@@ -18,7 +18,7 @@
       fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
     }}};
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="../../assets/css/styles.css" />
 </head>
 
 <body class="bg-paper text-ink">
@@ -30,7 +30,7 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg>
         12.480 referencias · stock verificado en tiempo real
       </span>
-      <a href="login.html" class="link-underline opacity-90">Tarifas profesionales</a>
+      <a href="../auth/login.html" class="link-underline opacity-90">Tarifas profesionales</a>
     </div>
   </div>
   <div data-component="site-header"></div>
@@ -38,7 +38,7 @@
   <!-- BREADCRUMBS -->
   <div class="container-x pt-5 pb-2">
     <nav class="text-xs font-mono text-graphite flex items-center gap-2">
-      <a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
       <span class="text-ink">Tienda</span>
     </nav>
   </div>
@@ -249,7 +249,7 @@
           <div class="eyebrow text-copper mb-2">Marcas que trabajamos</div>
           <p class="font-serif text-2xl">Las que de verdad usan los <em class="italic">electricistas profesionales</em>.</p>
         </div>
-        <a href="marcas.html" class="link-underline text-sm">Ver todas las marcas</a>
+        <a href="../empresa/marcas.html" class="link-underline text-sm">Ver todas las marcas</a>
       </div>
       <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-px bg-line border border-line rounded-xl overflow-hidden">
         <div class="bg-paper py-7 grid place-items-center font-serif text-lg italic text-graphite hover:text-ink hover:bg-white transition-colors cursor-pointer">Schneider</div>
@@ -449,8 +449,8 @@
           <p class="text-paper/70 leading-relaxed max-w-xl">Regístrate como instalador con carnet vigente y accede a precios especiales, descargas de albaranes, búsqueda por referencia y un panel pensado para no perder tardes en la oficina.</p>
         </div>
         <div class="lg:col-span-5 lg:text-right space-y-3">
-          <a href="login.html" class="btn btn-primary w-full lg:w-auto justify-center">Acceder al área pro</a>
-          <a href="login.html#registro-pro" class="btn btn-ghost-light w-full lg:w-auto justify-center">Registrarse</a>
+          <a href="../auth/login.html" class="btn btn-primary w-full lg:w-auto justify-center">Acceder al área pro</a>
+          <a href="../auth/login.html#registro-pro" class="btn btn-ghost-light w-full lg:w-auto justify-center">Registrarse</a>
         </div>
       </div>
     </div>
@@ -461,13 +461,13 @@
 
   <!-- Mobile + search overlays -->
   <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto">
-    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="../../assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <nav class="px-5 py-6">
-      <a href="hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a>
+      <a href="../aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a>
       <a href="tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif text-filament">Tienda</a>
-      <a href="servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a>
-      <a href="solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a>
-      <a href="quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a>
+      <a href="../servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a>
+      <a href="../servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a>
+      <a href="../empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a>
     </nav>
   </div>
 
@@ -481,10 +481,10 @@
     </div>
   </div>
 
-  <script src="assets/js/component-loader.js"></script>
-  <script src="data/api.js"></script>
-  <script src="assets/js/backend-integration.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/catalog-ui.js"></script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/main.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
 </body>
 </html>

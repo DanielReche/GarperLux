@@ -4,7 +4,15 @@
   'use strict';
 
   const currentPath = location.pathname.replace(/\\/g, '/');
-  const depth = currentPath.includes('/pages/') ? '../' : '';
+  // Calcula el depth contando los segmentos que hay después de "/pages/" en la URL.
+  // Ejemplo: /pages/tienda/categoria.html -> ['pages','tienda','categoria.html'] -> depth = '../../'
+  const depth = (() => {
+    const segments = currentPath.split('/').filter(Boolean);
+    const idx = segments.indexOf('pages');
+    if (idx === -1) return '';
+    const levels = segments.length - idx - 1;
+    return levels > 0 ? '../'.repeat(levels) : '';
+  })();
   const componentMap = {
     'site-header': 'components/site-header.html',
     'site-footer': 'components/site-footer.html',

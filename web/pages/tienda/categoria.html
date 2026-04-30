@@ -18,7 +18,7 @@
       fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
     }}};
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="../../assets/css/styles.css" />
   <style>
     /* Custom checkbox y range para los filtros */
     .filter-check { display: flex; align-items: center; gap: 10px; padding: 7px 0; cursor: pointer; font-size: 14px; color: var(--graphite); transition: color .15s; }
@@ -42,7 +42,7 @@
   <div class="bg-ink text-paper text-[12.5px]">
     <div class="container-x flex items-center justify-between py-2">
       <span class="opacity-90 hidden sm:inline">12.480 referencias · stock verificado</span>
-      <a href="login.html" class="link-underline opacity-90">Tarifas profesionales</a>
+      <a href="../auth/login.html" class="link-underline opacity-90">Tarifas profesionales</a>
     </div>
   </div>
   <div data-component="site-header"></div>
@@ -50,7 +50,7 @@
   <!-- BREADCRUMBS -->
   <div class="container-x pt-5 pb-2">
     <nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap">
-      <a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
       <a href="tienda.html" class="hover:text-ink">Tienda</a><span class="opacity-50">/</span>
       <span class="text-ink">Mecanismos</span>
     </nav>
@@ -511,7 +511,7 @@
         <div class="lg:col-span-8 prose-content text-graphite leading-relaxed space-y-4 max-w-3xl">
           <p>Los <strong class="text-ink">mecanismos eléctricos</strong> son los componentes visibles e interactuables de cualquier instalación: interruptores, conmutadores, enchufes, pulsadores, tomas TV y de teléfono. En GarperLux trabajamos las gamas más usadas por instaladores profesionales, pero también las opciones de diseño que pide el particular cuando reforma una vivienda.</p>
           <p>Si vas a empezar de cero o renovar lo existente, la decisión más importante es la <strong class="text-ink">gama</strong>: marca y serie deben mantenerse a lo largo de toda la vivienda para que los acabados encajen. Cambiar gama a mitad de obra obliga después a sustituir piezas innecesariamente.</p>
-          <p>¿No sabes qué necesitas Echa un vistazo al <a href="hazlo-tu-mismo.html" class="link-underline text-ink">tutorial de cambiar un mecanismo</a>, donde explicamos sin jerga la diferencia entre interruptor, conmutador y cruzamiento.?</p>
+          <p>¿No sabes qué necesitas Echa un vistazo al <a href="../aprender/hazlo-tu-mismo.html" class="link-underline text-ink">tutorial de cambiar un mecanismo</a>, donde explicamos sin jerga la diferencia entre interruptor, conmutador y cruzamiento.?</p>
         </div>
       </div>
     </div>
@@ -522,13 +522,13 @@
 
   <!-- Mobile + search overlays -->
   <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto">
-    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="../../assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <nav class="px-5 py-6">
-      <a href="hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a>
+      <a href="../aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a>
       <a href="tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif text-filament">Tienda</a>
-      <a href="servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a>
-      <a href="solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a>
-      <a href="quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a>
+      <a href="../servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a>
+      <a href="../servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a>
+      <a href="../empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a>
     </nav>
   </div>
 
@@ -538,10 +538,10 @@
     </div>
   </div>
 
-  <script src="assets/js/component-loader.js"></script>
-  <script src="data/api.js"></script>
-  <script src="assets/js/backend-integration.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/catalog-ui.js"></script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/main.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
 </body>
 </html>

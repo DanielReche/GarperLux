@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-<link rel="stylesheet" href="assets/css/styles.css" />
+<link rel="stylesheet" href="../../assets/css/styles.css" />
 <style>
 .field{width:100%;padding:.85rem 1rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink)}
 .field:focus{outline:none;border-color:var(--ink)}
@@ -23,7 +23,7 @@
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
 
-<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap"><a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><a href="direcciones.html" class="hover:text-ink">Direcciones</a><span class="opacity-50">/</span><span class="text-ink">Añadir nueva</span></nav></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><a href="direcciones.html" class="hover:text-ink">Direcciones</a><span class="opacity-50">/</span><span class="text-ink">Añadir nueva</span></nav></div>
 
 <section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
 <aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="direcciones"></aside>
@@ -111,7 +111,7 @@
 </div></section>
   <div data-component="site-footer"></div>
 
-<script src="assets/js/main.js"></script><script src="assets/js/auth.js"></script>
+<script src="../../assets/js/main.js"></script><script src="../../assets/js/auth.js"></script>
 <script>
 if(glxRequireAuth()){const u=glxGetUser();document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);
   if(u.role==='pro'){document.querySelectorAll('[data-pro-only]').forEach(e=>e.style.display='');document.querySelectorAll('[data-particular-only]').forEach(e=>e.style.display='none');}
@@ -123,8 +123,8 @@ document.getElementById('cp-input').addEventListener('input',e=>{
   if(v.length===5&&CP_MAP[v]){document.getElementById('loc-input').value=CP_MAP[v][0];document.getElementById('prov-input').value=CP_MAP[v][1];document.getElementById('cp-hint').textContent='Localidad y provincia rellenadas automáticamente.';document.getElementById('cp-hint').style.color='var(--stock)';}
 });
 </script>
-  <script src="assets/js/component-loader.js"></script>
-  <script src="data/api.js"></script>
-  <script src="assets/js/backend-integration.js"></script>
-  <script src="assets/js/catalog-ui.js"></script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
 </body></html>

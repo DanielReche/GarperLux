@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="../../assets/css/styles.css" />
   <style>
     @keyframes fall{0%{transform:translateY(-50px) rotate(0);opacity:0}10%{opacity:1}100%{transform:translateY(400px) rotate(360deg);opacity:0}}
     .filament-spark{position:absolute;width:3px;height:18px;background:linear-gradient(180deg,var(--filament-glow),transparent);border-radius:2px;animation:fall 4.5s linear infinite}
@@ -125,7 +125,7 @@
           <div class="flex-1">
             <h3 class="font-serif text-lg font-medium mb-1">Mientras te llega: el tutorial paso a paso</h3>
             <p class="text-sm text-graphite mb-3">Estos 3 productos vienen del tutorial #042 · Cambiar un interruptor sin liarla. Léelo con tranquilidad para que cuando llegue la caja sepas exactamente qué hacer.</p>
-            <a href="tutorial.html" class="link-underline text-sm">Ver tutorial #042 →</a>
+            <a href="../aprender/tutorial.html" class="link-underline text-sm">Ver tutorial #042 →</a>
           </div>
         </div>
 
@@ -137,7 +137,7 @@
           <!-- Acciones -->
           <div class="bg-white border border-line rounded-2xl p-5 space-y-2">
             <button class="btn btn-ghost w-full justify-center btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Descargar factura PDF</button>
-            <a href="mis-pedido.html" class="btn btn-ink w-full justify-center btn-sm">Ver detalle del pedido</a>
+            <a href="../cuenta/mis-pedido.html" class="btn btn-ink w-full justify-center btn-sm">Ver detalle del pedido</a>
             <button class="btn btn-ghost w-full justify-center btn-sm">Cancelar pedido</button>
           </div>
 
@@ -146,7 +146,7 @@
             <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Dirección de entrega</div>
             <div class="text-sm font-medium mb-1">Antonio García</div>
             <div class="text-sm text-graphite">Calle Bernabé Soriano 12, 3º B<br/>23001 Jaén</div>
-            <div class="text-xs text-graphite font-mono mt-2">SEUR · seguimiento <a href="seguir-solicitud.html" class="text-copper">SE-7748392</a></div>
+            <div class="text-xs text-graphite font-mono mt-2">SEUR · seguimiento <a href="../servicios/seguir-solicitud.html" class="text-copper">SE-7748392</a></div>
           </div>
 
           <!-- Email confirm -->
@@ -159,7 +159,7 @@
           <div class="bg-ink text-paper rounded-2xl p-5">
             <div class="eyebrow text-filament mb-2">¿Algo va mal?</div>
             <p class="text-sm text-paper/70 mb-4 leading-relaxed">Tienes 30 días para devolver lo que no encaje. Y si tienes dudas, te llamamos.</p>
-            <a href="contacto.html" class="btn btn-ghost-light btn-sm w-full justify-center">Contactar soporte</a>
+            <a href="../empresa/contacto.html" class="btn btn-ghost-light btn-sm w-full justify-center">Contactar soporte</a>
           </div>
         </div>
       </aside>
@@ -167,12 +167,12 @@
   </section>
   <div data-component="site-footer"></div>
 
-  <script src="assets/js/component-loader.js"></script>
-  <script src="data/api.js"></script>
-  <script src="assets/js/backend-integration.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/catalog-ui.js"></script>
-  <script src="assets/js/auth.js"></script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/main.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="../../assets/js/auth.js"></script>
   <script>
     const u=glxGetUser();
     if(u)document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);

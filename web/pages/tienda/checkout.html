@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="../../assets/css/styles.css" />
   <style>
     .field{width:100%;padding:.75rem .9rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink);transition:border-color .15s}
     .field:focus{outline:none;border-color:var(--ink)}
@@ -23,7 +23,7 @@
 
   <header class="border-b border-line bg-paper">
     <div class="container-x flex items-center justify-between py-4">
-      <a href="index.html"><img src="assets/img/logo.svg" alt="GarperLux" class="h-9 w-auto"/></a>
+      <a href="../../index.html"><img src="../../assets/img/logo.svg" alt="GarperLux" class="h-9 w-auto"/></a>
       <a href="carrito.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver al carrito</a>
     </div>
   </header>
@@ -199,11 +199,11 @@
   </section>
   <div data-component="site-footer"></div>
 
-  <script src="assets/js/component-loader.js"></script>
-  <script src="data/api.js"></script>
-  <script src="assets/js/backend-integration.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/catalog-ui.js"></script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/main.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
   <script>
     document.querySelectorAll('.opt-card').forEach(c=>{
       c.addEventListener('click',()=>{

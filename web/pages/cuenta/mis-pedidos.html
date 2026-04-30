@@ -17,7 +17,7 @@
       fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
     }}};
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="../../assets/css/styles.css" />
   <style>
     [data-active-view="particular"] .view-pro { display: none; }
     [data-active-view="pro"] .view-particular { display: none; }
@@ -34,7 +34,7 @@
 
   <!-- BREADCRUMBS -->
   <div class="container-x pt-5 pb-2">
-    <nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink">Mis pedidos</span></nav>
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink">Mis pedidos</span></nav>
   </div>
 
   <section class="container-x py-6 pb-20">
@@ -51,7 +51,7 @@
           </div>
           <div class="view-pro flex gap-2">
             <button class="btn btn-sm btn-ghost">Exportar mes en CSV</button>
-            <a href="tienda.html" class="btn btn-sm btn-ink">+ Nuevo pedido</a>
+            <a href="../tienda/tienda.html" class="btn btn-sm btn-ink">+ Nuevo pedido</a>
           </div>
         </div>
 
@@ -141,7 +141,7 @@
 
           <!-- Mensaje sin más pedidos -->
           <div class="text-center py-8 text-sm text-graphite">
-            Tienes <strong class="text-ink">3 pedidos</strong> en total. <a href="tienda.html" class="link-underline text-ink">Sigue comprando →</a>
+            Tienes <strong class="text-ink">3 pedidos</strong> en total. <a href="../tienda/tienda.html" class="link-underline text-ink">Sigue comprando →</a>
           </div>
         </div>
 
@@ -240,12 +240,12 @@
   </section>
   <div data-component="site-footer"></div>
 
-  <script src="assets/js/component-loader.js"></script>
-  <script src="data/api.js"></script>
-  <script src="assets/js/backend-integration.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/catalog-ui.js"></script>
-  <script src="assets/js/auth.js"></script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/main.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="../../assets/js/auth.js"></script>
   <script>
     if (glxRequireAuth()) {
       const user = glxGetUser();
