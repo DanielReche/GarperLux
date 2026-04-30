@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-  <base href="../../">
+  <base href="/.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acceder · Crear cuenta · GarperLux</title>
@@ -18,7 +18,7 @@
       fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
     }}};
   </script>
-  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
 
   <style>
     body { min-height: 100vh; }
@@ -71,11 +71,11 @@
 
       <!-- Top: logo -->
       <div class="relative p-10">
-        <a href="../../index.html" class="inline-flex items-center text-sm text-paper/70 hover:text-paper gap-2 mb-12">
+        <a href="/index.html" class="inline-flex items-center text-sm text-paper/70 hover:text-paper gap-2 mb-12">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Volver al inicio
         </a>
-        <img src="../../assets/img/logo.svg" alt="GarperLux" class="h-10 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
+        <img src="/assets/img/logo.svg" alt="GarperLux" class="h-10 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
       </div>
 
       <!-- Frase y manifiesto -->
@@ -135,11 +135,11 @@
     <main class="flex flex-col">
       <!-- Top mobile bar -->
       <div class="lg:hidden bg-ink text-paper p-5 flex items-center justify-between">
-        <a href="../../index.html" class="inline-flex items-center text-sm gap-2">
+        <a href="/index.html" class="inline-flex items-center text-sm gap-2">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Volver
         </a>
-        <img src="../../assets/img/logo.svg" alt="GarperLux" class="h-7 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
+        <img src="/assets/img/logo.svg" alt="GarperLux" class="h-7 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
       </div>
 
       <div class="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-14">
@@ -152,14 +152,14 @@
               <span class="text-xs text-graphite">· entrar sin contraseña</span>
             </div>
             <div class="grid grid-cols-2 gap-2">
-              <button onclick="glxSetSession('particular'); location.href='area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-ink transition-colors">
+              <button onclick="glxSetSession('particular'); location.href='/pages/auth/area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-ink transition-colors">
                 <div class="flex items-center gap-2 mb-1">
                   <span class="w-6 h-6 rounded-full bg-ink text-paper grid place-items-center font-medium text-[11px]">A</span>
                   <span class="text-sm font-medium">Antonio</span>
                 </div>
                 <div class="text-[11px] text-graphite">Particular</div>
               </button>
-              <button onclick="glxSetSession('pro'); location.href='area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-filament transition-colors">
+              <button onclick="glxSetSession('pro'); location.href='/pages/auth/area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-filament transition-colors">
                 <div class="flex items-center gap-2 mb-1">
                   <span class="w-6 h-6 rounded-full bg-filament text-ink grid place-items-center font-medium text-[10px]">JL</span>
                   <span class="text-sm font-medium">El Chispas</span>
@@ -188,7 +188,7 @@
               <div>
                 <div class="flex items-center justify-between mb-1.5">
                   <label class="text-sm font-medium">Contraseña <span class="text-warn">*</span></label>
-                  <a href="recuperar-password.html" class="text-xs text-copper hover:underline">¿La olvidaste?</a>
+                  <a href="/pages/auth/recuperar-password.html" class="text-xs text-copper hover:underline">¿La olvidaste?</a>
                 </div>
                 <input type="password" class="field" placeholder="••••••••" required/>
               </div>
@@ -391,7 +391,7 @@
               <label class="flex items-start gap-3 cursor-pointer text-sm pt-2">
                 <input type="checkbox" class="w-4 h-4 mt-1" required/>
                 <span class="text-graphite leading-relaxed">
-                  Acepto la <a href="../legal/privacidad.html" class="link-underline text-ink">política de privacidad</a> y los <a href="../legal/terminos.html" class="link-underline text-ink">términos de uso</a> de GarperLux.
+                  Acepto la <a href="/pages/legal/privacidad.html" class="link-underline text-ink">política de privacidad</a> y los <a href="/pages/legal/terminos.html" class="link-underline text-ink">términos de uso</a> de GarperLux.
                 </span>
               </label>
 
@@ -416,7 +416,7 @@
     </main>
   </div>
 
-  <script src="../../assets/js/auth.js"></script>
+  <script src="/assets/js/auth.js"></script>
   <script>
     // Tabs login/register
     const tabs = document.querySelectorAll('.auth-tab');
@@ -463,7 +463,7 @@
       glxSetSession(role);
       const params = new URLSearchParams(location.search);
       const redirect = params.get('redirect');
-      location.href = redirect || 'area-personal.html';
+      location.href = redirect || '/pages/auth/area-personal.html';
     });
 
     // Form de registro: cae como particular o pro según role-card
@@ -471,12 +471,12 @@
       e.preventDefault();
       const role = document.querySelector('.role-card.is-selected').dataset.role || 'particular';
       glxSetSession(role);
-      location.href = 'area-personal.html';
+      location.href = '/pages/auth/area-personal.html';
     });
   </script>
-  <script src="../../assets/js/component-loader.js"></script>
-  <script src="../../data/api.js"></script>
-  <script src="../../assets/js/backend-integration.js"></script>
-  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
 </body>
 </html>

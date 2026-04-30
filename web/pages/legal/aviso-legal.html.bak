@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="../../">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aviso legal · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="../../assets/css/styles.css" />
+<style>
+  .toc-link{display:block;padding:.4rem 0;color:var(--graphite);font-size:13px;border-left:2px solid transparent;padding-left:.75rem;transition:all .15s}
+  .toc-link:hover{color:var(--ink);border-left-color:var(--line)}
+  .toc-link.active{color:var(--ink);border-left-color:var(--filament);font-weight:500}
+  .legal h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,3vw,2rem);line-height:1.2;margin-top:3rem;margin-bottom:1rem;letter-spacing:-.01em;scroll-margin-top:2rem}
+  .legal h3{font-weight:600;font-size:1rem;margin-top:1.75rem;margin-bottom:.5rem}
+  .legal p{margin-bottom:1rem;line-height:1.7;color:var(--graphite)}
+  .legal strong{color:var(--ink)}
+  .legal ul{list-style:disc;padding-left:1.25rem;margin-bottom:1rem;color:var(--graphite)}
+  .legal ul li{margin-bottom:.4rem;line-height:1.6}
+</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><span class="text-ink">Aviso legal</span></nav></div>
+
+<!-- Hero -->
+<section class="container-x py-10 md:py-14 border-b border-line">
+  <div class="max-w-3xl">
+    <div class="eyebrow text-copper mb-3">Información obligatoria · LSSI-CE</div>
+    <h1 class="font-serif font-medium leading-[0.95] tracking-[-0.02em]" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">Aviso legal.</h1>
+    <p class="text-graphite mt-3 text-lg">Quién somos, qué hacemos cuando entras a este sitio y cómo nos puedes contactar si algo no encaja.</p>
+    <div class="mt-5 text-xs font-mono text-graphite flex flex-wrap gap-4">
+      <span>Última revisión: <strong class="text-ink">15/04/2026</strong></span>
+      <span>Versión <strong class="text-ink">3.1</strong></span>
+    </div>
+  </div>
+</section>
+
+<section class="container-x py-12 pb-20"><div class="grid lg:grid-cols-[260px_1fr] gap-10 lg:gap-16">
+
+  <!-- Sidebar TOC -->
+  <aside class="lg:sticky lg:top-6 lg:self-start">
+    <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-3">En esta página</div>
+    <nav class="space-y-0">
+      <a href="#titularidad" class="toc-link active">1 · Titularidad del sitio</a>
+      <a href="#objeto" class="toc-link">2 · Objeto del sitio</a>
+      <a href="#uso" class="toc-link">3 · Condiciones de uso</a>
+      <a href="#propiedad" class="toc-link">4 · Propiedad intelectual</a>
+      <a href="#enlaces" class="toc-link">5 · Enlaces a terceros</a>
+      <a href="#responsabilidad" class="toc-link">6 · Limitación de responsabilidad</a>
+      <a href="#legislacion" class="toc-link">7 · Legislación aplicable</a>
+      <a href="#contacto" class="toc-link">8 · Contacto y reclamaciones</a>
+    </nav>
+    <div class="mt-8 pt-6 border-t border-line text-xs text-graphite">
+      <p class="mb-3">¿Necesitas más detalle?</p>
+      <div class="space-y-1.5">
+        <a href="privacidad.html" class="block text-copper hover:underline">→ Política de privacidad</a>
+        <a href="cookies.html" class="block text-copper hover:underline">→ Política de cookies</a>
+        <a href="terminos.html" class="block text-copper hover:underline">→ Términos y condiciones</a>
+      </div>
+    </div>
+  </aside>
+
+  <main class="legal max-w-2xl">
+
+    <h2 id="titularidad">1 · Titularidad del sitio</h2>
+    <p>El presente sitio web <strong>garperlux.es</strong> y todos sus subdominios son titularidad de <strong>GarperLux S.L.</strong>, sociedad mercantil constituida conforme a la legislación española, con los siguientes datos identificativos:</p>
+    <ul>
+      <li><strong>Razón social:</strong> GarperLux S.L.</li>
+      <li><strong>CIF:</strong> B-23456789</li>
+      <li><strong>Domicilio social:</strong> Campus Las Lagunillas s/n · 23071 Jaén · España</li>
+      <li><strong>Inscripción:</strong> Registro Mercantil de Jaén, tomo 1.842, folio 73, hoja J-12.345</li>
+      <li><strong>Email:</strong> hola@garperlux.es</li>
+      <li><strong>Teléfono:</strong> 953 21 22 23</li>
+    </ul>
+    <p>GarperLux S.L. está autorizada como instaladora de baja tensión por la Junta de Andalucía con número de registro <strong>BT-AND-04-2018</strong>, y dispone de seguro de responsabilidad civil profesional con cobertura mínima de 600.000 €.</p>
+
+    <h2 id="objeto">2 · Objeto del sitio</h2>
+    <p>Este sitio se dirige a dos públicos diferenciados que conviven en el mismo dominio:</p>
+    <ul>
+      <li><strong>Particulares</strong> que buscan aprender a hacer pequeñas reparaciones eléctricas, comprar material doméstico o solicitar un técnico autorizado.</li>
+      <li><strong>Profesionales instaladores</strong> con carnet de baja tensión vigente que necesitan tarifa pro, ficha técnica detallada, albaranes y facturación electrónica.</li>
+    </ul>
+    <p>El acceso al sitio es gratuito. Algunas funcionalidades requieren registro y validación documental. La compra de material y la contratación de servicios técnicos requieren mayoría de edad y capacidad legal para contratar.</p>
+
+    <h2 id="uso">3 · Condiciones de uso</h2>
+    <p>El usuario se compromete a hacer un uso del sitio conforme a la ley, a este aviso legal y a las buenas costumbres. En particular, se compromete a no utilizar el sitio para:</p>
+    <ul>
+      <li>Realizar actividades ilícitas o contrarias a la moral.</li>
+      <li>Difundir contenidos racistas, xenófobos, pornográficos o que inciten a la violencia.</li>
+      <li>Introducir virus, código malicioso o cualquier elemento que altere el funcionamiento del sitio.</li>
+      <li>Suplantar la identidad de terceros, falsear datos o intentar acceder a áreas restringidas.</li>
+      <li>Reproducir, copiar o redistribuir contenido sin autorización expresa.</li>
+    </ul>
+
+    <h3>Tutoriales: uso responsable</h3>
+    <p>Los contenidos de la sección <em>Hazlo Tú Mismo</em> son <strong>orientativos</strong>. Antes de actuar sobre una instalación eléctrica, asegúrate de cortar la corriente desde el cuadro general. Cuando una tarea quede fuera de tu nivel, recurre a un instalador autorizado. GarperLux no se responsabiliza de daños derivados de un uso indebido de los tutoriales.</p>
+
+    <h2 id="propiedad">4 · Propiedad intelectual e industrial</h2>
+    <p>Todos los contenidos del sitio (textos, imágenes, vídeos, diseños, código, marca, logotipo) son propiedad de GarperLux S.L. o de terceros que han autorizado su publicación. Quedan reservados todos los derechos de explotación.</p>
+    <p>Se autoriza la <strong>visualización privada</strong> y la <strong>impresión</strong> de fragmentos para uso personal no comercial. Cualquier otro uso (reproducción, distribución, modificación, comunicación pública) requiere autorización previa por escrito.</p>
+    <p>Las marcas comerciales que aparecen en el catálogo (Schneider, Simón, Wago, Shelly, Wiha, etc.) son propiedad de sus respectivos titulares y se utilizan únicamente con fines descriptivos del producto en venta.</p>
+
+    <h2 id="enlaces">5 · Enlaces a terceros</h2>
+    <p>El sitio puede contener enlaces a sitios de terceros (fabricantes, organismos oficiales, transportistas, pasarelas de pago). GarperLux no controla ni responde del contenido de esos sitios. La inclusión de un enlace no implica recomendación ni asociación.</p>
+    <p>Si detectas un enlace que dirige a contenido ilícito o inapropiado, escríbenos a <a href="mailto:hola@garperlux.es" class="link-underline">hola@garperlux.es</a> y lo retiraremos en un plazo máximo de 72 horas.</p>
+
+    <h2 id="responsabilidad">6 · Limitación de responsabilidad</h2>
+    <p>GarperLux pone los medios razonables para que el sitio funcione correctamente, pero no garantiza la disponibilidad continua del servicio ni la ausencia de errores. No se hace responsable de:</p>
+    <ul>
+      <li>Interrupciones por mantenimiento, fallos técnicos o causas de fuerza mayor.</li>
+      <li>Daños derivados del uso del sitio en equipos del usuario.</li>
+      <li>Imprecisiones puntuales en precios, stock o fichas técnicas, que se corregirán en cuanto se detecten.</li>
+      <li>Decisiones de terceros (transportistas, pasarela de pago) ajenas a nuestro control directo.</li>
+    </ul>
+    <p>En caso de error manifiesto en un precio, GarperLux se reserva el derecho a anular el pedido y reembolsar el importe íntegro pagado.</p>
+
+    <h2 id="legislacion">7 · Legislación aplicable y jurisdicción</h2>
+    <p>Este aviso legal se rige por la legislación española. En caso de controversia, las partes se someterán a los Juzgados y Tribunales de <strong>Jaén capital</strong>, salvo que la ley imponga otro fuero (por ejemplo, en relaciones con consumidores).</p>
+    <p>El consumidor puede acudir además a la <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener" class="link-underline">Plataforma de Resolución de Litigios en Línea de la Comisión Europea</a> para presentar reclamaciones extrajudiciales.</p>
+
+    <h2 id="contacto">8 · Contacto y reclamaciones</h2>
+    <p>Para cualquier consulta sobre este aviso legal o para presentar una reclamación formal:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:legal@garperlux.es" class="link-underline">legal@garperlux.es</a></li>
+      <li><strong>Postal:</strong> GarperLux S.L. · Apartado 142 · 23080 Jaén</li>
+      <li><strong>Hojas de reclamación oficiales:</strong> disponibles en nuestra sede física y en formato electrónico previa solicitud</li>
+    </ul>
+    <p class="text-xs mt-8 pt-6 border-t border-line">Este aviso legal entra en vigor el 15/04/2026 y sustituye a versiones anteriores. GarperLux se reserva el derecho a modificarlo para adaptarlo a cambios normativos o de funcionamiento del sitio. Las modificaciones se comunicarán con antelación razonable.</p>
+
+  </main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+  const links=document.querySelectorAll('.toc-link');
+  const sections=Array.from(links).map(l=>document.getElementById(l.getAttribute('href').slice(1))).filter(Boolean);
+  window.addEventListener('scroll',()=>{
+    let active=0;
+    sections.forEach((s,i)=>{if(s.getBoundingClientRect().top<120)active=i});
+    links.forEach((l,i)=>l.classList.toggle('active',i===active));
+  },{passive:true});
+</script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
+</body></html>

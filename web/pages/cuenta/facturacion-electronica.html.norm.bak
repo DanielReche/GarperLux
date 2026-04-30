@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="/.">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facturación electrónica · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="/assets/css/styles.css" />
+<style>
+.field{width:100%;padding:.85rem 1rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink)}
+.field:focus{outline:none;border-color:var(--ink)}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}
+.nav-item:hover{background:var(--paper-2);color:var(--ink)}
+.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}
+.opt-card{display:block;padding:1.1rem 1.3rem;border:1.5px solid var(--line);border-radius:14px;background:white;cursor:pointer;transition:all .15s}
+.opt-card:hover{border-color:var(--graphite)}
+.opt-card input{display:none}
+.opt-card.is-on{border-color:var(--ink);background:var(--paper-2);box-shadow:0 0 0 3px rgba(11,13,18,.05)}
+.switch{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:var(--line);border-radius:999px;transition:.2s}
+.slider::before{position:absolute;content:"";height:18px;width:18px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+input:checked+.slider{background:var(--stock)}
+input:checked+.slider::before{transform:translateX(20px)}
+</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/cuenta/area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><a href="/pages/cuenta/pages/cuenta/pages/cuenta/facturas.html" class="hover:text-ink">Facturas</a><span class="opacity-50">/</span><span class="text-ink">Facturación electrónica</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="facturas"></aside>
+
+<main class="max-w-3xl">
+  <a href="/pages/cuenta/pages/cuenta/pages/cuenta/facturas.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2 mb-5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver a facturas</a>
+
+  <div class="mb-8">
+    <div class="eyebrow text-copper mb-2">Configuración pro</div>
+    <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Facturación electrónica.</h1>
+    <p class="text-graphite mt-2 max-w-xl">Configura cómo emitimos y entregamos tus facturas. Si trabajas con AAPP, te ayudamos con el formato Facturae y el envío a FACe.</p>
+  </div>
+
+  <!-- Estado actual -->
+  <div class="bg-stock/5 border border-stock/30 rounded-2xl p-5 mb-6 flex items-start gap-4">
+    <span class="w-10 h-10 rounded-full bg-stock text-paper grid place-items-center shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
+    <div>
+      <div class="font-medium">Facturación electrónica activa</div>
+      <p class="text-sm text-graphite mt-1">Recibes tus facturas en PDF firmado en <strong>chispas@instaladoreseljaen.es</strong>. Última factura emitida: FAC-2026-04-184 · 26/04/2026.</p>
+    </div>
+  </div>
+
+  <!-- Formato -->
+  <div class="bg-white border border-line rounded-2xl p-6 mb-5">
+    <h2 class="font-serif text-xl font-medium mb-2">Formato de la factura</h2>
+    <p class="text-sm text-graphite mb-5">Elige cómo quieres recibir las facturas. Puedes activar varios formatos a la vez.</p>
+
+    <div class="space-y-3">
+      <label class="opt-card is-on">
+        <div class="flex items-start gap-4">
+          <input type="checkbox" checked/>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <span class="font-medium">PDF firmado</span>
+              <span class="pill pill-stock text-[10px]">Activo</span>
+            </div>
+            <p class="text-sm text-graphite">PDF con firma digital electrónica avanzada (FNMT) y sello de tiempo. Vale como factura legal a todos los efectos.</p>
+          </div>
+        </div>
+      </label>
+
+      <label class="opt-card">
+        <div class="flex items-start gap-4">
+          <input type="checkbox"/>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <span class="font-medium">Facturae 3.2.2 (XML)</span>
+              <span class="pill bg-paper-2 text-graphite text-[10px]">Para AAPP</span>
+            </div>
+            <p class="text-sm text-graphite">Formato oficial requerido por el sector público (Punto General de Entrada FACe).</p>
+          </div>
+        </div>
+      </label>
+
+      <label class="opt-card">
+        <div class="flex items-start gap-4">
+          <input type="checkbox"/>
+          <div class="flex-1">
+            <span class="font-medium">UBL 2.1 (XML)</span>
+            <p class="text-sm text-graphite mt-1">Para clientes europeos que requieran formato Universal Business Language.</p>
+          </div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Envío automático -->
+  <div class="bg-white border border-line rounded-2xl p-6 mb-5">
+    <h2 class="font-serif text-xl font-medium mb-5">Envío automático</h2>
+
+    <div class="space-y-4">
+      <div class="flex items-center justify-between gap-3 pb-4 border-b border-line">
+        <div>
+          <div class="font-medium">Email cuando se emite la factura</div>
+          <p class="text-sm text-graphite mt-0.5">A chispas@instaladoreseljaen.es con el PDF adjunto y enlace al portal.</p>
+        </div>
+        <label class="switch"><input type="checkbox" checked/><span class="slider"></span></label>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 pb-4 border-b border-line">
+        <div>
+          <div class="font-medium">Resumen mensual al cierre</div>
+          <p class="text-sm text-graphite mt-0.5">El primer día hábil del mes, recibes un email con todas las facturas del mes anterior, incluyendo CSV exportable.</p>
+        </div>
+        <label class="switch"><input type="checkbox" checked/><span class="slider"></span></label>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 pb-4 border-b border-line">
+        <div>
+          <div class="font-medium">Envío adicional al gestor / asesoría</div>
+          <p class="text-sm text-graphite mt-0.5">Una copia automática a un email adicional. Útil si tu asesoría centraliza tu contabilidad.</p>
+          <input type="email" placeholder="contabilidad@asesoria.com" class="field mt-2"/>
+        </div>
+        <label class="switch"><input type="checkbox"/><span class="slider"></span></label>
+      </div>
+
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <div class="font-medium">Envío a punto FACe (administración pública)</div>
+          <p class="text-sm text-graphite mt-0.5">Si el cliente final es una administración pública, enviamos directamente a su unidad receptora.</p>
+        </div>
+        <label class="switch"><input type="checkbox"/><span class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cuentas FACe -->
+  <div class="bg-white border border-line rounded-2xl p-6 mb-5">
+    <h2 class="font-serif text-xl font-medium mb-2">Códigos DIR3 de tus clientes públicos</h2>
+    <p class="text-sm text-graphite mb-5">Si facturas a administraciones públicas, registra aquí los códigos DIR3 (Oficina contable · Órgano gestor · Unidad tramitadora) para que cada factura llegue al receptor correcto.</p>
+
+    <div class="bg-paper-2 rounded-xl p-4 grid sm:grid-cols-[1fr_auto] gap-4 items-center mb-3">
+      <div>
+        <div class="font-medium text-sm">Ayuntamiento de Jaén · Servicio de Obras</div>
+        <div class="text-xs text-graphite font-mono mt-1">L01230500 · LA0001234 · GE0005678</div>
+      </div>
+      <div class="flex gap-2"><button class="text-xs text-copper hover:underline">Editar</button><button class="text-xs text-warn hover:underline">Eliminar</button></div>
+    </div>
+
+    <button class="btn btn-ghost btn-sm w-full justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Añadir cliente público</button>
+  </div>
+
+  <!-- Numeración -->
+  <div class="bg-white border border-line rounded-2xl p-6 mb-5">
+    <h2 class="font-serif text-xl font-medium mb-5">Numeración propia</h2>
+    <p class="text-sm text-graphite mb-4">Por defecto las facturas siguen la serie GarperLux (FAC-2026-04-XXX). Si prefieres tu propia numeración para las facturas que conviertes desde tus presupuestos, configúrala aquí.</p>
+
+    <div class="grid sm:grid-cols-[1fr_140px_120px] gap-3 items-end">
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Prefijo</label><input type="text" class="field font-mono" value="CHIS"/></div>
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Año</label><input type="text" class="field font-mono" value="2026"/></div>
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Próximo nº</label><input type="text" class="field font-mono" value="0042"/></div>
+    </div>
+    <div class="text-xs text-graphite font-mono mt-2">Vista previa: <strong class="text-ink">CHIS-2026-0042</strong></div>
+  </div>
+
+  <!-- Acciones finales -->
+  <div class="flex justify-between flex-wrap gap-3 pt-4">
+    <a href="/pages/cuenta/pages/cuenta/pages/cuenta/facturas.html" class="btn btn-ghost btn-sm">Cancelar</a>
+    <button class="btn btn-primary">Guardar configuración</button>
+  </div>
+
+  <!-- Ayuda -->
+  <div class="mt-10 bg-paper-2 border border-line rounded-2xl p-6 flex items-start gap-4">
+    <span class="w-10 h-10 rounded-full bg-electric/10 grid place-items-center text-electric shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></span>
+    <div class="flex-1">
+      <h3 class="font-medium mb-1">¿No sabes qué necesitas?</h3>
+      <p class="text-sm text-graphite mb-3">Si trabajas con AAPP por primera vez, tu cliente debe darte sus 3 códigos DIR3. Si no los tiene a mano, suelen estar en la web del organismo bajo "Datos de facturación electrónica".</p>
+      <a href="/pages/empresa/contacto.html" class="link-underline text-sm">Hablar con nuestro soporte fiscal</a>
+    </div>
+  </div>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="/assets/js/main.js"></script><script src="/assets/js/auth.js"></script>
+<script>
+if(glxRequireAuth()){const u=glxGetUser();if(u.role!=='pro'){location.href='/pages/cuenta/area-personal.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}
+document.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>{const i=c.querySelector('input');setTimeout(()=>c.classList.toggle('is-on',i.checked));}));
+</script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
+</body></html>

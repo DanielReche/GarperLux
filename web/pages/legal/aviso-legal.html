@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="es"><head>
-  <base href="../../">
+  <base href="/.">
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Aviso legal · GarperLux</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-<link rel="stylesheet" href="../../assets/css/styles.css" />
+<link rel="stylesheet" href="/assets/css/styles.css" />
 <style>
   .toc-link{display:block;padding:.4rem 0;color:var(--graphite);font-size:13px;border-left:2px solid transparent;padding-left:.75rem;transition:all .15s}
   .toc-link:hover{color:var(--ink);border-left-color:var(--line)}
@@ -23,7 +23,7 @@
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
 
-<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><span class="text-ink">Aviso legal</span></nav></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><span class="text-ink">Aviso legal</span></nav></div>
 
 <!-- Hero -->
 <section class="container-x py-10 md:py-14 border-b border-line">
@@ -56,9 +56,9 @@
     <div class="mt-8 pt-6 border-t border-line text-xs text-graphite">
       <p class="mb-3">¿Necesitas más detalle?</p>
       <div class="space-y-1.5">
-        <a href="privacidad.html" class="block text-copper hover:underline">→ Política de privacidad</a>
-        <a href="cookies.html" class="block text-copper hover:underline">→ Política de cookies</a>
-        <a href="terminos.html" class="block text-copper hover:underline">→ Términos y condiciones</a>
+        <a href="/pages/legal/privacidad.html" class="block text-copper hover:underline">→ Política de privacidad</a>
+        <a href="/pages/legal/cookies.html" class="block text-copper hover:underline">→ Política de cookies</a>
+        <a href="/pages/legal/terminos.html" class="block text-copper hover:underline">→ Términos y condiciones</a>
       </div>
     </div>
   </aside>
@@ -134,7 +134,7 @@
 </div></section>
   <div data-component="site-footer"></div>
 
-<script src="../../assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
 <script>
   const links=document.querySelectorAll('.toc-link');
   const sections=Array.from(links).map(l=>document.getElementById(l.getAttribute('href').slice(1))).filter(Boolean);
@@ -144,8 +144,8 @@
     links.forEach((l,i)=>l.classList.toggle('active',i===active));
   },{passive:true});
 </script>
-  <script src="../../assets/js/component-loader.js"></script>
-  <script src="../../data/api.js"></script>
-  <script src="../../assets/js/backend-integration.js"></script>
-  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
 </body></html>

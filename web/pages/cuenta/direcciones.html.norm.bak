@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="/.">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Direcciones · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="/.assets/css/styles.css" />
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}[data-active-view="particular"] .view-pro{display:none}[data-active-view="pro"] .view-particular{display:none}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/.index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/cuenta/area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink" data-bc-label>Direcciones</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="direcciones"></aside>
+
+<main>
+  <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+    <div>
+      <div class="eyebrow text-copper mb-2">Configuración</div>
+      <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);"><span data-title>Mis direcciones</span>.</h1>
+      <p class="text-graphite mt-2 text-sm" data-subtitle>—</p>
+    </div>
+    <a href="/pages/cuenta/anadir-direccion.html" class="btn btn-ink"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Añadir dirección</a>
+  </div>
+
+  <!-- Vista particular -->
+  <div class="view-particular grid md:grid-cols-2 gap-5">
+    <div class="bg-white border-2 border-ink rounded-2xl p-6 relative">
+      <span class="absolute top-4 right-4 pill pill-info text-[10px]">Predeterminada · envío y facturación</span>
+      <div class="font-mono text-[10px] text-graphite uppercase tracking-wider mb-2">Casa</div>
+      <h3 class="font-serif text-xl font-medium leading-tight mb-3">Antonio García</h3>
+      <address class="not-italic text-graphite text-sm leading-relaxed">Calle Bernabé Soriano 12, 3º B<br/>23001 Jaén · Andalucía<br/>España<br/><span class="font-mono text-xs">Tlf: 600 123 456</span></address>
+      <div class="flex gap-3 mt-5 pt-5 border-t border-line text-xs"><button class="text-copper hover:underline">Editar</button><button class="text-graphite hover:underline">Hacer secundaria</button></div>
+    </div>
+    <div class="bg-white border border-line rounded-2xl p-6 relative">
+      <div class="font-mono text-[10px] text-graphite uppercase tracking-wider mb-2">Casa de mis padres</div>
+      <h3 class="font-serif text-xl font-medium leading-tight mb-3">Antonio García</h3>
+      <address class="not-italic text-graphite text-sm leading-relaxed">Avda. de Andalucía 45, 1º D<br/>23700 Linares (Jaén)<br/>España<br/><span class="font-mono text-xs">Tlf: 953 65 12 34</span></address>
+      <div class="flex gap-3 mt-5 pt-5 border-t border-line text-xs"><button class="text-copper hover:underline">Editar</button><button class="text-copper hover:underline">Hacer predeterminada</button><button class="text-warn hover:underline">Eliminar</button></div>
+    </div>
+  </div>
+
+  <!-- Vista profesional: direcciones de obra -->
+  <div class="view-pro space-y-3">
+    <div class="bg-white border-2 border-ink rounded-2xl p-5">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="pill pill-info text-[10px]">Sede taller</span><span class="pill pill-stock text-[10px]">Predeterminada</span></div>
+          <h3 class="font-serif text-lg font-medium leading-tight">Instalaciones El Chispas S.L.</h3>
+          <address class="not-italic text-graphite text-sm leading-relaxed mt-1">Polígono Los Olivares, nave 24 · 23009 Jaén</address>
+        </div>
+        <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Editar</button></div>
+      </div>
+    </div>
+    <div class="bg-white border border-line rounded-2xl p-5">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="pill bg-copper/15 text-copper text-[10px]">Obra activa</span><span class="font-mono text-[10px] text-graphite">desde 12/04/2026</span></div>
+          <h3 class="font-serif text-lg font-medium leading-tight">Familia López · vivienda unifamiliar</h3>
+          <address class="not-italic text-graphite text-sm leading-relaxed mt-1">Calle Bernabé Soriano 12 · 23001 Jaén · 3º B</address>
+          <div class="text-xs text-graphite mt-1 font-mono">Contacto en obra: María López · 654 321 098</div>
+        </div>
+        <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Editar</button><button class="btn btn-sm btn-ink">Hacer pedido aquí</button></div>
+      </div>
+    </div>
+    <div class="bg-white border border-line rounded-2xl p-5">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="pill bg-copper/15 text-copper text-[10px]">Obra activa</span><span class="font-mono text-[10px] text-graphite">desde 22/04/2026</span></div>
+          <h3 class="font-serif text-lg font-medium leading-tight">Comunidad C/ Bernabé Soriano</h3>
+          <address class="not-italic text-graphite text-sm leading-relaxed mt-1">Calle Bernabé Soriano 18 · 23001 Jaén · zonas comunes</address>
+          <div class="text-xs text-graphite mt-1 font-mono">Administrador: Fincas Jaén · 953 22 11 99</div>
+        </div>
+        <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Editar</button><button class="btn btn-sm btn-ink">Hacer pedido aquí</button></div>
+      </div>
+    </div>
+    <div class="bg-paper-2 border border-line rounded-2xl p-5">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <div class="flex items-center gap-2 mb-2"><span class="pill bg-graphite/15 text-graphite text-[10px]">Obra cerrada</span></div>
+          <h3 class="font-serif text-lg font-medium leading-tight text-graphite">Granja avícola Hermanos Ruiz</h3>
+          <address class="not-italic text-graphite text-sm leading-relaxed mt-1">Carretera de Mancha Real km 4 · 23100 Mancha Real</address>
+        </div>
+        <button class="btn btn-sm btn-ghost">Reabrir</button>
+      </div>
+    </div>
+  </div>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="/.assets/js/main.js"></script><script src="/.assets/js/auth.js"></script>
+<script>if(glxRequireAuth()){const u=glxGetUser();document.body.dataset.activeView=u.role;document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);
+if(u.role==='pro'){document.querySelector('[data-title]').textContent='Direcciones de obra';document.querySelector('[data-bc-label]').textContent='Direcciones de obra';document.querySelector('[data-subtitle]').textContent='2 obras activas · 1 cerrada · 1 sede';}
+else{document.querySelector('[data-subtitle]').textContent='2 direcciones guardadas';}
+const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}</script>
+  <script src="/.assets/js/component-loader.js"></script>
+  <script src="/.data/api.js"></script>
+  <script src="/.assets/js/backend-integration.js"></script>
+  <script src="/.assets/js/catalog-ui.js"></script>
+</body></html>

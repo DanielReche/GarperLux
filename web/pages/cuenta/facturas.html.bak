@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="../../">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facturas · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="../../assets/css/styles.css" />
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink">Facturas</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="facturas"></aside>
+
+<main>
+  <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+    <div><div class="eyebrow text-copper mb-2">Documentos fiscales</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Facturas.</h1><p class="text-graphite mt-2">38 facturas · 12 este trimestre</p></div>
+    <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Exportar trimestre (CSV)</button><button class="btn btn-sm btn-ink">Modelo 303 · Q1</button></div>
+  </div>
+
+  <!-- Resumen trimestre -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Base imponible Q2</div><div class="font-serif text-2xl font-medium">1.522 €</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">IVA soportado Q2</div><div class="font-serif text-2xl font-medium text-electric">320 €</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Total facturas Q2</div><div class="font-serif text-2xl font-medium">1.842 €</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Pendientes pago</div><div class="font-serif text-2xl font-medium text-caution">2</div></div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="bg-white border border-line rounded-2xl overflow-hidden">
+    <div class="px-5 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3"><span>Fecha</span><span>Factura</span><span>Concepto</span><span>Base</span><span>IVA 21%</span><span>Total</span><span></span></div>
+    <div class="divide-y divide-line">
+      <a href="factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">26/04</div><div class="font-mono font-medium">FAC-2026-04-184</div><div><div class="font-medium">Pedido GLX-04-1184</div><div class="text-xs text-graphite">Stock taller · Aplazada 30d</div></div><div class="font-mono">180,50 €</div><div class="font-mono">37,90 €</div><div class="font-mono font-medium">218,40 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">25/04</div><div class="font-mono font-medium">FAC-2026-04-178</div><div><div class="font-medium">Pedido GLX-04-1178</div><div class="text-xs text-graphite">Pagada con tarjeta</div></div><div class="font-mono">78,18 €</div><div class="font-mono">16,42 €</div><div class="font-mono font-medium">94,60 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">22/04</div><div class="font-mono font-medium">FAC-2026-04-162</div><div><div class="font-medium">Obra C/ Bernabé Soriano</div><div class="text-xs text-graphite"><span class="pill pill-caution text-[9px]">Pendiente</span> Vence 22/05</div></div><div class="font-mono">402,73 €</div><div class="font-mono">84,57 €</div><div class="font-mono font-medium">487,30 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">19/04</div><div class="font-mono font-medium">FAC-2026-04-141</div><div><div class="font-medium">Pedido GLX-04-1141</div><div class="text-xs text-graphite">Pagada con tarjeta</div></div><div class="font-mono">154,46 €</div><div class="font-mono">32,44 €</div><div class="font-mono font-medium">186,90 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">15/04</div><div class="font-mono font-medium">FAC-2026-04-098</div><div><div class="font-medium">Domótica Sr. Martínez</div><div class="text-xs text-graphite"><span class="pill pill-caution text-[9px]">Pendiente</span> Vence 15/05</div></div><div class="font-mono">258,18 €</div><div class="font-mono">54,22 €</div><div class="font-mono font-medium">312,40 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+    </div>
+    <div class="px-5 py-3 bg-paper-2 border-t border-line text-xs font-mono text-graphite flex justify-between flex-wrap gap-2"><span>1-5 de 38 facturas · <strong class="text-ink">Total Q2: 1.842,40 €</strong></span><a href="facturacion-electronica.html" class="text-copper hover:underline">Configurar facturación electrónica →</a></div>
+  </div>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="../../assets/js/main.js"></script><script src="../../assets/js/auth.js"></script>
+<script>if(glxRequireAuth()){const u=glxGetUser();if(u.role!=='pro'){location.href='area-personal.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}</script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
+</body></html>

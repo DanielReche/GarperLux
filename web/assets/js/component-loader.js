@@ -5,7 +5,7 @@
 
   const currentPath = location.pathname.replace(/\\/g, '/');
   // Calcula el depth contando los segmentos que hay después de "/pages/" en la URL.
-  // Ejemplo: /pages/tienda/categoria.html -> ['pages','tienda','categoria.html'] -> depth = '../../'
+  // Ejemplo: /pages/tienda//assets/js/categoria.html -> ['pages','tienda','/assets/js/categoria.html'] -> depth = '../../'
   const depth = (() => {
     const segments = currentPath.split('/').filter(Boolean);
     const idx = segments.indexOf('pages');
@@ -14,8 +14,13 @@
     return levels > 0 ? '../'.repeat(levels) : '';
   })();
   const componentMap = {
-    'site-header': 'components/site-header.html',
-    'site-footer': 'components/site-footer.html',
+    'site-header': '/components/site-header.html',
+    'site-footer': '/components/site-footer.html',
+  };
+
+  const resolveComponentUrl = (url) => {
+    if (!url) return url;
+    return url.startsWith('/') ? url : `${depth}${url}`;
   };
 
   const localizeUrl = (url) => {
@@ -113,7 +118,7 @@
       const file = componentMap[name];
       if (!file) return;
       try {
-        const response = await fetch(`${depth}${file}`);
+        const response = await fetch(resolveComponentUrl(file));
         if (!response.ok) throw new Error(`No se pudo cargar ${file}`);
         const template = document.createElement('template');
         template.innerHTML = await response.text();

@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="../../">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedido GLX-04-1184 · Mi área · GarperLux</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+  <div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><a href="mis-pedidos.html" class="hover:text-ink">Mis pedidos</a><span class="opacity-50">/</span><span class="text-ink">GLX-04-1184</span></nav></div>
+
+  <section class="container-x py-6 pb-20">
+    <div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+      <aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="mis-pedidos"></aside>
+
+      <main class="space-y-6">
+        <!-- Encabezado pedido -->
+        <div class="flex items-end justify-between flex-wrap gap-4">
+          <div>
+            <a href="mis-pedidos.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2 mb-3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver a mis pedidos</a>
+            <div class="flex items-center gap-3 mb-2"><span class="font-mono text-sm text-graphite">Pedido</span><span class="font-mono font-medium text-ink">GLX-04-1184</span><span class="pill pill-info">En preparación</span></div>
+            <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(1.75rem, 4vw, 2.75rem);">Kit Cambiar interruptor.</h1>
+            <p class="text-graphite mt-2">Realizado el 26/04/2026 a las 14:30 · entrega estimada 28/04</p>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <a href="factura.html" class="btn btn-sm btn-ghost"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Ver factura</a>
+            <a href="../tienda/escribir-resena.html" class="btn btn-sm btn-ghost">Escribir reseña</a>
+            <a href="repetir-compra.html" class="btn btn-sm btn-ink">Repetir pedido</a>
+          </div>
+        </div>
+
+        <!-- Tracking horizontal -->
+        <div class="bg-white border border-line rounded-2xl p-6">
+          <div class="grid grid-cols-4 relative mb-2">
+            <div class="absolute top-3 left-0 right-0 h-px bg-line z-0"></div>
+            <div class="absolute top-3 left-0 h-px bg-stock z-10" style="width: 50%;"></div>
+            <div class="relative text-center"><span class="block w-6 h-6 rounded-full bg-stock text-paper grid place-items-center mx-auto z-20 relative"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span><div class="text-xs font-medium mt-2">Recibido</div><div class="text-[10px] font-mono text-graphite">26/04 · 14:30</div></div>
+            <div class="relative text-center"><span class="block w-6 h-6 rounded-full bg-stock text-paper grid place-items-center mx-auto z-20 relative"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span><div class="text-xs font-medium mt-2">Pago confirmado</div><div class="text-[10px] font-mono text-graphite">26/04 · 14:31</div></div>
+            <div class="relative text-center"><span class="block w-6 h-6 rounded-full bg-filament text-ink grid place-items-center mx-auto z-20 relative animate-pulse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div class="text-xs font-medium mt-2">En preparación</div><div class="text-[10px] font-mono text-filament">Ahora</div></div>
+            <div class="relative text-center"><span class="block w-6 h-6 rounded-full bg-paper-2 border border-line grid place-items-center mx-auto z-20 relative"></span><div class="text-xs font-medium mt-2 text-graphite">Entregado</div><div class="text-[10px] font-mono text-graphite">est. 28/04</div></div>
+          </div>
+        </div>
+
+        <!-- Productos -->
+        <div class="bg-white border border-line rounded-2xl overflow-hidden">
+          <div class="px-6 py-4 border-b border-line"><h2 class="font-serif text-xl font-medium">3 productos</h2></div>
+          <div class="divide-y divide-line">
+            <div class="p-5 grid grid-cols-[60px_1fr_auto] gap-4 items-center">
+              <div class="w-14 h-14 rounded-lg bg-paper-2 grid place-items-center text-graphite/40"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></div>
+              <div><div class="font-medium">Interruptor Simón 27 10A blanco</div><div class="text-xs text-graphite font-mono">SKU 27101-31 · cantidad: 1</div></div>
+              <div class="font-mono font-medium">5,90 €</div>
+            </div>
+            <div class="p-5 grid grid-cols-[60px_1fr_auto] gap-4 items-center">
+              <div class="w-14 h-14 rounded-lg bg-paper-2 grid place-items-center text-graphite/40"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg></div>
+              <div><div class="font-medium">Destornillador aislado 1000V 3mm</div><div class="text-xs text-graphite font-mono">SKU WH-DA-3 · cantidad: 1</div></div>
+              <div class="font-mono font-medium">8,40 €</div>
+            </div>
+            <div class="p-5 grid grid-cols-[60px_1fr_auto] gap-4 items-center">
+              <div class="w-14 h-14 rounded-lg bg-paper-2 grid place-items-center text-graphite/40"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/></svg></div>
+              <div><div class="font-medium">Polímetro digital A03 básico</div><div class="text-xs text-graphite font-mono">SKU UNI-T-A03 · cantidad: 1</div></div>
+              <div class="font-mono font-medium">14,90 €</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen + Direcciones -->
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="bg-paper-2 border border-line rounded-2xl p-6">
+            <h3 class="font-serif text-lg font-medium mb-4">Resumen</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-graphite">Subtotal</span><span class="font-mono">29,20 €</span></div>
+              <div class="flex justify-between"><span class="text-graphite">Envío estándar 24-48h</span><span class="font-mono">4,90 €</span></div>
+              <div class="flex justify-between"><span class="text-graphite">IVA (21%)</span><span class="font-mono">5,06 €</span></div>
+              <div class="border-t border-line pt-3 flex justify-between font-medium"><span>Total pagado</span><span class="font-serif text-xl">34,10 €</span></div>
+              <div class="text-xs text-graphite mt-2">Pagado con Visa •••• 4242</div>
+            </div>
+          </div>
+          <div class="bg-paper-2 border border-line rounded-2xl p-6">
+            <h3 class="font-serif text-lg font-medium mb-4">Entrega</h3>
+            <div class="text-sm space-y-1">
+              <div class="font-medium">Antonio García</div>
+              <div class="text-graphite">Calle Bernabé Soriano 12, 3º B</div>
+              <div class="text-graphite">23001 Jaén · Andalucía</div>
+              <div class="text-graphite font-mono mt-2">Tlf: 600 123 456</div>
+            </div>
+            <div class="mt-5 pt-5 border-t border-line">
+              <div class="text-xs font-mono uppercase tracking-wider text-graphite mb-1">Transportista</div>
+              <div class="text-sm">SEUR Estándar · seguimiento <a href="../servicios/seguir-solicitud.html" class="link-underline font-mono text-xs">SE-7748392</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Acciones secundarias -->
+        <div class="bg-white border border-line rounded-2xl p-6 flex items-center justify-between flex-wrap gap-3">
+          <div class="text-sm text-graphite">¿Algo no encaja con tu pedido Tienes 30 días para solicitar devolución.?</div>
+          <div class="flex gap-2"><a href="../tienda/devolucion.html" class="btn btn-sm btn-ghost">Solicitar devolución</a><a href="../empresa/contacto.html" class="btn btn-sm btn-ghost">Contactar soporte</a></div>
+        </div>
+      </main>
+    </div>
+  </section>
+  <div data-component="site-footer"></div>
+
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/main.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    if (glxRequireAuth()) {
+      const u = glxGetUser();
+      document.body.dataset.activeView = u.role;
+      document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent = u.name);
+      const sb = document.getElementById('glx-sidebar');
+      sb.innerHTML = glxRenderSidebar(sb.dataset.active);
+    }
+  </script>
+</body>
+</html>

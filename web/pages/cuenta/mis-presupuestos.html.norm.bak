@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="/.">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mis presupuestos · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="/assets/css/styles.css" />
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/cuenta/area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink">Mis presupuestos</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="mis-presupuestos"></aside>
+
+<main>
+  <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+    <div><div class="eyebrow text-copper mb-2">Para tus clientes</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Mis presupuestos.</h1><p class="text-graphite mt-2">2 abiertos · 8 cerrados · 3 rechazados</p></div>
+    <a href="/pages/cuenta/crear-/pages/cuenta/pages/cuenta/presupuesto.html" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Crear presupuesto</a>
+  </div>
+
+  <!-- Tabs estado -->
+  <div class="flex items-center gap-1 mb-6 border-b border-line overflow-x-auto">
+    <button class="px-4 py-3 border-b-2 border-filament font-medium text-sm whitespace-nowrap">Abiertos <span class="font-mono text-xs text-graphite ml-1">2</span></button>
+    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Aceptados <span class="font-mono text-xs">8</span></button>
+    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Rechazados <span class="font-mono text-xs">3</span></button>
+    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Borradores <span class="font-mono text-xs">1</span></button>
+  </div>
+
+  <!-- Lista presupuestos abiertos -->
+  <div class="space-y-4">
+    <a href="/pages/cuenta/pages/cuenta/presupuesto.html" class="block bg-white border border-line rounded-2xl overflow-hidden hover:border-ink transition-colors">
+      <div class="p-6">
+        <div class="flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="font-mono text-xs text-graphite">PRES-2026-0028</span><span class="pill pill-caution text-[10px]">Esperando respuesta</span><span class="font-mono text-xs text-graphite">Enviado hace 3 días</span></div>
+            <h3 class="font-serif text-2xl font-medium leading-tight mb-1">Renovación cuadro · Familia López</h3>
+            <p class="text-graphite text-sm">Calle Bernabé Soriano 12 · Jaén · 24 productos</p>
+          </div>
+          <div class="text-right">
+            <div class="font-serif text-3xl font-medium">486,30 €</div>
+            <div class="text-xs text-graphite font-mono">Vencimiento 03/05/2026</div>
+          </div>
+        </div>
+        <div class="mt-5 pt-5 border-t border-line flex flex-wrap gap-2 justify-between items-center">
+          <div class="flex gap-2">
+            <span class="pill bg-paper-2 text-graphite text-[10px]">Schneider · 12 ud</span>
+            <span class="pill bg-paper-2 text-graphite text-[10px]">Simón · 8 ud</span>
+            <span class="pill bg-paper-2 text-graphite text-[10px]">Cableado · 4 ítems</span>
+          </div>
+          <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Reenviar al cliente</button><button class="btn btn-sm btn-ghost">Editar</button><button class="btn btn-sm btn-ink">Convertir en pedido</button></div>
+        </div>
+      </div>
+    </a>
+
+    <a href="/pages/cuenta/pages/cuenta/presupuesto.html" class="block bg-white border border-line rounded-2xl overflow-hidden hover:border-ink transition-colors">
+      <div class="p-6">
+        <div class="flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="font-mono text-xs text-graphite">PRES-2026-0027</span><span class="pill pill-caution text-[10px]">Esperando respuesta</span><span class="font-mono text-xs text-graphite">Enviado hace 5 días</span></div>
+            <h3 class="font-serif text-2xl font-medium leading-tight mb-1">Domótica salón · Sr. Martínez</h3>
+            <p class="text-graphite text-sm">Avda. Andalucía 18 · Jaén · 9 productos</p>
+          </div>
+          <div class="text-right">
+            <div class="font-serif text-3xl font-medium">312,40 €</div>
+            <div class="text-xs text-graphite font-mono">Vencimiento 01/05/2026</div>
+          </div>
+        </div>
+        <div class="mt-5 pt-5 border-t border-line flex flex-wrap gap-2 justify-between items-center">
+          <div class="flex gap-2">
+            <span class="pill bg-paper-2 text-graphite text-[10px]">Shelly · 5 ud</span>
+            <span class="pill bg-paper-2 text-graphite text-[10px]">Mecanismos Simón · 3 ud</span>
+            <span class="pill bg-paper-2 text-graphite text-[10px]">Cableado</span>
+          </div>
+          <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Reenviar</button><button class="btn btn-sm btn-ghost">Editar</button><button class="btn btn-sm btn-ink">Convertir en pedido</button></div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Cifras -->
+  <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Tasa conversión</div><div class="font-serif text-2xl font-medium">73%</div><div class="text-xs text-stock mt-1">+8% vs trimestre anterior</div></div>
+    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Importe medio</div><div class="font-serif text-2xl font-medium">412 €</div></div>
+    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Tiempo medio respuesta</div><div class="font-serif text-2xl font-medium">2,4d</div></div>
+    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Total año</div><div class="font-serif text-2xl font-medium">11.428 €</div></div>
+  </div>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="/assets/js/main.js"></script><script src="/assets/js/auth.js"></script>
+<script>if(glxRequireAuth()){const u=glxGetUser();if(u.role!=='pro'){location.href='/pages/cuenta/area-personal.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}</script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
+</body></html>

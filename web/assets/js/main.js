@@ -142,7 +142,7 @@
     } else if (text.includes('cancelar solicitud')) {
       toast('Solicitud marcada como cancelada en modo demo.');
     } else if (text.includes('modificar datos')) {
-      window.location.href = 'solicitar-tecnico.html';
+      window.location.href = '/assets/js/solicitar-tecnico.html';
     }
   });
 

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-  <base href="../../">
+  <base href="/.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Entrega · Tramitar pedido · GarperLux</title>
@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
   <style>
     .field{width:100%;padding:.75rem .9rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink);transition:border-color .15s}
     .field:focus{outline:none;border-color:var(--ink)}
@@ -23,15 +23,15 @@
 
   <header class="border-b border-line bg-paper">
     <div class="container-x flex items-center justify-between py-4">
-      <a href="../../index.html"><img src="../../assets/img/logo.svg" alt="GarperLux" class="h-9 w-auto"/></a>
-      <a href="carrito.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver al carrito</a>
+      <a href="/index.html"><img src="/assets/img/logo.svg" alt="GarperLux" class="h-9 w-auto"/></a>
+      <a href="/pages/tienda/carrito.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver al carrito</a>
     </div>
   </header>
 
   <!-- Steps -->
   <section class="container-x pt-8 pb-4">
     <div class="flex items-center gap-2 sm:gap-4 text-sm flex-wrap">
-      <a href="carrito.html" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper-2 text-graphite hover:bg-paper-3"><span class="w-5 h-5 rounded-full bg-stock text-paper grid place-items-center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>Carrito</a>
+      <a href="/pages/tienda/carrito.html" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper-2 text-graphite hover:bg-paper-3"><span class="w-5 h-5 rounded-full bg-stock text-paper grid place-items-center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>Carrito</a>
       <span class="text-graphite/50">›</span>
       <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ink text-paper"><span class="w-5 h-5 rounded-full bg-filament text-ink grid place-items-center font-mono text-xs font-medium">2</span>Entrega</span>
       <span class="text-graphite/50">›</span>
@@ -154,8 +154,8 @@
         </label>
 
         <div class="flex justify-between flex-wrap gap-4 mt-10">
-          <a href="carrito.html" class="btn btn-ghost">← Volver al carrito</a>
-          <a href="pago.html" class="btn btn-primary">Continuar al pago<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+          <a href="/pages/tienda/carrito.html" class="btn btn-ghost">← Volver al carrito</a>
+          <a href="/pages/tienda/pago.html" class="btn btn-primary">Continuar al pago<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
         </div>
       </div>
 
@@ -163,29 +163,15 @@
       <aside>
         <div class="lg:sticky lg:top-6 space-y-4">
           <div class="bg-white border border-line rounded-2xl overflow-hidden">
-            <div class="px-6 py-4 bg-paper-2 border-b border-line"><h2 class="font-serif text-lg font-medium">Tu pedido</h2><p class="text-xs text-graphite font-mono mt-0.5">3 productos</p></div>
-            <div class="divide-y divide-line">
-              <div class="p-4 flex gap-3 items-center">
-                <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></div>
-                <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">Interruptor Simón 27 10A</div><div class="text-xs text-graphite font-mono">×1</div></div>
-                <span class="font-mono text-sm">5,90 €</span>
-              </div>
-              <div class="p-4 flex gap-3 items-center">
-                <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg></div>
-                <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">Destornillador aislado 1000V</div><div class="text-xs text-graphite font-mono">×1</div></div>
-                <span class="font-mono text-sm">8,40 €</span>
-              </div>
-              <div class="p-4 flex gap-3 items-center">
-                <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div>
-                <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">Polímetro digital A03</div><div class="text-xs text-graphite font-mono">×1</div></div>
-                <span class="font-mono text-sm">14,90 €</span>
-              </div>
+            <div class="px-6 py-4 bg-paper-2 border-b border-line"><h2 class="font-serif text-lg font-medium">Tu pedido</h2><p class="text-xs text-graphite font-mono mt-0.5" data-order-item-count>0 productos</p></div>
+            <div class="divide-y divide-line" data-checkout-items>
+              <!-- JS renderiza los items aquí -->
             </div>
             <div class="p-5 space-y-2 text-sm border-t border-line">
-              <div class="flex justify-between"><span class="text-graphite">Subtotal</span><span class="font-mono">29,20 €</span></div>
+              <div class="flex justify-between"><span class="text-graphite">Subtotal</span><span class="font-mono" data-order-subtotal>0,00 €</span></div>
               <div class="flex justify-between"><span class="text-graphite">Envío estándar</span><span class="font-mono">4,90 €</span></div>
-              <div class="flex justify-between"><span class="text-graphite">IVA (21%)</span><span class="font-mono">5,06 €</span></div>
-              <div class="pt-3 border-t border-line flex items-baseline justify-between"><span class="font-medium">Total</span><span class="font-serif text-2xl font-medium">34,10 €</span></div>
+              <div class="flex justify-between"><span class="text-graphite">IVA (21%)</span><span class="font-mono" data-order-tax>0,00 €</span></div>
+              <div class="pt-3 border-t border-line flex items-baseline justify-between"><span class="font-medium">Total</span><span class="font-serif text-2xl font-medium" data-order-total>0,00 €</span></div>
             </div>
           </div>
 
@@ -199,11 +185,11 @@
   </section>
   <div data-component="site-footer"></div>
 
-  <script src="../../assets/js/component-loader.js"></script>
-  <script src="../../data/api.js"></script>
-  <script src="../../assets/js/backend-integration.js"></script>
-  <script src="../../assets/js/main.js"></script>
-  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
   <script>
     document.querySelectorAll('.opt-card').forEach(c=>{
       c.addEventListener('click',()=>{

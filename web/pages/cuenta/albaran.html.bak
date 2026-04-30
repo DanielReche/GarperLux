@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="../../">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Albarán ALB-2026-1184 · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="../../assets/css/styles.css" />
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}.doc-grid{font-variant-numeric:tabular-nums}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><a href="albaranes.html" class="hover:text-ink">Albaranes</a><span class="opacity-50">/</span><span class="text-ink">ALB-2026-1184</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="albaranes"></aside>
+
+<main class="space-y-6">
+
+  <!-- Encabezado -->
+  <div class="flex items-end justify-between flex-wrap gap-4">
+    <div>
+      <a href="albaranes.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2 mb-3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver a albaranes</a>
+      <div class="flex items-center gap-3 mb-2 flex-wrap">
+        <span class="font-mono text-sm text-graphite">Albarán</span>
+        <span class="font-mono font-medium text-ink">ALB-2026-1184</span>
+        <span class="pill pill-stock text-[10px]">Entregado</span>
+        <span class="pill pill-caution text-[10px]">Pendiente facturar</span>
+      </div>
+      <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(1.75rem, 4vw, 2.75rem);">Kit Cambiar interruptor + accesorios.</h1>
+      <p class="text-graphite mt-2">Emitido 26/04/2026 · obra <strong class="text-ink">Stock taller</strong></p>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+      <button class="btn btn-sm btn-ghost"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>Imprimir</button>
+      <button class="btn btn-sm btn-ghost"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>PDF</button>
+      <a href="factura.html" class="btn btn-sm btn-ink">Convertir a factura</a>
+    </div>
+  </div>
+
+  <!-- Doc estilo documento comercial -->
+  <div class="bg-white border border-line rounded-2xl p-8 md:p-10 doc-grid">
+
+    <!-- Cabecera doc -->
+    <div class="grid md:grid-cols-2 gap-6 pb-6 border-b border-line">
+      <div>
+        <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Emitido por</div>
+        <img src="../../assets/img/logo.svg" alt="GarperLux" class="h-7 w-auto mb-3"/>
+        <div class="text-sm leading-relaxed">
+          <strong>GarperLux S.L.</strong><br/>
+          CIF: B-23456789<br/>
+          Campus Las Lagunillas s/n · 23071 Jaén<br/>
+          953 21 22 23 · hola@garperlux.es
+        </div>
+      </div>
+      <div>
+        <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Cliente</div>
+        <div class="font-serif text-lg font-medium mb-2">Jose Luis García "El Chispas"</div>
+        <div class="text-sm leading-relaxed text-graphite">
+          <strong class="text-ink">Jose Luis García - El Chispas Instalaciones</strong><br/>
+          CIF: B12345678<br/>
+          Polígono Los Olivares, nave 24 · 23009 Jaén<br/>
+          Carnet BT: <span class="font-mono">BT-123456-AND</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Datos albarán -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 py-6 border-b border-line">
+      <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Nº albarán</div><div class="font-mono font-medium">ALB-2026-1184</div></div>
+      <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Fecha emisión</div><div class="font-mono">26/04/2026</div></div>
+      <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Pedido relacionado</div><a href="mis-pedido.html" class="font-mono text-copper hover:underline">GLX-04-1184</a></div>
+      <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Obra</div><div class="font-medium">Stock taller</div></div>
+    </div>
+
+    <!-- Líneas -->
+    <div class="py-6">
+      <div class="grid grid-cols-[1fr_70px_90px_90px_90px] gap-3 pb-3 border-b border-line text-[10px] font-mono uppercase tracking-wider text-graphite">
+        <span>Concepto</span><span class="text-right">Cant.</span><span class="text-right">Precio</span><span class="text-right">Dto. pro</span><span class="text-right">Importe</span>
+      </div>
+      <div class="divide-y divide-line">
+        <div class="grid grid-cols-[1fr_70px_90px_90px_90px] gap-3 py-3 text-sm items-baseline">
+          <div><div class="font-medium">Interruptor Simón 27 10A blanco</div><div class="text-xs text-graphite font-mono">SKU 27101-31 · EAN 8410101011019</div></div>
+          <div class="text-right font-mono">8</div>
+          <div class="text-right font-mono text-graphite line-through">5,90 €</div>
+          <div class="text-right font-mono text-stock">−22%</div>
+          <div class="text-right font-mono font-medium">36,82 €</div>
+        </div>
+        <div class="grid grid-cols-[1fr_70px_90px_90px_90px] gap-3 py-3 text-sm items-baseline">
+          <div><div class="font-medium">Magnetotérmico Schneider iC60N 16A</div><div class="text-xs text-graphite font-mono">SKU A9F74216 · EAN 3606480083747</div></div>
+          <div class="text-right font-mono">5</div>
+          <div class="text-right font-mono text-graphite line-through">21,40 €</div>
+          <div class="text-right font-mono text-stock">−22%</div>
+          <div class="text-right font-mono font-medium">83,46 €</div>
+        </div>
+        <div class="grid grid-cols-[1fr_70px_90px_90px_90px] gap-3 py-3 text-sm items-baseline">
+          <div><div class="font-medium">Cinta aislante 3M 10m blanca</div><div class="text-xs text-graphite font-mono">SKU 3M-CA-10W · EAN 4046719224258</div></div>
+          <div class="text-right font-mono">20</div>
+          <div class="text-right font-mono text-graphite line-through">1,68 €</div>
+          <div class="text-right font-mono text-stock">−22%</div>
+          <div class="text-right font-mono font-medium">26,21 €</div>
+        </div>
+        <div class="grid grid-cols-[1fr_70px_90px_90px_90px] gap-3 py-3 text-sm items-baseline">
+          <div><div class="font-medium">Clema Wago 222 3 hilos (caja 50)</div><div class="text-xs text-graphite font-mono">SKU WG-222-415</div></div>
+          <div class="text-right font-mono">2</div>
+          <div class="text-right font-mono text-graphite line-through">16,00 €</div>
+          <div class="text-right font-mono text-stock">−22%</div>
+          <div class="text-right font-mono font-medium">24,96 €</div>
+        </div>
+        <div class="grid grid-cols-[1fr_70px_90px_90px_90px] gap-3 py-3 text-sm items-baseline">
+          <div><div class="font-medium">Cable manguera 3×1.5 mm² flex (rollo 100m)</div><div class="text-xs text-graphite font-mono">SKU CM-315-100 · al corte</div></div>
+          <div class="text-right font-mono">1</div>
+          <div class="text-right font-mono text-graphite line-through">52,00 €</div>
+          <div class="text-right font-mono text-stock">−22%</div>
+          <div class="text-right font-mono font-medium">40,56 €</div>
+        </div>
+        <div class="grid grid-cols-[1fr_70px_90px_90px_90px] gap-3 py-3 text-sm items-baseline">
+          <div><div class="font-medium">Punteras de cobre 2.5 mm² (caja 100)</div><div class="text-xs text-graphite font-mono">SKU PUN-25-100</div></div>
+          <div class="text-right font-mono">1</div>
+          <div class="text-right font-mono text-graphite line-through">8,40 €</div>
+          <div class="text-right font-mono text-stock">−22%</div>
+          <div class="text-right font-mono font-medium">6,55 €</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Totales -->
+    <div class="grid md:grid-cols-2 gap-5 pt-2">
+      <div class="text-sm text-graphite leading-relaxed">
+        <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Notas</div>
+        <p>Mercancía recibida en perfecto estado el 26/04/2026 a las 12:14. Firma digital del cliente registrada.</p>
+        <p class="mt-3 font-mono text-xs">Recibido por: J.L. García (Chispas) · #SIG-2026-1184</p>
+      </div>
+      <div class="bg-paper-2 rounded-xl p-5 space-y-2 text-sm">
+        <div class="flex justify-between"><span class="text-graphite">Subtotal pro (con −22%)</span><span class="font-mono">218,56 €</span></div>
+        <div class="flex justify-between"><span class="text-graphite">Portes</span><span class="font-mono text-stock">Gratis</span></div>
+        <div class="flex justify-between text-xs text-graphite italic"><span>Has ahorrado</span><span class="font-mono">61,69 €</span></div>
+        <div class="pt-3 border-t border-line/60 flex justify-between font-medium">
+          <span>Total albarán <span class="text-xs text-graphite font-normal">(sin IVA)</span></span>
+          <span class="font-serif text-2xl">218,56 €</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acciones secundarias -->
+  <div class="bg-paper-2 border border-line rounded-2xl p-5 flex items-center justify-between flex-wrap gap-3">
+    <div class="text-sm text-graphite">El IVA se aplicará al emitir la factura mensual de abril.</div>
+    <div class="flex gap-2">
+      <a href="../tienda/carrito.html" class="btn btn-sm btn-ghost">Duplicar como pedido</a>
+      <a href="../empresa/contacto.html" class="btn btn-sm btn-ghost">Reportar incidencia</a>
+    </div>
+  </div>
+
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="../../assets/js/main.js"></script><script src="../../assets/js/auth.js"></script>
+<script>if(glxRequireAuth()){const u=glxGetUser();if(u.role!=='pro'){location.href='area-personal.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}</script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
+</body></html>

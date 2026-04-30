@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="../../">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Repetir compra · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="../../assets/css/styles.css" />
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink">Repetir compra</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="repetir-compra"></aside>
+
+<main>
+  <div class="mb-8"><div class="eyebrow text-copper mb-2">Reposición rápida</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Repetir compra.</h1><p class="text-graphite mt-2">Lo que sueles agotar, basado en tus últimos 6 meses de compras.</p></div>
+
+  <!-- Tabs -->
+  <div class="flex items-center gap-1 mb-6 border-b border-line overflow-x-auto">
+    <button class="px-4 py-3 border-b-2 border-filament font-medium text-sm whitespace-nowrap">Reposición sugerida</button>
+    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Plantillas guardadas <span class="font-mono text-xs">3</span></button>
+    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Pedidos recurrentes <span class="font-mono text-xs">1</span></button>
+  </div>
+
+  <!-- Reposición sugerida -->
+  <div class="bg-white border border-line rounded-2xl overflow-hidden mb-8">
+    <div class="px-6 py-4 bg-paper-2 border-b border-line flex items-center justify-between flex-wrap gap-3">
+      <div><h2 class="font-serif text-xl font-medium">Lo que sueles agotar</h2><p class="text-xs text-graphite">Algoritmo basado en patrón histórico de tus pedidos</p></div>
+      <div class="flex items-center gap-3"><label class="flex items-center gap-2 text-sm"><input type="checkbox" class="w-4 h-4" checked/> Seleccionar todos</label></div>
+    </div>
+    <div class="divide-y divide-line">
+      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
+        <input type="checkbox" class="w-4 h-4" checked/>
+        <div><div class="font-medium">Interruptor Simón 27 10A blanco</div><div class="text-xs text-graphite font-mono">SKU 27101-31 · última: 25 uds hace 12 días · agotamiento previsto: 6 días</div></div>
+        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="25" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
+        <div class="text-right"><div class="font-mono font-medium text-filament">4,30 €/u</div><div class="text-xs text-graphite font-mono">Total: 107,50 €</div></div>
+        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
+      </div>
+      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
+        <input type="checkbox" class="w-4 h-4" checked/>
+        <div><div class="font-medium">Cinta aislante 3M 10m blanca</div><div class="text-xs text-graphite font-mono">SKU 3M-CA-10W · última: 20 uds hace 8 días · agotamiento previsto: 9 días</div></div>
+        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="20" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
+        <div class="text-right"><div class="font-mono font-medium text-filament">1,68 €/u</div><div class="text-xs text-graphite font-mono">Total: 33,60 €</div></div>
+        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
+      </div>
+      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
+        <input type="checkbox" class="w-4 h-4" checked/>
+        <div><div class="font-medium">Clema Wago 222 3 hilos (caja 50)</div><div class="text-xs text-graphite font-mono">SKU WG-222-415 · última: 100 uds hace 5 días · agotamiento previsto: 14 días</div></div>
+        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="100" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
+        <div class="text-right"><div class="font-mono font-medium text-filament">0,32 €/u</div><div class="text-xs text-graphite font-mono">Total: 32,00 €</div></div>
+        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
+      </div>
+      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
+        <input type="checkbox" class="w-4 h-4" checked/>
+        <div><div class="font-medium">Magnetotérmico Schneider iC60N 16A</div><div class="text-xs text-graphite font-mono">SKU A9F74216 · última: 5 uds hace 18 días · agotamiento previsto: ya agotado</div></div>
+        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="5" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
+        <div class="text-right"><div class="font-mono font-medium text-filament">21,40 €/u</div><div class="text-xs text-graphite font-mono">Total: 107,00 €</div></div>
+        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
+      </div>
+      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
+        <input type="checkbox" class="w-4 h-4"/>
+        <div><div class="font-medium">Punteras de cobre 2.5 mm² (caja 100)</div><div class="text-xs text-graphite font-mono">SKU PUN-25-100 · última: 200 uds hace 30 días · agotamiento previsto: 22 días</div></div>
+        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="200" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
+        <div class="text-right"><div class="font-mono font-medium text-filament">8,40 €/100u</div><div class="text-xs text-graphite font-mono">Total: 16,80 €</div></div>
+        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
+      </div>
+    </div>
+    <div class="px-6 py-4 bg-ink text-paper flex items-center justify-between flex-wrap gap-3">
+      <div><div class="font-mono text-[10px] uppercase tracking-wider text-paper/60 mb-0.5">Total selección · 4 productos · 150 uds</div><div class="font-serif text-2xl font-medium">280,10 €</div></div>
+      <div class="flex gap-2"><button class="btn btn-ghost-light btn-sm">Guardar como plantilla</button><button class="btn btn-primary">Añadir todo al carrito<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button></div>
+    </div>
+  </div>
+
+  <!-- Configurar pedido recurrente -->
+  <div class="bg-paper-2 border border-line rounded-2xl p-6 flex items-start gap-4">
+    <span class="w-10 h-10 rounded-full bg-electric/10 grid place-items-center text-electric shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+    <div class="flex-1">
+      <h3 class="font-serif text-lg font-medium mb-1">¿Quieres que esto se haga solo cada mes?</h3>
+      <p class="text-sm text-graphite mb-3">Configura un pedido recurrente y se prepara automáticamente. Tú solo recibes un email para confirmar antes de que salga.</p>
+      <a href="pedido-recurrente.html" class="btn btn-sm btn-ink">Configurar pedido recurrente</a>
+    </div>
+  </div>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="../../assets/js/main.js"></script><script src="../../assets/js/auth.js"></script>
+<script>if(glxRequireAuth()){const u=glxGetUser();if(u.role!=='pro'){location.href='area-personal.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}</script>
+  <script src="../../assets/js/component-loader.js"></script>
+  <script src="../../data/api.js"></script>
+  <script src="../../assets/js/backend-integration.js"></script>
+  <script src="../../assets/js/catalog-ui.js"></script>
+</body></html>

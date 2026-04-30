@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="/.">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mis favoritos · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="/.assets/css/styles.css" />
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/.index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/cuenta/area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink">Mis favoritos</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="mis-favoritos"></aside>
+
+<main>
+  <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+    <div><div class="eyebrow text-copper mb-2">Productos guardados</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Mis favoritos.</h1><p class="text-graphite mt-2 text-sm" data-fav-count>—</p></div>
+    <button class="btn btn-sm btn-ink">Añadir todo al carrito</button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex items-center gap-2 mb-6 flex-wrap">
+    <button class="px-3 py-1.5 rounded-full bg-ink text-paper text-xs">Todos</button>
+    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Iluminación</button>
+    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Mecanismos</button>
+    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Domótica</button>
+    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Protecciones</button>
+  </div>
+
+  <!-- Vista particular: 6 productos -->
+  <div class="view-particular grid grid-cols-2 md:grid-cols-3 gap-4">
+    <a href="/pages/tienda/producto.html" class="card-prod group relative">
+      <button class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-paper/95 grid place-items-center hover:bg-warn hover:text-paper transition-colors" aria-label="Quitar de favoritos"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <div class="img"><img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=400&q=80" alt="" class="w-full h-full object-cover rounded-lg" loading="lazy" onerror="this.style.display='none'"/></div>
+      <div><div class="text-[11px] font-mono text-graphite">Simón · 27</div><h3 class="text-[14px] font-medium leading-snug">Interruptor 27 10A blanco</h3></div>
+      <div class="flex items-center justify-between"><span class="font-serif text-lg font-medium">5,90 €</span><button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    </a>
+    <a href="/pages/tienda/producto.html" class="card-prod group relative">
+      <button class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-paper/95 grid place-items-center hover:bg-warn hover:text-paper" aria-label="Quitar"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2a7 7 0 0 0-5 12v3h10v-3a7 7 0 0 0-5-12z"/></svg></div>
+      <div><div class="text-[11px] font-mono text-graphite">Philips</div><h3 class="text-[14px] font-medium leading-snug">Bombilla LED E27 9W 4000K</h3></div>
+      <div class="flex items-center justify-between"><span class="font-serif text-lg font-medium">3,40 €</span><button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    </a>
+    <a href="/pages/tienda/producto.html" class="card-prod group relative">
+      <button class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-paper/95 grid place-items-center hover:bg-warn hover:text-paper"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/></svg></div>
+      <div><div class="text-[11px] font-mono text-graphite">Uni-T</div><h3 class="text-[14px] font-medium leading-snug">Polímetro digital A03</h3></div>
+      <div class="flex items-center justify-between"><span class="font-serif text-lg font-medium">14,90 €</span><button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    </a>
+    <a href="/pages/tienda/producto.html" class="card-prod group relative">
+      <button class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-paper/95 grid place-items-center hover:bg-warn hover:text-paper"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>
+      <div><div class="text-[11px] font-mono text-graphite">Schneider</div><h3 class="text-[14px] font-medium leading-snug">Magnetotérmico 25A curva C</h3></div>
+      <div class="flex items-center justify-between"><span class="font-serif text-lg font-medium">28,40 €</span><button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    </a>
+    <a href="/pages/tienda/producto.html" class="card-prod group relative">
+      <button class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-paper/95 grid place-items-center hover:bg-warn hover:text-paper"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="5" width="18" height="14" rx="2"/></svg></div>
+      <div><div class="text-[11px] font-mono text-graphite">Shelly</div><h3 class="text-[14px] font-medium leading-snug">Shelly 1 Mini Gen3 Wi-Fi</h3></div>
+      <div class="flex items-center justify-between"><span class="font-serif text-lg font-medium">12,90 €</span><button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    </a>
+    <a href="/pages/tienda/producto.html" class="card-prod group relative">
+      <button class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-paper/95 grid place-items-center hover:bg-warn hover:text-paper"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="6" y="3" width="12" height="18" rx="1"/></svg></div>
+      <div><div class="text-[11px] font-mono text-graphite">Solera</div><h3 class="text-[14px] font-medium leading-snug">Caja universal empotrar 60mm</h3></div>
+      <div class="flex items-center justify-between"><span class="font-serif text-lg font-medium">0,90 €</span><button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    </a>
+  </div>
+
+  <!-- Vista profesional: lista densa con tarifa pro y stock -->
+  <div class="view-pro bg-white border border-line rounded-2xl overflow-hidden">
+    <div class="px-5 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite grid grid-cols-[1fr_120px_120px_100px_60px] gap-3"><span>Producto</span><span>SKU</span><span>Stock</span><span>Tarifa pro</span><span></span></div>
+    <div class="divide-y divide-line">
+      <div class="px-5 py-3 grid grid-cols-[1fr_120px_120px_100px_60px] gap-3 items-center text-sm hover:bg-paper-2/30">
+        <div><div class="font-medium">Interruptor Simón 27 10A blanco</div><div class="text-xs text-graphite">Simón · gama 27</div></div>
+        <div class="font-mono text-xs">27101-31</div>
+        <div><span class="pill pill-stock text-[10px]">47 uds</span></div>
+        <div class="font-mono font-medium text-filament">4,60 €</div>
+        <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+      <div class="px-5 py-3 grid grid-cols-[1fr_120px_120px_100px_60px] gap-3 items-center text-sm hover:bg-paper-2/30">
+        <div><div class="font-medium">Magnetotérmico iC60N 16A</div><div class="text-xs text-graphite">Schneider</div></div>
+        <div class="font-mono text-xs">A9F74216</div>
+        <div><span class="pill pill-stock text-[10px]">31 uds</span></div>
+        <div class="font-mono font-medium text-filament">21,40 €</div>
+        <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+      <div class="px-5 py-3 grid grid-cols-[1fr_120px_120px_100px_60px] gap-3 items-center text-sm hover:bg-paper-2/30">
+        <div><div class="font-medium">Cinta aislante 3M 10m blanca</div><div class="text-xs text-graphite">3M</div></div>
+        <div class="font-mono text-xs">3M-CA-10W</div>
+        <div><span class="pill pill-stock text-[10px]">128 uds</span></div>
+        <div class="font-mono font-medium text-filament">1,68 €</div>
+        <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+      <div class="px-5 py-3 grid grid-cols-[1fr_120px_120px_100px_60px] gap-3 items-center text-sm hover:bg-paper-2/30">
+        <div><div class="font-medium">Clema Wago 222 3 hilos (caja 50)</div><div class="text-xs text-graphite">Wago</div></div>
+        <div class="font-mono text-xs">WG-222-415</div>
+        <div><span class="pill pill-stock text-[10px]">14 cajas</span></div>
+        <div class="font-mono font-medium text-filament">9,80 €</div>
+        <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+    </div>
+    <div class="px-5 py-3 bg-paper-2 border-t border-line text-xs flex justify-between"><span class="font-mono text-graphite">87 productos guardados</span><a href="#" class="text-copper hover:underline">Exportar lista en CSV</a></div>
+  </div>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="/.assets/js/main.js"></script><script src="/.assets/js/auth.js"></script>
+<script>if(glxRequireAuth()){const u=glxGetUser();document.body.dataset.activeView=u.role;document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const c = u.role === 'pro' ? '87 productos guardados' : '12 productos guardados - 3 nuevos esta semana';document.querySelector('[data-fav-count]').textContent=c;const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}</script>
+  <script src="/.assets/js/component-loader.js"></script>
+  <script src="/.data/api.js"></script>
+  <script src="/.assets/js/backend-integration.js"></script>
+  <script src="/.assets/js/catalog-ui.js"></script>
+</body></html>

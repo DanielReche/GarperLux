@@ -1,0 +1,916 @@
+/* GarperLux — integración incremental con backend provisional */
+
+(function () {
+  'use strict';
+
+  const api = window.GarperLuxApi;
+  if (!api) return;
+
+  const page = location.pathname.split('/').pop() || 'index.html';
+  const money = (value) => `${Number(value || 0).toFixed(2).replace('.', ',')} €`;
+  const publicAuthlessPages = new Set(['recuperar-password.html', 'contacto.html', 'trabaja-con-nosotros.html', 'seguir-solicitud.html']);
+  const CHECKOUT_KEY = 'garperlux_checkout_draft';
+
+  const toast = (message) => {
+    if (window.glxToast) return window.glxToast(message);
+    console.info(message);
+  };
+
+  const requireSession = () => {
+    if (api.getToken()) return true;
+    location.href = `login.html?redirect=${encodeURIComponent(page)}`;
+    return false;
+  };
+
+  async function syncSessionToLegacyAuth() {
+    if (!api.getToken()) return null;
+    try {
+      const user = await api.me();
+      localStorage.setItem('garperlux_session', JSON.stringify({
+        role: user.role,
+        name: user.fullName.split(' ')[0],
+        fullName: user.fullName,
+        email: user.email,
+        initial: user.fullName.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase(),
+        discount: user.proDiscount,
+        at: Date.now(),
+      }));
+      document.querySelectorAll('[data-current-name]').forEach((el) => { el.textContent = user.fullName; });
+      return user;
+    } catch {
+      api.setToken(null);
+      return null;
+    }
+  }
+
+  const addCartBadge = (count) => {
+    document.querySelectorAll('[data-cart-count]').forEach((el) => { el.textContent = count; });
+    document.querySelectorAll('a[href="/pages/tienda/carrito.html"]').forEach((link) => {
+      if (link.querySelector('[data-cart-count]')) return;
+      link.classList.add('relative');
+      const badge = document.createElement('span');
+      badge.dataset.cartCount = '';
+      badge.className = 'absolute -top-0.5 -right-0.5 bg-filament text-ink text-[10px] font-semibold rounded-full w-[18px] h-[18px] flex items-center justify-center';
+      badge.textContent = count;
+      link.appendChild(badge);
+    });
+  };
+
+  async function refreshCartCount() {
+    if (!api.getToken()) return;
+    try {
+      const cart = await api.cart();
+      addCartBadge(cart.items.reduce((sum, item) => sum + item.quantity, 0));
+    } catch {
+      addCartBadge(Number(localStorage.getItem('garperlux_cart_count') || 0));
+    }
+  }
+
+  const findSku = (root) => {
+    const text = root.closest('a, article, section, li, div')?.textContent || root.textContent || '';
+    const match = text.match(/SKU\s+([A-Z0-9._-]+)/i);
+    return match?.[1] || root.dataset.sku || '27101-31';
+  };
+
+  function bindLogin() {
+    if (page !== 'login.html') return;
+
+    document.querySelectorAll('button[onclick*="glxSetSession"]').forEach((button) => {
+      button.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const role = button.getAttribute('onclick').includes('pro') ? 'pro' : 'particular';
+        const email = role === 'pro' ? 'chispas@instaladoreseljaen.es' : 'antonio.garcia@correo.com';
+        try {
+          const user = await api.login(email, 'garperlux123');
+          await syncSessionToLegacyAuth();
+          toast(`Sesión iniciada como ${user.fullName}`);
+          location.href = new URLSearchParams(location.search).get('redirect') || 'area-personal.html';
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    });
+
+    document.querySelector('[data-pane="login"] form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const form = event.currentTarget;
+      try {
+        const user = await api.login(
+          form.querySelector('input[type="email"]').value.trim(),
+          form.querySelector('input[type="password"]').value
+        );
+        await syncSessionToLegacyAuth();
+        toast(`Sesión iniciada como ${user.fullName}`);
+        location.href = new URLSearchParams(location.search).get('redirect') || 'area-personal.html';
+      } catch (error) {
+        toast(error.message);
+      }
+    }, true);
+
+    document.querySelector('[data-pane="register"] form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const form = event.currentTarget;
+      const role = document.querySelector('input[name="role"]:checked')?.value || 'particular';
+      const fields = [...form.querySelectorAll('input')];
+      const email = fields.find((input) => input.type === 'email')?.value.trim();
+      const password = fields.find((input) => input.type === 'password')?.value;
+      const fullName = fields.find((input) => input.type === 'text' && input.value.trim())?.value.trim() || 'Cliente GarperLux';
+      try {
+        const data = await api.request('/auth/register', { method: 'POST', body: JSON.stringify({ role, email, password, fullName }) });
+        if (data?.token) api.setToken(data.token);
+        await syncSessionToLegacyAuth();
+        location.href = 'area-personal.html';
+      } catch (error) {
+        toast(error.message);
+      }
+    }, true);
+  }
+
+  function bindPasswordRecovery() {
+    if (page !== 'recuperar-password.html') return;
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    const forms = [...document.querySelectorAll('form')];
+
+    forms[0]?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      try {
+        const email = forms[0].querySelector('input[type="email"]')?.value.trim();
+        const result = await api.forgotPassword(email);
+        document.querySelector('[data-target-email]').textContent = email;
+        if (result.resetUrl) {
+          const helper = document.createElement('p');
+          helper.className = 'mt-4 text-xs font-mono text-copper break-all';
+          helper.textContent = `Enlace demo: ${result.resetUrl}`;
+          forms[0].appendChild(helper);
+        }
+        if (window.glxShow) window.glxShow(2);
+        toast('Solicitud de recuperación registrada.');
+      } catch (error) {
+        toast(error.message);
+      }
+    }, true);
+
+    forms[1]?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      try {
+        const [password, repeat] = [...forms[1].querySelectorAll('input[type="password"]')].map((input) => input.value);
+        if (password !== repeat) {
+          toast('Las contraseñas no coinciden.');
+          return;
+        }
+        if (!token) {
+          toast('Falta el token de recuperación.');
+          return;
+        }
+        const user = await api.resetPassword(token, password);
+        await syncSessionToLegacyAuth();
+        toast(`Contraseña actualizada para ${user.fullName}.`);
+        if (window.glxShow) window.glxShow(4);
+      } catch (error) {
+        toast(error.message);
+      }
+    }, true);
+  }
+
+  const renderProductCard = (product) => `
+  <a href="/pages/tienda/producto.html?sku=${encodeURIComponent(product.sku)}" class="card-prod group" data-sku="${product.sku}">
+      <div class="aspect-square bg-paper-2 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent"></div>
+        <span class="relative font-serif text-4xl text-graphite/20">GL</span>
+      </div>
+      <div class="space-y-2">
+        <div class="font-mono text-[11px] text-graphite/70">SKU ${product.sku}</div>
+        <h3 class="font-medium leading-tight group-hover:text-copper transition-colors">${product.name}</h3>
+        <div class="flex items-end justify-between">
+          <div><span class="font-serif text-xl font-medium">${money(product.price)}</span><span class="block text-[11px] text-stock">${product.stock} uds. stock</span></div>
+          <button type="button" data-add-cart data-sku="${product.sku}" class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors" aria-label="Añadir">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+    </a>`;
+
+  function bindCatalogActions() {
+    document.addEventListener('click', async (event) => {
+      const button = event.target.closest('button[data-add-cart], button[aria-label="Añadir"], .card-prod button');
+      if (!button) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (!requireSession()) return;
+      try {
+        const cart = await api.addToCart(button.dataset.sku || findSku(button), 1);
+        addCartBadge(cart.items.reduce((sum, item) => sum + item.quantity, 0));
+        toast('Producto añadido al carrito.');
+      } catch (error) {
+        toast(error.message);
+      }
+    });
+  }
+
+  async function bindSearchPage() {
+    if (page !== 'buscador.html') return;
+    const input = document.querySelector('main input[type="search"], input[type="search"]');
+    const params = new URLSearchParams(location.search);
+    if (params.get('q') && input) input.value = params.get('q');
+    const run = async () => {
+      const query = input?.value.trim() || '';
+      const products = await api.products(query ? { q: query } : {});
+      document.querySelectorAll('[data-pane="productos"] .grid, [data-pane="all"] .grid').forEach((grid) => {
+        grid.innerHTML = products.slice(0, grid.closest('[data-pane="all"]') ? 4 : 12).map(renderProductCard).join('');
+      });
+    };
+    input?.closest('div')?.querySelector('button')?.addEventListener('click', run);
+    input?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        run();
+      }
+    });
+    await run().catch((error) => toast(error.message));
+  }
+
+  async function bindCatalogPages() {
+    if (!['tienda.html', 'categoria.html'].includes(page)) return;
+    const products = await api.products(page === 'categoria.html' ? { category: 'mecanismos' } : {});
+    const grids = [...document.querySelectorAll('.card-prod')].map((card) => card.parentElement).filter(Boolean);
+    const grid = grids.find((candidate) => candidate.querySelectorAll('.card-prod').length >= 4);
+    if (grid) grid.innerHTML = products.slice(0, page === 'categoria.html' ? 12 : 8).map(renderProductCard).join('');
+  }
+
+  async function bindCartPage() {
+    if (page !== 'carrito.html') return;
+    if (!requireSession()) return;
+    try {
+      const cart = await api.cart();
+      const mainGrid = document.querySelector('main .lg\\:grid, main .grid');
+      const list = mainGrid?.querySelector('.space-y-4, .space-y-5, .space-y-6') || document.querySelector('main section');
+      if (list) {
+        list.innerHTML = cart.items.length ? cart.items.map((item) => `
+          <article class="bg-white border border-line rounded-2xl p-4 flex gap-4" data-sku="${item.sku}">
+            <div class="w-20 h-20 rounded-xl bg-paper-2 grid place-items-center font-serif text-graphite/30">GL</div>
+            <div class="flex-1">
+              <div class="font-mono text-[11px] text-graphite mb-1">SKU ${item.sku}</div>
+              <h3 class="font-medium">${item.name}</h3>
+              <div class="flex items-center justify-between mt-3">
+                <span class="font-mono text-sm">x${item.quantity}</span>
+                <strong class="font-serif text-xl">${money(item.price * item.quantity)}</strong>
+              </div>
+            </div>
+          </article>`).join('') : '<div class="bg-white border border-line rounded-2xl p-8 text-center">Tu carrito está vacío.</div>';
+      }
+      addCartBadge(cart.items.reduce((sum, item) => sum + item.quantity, 0));
+    } catch (error) {
+      toast(error.message);
+    }
+  }
+
+  async function bindProductPage() {
+    if (page !== 'producto.html') return;
+    const sku = new URLSearchParams(location.search).get('sku') || '27101-31';
+    try {
+      const product = await api.product(sku);
+      if (!product) return;
+      document.title = `${product.name} · GarperLux`;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', product.description || product.name);
+      const title = document.querySelector('section h1');
+      if (title) title.textContent = product.name;
+      const brand = document.querySelector('section a[href="/pages/empresa/marcas.html"]');
+      if (brand) brand.textContent = product.brand.name;
+      document.querySelectorAll('*').forEach((node) => {
+        if (node.children.length) return;
+        if (node.textContent.includes('27101-31')) node.textContent = node.textContent.replaceAll('27101-31', product.sku);
+        if (node.textContent.includes('Interruptor Simón 27')) node.textContent = product.name;
+      });
+      const stockPill = [...document.querySelectorAll('.pill, span')].find((node) => /stock/i.test(node.textContent));
+      if (stockPill) stockPill.textContent = product.stock > 0 ? `${product.stock} uds. en stock` : 'Sin stock';
+      document.querySelectorAll('button').forEach((button) => {
+        if (/Añadir|carrito/i.test(button.textContent) || button.getAttribute('aria-label') === 'Añadir') {
+          button.dataset.addCart = '';
+          button.dataset.sku = product.sku;
+        }
+      });
+    } catch (error) {
+      toast(error.message);
+    }
+  }
+
+  function bindCheckout() {
+    if (!['carrito.html', 'checkout.html', 'pago.html'].includes(page)) return;
+    if (page === 'carrito.html') {
+      const couponInput = document.querySelector('details input[type="text"]');
+      const applyCoupon = document.querySelector('details button');
+      applyCoupon?.addEventListener('click', (event) => {
+        event.preventDefault();
+        const couponCode = couponInput?.value?.trim().toUpperCase();
+        if (!couponCode) return toast('Introduce un código de descuento.');
+        const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
+        draft.couponCode = couponCode;
+        localStorage.setItem(CHECKOUT_KEY, JSON.stringify(draft));
+        toast(`Cupón ${couponCode} preparado para el checkout.`);
+      });
+      return;
+    }
+    if (page === 'checkout.html') {
+      api.checkoutOptions().then((options) => {
+        const defaultAddress = options.addresses?.[0];
+        if (defaultAddress) {
+          const addressText = document.querySelector('input[name="dir"]:checked')?.closest('.bg-white')?.querySelector('.text-sm.text-graphite');
+          if (addressText) addressText.textContent = `${defaultAddress.recipient} · ${defaultAddress.line1} · ${defaultAddress.postal_code} ${defaultAddress.city} · ${defaultAddress.phone || ''}`.trim();
+        }
+      }).catch(() => null);
+    }
+    const primary = [...document.querySelectorAll('a.btn-primary, button.btn-primary')].at(-1);
+    primary?.addEventListener('click', async (event) => {
+      if (page === 'checkout.html') {
+        const selectedShipping = checkedLabel('vel', 'Estándar 24-48 h').toLowerCase();
+        const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
+        draft.shippingMethod = selectedShipping.includes('expr') ? 'express' : selectedShipping.includes('recogida') ? 'pickup' : 'standard';
+        draft.addressLabel = checkedLabel('dir', 'Dirección predeterminada');
+        localStorage.setItem(CHECKOUT_KEY, JSON.stringify(draft));
+        return;
+      }
+      event.preventDefault();
+      if (!requireSession()) return;
+      try {
+        const options = await api.checkoutOptions();
+        const selectedPayment = document.querySelector('input[name="metodo"]:checked')?.closest('.pay-method')?.textContent?.replace(/\s+/g, ' ').trim() || 'Tarjeta demo';
+        const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
+        const order = await api.checkout({
+          ...draft,
+          payment: selectedPayment,
+          paymentMethodId: options.paymentMethods?.[0]?.id || null,
+          acceptedTerms: true,
+        });
+        localStorage.setItem('garperlux_last_order', JSON.stringify(order));
+        localStorage.removeItem(CHECKOUT_KEY);
+        location.href = `pedido-confirmado.html?order=${encodeURIComponent(order.code)}`;
+      } catch (error) {
+        toast(error.message);
+      }
+    });
+  }
+
+  function bindConfirmationPages() {
+    if (page === 'pedido-confirmado.html') {
+      const order = JSON.parse(localStorage.getItem('garperlux_last_order') || 'null');
+      const code = new URLSearchParams(location.search).get('order') || order?.code;
+      if (!code) return;
+      document.querySelectorAll('*').forEach((node) => {
+        if (!node.children.length && /GLX-[A-Z0-9-]+/.test(node.textContent)) {
+          node.textContent = node.textContent.replace(/GLX-[A-Z0-9-]+/, code);
+        }
+      });
+    }
+    if (page === 'solicitud-confirmacion.html') {
+      const request = JSON.parse(localStorage.getItem('garperlux_last_service_request') || 'null');
+      const code = new URLSearchParams(location.search).get('code') || request?.code;
+      if (!code) return;
+      document.querySelectorAll('*').forEach((node) => {
+        if (!node.children.length && /(GLX|SAT)-[A-Z0-9-]+/.test(node.textContent)) {
+          node.textContent = node.textContent.replace(/(GLX|SAT)-[A-Z0-9-]+/, code);
+        }
+      });
+    }
+  }
+
+  function renderTimeline(events = []) {
+    if (!events.length) return '';
+    return events.map((event, index) => `
+      <li class="relative pl-10 ${index < events.length - 1 ? '' : ''}">
+        <span class="absolute left-0 top-1 w-6 h-6 rounded-full ${index === events.length - 1 ? 'bg-filament text-ink' : 'bg-stock text-paper'} grid place-items-center">
+          ${index === events.length - 1 ? '•' : '✓'}
+        </span>
+        <div class="font-medium">${event.title}</div>
+        <div class="text-xs text-graphite font-mono mt-0.5">${new Date(event.happened_at).toLocaleString('es-ES')}</div>
+        ${event.description ? `<p class="text-sm text-graphite mt-2">${event.description}</p>` : ''}
+      </li>`).join('');
+  }
+
+  async function bindTrackingPages() {
+    if (page === 'seguir-solicitud.html') {
+      const form = document.querySelector('form');
+      const showRequest = async (code, email) => {
+        const request = await api.publicServiceRequest(code, email);
+        document.querySelectorAll('*').forEach((node) => {
+          if (node.children.length) return;
+          node.textContent = node.textContent
+            .replace(/(GLX|SAT)-[A-Z0-9-]+/g, request.code)
+            .replace(/Salta el automático al enchufar el microondas\./g, request.description || request.service_type)
+            .replace(/Avería eléctrica/g, request.service_type || 'Servicio técnico')
+            .replace(/Calle Bernabé Soriano 12, 3ºB · 23001 Jaén/g, request.address || 'Dirección de la solicitud');
+        });
+        const timeline = document.querySelector('ol.space-y-6');
+        if (timeline && request.events?.length) {
+          timeline.innerHTML = '<div class="absolute left-3 top-3 bottom-3 w-px bg-line"></div>' + renderTimeline(request.events);
+        }
+        if (window.glxShow) window.glxShow(2);
+      };
+
+      form?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        try {
+          const code = form.querySelector('input[type="text"]')?.value.trim();
+          const email = form.querySelector('input[type="email"]')?.value.trim();
+          await showRequest(code, email);
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+
+      const code = new URLSearchParams(location.search).get('code') || new URLSearchParams(location.search).get('codigo');
+      if (code) {
+        showRequest(code, new URLSearchParams(location.search).get('email') || '').catch((error) => toast(error.message));
+      }
+    }
+
+    if (page === 'mis-pedido.html') {
+      const code = new URLSearchParams(location.search).get('order');
+      if (!code || !api.getToken()) return;
+      try {
+        const order = await api.order(code);
+        document.querySelectorAll('*').forEach((node) => {
+          if (!node.children.length && /GLX-[A-Z0-9-]+|GLX-\d{2}-\d+/.test(node.textContent)) {
+            node.textContent = node.textContent.replace(/GLX-[A-Z0-9-]+|GLX-\d{2}-\d+/g, order.code);
+          }
+        });
+        const tracking = document.querySelector('.bg-white.border.border-line.rounded-2xl.p-6');
+        if (tracking && order.events?.length) {
+          tracking.innerHTML = `<h2 class="font-serif text-xl font-medium mb-6">Tracking real del pedido</h2><ol class="space-y-5 relative"><div class="absolute left-3 top-3 bottom-3 w-px bg-line"></div>${renderTimeline(order.events)}</ol>`;
+        }
+      } catch (error) {
+        toast(error.message);
+      }
+    }
+  }
+
+  function bindServiceRequest() {
+    if (page !== 'solicitar-tecnico.html') return;
+    document.getElementById('btn-submit')?.addEventListener('click', async (event) => {
+      event.preventDefault();
+      if (!requireSession()) return;
+      try {
+        const payload = {
+          serviceType: document.querySelector('input[name="tipo"]:checked')?.value || 'averia',
+          area: document.querySelector('input[name="area"]:checked')?.value || 'electricidad',
+          urgency: document.querySelector('input[name="urgencia"]:checked')?.value || 'normal',
+          address: [...document.querySelectorAll('[data-step="4"] input[type="text"]')].map((input) => input.value).filter(Boolean).join(', ') || 'Dirección pendiente',
+          description: document.getElementById('descripcion')?.value || 'Solicitud creada desde el prototipo GarperLux.',
+        };
+        const request = await api.serviceRequest(payload);
+        localStorage.setItem('garperlux_last_service_request', JSON.stringify(request));
+        location.href = `solicitud-confirmacion.html?code=${encodeURIComponent(request.code)}`;
+      } catch (error) {
+        toast(error.message);
+      }
+    }, true);
+  }
+
+  function bindQuoteForms() {
+    if (!['solicitar-presupuesto.html', 'crear-presupuesto.html'].includes(page)) return;
+    const submitQuote = async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (!requireSession()) return;
+      try {
+        const title = document.querySelector('input[placeholder*="Título"], input[placeholder*="Razón"], input[placeholder*="Nombre"]')?.value || 'Presupuesto GarperLux';
+        const quote = await api.quote({ title, source: page, items: [] });
+        toast(`Presupuesto ${quote.code} guardado.`);
+        location.href = `presupuesto.html?code=${encodeURIComponent(quote.code)}`;
+      } catch (error) {
+        toast(error.message);
+      }
+    };
+    document.querySelector('form')?.addEventListener('submit', submitQuote, true);
+    document.querySelectorAll('button').forEach((button) => {
+      if (/Enviar|Guardar borrador/i.test(button.textContent)) button.addEventListener('click', submitQuote, true);
+    });
+  }
+
+  const inputValue = (selector, fallback = '') => document.querySelector(selector)?.value?.trim() || fallback;
+  const selectedText = (selector, fallback = '') => document.querySelector(selector)?.selectedOptions?.[0]?.textContent?.trim() || fallback;
+  const checkedLabel = (name, fallback = '') => {
+    const checked = document.querySelector(`input[name="${name}"]:checked`);
+    return checked?.closest('label')?.textContent?.replace(/\s+/g, ' ').trim() || fallback;
+  };
+
+  function bindAccountForms() {
+    if (page === 'datos-personales.html') {
+      document.querySelector('button.btn-primary')?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (!requireSession()) return;
+        try {
+          const fields = [...document.querySelectorAll('main input')];
+          const [firstName, lastName, fiscalId, birthDate, email, phone] = fields;
+          await api.updateProfile({
+            firstName: firstName?.value,
+            lastName: lastName?.value,
+            fiscalId: fiscalId?.value,
+            birthDate: birthDate?.value,
+            email: email?.value,
+            phone: phone?.value,
+            communications: [...document.querySelectorAll('main input[type="checkbox"]')].map((input) => input.checked),
+          });
+          toast('Datos personales guardados en backend.');
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    }
+
+    if (page === 'datos-fiscales.html') {
+      document.querySelector('button.btn-primary')?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (!requireSession()) return;
+        try {
+          const fields = [...document.querySelectorAll('main input, main select')];
+          const payload = {
+            legalName: fields[0]?.value,
+            taxId: fields[1]?.value,
+            legalForm: fields[2]?.value,
+            vatRegime: fields[3]?.value,
+            cnae: fields[4]?.value,
+            licenseNumber: fields[5]?.value,
+            licenseExpires: fields[6]?.value,
+            licenseRegion: fields[7]?.value,
+            fiscalAddress: fields[8]?.value,
+            postalCode: fields[9]?.value,
+            city: fields[10]?.value,
+            province: fields[11]?.value,
+            country: fields[12]?.value,
+            iban: fields[13]?.value,
+          };
+          await api.saveFiscalProfile(payload);
+          toast('Datos fiscales guardados en backend.');
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    }
+
+    if (page === 'anadir-tarjeta.html') {
+      document.querySelector('form')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (!requireSession()) return;
+        try {
+          const number = inputValue('[data-input-num]');
+          const exp = inputValue('[data-input-exp]');
+          const [expMonth, expYear] = exp.split('/');
+          const method = await api.addPaymentMethod({
+            type: 'card',
+            label: `Tarjeta ${number.slice(-4) || 'nueva'}`,
+            last4: number.replace(/\D/g, '').slice(-4),
+            brand: number.startsWith('4') ? 'Visa' : 'Card',
+            expMonth,
+            expYear,
+            holder: inputValue('[data-input-name]'),
+            isDefault: document.querySelectorAll('form input[type="checkbox"]')[0]?.checked,
+            allowRecurring: document.querySelectorAll('form input[type="checkbox"]')[1]?.checked,
+          });
+          toast(`Método de pago ${method.label} guardado.`);
+          location.href = 'metodos-pago.html';
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    }
+  }
+
+  function bindCommerceForms() {
+    if (page === 'escribir-resena.html') {
+      document.querySelector('form')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (!requireSession()) return;
+        try {
+          const rating = document.querySelector('input[name="rating"]:checked')?.value || '5';
+          const tags = [...document.querySelectorAll('.tag-pill input:checked')].map((input) => input.closest('label').textContent.replace(/\s+/g, ' ').trim());
+          const textInputs = [...document.querySelectorAll('main input[type="text"]')];
+          const review = await api.addReview({
+            sku: new URLSearchParams(location.search).get('sku') || '27101-31',
+            orderCode: new URLSearchParams(location.search).get('order') || 'GLX-04-1098',
+            rating,
+            title: textInputs[0]?.value || 'Reseña GarperLux',
+            body: document.querySelector('textarea')?.value || 'Reseña creada desde la web.',
+            displayName: textInputs[1]?.value || 'Cliente GarperLux',
+            tags,
+            verifiedPurchase: true,
+          });
+          toast(`Reseña guardada para moderación (#${review.id}).`);
+          location.href = 'mis-pedido.html';
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    }
+
+    if (page === 'devolucion.html') {
+      document.querySelector('.btn.btn-primary')?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (!requireSession()) return;
+        try {
+          const selected = [...document.querySelectorAll('.product-pick input[type="checkbox"]:checked')].map((input) => {
+            const row = input.closest('.product-pick');
+            return { text: row.textContent.replace(/\s+/g, ' ').trim(), quantity: Number(row.querySelector('input[type="number"]')?.value || 1) };
+          });
+          const result = await api.createReturn({
+            orderCode: new URLSearchParams(location.search).get('order') || 'GLX-04-1184',
+            reason: document.querySelector('input[name="motivo"]:checked')?.closest('label')?.querySelector('.font-medium')?.textContent?.trim() || 'No es lo que esperaba',
+            shippingMethod: checkedLabel('envio', 'Recogida en casa'),
+            refundMethod: checkedLabel('reemb', 'Misma tarjeta del pedido'),
+            amount: 5.9,
+            items: selected,
+            notes: document.querySelector('textarea')?.value || '',
+          });
+          toast(`Devolución ${result.code} registrada.`);
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    }
+
+    if (page === 'pedido-recurrente.html') {
+      document.querySelector('form')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (!requireSession()) return;
+        try {
+          const result = await api.createRecurringOrder({
+            name: inputValue('input[type="text"]', 'Pedido recurrente GarperLux'),
+            frequency: selectedText('select', 'Mensual'),
+            source: page,
+          });
+          toast(`Pedido recurrente ${result.code} activado.`);
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    }
+  }
+
+  function bindSupportForms() {
+    if (page === 'contacto.html') {
+      document.querySelector('form')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        try {
+          const form = event.currentTarget;
+          const fields = [...form.querySelectorAll('input, textarea')];
+          const reason = checkedLabel('motivo', 'Otro');
+          const result = await api.contactMessage({
+            reason,
+            name: fields.find((field) => field.type === 'text' && field.required)?.value || 'Cliente GarperLux',
+            email: fields.find((field) => field.type === 'email')?.value || 'cliente@example.com',
+            phone: fields.find((field) => field.type === 'tel')?.value || '',
+            reference: fields.find((field) => field.placeholder?.includes('GLX'))?.value || '',
+            subject: fields.find((field) => field.placeholder?.includes('Resumen'))?.value || 'Contacto web',
+            message: form.querySelector('textarea')?.value || 'Mensaje desde formulario de contacto.',
+          });
+          toast(`Mensaje ${result.code} enviado.`);
+          form.reset();
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    }
+
+    if (page === 'trabaja-con-nosotros.html') {
+      document.querySelector('form')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        try {
+          const fields = [...event.currentTarget.querySelectorAll('input, textarea, select')];
+          const result = await api.jobApplication({
+            name: fields.find((field) => field.type === 'text')?.value || 'Candidato GarperLux',
+            email: fields.find((field) => field.type === 'email')?.value || 'candidato@example.com',
+            phone: fields.find((field) => field.type === 'tel')?.value || '',
+            role: selectedText('select', inputValue('input[name="role"]', 'Candidatura espontánea')),
+            message: event.currentTarget.querySelector('textarea')?.value || '',
+          });
+          toast(`Candidatura ${result.code} recibida.`);
+        } catch (error) {
+          toast(error.message);
+        }
+      }, true);
+    }
+  }
+
+  function backendPanel(title, rows, emptyText) {
+    const main = document.querySelector('main');
+    if (!main || document.querySelector('[data-backend-panel]')) return;
+    const panel = document.createElement('section');
+    panel.dataset.backendPanel = '';
+    panel.className = 'container-x mt-6';
+    panel.innerHTML = `
+      <div class="bg-white border border-line rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center justify-between gap-4 mb-4">
+          <h2 class="font-serif text-xl font-medium">${title}</h2>
+          <span class="font-mono text-xs text-stock">Datos backend</span>
+        </div>
+        <div class="grid gap-2">${rows.length ? rows.join('') : `<p class="text-sm text-graphite">${emptyText}</p>`}</div>
+      </div>`;
+    main.prepend(panel);
+  }
+
+  async function bindAccountPages() {
+    if (!api.getToken()) return;
+    try {
+      if (page === 'mis-pedidos.html') {
+        const orders = await api.orders();
+        backendPanel('Pedidos reales', orders.map((order) => `<a href="/pages/cuenta/mis-pedido.html?order=${order.code}" class="flex justify-between gap-4 rounded-xl bg-paper-2 p-3"><span>${order.code} · ${order.status}</span><strong>${money(order.total)}</strong></a>`), 'Todavía no hay pedidos en la base de datos.');
+      }
+      if (page === 'mis-solicitudes.html') {
+        const requests = await api.serviceRequests();
+        backendPanel('Solicitudes técnicas reales', requests.map((request) => `<a href="/pages/servicios/seguir-solicitud.html?code=${request.code}" class="flex justify-between gap-4 rounded-xl bg-paper-2 p-3"><span>${request.code} · ${request.service_type}</span><strong>${request.status}</strong></a>`), 'Todavía no hay solicitudes técnicas reales.');
+      }
+      if (page === 'mis-presupuestos.html') {
+        const quotes = await api.quotes();
+        backendPanel('Presupuestos reales', quotes.map((quote) => `<a href="/pages/cuenta/presupuesto.html?code=${quote.code}" class="flex justify-between gap-4 rounded-xl bg-paper-2 p-3"><span>${quote.code} · ${quote.title}</span><strong>${money(quote.total)}</strong></a>`), 'Todavía no hay presupuestos reales.');
+      }
+      if (page === 'facturas.html' || page === 'albaranes.html') {
+        const docs = await api.documents(page === 'facturas.html' ? 'invoice' : 'delivery_note');
+        backendPanel(page === 'facturas.html' ? 'Facturas reales' : 'Albaranes reales', docs.map((doc) => `<div class="flex justify-between gap-4 rounded-xl bg-paper-2 p-3"><span>${doc.code} · ${doc.type}</span><strong>${money(doc.total)}</strong></div>`), 'Todavía no hay documentos reales.');
+      }
+    } catch (error) {
+      toast(error.message);
+    }
+  }
+
+  async function bindAdminDashboard() {
+    if (page !== 'admin.html') return;
+    if (!requireSession()) return;
+    const user = await syncSessionToLegacyAuth();
+    if (user?.role !== 'admin') {
+      toast('Solo administración puede acceder a este panel.');
+      location.href = 'area-personal.html';
+      return;
+    }
+
+    const setText = (selector, value) => {
+      const node = document.querySelector(selector);
+      if (node) node.textContent = value;
+    };
+    const badge = (status) => `<span class="rounded-full bg-paper-2 px-2 py-1 text-[11px] font-mono text-graphite">${status}</span>`;
+    const empty = (text) => `<p class="rounded-xl bg-paper-2 p-4 text-sm text-graphite">${text}</p>`;
+    const mount = (name, html) => {
+      const node = document.querySelector(`[data-admin-list="${name}"]`);
+      if (node) node.innerHTML = html;
+    };
+    const action = (kind, id, status, label) => `<button class="btn btn-sm btn-ghost" data-admin-action="${kind}" data-id="${id}" data-status="${status}">${label}</button>`;
+
+    async function load() {
+      const [summary, products, orders, services, reviews, returns, messages, applications, auditRows] = await Promise.all([
+        api.adminSummary(),
+        api.adminProducts({ limit: 12 }),
+        api.adminOrders(),
+        api.adminServiceRequests(),
+        api.adminReviews(),
+        api.adminReturns(),
+        api.adminContactMessages(),
+        api.adminJobApplications(),
+        api.adminAudit(),
+      ]);
+
+      setText('[data-admin-stat="orders"]', summary.pendingOrders);
+      setText('[data-admin-stat="services"]', summary.openServiceRequests);
+      setText('[data-admin-stat="reviews"]', summary.pendingReviews);
+      setText('[data-admin-stat="support"]', summary.newMessages + summary.newApplications);
+
+      mount('products', products.length ? products.map((product) => `
+        <article class="admin-row">
+          <div><strong>${product.sku} · ${product.name}</strong><p>${product.category_name} · ${product.brand_name} · ${money(product.price)}</p></div>
+          <div class="admin-actions">${badge(`${product.stock} uds`)}${action('product-stock', product.sku, '10', '+10 stock')}${action('product-stock', product.sku, '-1', '-1 stock')}</div>
+        </article>`).join('') : empty('No hay productos.'));
+      mount('orders', orders.length ? orders.map((order) => `
+        <article class="admin-row">
+          <div><strong>${order.code}</strong><p>${order.customer_name || 'Cliente'} · ${money(order.total)}</p></div>
+          <div class="admin-actions">${badge(order.status)}${action('order', order.code, 'shipped', 'Marcar enviado')}${action('order', order.code, 'completed', 'Cerrar')}</div>
+        </article>`).join('') : empty('No hay pedidos.'));
+      mount('services', services.length ? services.map((request) => `
+        <article class="admin-row">
+          <div><strong>${request.code}</strong><p>${request.service_type} · ${request.address}</p></div>
+          <div class="admin-actions">${badge(request.status)}${action('service', request.code, 'scheduled', 'Programar')}${action('service', request.code, 'resolved', 'Resolver')}</div>
+        </article>`).join('') : empty('No hay solicitudes técnicas.'));
+      mount('reviews', reviews.length ? reviews.map((review) => `
+        <article class="admin-row">
+          <div><strong>${review.rating}/5 · ${review.title}</strong><p>${review.product_name} · ${review.display_name}</p></div>
+          <div class="admin-actions">${badge(review.status)}${action('review', review.id, 'published', 'Publicar')}${action('review', review.id, 'rejected', 'Rechazar')}</div>
+        </article>`).join('') : empty('No hay reseñas.'));
+      mount('returns', returns.length ? returns.map((item) => `
+        <article class="admin-row">
+          <div><strong>${item.code}</strong><p>${item.order_code} · ${item.reason}</p></div>
+          <div class="admin-actions">${badge(item.status)}${action('return', item.code, 'approved', 'Aprobar')}${action('return', item.code, 'refunded', 'Reembolsar')}</div>
+        </article>`).join('') : empty('No hay devoluciones.'));
+      mount('messages', messages.length ? messages.map((message) => `
+        <article class="admin-row">
+          <div><strong>${message.code} · ${message.subject}</strong><p>${message.name} · ${message.email}</p></div>
+          <div class="admin-actions">${badge(message.status)}${action('message', message.code, 'in_progress', 'En curso')}${action('message', message.code, 'closed', 'Cerrar')}</div>
+        </article>`).join('') : empty('No hay mensajes.'));
+      mount('applications', applications.length ? applications.map((application) => `
+        <article class="admin-row">
+          <div><strong>${application.code} · ${application.role}</strong><p>${application.name} · ${application.email}</p></div>
+          <div class="admin-actions">${badge(application.status)}${action('application', application.code, 'shortlisted', 'Preseleccionar')}${action('application', application.code, 'rejected', 'Descartar')}</div>
+        </article>`).join('') : empty('No hay candidaturas.'));
+      mount('audit', auditRows.length ? auditRows.map((row) => `
+        <article class="admin-row">
+          <div><strong>${row.action} · ${row.entity_type} · ${row.entity_id}</strong><p>${row.admin_name || 'Admin'} · ${row.created_at}</p></div>
+          <div class="admin-actions">${badge(row.id)}</div>
+        </article>`).join('') : empty('No hay auditoría registrada.'));
+    }
+
+    async function createAdminProduct(event) {
+      event.preventDefault();
+      const form = document.querySelector('[data-admin-product-form]');
+      if (!form) return;
+      try {
+        const field = (name) => form.querySelector(`[name="${name}"]`)?.value?.trim() || '';
+        const payload = {
+          sku: field('sku'),
+          name: field('name'),
+          price: Number(field('price')),
+          stock: Number(field('stock')),
+          categorySlug: 'mecanismos',
+          brandSlug: 'garperlux',
+          description: 'Producto creado desde administración.',
+          specs: { source: 'admin' },
+        };
+        await api.adminCreateProduct(payload);
+        form.reset();
+        toast(`Producto ${payload.sku} creado.`);
+        await load();
+      } catch (error) {
+        toast(error.message);
+      }
+    }
+
+    document.querySelector('[data-admin-product-form]')?.addEventListener('submit', createAdminProduct);
+    document.querySelector('[data-admin-product-create]')?.addEventListener('click', createAdminProduct);
+
+    document.addEventListener('click', async (event) => {
+      const button = event.target.closest('[data-admin-action]');
+      if (!button) return;
+      event.preventDefault();
+      const kind = button.dataset.adminAction;
+      const id = button.dataset.id;
+      const status = button.dataset.status;
+      try {
+        if (kind === 'order') await api.adminUpdateOrderStatus(id, { status });
+        if (kind === 'service') await api.adminUpdateServiceRequestStatus(id, { status });
+        if (kind === 'review') await api.adminUpdateReviewStatus(id, { status });
+        if (kind === 'return') await api.adminUpdateReturnStatus(id, { status });
+        if (kind === 'message') await api.adminUpdateContactMessageStatus(id, { status });
+        if (kind === 'application') await api.adminUpdateJobApplicationStatus(id, { status });
+        if (kind === 'product-stock') await api.adminUpdateProductStock(id, { delta: Number(status) });
+        toast(`Estado actualizado a ${status}.`);
+        await load();
+      } catch (error) {
+        toast(error.message);
+      }
+    });
+
+    await load().catch((error) => toast(error.message));
+  }
+
+  async function boot() {
+    bindLogin();
+    bindPasswordRecovery();
+    if (!publicAuthlessPages.has(page)) {
+      await syncSessionToLegacyAuth();
+      await refreshCartCount();
+    }
+    bindCatalogActions();
+    bindCheckout();
+    bindConfirmationPages();
+    await bindTrackingPages();
+    bindServiceRequest();
+    bindQuoteForms();
+    bindAccountForms();
+    bindCommerceForms();
+    bindSupportForms();
+    await bindSearchPage();
+    await bindCatalogPages().catch((error) => toast(error.message));
+    await bindProductPage();
+    await bindCartPage();
+    await bindAccountPages();
+    await bindAdminDashboard();
+  }
+
+  document.addEventListener('garperlux:components-ready', () => {
+    if (publicAuthlessPages.has(page)) return;
+    syncSessionToLegacyAuth();
+    refreshCartCount();
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();

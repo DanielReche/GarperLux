@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <base href="../../">
+  <base href="/.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Administración · GarperLux</title>
   <meta name="description" content="Panel interno de administración GarperLux para pedidos, servicios, reseñas, devoluciones, mensajes y candidaturas." />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
   <style>
     .admin-card{background:white;border:1px solid var(--line);border-radius:22px;padding:1.25rem}
     .admin-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem;border-radius:16px;background:var(--paper-2);border:1px solid rgba(0,0,0,.04)}
@@ -22,7 +22,7 @@
 
   <main class="container-x py-10">
     <nav class="text-sm text-graphite mb-8">
-      <a href="../../index.html" class="hover:text-ink">Inicio</a>
+      <a href="/index.html" class="hover:text-ink">Inicio</a>
       <span class="mx-2">/</span>
       <span>Administración</span>
     </nav>
@@ -36,7 +36,7 @@
       <aside class="admin-card">
         <div class="eyebrow text-copper mb-3">Acceso</div>
         <p class="text-sm text-graphite leading-relaxed">Usuario demo: <strong>admin@garperlux.local</strong><br/>Contraseña: <strong>garperlux123</strong></p>
-        <a href="../auth/login.html?redirect=admin.html" class="btn btn-primary w-full justify-center mt-5">Iniciar sesión admin</a>
+        <a href="/pages/auth/login.html?redirect=admin.html" class="btn btn-primary w-full justify-center mt-5">Iniciar sesión admin</a>
       </aside>
     </section>
 
@@ -75,10 +75,10 @@
   </main>
 
   <div data-component="site-footer"></div>
-  <script src="../../assets/js/component-loader.js"></script>
-  <script src="../../data/api.js"></script>
-  <script src="../../assets/js/backend-integration.js?v=admin-catalog-1"></script>
-  <script src="../../assets/js/main.js"></script>
-  <script src="../../assets/js/auth.js"></script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js?v=admin-catalog-1"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/auth.js"></script>
 </body>
 </html>

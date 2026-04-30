@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="es"><head>
-  <base href="../../">
+  <base href="/.">
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Seguir mi solicitud · GarperLux</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-<link rel="stylesheet" href="../../assets/css/styles.css" />
+<link rel="stylesheet" href="/assets/css/styles.css" />
 <style>
 .field{width:100%;padding:.85rem 1rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:15px;color:var(--ink)}
 .field:focus{outline:none;border-color:var(--ink)}
@@ -18,7 +18,7 @@
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
 
-<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="servicios.html" class="hover:text-ink">Servicios</a><span class="opacity-50">/</span><span class="text-ink">Seguir solicitud</span></nav></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/servicios/servicios.html" class="hover:text-ink">Servicios</a><span class="opacity-50">/</span><span class="text-ink">Seguir solicitud</span></nav></div>
 
 <!-- ============ STEP 1: introducir código ============ -->
 <section data-step="1" class="step is-active container-x py-16 md:py-24">
@@ -44,7 +44,7 @@
     </form>
 
     <div class="mt-8 text-center text-sm text-graphite">
-      ¿No encuentras el código? <a href="../empresa/contacto.html" class="link-underline">Llámanos al 953 21 22 23</a>
+      ¿No encuentras el código? <a href="/pages/empresa/contacto.html" class="link-underline">Llámanos al 953 21 22 23</a>
     </div>
   </div>
 </section>
@@ -114,7 +114,7 @@
         <div class="flex-1">
           <h3 class="font-medium mb-1">¿Te resuelve antes lo que pasa?</h3>
           <p class="text-sm text-graphite mb-3">Algunas averías como la tuya tienen pasos previos que puedes intentar tú mismo en 5 minutos. Si funciona, te ahorras la visita.</p>
-          <a href="../aprender/hazlo-tu-mismo.html" class="link-underline text-sm">Ver guías "Cuándo NO llamar al técnico"</a>
+          <a href="/pages/aprender/hazlo-tu-mismo.html" class="link-underline text-sm">Ver guías "Cuándo NO llamar al técnico"</a>
         </div>
       </div>
 
@@ -145,7 +145,7 @@
         </div>
 
         <div class="text-xs text-graphite text-center">
-          ¿Tienes cuenta? <a href="../auth/login.html" class="link-underline text-ink">Inicia sesión</a> y consulta todas tus solicitudes.
+          ¿Tienes cuenta? <a href="/pages/auth/login.html" class="link-underline text-ink">Inicia sesión</a> y consulta todas tus solicitudes.
         </div>
       </div>
     </aside>
@@ -154,15 +154,15 @@
 </section>
   <div data-component="site-footer"></div>
 
-<script src="../../assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
 <script>
   function glxShow(s){document.querySelectorAll('.step').forEach(el=>el.classList.toggle('is-active',Number(el.dataset.step)===s));window.scrollTo(0,0);}
   function glxNext(){glxShow(2)}
   function glxBack(){glxShow(1)}
   if(new URLSearchParams(location.search).get('codigo'))glxShow(2);
 </script>
-  <script src="../../assets/js/component-loader.js"></script>
-  <script src="../../data/api.js"></script>
-  <script src="../../assets/js/backend-integration.js"></script>
-  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
 </body></html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <base href="../../">
+  <base href="/.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pedido confirmado · GarperLux</title>
@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
   <style>
     @keyframes fall{0%{transform:translateY(-50px) rotate(0);opacity:0}10%{opacity:1}100%{transform:translateY(400px) rotate(360deg);opacity:0}}
     .filament-spark{position:absolute;width:3px;height:18px;background:linear-gradient(180deg,var(--filament-glow),transparent);border-radius:2px;animation:fall 4.5s linear infinite}
@@ -93,29 +93,15 @@
           </div>
         </div>
 
-        <!-- Productos -->
+        <!-- Productos (render dinámico) -->
         <div class="bg-white border border-line rounded-2xl overflow-hidden">
-          <div class="px-6 py-4 border-b border-line"><h2 class="font-serif text-xl font-medium">3 productos</h2></div>
-          <div class="divide-y divide-line">
-            <div class="p-5 flex gap-4 items-center">
-              <div class="w-14 h-14 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></div>
-              <div class="flex-1"><div class="font-medium">Interruptor Simón 27 10A blanco</div><div class="text-xs text-graphite font-mono">SKU 27101-31 · cantidad: 1</div></div>
-              <div class="font-mono font-medium">5,90 €</div>
-            </div>
-            <div class="p-5 flex gap-4 items-center">
-              <div class="w-14 h-14 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg></div>
-              <div class="flex-1"><div class="font-medium">Destornillador aislado 1000V 3mm</div><div class="text-xs text-graphite font-mono">SKU WH-DA-3 · cantidad: 1</div></div>
-              <div class="font-mono font-medium">8,40 €</div>
-            </div>
-            <div class="p-5 flex gap-4 items-center">
-              <div class="w-14 h-14 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/></svg></div>
-              <div class="flex-1"><div class="font-medium">Polímetro digital A03 básico</div><div class="text-xs text-graphite font-mono">SKU UNI-T-A03 · cantidad: 1</div></div>
-              <div class="font-mono font-medium">14,90 €</div>
-            </div>
+          <div class="px-6 py-4 border-b border-line"><h2 class="font-serif text-xl font-medium"><span data-confirm-item-count>0 productos</span></h2></div>
+          <div class="divide-y divide-line" data-confirm-order-items>
+            <!-- JS renderiza los items del pedido -->
           </div>
           <div class="px-6 py-4 bg-paper-2 border-t border-line flex justify-between items-center">
             <span class="text-sm text-graphite">Total pagado</span>
-            <span class="font-serif text-2xl font-medium">34,10 €</span>
+            <span class="font-serif text-2xl font-medium" data-confirm-total>0,00 €</span>
           </div>
         </div>
 
@@ -125,7 +111,7 @@
           <div class="flex-1">
             <h3 class="font-serif text-lg font-medium mb-1">Mientras te llega: el tutorial paso a paso</h3>
             <p class="text-sm text-graphite mb-3">Estos 3 productos vienen del tutorial #042 · Cambiar un interruptor sin liarla. Léelo con tranquilidad para que cuando llegue la caja sepas exactamente qué hacer.</p>
-            <a href="../aprender/tutorial.html" class="link-underline text-sm">Ver tutorial #042 →</a>
+            <a href="/pages/aprender/tutorial.html" class="link-underline text-sm">Ver tutorial #042 →</a>
           </div>
         </div>
 
@@ -137,7 +123,7 @@
           <!-- Acciones -->
           <div class="bg-white border border-line rounded-2xl p-5 space-y-2">
             <button class="btn btn-ghost w-full justify-center btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Descargar factura PDF</button>
-            <a href="../cuenta/mis-pedido.html" class="btn btn-ink w-full justify-center btn-sm">Ver detalle del pedido</a>
+            <a href="/pages/cuenta/mis-pedido.html" class="btn btn-ink w-full justify-center btn-sm">Ver detalle del pedido</a>
             <button class="btn btn-ghost w-full justify-center btn-sm">Cancelar pedido</button>
           </div>
 
@@ -146,7 +132,7 @@
             <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Dirección de entrega</div>
             <div class="text-sm font-medium mb-1">Antonio García</div>
             <div class="text-sm text-graphite">Calle Bernabé Soriano 12, 3º B<br/>23001 Jaén</div>
-            <div class="text-xs text-graphite font-mono mt-2">SEUR · seguimiento <a href="../servicios/seguir-solicitud.html" class="text-copper">SE-7748392</a></div>
+            <div class="text-xs text-graphite font-mono mt-2">SEUR · seguimiento <a href="/pages/servicios/seguir-solicitud.html" class="text-copper">SE-7748392</a></div>
           </div>
 
           <!-- Email confirm -->
@@ -159,7 +145,7 @@
           <div class="bg-ink text-paper rounded-2xl p-5">
             <div class="eyebrow text-filament mb-2">¿Algo va mal?</div>
             <p class="text-sm text-paper/70 mb-4 leading-relaxed">Tienes 30 días para devolver lo que no encaje. Y si tienes dudas, te llamamos.</p>
-            <a href="../empresa/contacto.html" class="btn btn-ghost-light btn-sm w-full justify-center">Contactar soporte</a>
+            <a href="/pages/empresa/contacto.html" class="btn btn-ghost-light btn-sm w-full justify-center">Contactar soporte</a>
           </div>
         </div>
       </aside>
@@ -167,12 +153,12 @@
   </section>
   <div data-component="site-footer"></div>
 
-  <script src="../../assets/js/component-loader.js"></script>
-  <script src="../../data/api.js"></script>
-  <script src="../../assets/js/backend-integration.js"></script>
-  <script src="../../assets/js/main.js"></script>
-  <script src="../../assets/js/catalog-ui.js"></script>
-  <script src="../../assets/js/auth.js"></script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
+  <script src="/assets/js/auth.js"></script>
   <script>
     const u=glxGetUser();
     if(u)document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);

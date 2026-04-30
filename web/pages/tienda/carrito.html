@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-  <base href="../../">
+  <base href="/.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tu carrito · GarperLux</title>
@@ -17,17 +17,17 @@
       fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
     }}};
   </script>
-  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
 
 <body class="bg-paper text-ink">
 
-  <div class="bg-ink text-paper text-[12.5px]"><div class="container-x flex items-center justify-between py-2"><span class="opacity-90 hidden sm:inline">Envíos gratis desde 75 € · Devoluciones 30 días</span><a href="../auth/login.html" class="link-underline opacity-90">¿Eres instalador Accede para tarifa pro</a>?</div></div>
+  <div class="bg-ink text-paper text-[12.5px]"><div class="container-x flex items-center justify-between py-2"><span class="opacity-90 hidden sm:inline">Envíos gratis desde 75 € · Devoluciones 30 días</span><a href="/pages/auth/login.html" class="link-underline opacity-90">¿Eres instalador Accede para tarifa pro</a>?</div></div>
   <div data-component="site-header"></div>
 
   <!-- BREADCRUMBS -->
   <div class="container-x pt-5 pb-2">
-    <nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="../../index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><span class="text-ink">Tu carrito</span></nav>
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><span class="text-ink">Tu carrito</span></nav>
   </div>
 
   <!-- ============ HEADER CARRITO ============ -->
@@ -37,9 +37,9 @@
         <h1 class="font-serif font-medium leading-[0.96] tracking-[-0.02em]" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
           Tu carrito.
         </h1>
-        <p class="text-graphite mt-2 text-lg">3 productos · listo para tramitar</p>
+        <p class="text-graphite mt-2 text-lg" data-cart-summary>0 productos · listo para tramitar</p>
       </div>
-      <a href="tienda.html" class="link-underline text-sm">
+      <a href="/pages/tienda/tienda.html" class="link-underline text-sm">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         Seguir comprando
       </a>
@@ -86,81 +86,10 @@
           </div>
         </div>
 
-        <!-- Items list -->
+        <!-- Items list: populated dynamically by JS -->
         <div class="bg-white border border-line rounded-2xl overflow-hidden">
-          <!-- Item 1 -->
-          <div class="p-5 sm:p-6 grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr_auto] gap-5 border-b border-line">
-            <a href="producto.html" class="aspect-square bg-paper-2 rounded-lg overflow-hidden grid place-items-center text-graphite/40">
-              <img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=200&q=80" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.parentNode.innerHTML='<svg width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'4\' y=\'4\' width=\'16\' height=\'16\' rx=\'2\'/></svg>'"/>
-            </a>
-            <div class="col-span-1 sm:col-auto">
-              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Simón · gama 27</div>
-              <h3 class="font-medium leading-snug mb-1">Interruptor Simón 27 10A blanco</h3>
-              <div class="font-mono text-[11px] text-graphite mb-2">SKU 27101-31 · Acabado: Blanco</div>
-              <div class="flex items-center gap-3">
-                <div class="flex items-center bg-paper-2 rounded-full overflow-hidden">
-                  <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" aria-label="-">−</button>
-                  <input type="number" value="1" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none"/>
-                  <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" aria-label="+">+</button>
-                </div>
-                <button class="text-xs text-graphite hover:text-warn">Eliminar</button>
-                <button class="text-xs text-graphite hover:text-ink">Mover a favoritos</button>
-              </div>
-            </div>
-            <div class="col-span-2 sm:col-auto sm:text-right flex items-center justify-between sm:flex-col sm:items-end sm:justify-start gap-2">
-              <span class="font-serif text-xl font-medium">5,90 €</span>
-              <span class="pill pill-stock text-[10px]">En stock · 47 uds</span>
-            </div>
-          </div>
-
-          <!-- Item 2 -->
-          <div class="p-5 sm:p-6 grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr_auto] gap-5 border-b border-line">
-            <a href="producto.html" class="aspect-square bg-paper-2 rounded-lg grid place-items-center text-graphite/40">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg>
-            </a>
-            <div class="col-span-1 sm:col-auto">
-              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Wiha</div>
-              <h3 class="font-medium leading-snug mb-1">Destornillador aislado 1000V 3mm</h3>
-              <div class="font-mono text-[11px] text-graphite mb-2">SKU WH-DA-3</div>
-              <div class="flex items-center gap-3">
-                <div class="flex items-center bg-paper-2 rounded-full overflow-hidden">
-                  <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm">−</button>
-                  <input type="number" value="1" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none"/>
-                  <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm">+</button>
-                </div>
-                <button class="text-xs text-graphite hover:text-warn">Eliminar</button>
-                <button class="text-xs text-graphite hover:text-ink">Mover a favoritos</button>
-              </div>
-            </div>
-            <div class="col-span-2 sm:col-auto sm:text-right flex items-center justify-between sm:flex-col sm:items-end sm:justify-start gap-2">
-              <span class="font-serif text-xl font-medium">8,40 €</span>
-              <span class="pill pill-stock text-[10px]">En stock</span>
-            </div>
-          </div>
-
-          <!-- Item 3 -->
-          <div class="p-5 sm:p-6 grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr_auto] gap-5">
-            <a href="producto.html" class="aspect-square bg-paper-2 rounded-lg grid place-items-center text-graphite/40">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-            </a>
-            <div class="col-span-1 sm:col-auto">
-              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Uni-T</div>
-              <h3 class="font-medium leading-snug mb-1">Polímetro digital A03 básico</h3>
-              <div class="font-mono text-[11px] text-graphite mb-2">SKU UNI-T-A03</div>
-              <div class="flex items-center gap-3">
-                <div class="flex items-center bg-paper-2 rounded-full overflow-hidden">
-                  <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm">−</button>
-                  <input type="number" value="1" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none"/>
-                  <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm">+</button>
-                </div>
-                <button class="text-xs text-graphite hover:text-warn">Eliminar</button>
-                <button class="text-xs text-graphite hover:text-ink">Mover a favoritos</button>
-              </div>
-            </div>
-            <div class="col-span-2 sm:col-auto sm:text-right flex items-center justify-between sm:flex-col sm:items-end sm:justify-start gap-2">
-              <span class="font-serif text-xl font-medium">14,90 €</span>
-              <span class="pill pill-stock text-[10px]">23 uds</span>
-            </div>
+          <div class="space-y-4 p-0" data-cart-items>
+            <!-- JS will render cart items here -->
           </div>
         </div>
 
@@ -172,7 +101,7 @@
           <div>
             <strong class="text-ink">¿Necesitas un presupuesto en lugar de comprar ahora?</strong>
             <p class="text-graphite mt-0.5">Convierte este carrito en una solicitud de presupuesto formal con datos fiscales. Útil para comunidades, empresas y proyectos.</p>
-            <a href="../servicios/solicitar-presupuesto.html" class="link-underline text-sm mt-2">Convertir en solicitud de presupuesto</a>
+            <a href="/pages/servicios/solicitar-presupuesto.html" class="link-underline text-sm mt-2">Convertir en solicitud de presupuesto</a>
           </div>
         </div>
 
@@ -180,10 +109,10 @@
         <div class="mt-12">
           <div class="flex items-end justify-between mb-5">
             <h2 class="font-serif text-2xl font-medium">Te puede interesar</h2>
-            <a href="categoria.html" class="text-sm text-copper hover:underline">Ver más →</a>
+            <a href="/pages/tienda/categoria.html" class="text-sm text-copper hover:underline">Ver más →</a>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="producto.html" class="card-prod group">
+            <a href="/pages/tienda/producto.html" class="card-prod group">
               <div class="img grid place-items-center text-graphite/30">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
               </div>
@@ -196,7 +125,7 @@
                 <button class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
               </div>
             </a>
-            <a href="producto.html" class="card-prod group">
+            <a href="/pages/tienda/producto.html" class="card-prod group">
               <div class="img grid place-items-center text-graphite/30">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="6" y="3" width="12" height="18" rx="1"/></svg>
               </div>
@@ -209,7 +138,7 @@
                 <button class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
               </div>
             </a>
-            <a href="producto.html" class="card-prod group">
+            <a href="/pages/tienda/producto.html" class="card-prod group">
               <div class="img grid place-items-center text-graphite/30">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/><path d="M2 12h20"/></svg>
               </div>
@@ -222,7 +151,7 @@
                 <button class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
               </div>
             </a>
-            <a href="producto.html" class="card-prod group">
+            <a href="/pages/tienda/producto.html" class="card-prod group">
               <div class="img grid place-items-center text-graphite/30">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 21l1.5-7L20 4l-7 16-2.5-7L3 11"/></svg>
               </div>
@@ -251,8 +180,8 @@
             </div>
             <div class="p-6 space-y-3 text-sm">
               <div class="flex items-center justify-between">
-                <span class="text-graphite">Subtotal (3 productos)</span>
-                <span class="font-mono">29,20 €</span>
+                <span class="text-graphite">Subtotal (<span data-cart-item-count>0</span> productos)</span>
+                <span class="font-mono" data-cart-subtotal>0,00 €</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-graphite">Envío estándar</span>
@@ -260,7 +189,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-graphite">IVA incluido (21%)</span>
-                <span class="font-mono text-graphite">5,06 €</span>
+                <span class="font-mono text-graphite" data-cart-tax>0,00 €</span>
               </div>
 
               <!-- Cupón -->
@@ -279,12 +208,12 @@
 
               <div class="pt-3 border-t border-line flex items-baseline justify-between">
                 <span class="font-medium">Total</span>
-                <span class="font-serif text-3xl font-medium">34,10 €</span>
+                <span class="font-serif text-3xl font-medium" data-cart-total>0,00 €</span>
               </div>
             </div>
 
             <div class="px-6 py-5 bg-paper-2 border-t border-line">
-              <a href="checkout.html" class="btn btn-primary w-full justify-center">
+              <a href="/pages/tienda/checkout.html" class="btn btn-primary w-full justify-center">
                 Tramitar pedido
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
               </a>
@@ -316,7 +245,7 @@
           <div class="bg-ink text-paper rounded-2xl p-5">
             <div class="eyebrow text-filament mb-2">¿Eres instalador?</div>
             <p class="text-sm text-paper/70 mb-4 leading-relaxed">Inicia sesión con tu cuenta pro y se aplica automáticamente la tarifa profesional (−22 % en este pedido).</p>
-            <a href="../auth/login.html" class="btn btn-ghost-light btn-sm w-full justify-center">Acceder al área pro</a>
+            <a href="/pages/auth/login.html" class="btn btn-ghost-light btn-sm w-full justify-center">Acceder al área pro</a>
           </div>
 
           <!-- Métodos de pago -->
@@ -339,13 +268,13 @@
   <div data-component="site-footer"></div>
 
   <!-- Mobile + search -->
-  <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto"><div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="../../assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><nav class="px-5 py-6"><a href="../aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a><a href="tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Tienda</a><a href="../servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a><a href="../servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a><a href="../empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a></nav></div>
+  <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto"><div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="/assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><nav class="px-5 py-6"><a href="/pages/aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a><a href="/pages/tienda/tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Tienda</a><a href="/pages/servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a><a href="/pages/servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a><a href="/pages/empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a></nav></div>
   <div data-search-overlay class="fixed inset-0 z-50 bg-ink/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300"><div class="container-x pt-24"><button data-search-close class="absolute top-6 right-6 text-paper p-3 hover:bg-white/10 rounded-full"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="max-w-3xl mx-auto"><input type="search" placeholder="¿Qué necesitas?" class="w-full bg-transparent text-paper text-2xl md:text-4xl font-serif pb-5 border-b-2 border-white/20 focus:border-filament outline-none placeholder:text-paper/30"/></div></div></div>
 
-  <script src="../../assets/js/component-loader.js"></script>
-  <script src="../../data/api.js"></script>
-  <script src="../../assets/js/backend-integration.js"></script>
-  <script src="../../assets/js/main.js"></script>
-  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
 </body>
 </html>

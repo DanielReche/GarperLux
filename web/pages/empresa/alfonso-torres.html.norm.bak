@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="/.">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alfonso Torres · Autor invitado · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="/.assets/css/styles.css" />
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/.index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/aprender/hazlo-tu-mismo.html" class="hover:text-ink">Hazlo Tú Mismo</a><span class="opacity-50">/</span><span class="text-ink">Alfonso Torres</span></nav></div>
+
+<!-- HERO -->
+<section class="container-x py-16 md:py-24 border-b border-line">
+  <div class="grid md:grid-cols-[1fr_1.5fr] gap-12 items-center">
+    <div class="relative">
+      <div class="aspect-square bg-gradient-to-br from-copper/30 via-filament/15 to-paper-2 rounded-2xl grid place-items-center relative overflow-hidden">
+        <div class="absolute inset-0 grid place-items-center text-graphite/15">
+          <svg width="280" height="280" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+        </div>
+        <div class="relative bg-ink text-paper rounded-full w-32 h-32 grid place-items-center font-serif text-5xl font-medium">AT</div>
+      </div>
+      <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+        <div class="bg-paper-2 rounded-xl p-3"><div class="font-serif text-2xl font-medium">24</div><div class="text-[10px] font-mono text-graphite uppercase">Años profesión</div></div>
+        <div class="bg-paper-2 rounded-xl p-3"><div class="font-serif text-2xl font-medium">62</div><div class="text-[10px] font-mono text-graphite uppercase">Tutoriales firmados</div></div>
+        <div class="bg-paper-2 rounded-xl p-3"><div class="font-serif text-2xl font-medium">47</div><div class="text-[10px] font-mono text-graphite uppercase">Consejos publicados</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="eyebrow text-copper mb-3">Autor invitado · Instalador BT</div>
+      <h1 class="font-serif font-medium leading-[0.92] tracking-[-0.02em]" style="font-size: clamp(2.75rem, 6.5vw, 5rem);">Alfonso Torres.</h1>
+      <p class="text-graphite mt-5 text-lg leading-relaxed max-w-xl">Lleva en obras desde 2002. Ha rehecho cuadros eléctricos por toda Andalucía oriental, ha visto cómo la domótica pasaba de pijada a estándar, y sigue enchufando un polímetro antes de tocar cualquier cable. Firma en GarperLux los tutoriales que necesitan rigor sin solemnidad.</p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        <span class="pill bg-paper-2 text-graphite text-[11px]">Carnet BT-AND-2002-417</span>
+        <span class="pill bg-paper-2 text-graphite text-[11px]">REBT actualizado</span>
+        <span class="pill bg-paper-2 text-graphite text-[11px]">Domótica KNX certificado</span>
+        <span class="pill bg-paper-2 text-graphite text-[11px]">Especialista en reformas</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIO -->
+<section class="container-x py-16 md:py-20">
+  <div class="max-w-3xl mx-auto">
+    <div class="eyebrow text-copper mb-3">Cómo llegamos aquí</div>
+    <h2 class="font-serif font-medium leading-[1.1] mb-6" style="font-size: clamp(1.75rem, 4vw, 2.5rem);">Cuatro veranos en obras y un curso de baja tensión.</h2>
+
+    <div class="space-y-4 text-lg text-graphite leading-relaxed">
+      <p>Empezó como peón de un electricista de pueblo en Mancha Real, llevando rollos de manguera y tirando del cable mientras alguien lo guiaba. Aquellos cuatro veranos, dice, le enseñaron más que la academia. Después vino la formación profesional, el carnet, y montar la furgoneta a su nombre.</p>
+      <p>Hizo de todo: domesticar un cuadro de fábrica, sacar de apuros a una panadería que se quedó sin corriente un sábado a las siete de la mañana, montar la primera instalación domótica de un chalet en Pegalajar cuando la palabra "domótica" todavía sonaba a ciencia ficción.</p>
+      <p>Su norma: no vender lo que no recomendaría a su madre. Si una avería se puede explicar al cliente para que la entienda, la explica. Si una reparación puede ahorrarse llamando a un técnico, lo dice.</p>
+      <p>Empezó a colaborar con GarperLux en 2025, cuando los socios le propusieron revisar todos los tutoriales de la web. Aceptó con dos condiciones: poder corregir lo que viera mal sin pelearse, y poner el "Cuándo NO hacerlo" en cada guía. Las dos siguen vigentes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CITAS -->
+<section class="container-x py-12 border-t border-line">
+  <div class="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+    <blockquote class="bg-white border border-line rounded-2xl p-6 relative">
+      <div class="text-filament font-serif text-5xl leading-none absolute -top-2 left-4">"</div>
+      <p class="font-serif italic text-lg leading-snug mt-3">El que dice que un cable da igual sólo está esperando que falle.</p>
+      <div class="text-xs text-graphite font-mono mt-4">Sobre por qué importa la sección del cable</div>
+    </blockquote>
+    <blockquote class="bg-ink text-paper rounded-2xl p-6 relative">
+      <div class="text-filament font-serif text-5xl leading-none absolute -top-2 left-4">"</div>
+      <p class="font-serif italic text-lg leading-snug mt-3">Si tu cuadro tiene cinta aislante donde no debería, es que alguien antes que tú apagó un fuego.</p>
+      <div class="text-xs text-paper/50 font-mono mt-4">Sobre revisar lo que te encuentras</div>
+    </blockquote>
+    <blockquote class="bg-white border border-line rounded-2xl p-6 relative">
+      <div class="text-filament font-serif text-5xl leading-none absolute -top-2 left-4">"</div>
+      <p class="font-serif italic text-lg leading-snug mt-3">Más vale cinco minutos verificando con polímetro que un susto que no se olvida.</p>
+      <div class="text-xs text-graphite font-mono mt-4">Sobre el protocolo CCC</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- TUTORIALES FIRMADOS -->
+<section class="container-x py-16 border-t border-line">
+  <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+    <div>
+      <div class="eyebrow text-copper mb-3">Tutoriales firmados</div>
+      <h2 class="font-serif font-medium leading-[1.05]" style="font-size: clamp(1.75rem, 4vw, 2.75rem);">62 guías revisadas por Alfonso.</h2>
+    </div>
+    <a href="/pages/aprender/hazlo-tu-mismo.html" class="link-underline text-sm">Ver biblioteca completa →</a>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-2xl p-5 hover:border-ink transition-colors">
+      <div class="text-[11px] font-mono text-copper uppercase tracking-wider mb-2">#042 · Mecanismos · Fácil</div>
+      <h3 class="font-serif text-lg font-medium leading-tight mb-2">Cambiar un interruptor sin liarla</h3>
+      <p class="text-sm text-graphite">El más vendido de la biblioteca. 25 minutos.</p>
+    </a>
+    <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-2xl p-5 hover:border-ink transition-colors">
+      <div class="text-[11px] font-mono text-copper uppercase tracking-wider mb-2">#020 · Mecanismos · Fácil</div>
+      <h3 class="font-serif text-lg font-medium leading-tight mb-2">Cambiar un enchufe quemado paso a paso</h3>
+      <p class="text-sm text-graphite">Reposición típica con explicación de por qué se quemó.</p>
+    </a>
+    <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-2xl p-5 hover:border-ink transition-colors">
+      <div class="text-[11px] font-mono text-copper uppercase tracking-wider mb-2">#015 · Cuadro · Media</div>
+      <h3 class="font-serif text-lg font-medium leading-tight mb-2">¿Por qué salta el diferencial?</h3>
+      <p class="text-sm text-graphite">Diagnóstico paso a paso de las 5 causas más frecuentes.</p>
+    </a>
+    <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-2xl p-5 hover:border-ink transition-colors">
+      <div class="text-[11px] font-mono text-copper uppercase tracking-wider mb-2">#011 · Iluminación · Fácil</div>
+      <h3 class="font-serif text-lg font-medium leading-tight mb-2">Reemplazar un downlight halógeno por LED</h3>
+      <p class="text-sm text-graphite">Sin estropear el techo. La conversión que más se amortiza.</p>
+    </a>
+    <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-2xl p-5 hover:border-ink transition-colors">
+      <div class="text-[11px] font-mono text-copper uppercase tracking-wider mb-2">#028 · Domótica · Media</div>
+      <h3 class="font-serif text-lg font-medium leading-tight mb-2">Instalar Shelly 1PM detrás de un interruptor</h3>
+      <p class="text-sm text-graphite">Domotizar sin tirar tabiques. Reversible al 100 %.</p>
+    </a>
+    <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-2xl p-5 hover:border-ink transition-colors">
+      <div class="text-[11px] font-mono text-copper uppercase tracking-wider mb-2">#048 · Cuadro · Fácil</div>
+      <h3 class="font-serif text-lg font-medium leading-tight mb-2">Etiquetar correctamente un cuadro eléctrico</h3>
+      <p class="text-sm text-graphite">El truco que te ahorra apagones a las 3 AM.</p>
+    </a>
+  </div>
+</section>
+
+<!-- CONSEJOS -->
+<section class="bg-paper-2 border-t border-line py-16">
+  <div class="container-x">
+    <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+      <div>
+        <div class="eyebrow text-copper mb-3">Consejos firmados</div>
+        <h2 class="font-serif font-medium leading-[1.05]" style="font-size: clamp(1.75rem, 4vw, 2.75rem);">47 trucos breves<br/><em class="not-italic text-copper">de los que se aprenden en obra.</em></h2>
+      </div>
+      <a href="/pages/aprender/consejos.html" class="link-underline text-sm">Ver todos los consejos →</a>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="bg-white rounded-xl p-4 border border-line"><div class="font-mono text-[10px] text-copper mb-1">#001 · Seguridad</div><p class="font-serif text-sm italic">"Antes de tocar un enchufe, comprueba con el polímetro que no hay tensión. Sí, ya has bajado el plomo. Hazlo igual."</p></div>
+      <div class="bg-white rounded-xl p-4 border border-line"><div class="font-mono text-[10px] text-copper mb-1">#003 · Cuadro</div><p class="font-serif text-sm italic">"Etiqueta cada magnetotérmico con el cuarto al que protege. Cuando salte uno a las 3 AM, te acordarás de mí."</p></div>
+      <div class="bg-white rounded-xl p-4 border border-line"><div class="font-mono text-[10px] text-copper mb-1">#005 · Iluminación</div><p class="font-serif text-sm italic">"Para un salón, 2700 K. Para un baño, 4000 K. Lo que pasa de 5000 K es para almacenes y quirófanos."</p></div>
+      <div class="bg-white rounded-xl p-4 border border-line"><div class="font-mono text-[10px] text-copper mb-1">#012 · Domótica</div><p class="font-serif text-sm italic">"No automatices nada que vayas a hacer dos veces al día como mucho. La domótica vacía tiene un coste."</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIO PROYECTO -->
+<section class="container-x py-16">
+  <div class="bg-ink text-paper rounded-2xl p-8 md:p-12 grid md:grid-cols-[2fr_1fr] gap-8 items-center relative overflow-hidden">
+    <div class="absolute -top-20 -right-20 w-[400px] h-[400px] filament-glow opacity-20"></div>
+    <div class="relative">
+      <div class="eyebrow text-filament mb-3">Lo dice él</div>
+      <blockquote class="font-serif text-2xl md:text-3xl leading-tight italic">
+        "Llevo años explicándolo en el taller. Que estos textos lo lleguen a personas que no van a venir a verme me parece lo más útil que he firmado en mi vida."
+      </blockquote>
+      <div class="mt-6 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-filament text-ink grid place-items-center font-medium">AT</div>
+        <div>
+          <div class="font-medium">Alfonso Torres</div>
+          <div class="text-xs text-paper/60 font-mono">Sobre escribir para GarperLux</div>
+        </div>
+      </div>
+    </div>
+    <div class="relative grid grid-cols-2 gap-3 text-center">
+      <div class="bg-white/5 rounded-xl p-4 border border-white/10"><div class="font-serif text-3xl">2002</div><div class="text-[10px] font-mono text-paper/50 uppercase">Carnet BT</div></div>
+      <div class="bg-white/5 rounded-xl p-4 border border-white/10"><div class="font-serif text-3xl">3.250</div><div class="text-[10px] font-mono text-paper/50 uppercase">Visitas en cartera</div></div>
+      <div class="bg-white/5 rounded-xl p-4 border border-white/10"><div class="font-serif text-3xl">Mancha Real</div><div class="text-[10px] font-mono text-paper/50 uppercase">Origen</div></div>
+      <div class="bg-white/5 rounded-xl p-4 border border-white/10"><div class="font-serif text-3xl">2025</div><div class="text-[10px] font-mono text-paper/50 uppercase">Llegada a GarperLux</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="container-x pb-20">
+  <div class="bg-paper-2 border border-line rounded-2xl p-8 grid md:grid-cols-[1fr_auto] gap-6 items-center">
+    <div>
+      <h2 class="font-serif text-2xl md:text-3xl font-medium leading-tight">¿Necesitas que pase por tu casa?</h2>
+      <p class="text-graphite mt-2">Alfonso forma parte de la red de instaladores colaboradores de GarperLux. Si tu solicitud cae en su zona, será él quien te atienda.</p>
+    </div>
+    <a href="/pages/servicios/solicitar-tecnico.html" class="btn btn-primary">Solicitar técnico</a>
+  </div>
+</section>
+  <div data-component="site-footer"></div>
+
+<script src="/.assets/js/main.js"></script>
+  <script src="/.assets/js/component-loader.js"></script>
+  <script src="/.data/api.js"></script>
+  <script src="/.assets/js/backend-integration.js"></script>
+  <script src="/.assets/js/catalog-ui.js"></script>
+</body></html>

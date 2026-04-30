@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-  <base href="../../">
+  <base href="/.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Solicitar técnico · GarperLux</title>
@@ -18,7 +18,7 @@
       fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
     }}};
   </script>
-  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
 
   <style>
     /* STEPPER */
@@ -69,8 +69,8 @@
   <!-- HEADER MINIMAL -->
   <header class="border-b border-line bg-paper sticky top-0 z-30">
     <div class="container-x flex items-center justify-between py-4">
-      <a href="../../index.html" class="flex items-center gap-3">
-        <img src="../../assets/img/logo.svg" alt="GarperLux" class="h-8 w-auto"/>
+      <a href="/index.html" class="flex items-center gap-3">
+        <img src="/assets/img/logo.svg" alt="GarperLux" class="h-8 w-auto"/>
       </a>
 
       <!-- Progress segmentada -->
@@ -86,7 +86,7 @@
         </div>
       </div>
 
-      <a href="../../index.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2">
+      <a href="/index.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg>
         <span class="hidden sm:inline">Salir</span>
       </a>
@@ -355,7 +355,7 @@
             <label class="flex items-start gap-3 mt-2 cursor-pointer">
               <input type="checkbox" class="w-4 h-4 mt-1" required/>
               <span class="text-sm text-graphite leading-relaxed">
-                He leído y acepto la <a href="../legal/privacidad.html" class="link-underline text-ink">política de privacidad</a> y el tratamiento de mis datos para gestionar esta solicitud.
+                He leído y acepto la <a href="/pages/legal/privacidad.html" class="link-underline text-ink">política de privacidad</a> y el tratamiento de mis datos para gestionar esta solicitud.
               </span>
             </label>
           </div>
@@ -597,16 +597,16 @@
     });
     $('#btn-submit').addEventListener('click', () => {
       // En un proyecto real iría aquí el POST al backend.
-      window.location.href = 'solicitud-confirmacion.html';
+      window.location.href = '/pages/servicios/solicitud-confirmacion.html';
     });
     $$('[data-edit]').forEach(b => b.addEventListener('click', () => {
       currentStep = +b.dataset.edit;
       showStep(currentStep);
     }));
   </script>
-  <script src="../../assets/js/component-loader.js"></script>
-  <script src="../../data/api.js"></script>
-  <script src="../../assets/js/backend-integration.js"></script>
-  <script src="../../assets/js/catalog-ui.js"></script>
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
 </body>
 </html>

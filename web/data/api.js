@@ -51,6 +51,7 @@ window.GarperLuxApi = (() => {
     product: (slug) => request(`/catalog/products/${encodeURIComponent(slug)}`),
     cart: () => request('/cart'),
     addToCart: (sku, quantity = 1) => request('/cart/items', { method: 'POST', body: JSON.stringify({ sku, quantity }) }),
+    deleteCartItem: (sku) => request(`/cart/items/${encodeURIComponent(sku)}`, { method: 'DELETE' }),
     checkoutOptions: () => request('/checkout/options'),
     checkout: (payload) => request('/orders/checkout', { method: 'POST', body: JSON.stringify(payload) }),
     order: (code) => request(`/orders/${encodeURIComponent(code)}`),
