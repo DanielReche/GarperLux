@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="../../">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administración · GarperLux</title>
+  <meta name="description" content="Panel interno de administración GarperLux para pedidos, servicios, reseñas, devoluciones, mensajes y candidaturas." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <style>
+    .admin-card{background:white;border:1px solid var(--line);border-radius:22px;padding:1.25rem}
+    .admin-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem;border-radius:16px;background:var(--paper-2);border:1px solid rgba(0,0,0,.04)}
+    .admin-row strong{display:block;color:var(--ink);font-weight:600}
+    .admin-row p{margin-top:.25rem;color:var(--graphite);font-size:.875rem}
+    .admin-actions{display:flex;align-items:center;justify-content:flex-end;gap:.5rem;flex-wrap:wrap}
+    @media (max-width:720px){.admin-row{align-items:flex-start;flex-direction:column}.admin-actions{justify-content:flex-start}}
+  </style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+  <main class="container-x py-10">
+    <nav class="text-sm text-graphite mb-8">
+      <a href="index.html" class="hover:text-ink">Inicio</a>
+      <span class="mx-2">/</span>
+      <span>Administración</span>
+    </nav>
+
+    <section class="grid lg:grid-cols-[1fr_.42fr] gap-6 mb-8">
+      <div class="rounded-[2rem] bg-ink text-paper p-8 md:p-10">
+        <div class="eyebrow text-filament mb-3">Panel interno</div>
+        <h1 class="font-serif font-medium leading-[.95]" style="font-size:clamp(2.3rem,5vw,4.8rem)">Operaciones GarperLux</h1>
+        <p class="text-paper/75 max-w-2xl mt-5">Gestión de pedidos, solicitudes técnicas, reseñas, devoluciones, mensajes y candidaturas desde la API real.</p>
+      </div>
+      <aside class="admin-card">
+        <div class="eyebrow text-copper mb-3">Acceso</div>
+        <p class="text-sm text-graphite leading-relaxed">Usuario demo: <strong>admin@garperlux.local</strong><br/>Contraseña: <strong>garperlux123</strong></p>
+        <a href="login.html?redirect=admin.html" class="btn btn-primary w-full justify-center mt-5">Iniciar sesión admin</a>
+      </aside>
+    </section>
+
+    <section class="grid md:grid-cols-4 gap-4 mb-8">
+      <article class="admin-card"><div class="text-xs font-mono text-graphite uppercase">Pedidos abiertos</div><strong class="font-serif text-4xl mt-2 block" data-admin-stat="orders">—</strong></article>
+      <article class="admin-card"><div class="text-xs font-mono text-graphite uppercase">Servicios abiertos</div><strong class="font-serif text-4xl mt-2 block" data-admin-stat="services">—</strong></article>
+      <article class="admin-card"><div class="text-xs font-mono text-graphite uppercase">Reseñas pendientes</div><strong class="font-serif text-4xl mt-2 block" data-admin-stat="reviews">—</strong></article>
+      <article class="admin-card"><div class="text-xs font-mono text-graphite uppercase">Soporte nuevo</div><strong class="font-serif text-4xl mt-2 block" data-admin-stat="support">—</strong></article>
+    </section>
+
+    <section class="grid lg:grid-cols-2 gap-6">
+      <article class="admin-card lg:col-span-2">
+        <div class="flex items-start justify-between gap-4 flex-wrap mb-4">
+          <div>
+            <h2 class="font-serif text-2xl font-medium">Catálogo</h2>
+            <p class="text-sm text-graphite mt-1">Alta rápida y control de stock conectado a SQLite provisional.</p>
+          </div>
+          <form data-admin-product-form class="grid md:grid-cols-6 gap-2 w-full">
+            <input class="field md:col-span-1" name="sku" placeholder="SKU" required />
+            <input class="field md:col-span-2" name="name" placeholder="Nombre del producto" required />
+            <input class="field" name="price" type="number" step="0.01" placeholder="Precio" required />
+            <input class="field" name="stock" type="number" step="1" placeholder="Stock" required />
+            <button class="btn btn-primary justify-center" type="button" data-admin-product-create>Crear</button>
+          </form>
+        </div>
+        <div class="space-y-3" data-admin-list="products"></div>
+      </article>
+      <article class="admin-card"><h2 class="font-serif text-2xl font-medium mb-4">Pedidos</h2><div class="space-y-3" data-admin-list="orders"></div></article>
+      <article class="admin-card"><h2 class="font-serif text-2xl font-medium mb-4">Solicitudes técnicas</h2><div class="space-y-3" data-admin-list="services"></div></article>
+      <article class="admin-card"><h2 class="font-serif text-2xl font-medium mb-4">Reseñas</h2><div class="space-y-3" data-admin-list="reviews"></div></article>
+      <article class="admin-card"><h2 class="font-serif text-2xl font-medium mb-4">Devoluciones</h2><div class="space-y-3" data-admin-list="returns"></div></article>
+      <article class="admin-card"><h2 class="font-serif text-2xl font-medium mb-4">Mensajes</h2><div class="space-y-3" data-admin-list="messages"></div></article>
+      <article class="admin-card"><h2 class="font-serif text-2xl font-medium mb-4">Candidaturas</h2><div class="space-y-3" data-admin-list="applications"></div></article>
+      <article class="admin-card lg:col-span-2"><h2 class="font-serif text-2xl font-medium mb-4">Auditoría</h2><div class="space-y-3" data-admin-list="audit"></div></article>
+    </section>
+  </main>
+
+  <div data-component="site-footer"></div>
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js?v=admin-catalog-1"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="../../">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceder · Crear cuenta · GarperLux</title>
+  <meta name="description" content="Accede a tu área personal de GarperLux o crea cuenta nueva. Cuenta particular gratis o registro de instalador autorizado con tarifas profesionales." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <style>
+    body { min-height: 100vh; }
+    .auth-tab {
+      flex: 1; padding: 0.85rem 1rem; text-align: center;
+      font-weight: 500; font-size: 14px; color: var(--graphite);
+      border-bottom: 2px solid transparent; cursor: pointer;
+      transition: all .2s;
+    }
+    .auth-tab.is-active { color: var(--ink); border-bottom-color: var(--filament); }
+
+    .auth-pane { display: none; }
+    .auth-pane.is-active { display: block; animation: fadeIn .3s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .field {
+      width: 100%; padding: 0.85rem 1rem;
+      background: white; border: 1.5px solid var(--line);
+      border-radius: 10px; font-size: 15px; color: var(--ink);
+      transition: border-color .15s;
+    }
+    .field:focus { outline: none; border-color: var(--ink); }
+
+    .role-card {
+      flex: 1; padding: 1.1rem; border: 1.5px solid var(--line);
+      border-radius: 12px; cursor: pointer; transition: all .2s;
+      background: white;
+    }
+    .role-card:hover { border-color: var(--graphite); }
+    .role-card.is-selected { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+    .role-card.is-selected .role-meta { color: rgba(247,243,236,0.6); }
+
+    .pro-section { display: none; }
+    .pro-section.is-active { display: block; }
+
+    /* Filamento orgánico decorativo */
+    .organic-glow { background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,200,120,0.6) 0%, rgba(232,165,69,0.2) 30%, transparent 70%); filter: blur(40px); }
+  </style>
+</head>
+
+<body class="bg-paper text-ink overflow-x-hidden">
+
+  <div class="grid lg:grid-cols-2 min-h-screen">
+
+    <!-- ============ PANEL IZQUIERDO: BRANDING ============ -->
+    <aside class="hidden lg:flex relative bg-ink text-paper overflow-hidden flex-col">
+      <!-- Glow decorativo -->
+      <div class="absolute -top-40 -left-40 w-[600px] h-[600px] organic-glow opacity-70"></div>
+      <div class="absolute bottom-1/4 -right-40 w-[500px] h-[500px] organic-glow opacity-40"></div>
+
+      <!-- Top: logo -->
+      <div class="relative p-10">
+        <a href="index.html" class="inline-flex items-center text-sm text-paper/70 hover:text-paper gap-2 mb-12">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Volver al inicio
+        </a>
+        <img src="assets/img/logo.svg" alt="GarperLux" class="h-10 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
+      </div>
+
+      <!-- Frase y manifiesto -->
+      <div class="relative px-10 flex-1 flex flex-col justify-center">
+        <div class="eyebrow text-filament mb-5 flex items-center gap-3">
+          <span class="w-8 h-px bg-filament"></span>
+          Tu área personal
+        </div>
+        <h1 class="font-serif font-medium leading-[0.96] tracking-[-0.02em] mb-7" style="font-size: clamp(2.5rem, 5vw, 4.25rem);">
+          Aprende, compra<br/>
+          y <em class="italic text-filament">repite pedido</em><br/>
+          en dos clics.
+        </h1>
+        <p class="text-paper/70 leading-relaxed max-w-md mb-10">
+          Una cuenta para guardar tutoriales, ver el estado de tus pedidos y solicitudes, y, si eres instalador autorizado, acceder a tarifas profesionales y a la descarga de albaranes y facturas.
+        </p>
+
+        <!-- Mini-features -->
+        <div class="space-y-3.5">
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-7 h-7 rounded-full bg-white/5 grid place-items-center text-filament">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            Guarda tutoriales y proyectos para luego
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-7 h-7 rounded-full bg-white/5 grid place-items-center text-filament">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            Sigue el estado de tus pedidos y solicitudes
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-7 h-7 rounded-full bg-white/5 grid place-items-center text-filament">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            Repite compra de tus favoritos en un solo clic
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-7 h-7 rounded-full bg-white/5 grid place-items-center text-filament">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            <span>Si eres instalador: <strong class="text-paper">tarifa pro y albaranes descargables</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonio -->
+      <div class="relative p-10 border-t border-white/10">
+        <blockquote class="font-serif italic text-xl leading-snug mb-3">
+          "Por fin una web que no me cambia los albaranes de sitio cada mes."
+        </blockquote>
+  <div data-component="site-footer"></div>
+      </div>
+    </aside>
+
+    <!-- ============ PANEL DERECHO: FORMS ============ -->
+    <main class="flex flex-col">
+      <!-- Top mobile bar -->
+      <div class="lg:hidden bg-ink text-paper p-5 flex items-center justify-between">
+        <a href="index.html" class="inline-flex items-center text-sm gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Volver
+        </a>
+        <img src="assets/img/logo.svg" alt="GarperLux" class="h-7 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
+      </div>
+
+      <div class="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-14">
+        <div class="w-full max-w-md">
+
+          <!-- DEMO BOTONES (entrar con rol simulado) -->
+          <div class="bg-paper-3 border border-copper/30 rounded-xl p-4 mb-6">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="font-mono text-[10px] uppercase tracking-wider text-copper font-semibold">Demo prototipo</span>
+              <span class="text-xs text-graphite">· entrar sin contraseña</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="glxSetSession('particular'); location.href='area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-ink transition-colors">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="w-6 h-6 rounded-full bg-ink text-paper grid place-items-center font-medium text-[11px]">A</span>
+                  <span class="text-sm font-medium">Antonio</span>
+                </div>
+                <div class="text-[11px] text-graphite">Particular</div>
+              </button>
+              <button onclick="glxSetSession('pro'); location.href='area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-filament transition-colors">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="w-6 h-6 rounded-full bg-filament text-ink grid place-items-center font-medium text-[10px]">JL</span>
+                  <span class="text-sm font-medium">El Chispas</span>
+                </div>
+                <div class="text-[11px] text-graphite">Instalador pro</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabs principales -->
+          <div class="flex border-b border-line mb-8">
+            <button class="auth-tab is-active" data-tab="login">Iniciar sesión</button>
+            <button class="auth-tab" data-tab="register">Crear cuenta</button>
+          </div>
+
+          <!-- ============ PANE LOGIN ============ -->
+          <section class="auth-pane is-active" data-pane="login">
+            <h2 class="font-serif text-3xl md:text-4xl font-medium leading-tight mb-2">Bienvenido de vuelta.</h2>
+            <p class="text-graphite mb-8">Accede a tu cuenta para gestionar pedidos, favoritos y solicitudes técnicas.</p>
+
+            <form class="space-y-4">
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Email <span class="text-warn">*</span></label>
+                <input type="email" class="field" placeholder="tu@correo.com" required/>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-sm font-medium">Contraseña <span class="text-warn">*</span></label>
+                  <a href="recuperar-password.html" class="text-xs text-copper hover:underline">¿La olvidaste?</a>
+                </div>
+                <input type="password" class="field" placeholder="••••••••" required/>
+              </div>
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-graphite">
+                <input type="checkbox" class="w-4 h-4"/> Mantener sesión iniciada
+              </label>
+              <button type="submit" class="btn btn-primary w-full justify-center">
+                Acceder
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </button>
+            </form>
+
+            <div class="my-7 flex items-center gap-3">
+              <div class="flex-1 h-px bg-line"></div>
+              <span class="text-xs text-graphite font-mono uppercase tracking-wider">o</span>
+              <div class="flex-1 h-px bg-line"></div>
+            </div>
+
+            <div class="space-y-2">
+              <button class="btn btn-ghost w-full justify-center text-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21.35 11.1H12v3.4h5.4c-.27 1.4-1.1 2.6-2.32 3.4l3.74 2.92c2.2-2.04 3.5-5.04 3.5-8.6 0-.74-.07-1.46-.18-2.16z"/><path d="M12 22c3.13 0 5.76-1.04 7.68-2.82l-3.74-2.92c-1.04.7-2.36 1.1-3.94 1.1-3 0-5.55-2.04-6.46-4.78H1.7v3c1.9 3.84 5.84 6.42 10.3 6.42z"/><path d="M5.54 14.42c-.22-.7-.35-1.44-.35-2.2s.13-1.5.35-2.2v-3H1.7C.66 8.5.06 10.18.06 12.2c0 2.04.6 3.7 1.64 5.18l3.84-2.96z"/><path d="M12 5.62c1.7 0 3.22.6 4.42 1.74l3.32-3.32C17.8 2.06 15.2 1 12 1 7.54 1 3.6 3.6 1.7 7.4l3.84 3c.9-2.74 3.46-4.78 6.46-4.78z"/></svg>
+                Continuar con Google
+              </button>
+            </div>
+
+            <p class="text-center text-sm text-graphite mt-7">
+              ¿Aún no tienes cuenta? <button data-tab-trigger="register" class="text-ink font-medium hover:underline">Créala aquí</button>
+            </p>
+          </section>
+
+          <!-- ============ PANE REGISTRO ============ -->
+          <section class="auth-pane" data-pane="register">
+            <h2 class="font-serif text-3xl md:text-4xl font-medium leading-tight mb-2">Crea tu cuenta.</h2>
+            <p class="text-graphite mb-7">Tres minutos si eres particular. Algo más si eres instalador autorizado, que requiere validar carnet.</p>
+
+            <!-- Selector de rol -->
+            <div class="flex gap-2 mb-7" role="radiogroup" aria-label="Tipo de cuenta">
+              <label class="role-card is-selected" data-role="particular">
+                <input type="radio" name="role" value="particular" class="sr-only" checked/>
+                <div class="flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-full bg-paper-2 grid place-items-center shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-medium">Particular</div>
+                    <div class="role-meta text-xs text-graphite">Compras y tutoriales</div>
+                  </div>
+                </div>
+              </label>
+              <label class="role-card" data-role="pro">
+                <input type="radio" name="role" value="pro" class="sr-only"/>
+                <div class="flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-full bg-paper-2 grid place-items-center shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-medium">Soy instalador</div>
+                    <div class="role-meta text-xs text-graphite">Carnet BT vigente · tarifa pro</div>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <form class="space-y-4">
+              <!-- COMÚN -->
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Email <span class="text-warn">*</span></label>
+                <input type="email" class="field" placeholder="tu@correo.com" required/>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-sm font-medium mb-1.5 block">Contraseña <span class="text-warn">*</span></label>
+                  <input type="password" class="field" placeholder="••••••••" required/>
+                </div>
+                <div>
+                  <label class="text-sm font-medium mb-1.5 block">Repite <span class="text-warn">*</span></label>
+                  <input type="password" class="field" placeholder="••••••••" required/>
+                </div>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Nombre completo <span class="text-warn">*</span></label>
+                <input type="text" class="field" placeholder="Antonio García López" required/>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Teléfono <span class="text-graphite font-normal">(opcional)</span></label>
+                <input type="tel" class="field font-mono" placeholder="600 123 456"/>
+              </div>
+
+              <!-- ============ EXTRA PRO ============ -->
+              <div class="pro-section space-y-4">
+                <div class="filament-line my-2"></div>
+                <div class="flex items-center gap-3 mb-1">
+                  <div class="w-9 h-9 rounded-full bg-electric/10 grid place-items-center text-electric shrink-0">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="font-medium">Datos profesionales</h3>
+                    <p class="text-xs text-graphite">Necesitamos validar tu carnet antes de activar la tarifa pro. Tarda 24-48 h.</p>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium mb-1.5 block">DNI / NIE <span class="text-warn">*</span></label>
+                  <input type="text" class="field font-mono" placeholder="12345678X" required/>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                  <div class="col-span-2">
+                    <label class="text-sm font-medium mb-1.5 block">Nº carnet de Baja Tensión <span class="text-warn">*</span></label>
+                    <input type="text" class="field font-mono" placeholder="BT-123456-AND" required/>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium mb-1.5 block">Caducidad <span class="text-warn">*</span></label>
+                    <input type="month" class="field font-mono" required/>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium mb-1.5 block">Comunidad autónoma de emisión <span class="text-warn">*</span></label>
+                  <select class="field" required>
+                    <option value="">Selecciona…</option>
+                    <option>Andalucía</option>
+                    <option>Madrid</option>
+                    <option>Cataluña</option>
+                    <option>Castilla-La Mancha</option>
+                    <option>Castilla y León</option>
+                    <option>Otra…</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium mb-1.5 block">Subir copia del carnet <span class="text-warn">*</span></label>
+                  <div class="dropzone" onclick="document.getElementById('carnet-file').click()" style="border: 2px dashed var(--line); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; background: var(--paper-2);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-copper mx-auto mb-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                    <div class="text-sm font-medium">Subir foto o PDF del carnet</div>
+                    <div class="text-xs text-graphite mt-0.5">Anverso y reverso · máx 5 MB</div>
+                    <input type="file" id="carnet-file" class="hidden" accept="image/*,.pdf"/>
+                  </div>
+                </div>
+
+                <div class="pt-3 mt-3 border-t border-line">
+                  <h3 class="font-medium mb-3">Datos fiscales</h3>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium mb-1.5 block">Razón social / Nombre fiscal <span class="text-warn">*</span></label>
+                  <input type="text" class="field" placeholder="Jose Luis García S.L." required/>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                  <div>
+                    <label class="text-sm font-medium mb-1.5 block">CIF / NIF <span class="text-warn">*</span></label>
+                    <input type="text" class="field font-mono" placeholder="B12345678" required/>
+                  </div>
+                  <div class="col-span-2">
+                    <label class="text-sm font-medium mb-1.5 block">Régimen IVA</label>
+                    <select class="field">
+                      <option>General</option>
+                      <option>Recargo equivalencia</option>
+                      <option>Exento</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium mb-1.5 block">Dirección fiscal <span class="text-warn">*</span></label>
+                  <input type="text" class="field" placeholder="Calle, número, piso" required/>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                  <div>
+                    <label class="text-sm font-medium mb-1.5 block">CP <span class="text-warn">*</span></label>
+                    <input type="text" class="field font-mono" placeholder="23071" maxlength="5" required/>
+                  </div>
+                  <div class="col-span-2">
+                    <label class="text-sm font-medium mb-1.5 block">Localidad <span class="text-warn">*</span></label>
+                    <input type="text" class="field" placeholder="Jaén" required/>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium mb-1.5 block">IBAN para devoluciones <span class="text-graphite font-normal">(opcional)</span></label>
+                  <input type="text" class="field font-mono" placeholder="ES00 0000 0000 0000 0000 0000"/>
+                </div>
+
+                <div class="bg-paper-3 border border-copper/20 rounded-xl p-4 text-sm flex items-start gap-3">
+                  <span class="w-8 h-8 rounded-full bg-copper/15 text-copper grid place-items-center shrink-0">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  </span>
+                  <div class="text-graphite">
+                    <strong class="text-ink">Validación 24-48 h.</strong> Mientras revisamos tu carnet, podrás navegar la web pero verás precios PVP. Tras la validación, tu cuenta queda activada con tarifa pro automáticamente.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Términos -->
+              <label class="flex items-start gap-3 cursor-pointer text-sm pt-2">
+                <input type="checkbox" class="w-4 h-4 mt-1" required/>
+                <span class="text-graphite leading-relaxed">
+                  Acepto la <a href="privacidad.html" class="link-underline text-ink">política de privacidad</a> y los <a href="terminos.html" class="link-underline text-ink">términos de uso</a> de GarperLux.
+                </span>
+              </label>
+
+              <button type="submit" class="btn btn-primary w-full justify-center mt-2">
+                <span data-cta="particular">Crear mi cuenta</span>
+                <span data-cta="pro" class="hidden">Enviar solicitud de validación</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </button>
+            </form>
+
+            <p class="text-center text-sm text-graphite mt-7">
+              ¿Ya tienes cuenta? <button data-tab-trigger="login" class="text-ink font-medium hover:underline">Inicia sesión</button>
+            </p>
+          </section>
+
+          <!-- Footer micro-legal -->
+          <p class="text-center text-xs text-graphite mt-10">
+            Protegido con cifrado de extremo a extremo · GarperLux S.L. · Jaén
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/auth.js"></script>
+  <script>
+    // Tabs login/register
+    const tabs = document.querySelectorAll('.auth-tab');
+    const panes = document.querySelectorAll('.auth-pane');
+    const showTab = (name) => {
+      tabs.forEach(t => t.classList.toggle('is-active', t.dataset.tab === name));
+      panes.forEach(p => p.classList.toggle('is-active', p.dataset.pane === name));
+    };
+    tabs.forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
+    document.querySelectorAll('[data-tab-trigger]').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tabTrigger)));
+
+    // Hash support
+    if (location.hash === '#registro' || location.hash === '#registro-pro') showTab('register');
+
+    // Selector rol particular/pro
+    const roleCards = document.querySelectorAll('.role-card');
+    const proSection = document.querySelector('.pro-section');
+    const ctaParticular = document.querySelector('[data-cta="particular"]');
+    const ctaPro = document.querySelector('[data-cta="pro"]');
+
+    roleCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const role = card.dataset.role;
+        roleCards.forEach(c => c.classList.toggle('is-selected', c.dataset.role === role));
+        card.querySelector('input').checked = true;
+        const isPro = role === 'pro';
+        proSection.classList.toggle('is-active', isPro);
+        ctaParticular.classList.toggle('hidden', isPro);
+        ctaPro.classList.toggle('hidden', !isPro);
+      });
+    });
+
+    // Si llegamos con hash de registro pro, activar
+    if (location.hash === '#registro-pro') {
+      document.querySelector('.role-card[data-role="pro"]').click();
+    }
+
+    // Form de login simulado: cualquier email vale, redirige a área personal
+    document.querySelector('[data-pane="login"] form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = e.target.querySelector('input[type="email"]').value.toLowerCase();
+      // Heurística simple: si el email parece pro lo metemos como pro, si no particular
+      const role = (email.includes('chispas') || email.includes('instalador')) ? 'pro' : 'particular';
+      glxSetSession(role);
+      const params = new URLSearchParams(location.search);
+      const redirect = params.get('redirect');
+      location.href = redirect || 'area-personal.html';
+    });
+
+    // Form de registro: cae como particular o pro según role-card
+    document.querySelector('[data-pane="register"] form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const role = document.querySelector('.role-card.is-selected').dataset.role || 'particular';
+      glxSetSession(role);
+      location.href = 'area-personal.html';
+    });
+  </script>
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+</body>
+</html>

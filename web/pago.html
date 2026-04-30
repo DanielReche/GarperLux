@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago · Tramitar pedido · GarperLux</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <style>
+    .field{width:100%;padding:.75rem .9rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink)}
+    .field:focus{outline:none;border-color:var(--ink)}
+    .pay-method{display:block;padding:1rem 1.2rem;border:1.5px solid var(--line);border-radius:14px;background:white;cursor:pointer;transition:all .15s}
+    .pay-method:hover{border-color:var(--graphite)}
+    .pay-method input{display:none}
+    .pay-method.is-on{border-color:var(--ink);background:var(--paper-2);box-shadow:0 0 0 3px rgba(11,13,18,.05)}
+    .pay-method-body{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
+    .pay-method.is-on .pay-method-body{display:block}
+  </style>
+</head>
+<body class="bg-paper text-ink">
+
+  <header class="border-b border-line bg-paper">
+    <div class="container-x flex items-center justify-between py-4">
+      <a href="index.html"><img src="assets/img/logo.svg" alt="GarperLux" class="h-9 w-auto"/></a>
+      <a href="checkout.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver a entrega</a>
+    </div>
+  </header>
+
+  <!-- Steps -->
+  <section class="container-x pt-8 pb-4">
+    <div class="flex items-center gap-2 sm:gap-4 text-sm flex-wrap">
+      <a href="carrito.html" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper-2 text-graphite hover:bg-paper-3"><span class="w-5 h-5 rounded-full bg-stock text-paper grid place-items-center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>Carrito</a>
+      <span class="text-graphite/50">›</span>
+      <a href="checkout.html" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper-2 text-graphite hover:bg-paper-3"><span class="w-5 h-5 rounded-full bg-stock text-paper grid place-items-center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>Entrega</a>
+      <span class="text-graphite/50">›</span>
+      <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ink text-paper"><span class="w-5 h-5 rounded-full bg-filament text-ink grid place-items-center font-mono text-xs font-medium">3</span>Pago</span>
+      <span class="text-graphite/50">›</span>
+      <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper-2 text-graphite"><span class="w-5 h-5 rounded-full bg-paper-3 text-graphite grid place-items-center font-mono text-xs font-medium">4</span>Confirmación</span>
+    </div>
+  </section>
+
+  <section class="container-x pb-20 pt-2">
+    <div class="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
+
+      <!-- ========== FORM PAGO ========== -->
+      <div>
+        <div class="mb-8">
+          <div class="eyebrow text-copper mb-2">Paso 3 de 4</div>
+          <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">¿Cómo lo pagas?</h1>
+          <p class="text-graphite mt-2">Pago seguro con cifrado SSL. Tus datos no se almacenan en nuestros servidores.</p>
+        </div>
+
+        <h2 class="font-serif text-lg font-medium mb-3">Método de pago</h2>
+        <div class="space-y-3 mb-8">
+          <!-- Tarjeta -->
+          <label class="pay-method is-on">
+            <input type="radio" name="metodo" checked/>
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-lg bg-ink text-paper grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+              <div class="flex-1">
+                <div class="font-medium">Tarjeta de crédito o débito</div>
+                <div class="text-xs text-graphite mt-0.5">Visa · Mastercard · American Express</div>
+              </div>
+              <div class="flex gap-1.5 text-[10px] font-mono text-graphite"><span class="px-1.5 py-0.5 bg-paper border border-line rounded">VISA</span><span class="px-1.5 py-0.5 bg-paper border border-line rounded">MC</span><span class="px-1.5 py-0.5 bg-paper border border-line rounded">AMEX</span></div>
+            </div>
+            <div class="pay-method-body grid sm:grid-cols-2 gap-3">
+              <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Número de tarjeta</label><input type="text" placeholder="1234 5678 9012 3456" class="field font-mono"/></div>
+              <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Caducidad</label><input type="text" placeholder="MM/AA" class="field font-mono"/></div>
+              <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CVV</label><input type="text" placeholder="123" class="field font-mono"/></div>
+              <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Titular</label><input type="text" placeholder="Como aparece en la tarjeta" class="field"/></div>
+              <label class="sm:col-span-2 flex items-center gap-2 text-sm cursor-pointer"><input type="checkbox" class="w-4 h-4"/>Guardar tarjeta para futuros pedidos</label>
+            </div>
+          </label>
+
+          <!-- Bizum -->
+          <label class="pay-method">
+            <input type="radio" name="metodo"/>
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-lg bg-electric text-paper grid place-items-center font-mono text-xs font-bold">Bz</span>
+              <div class="flex-1">
+                <div class="font-medium">Bizum</div>
+                <div class="text-xs text-graphite mt-0.5">Pago instantáneo desde el móvil</div>
+              </div>
+            </div>
+            <div class="pay-method-body">
+              <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Tu número de móvil</label>
+              <input type="tel" placeholder="600 000 000" class="field font-mono"/>
+              <p class="text-xs text-graphite mt-3">Te llegará una notificación a tu app del banco para autorizar el pago de 34,10 €.</p>
+            </div>
+          </label>
+
+          <!-- PayPal -->
+          <label class="pay-method">
+            <input type="radio" name="metodo"/>
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-lg bg-paper-2 text-electric grid place-items-center font-serif italic font-bold">P</span>
+              <div class="flex-1">
+                <div class="font-medium">PayPal</div>
+                <div class="text-xs text-graphite mt-0.5">Inicia sesión en PayPal al confirmar</div>
+              </div>
+            </div>
+          </label>
+
+          <!-- Transferencia -->
+          <label class="pay-method">
+            <input type="radio" name="metodo"/>
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-lg bg-paper-2 text-graphite grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11"/></svg></span>
+              <div class="flex-1">
+                <div class="font-medium">Transferencia bancaria</div>
+                <div class="text-xs text-graphite mt-0.5">El pedido se prepara cuando recibimos el ingreso (1-3 días)</div>
+              </div>
+            </div>
+          </label>
+
+          <!-- Pago aplazado pro -->
+          <label class="pay-method opacity-60">
+            <input type="radio" name="metodo" disabled/>
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-lg bg-filament/20 text-copper grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+              <div class="flex-1">
+                <div class="font-medium flex items-center gap-2">Pago aplazado a 30 días <span class="pill bg-filament/20 text-copper text-[10px] !border-0">Solo cuenta pro</span></div>
+                <div class="text-xs text-graphite mt-0.5">Disponible para instaladores con carnet BT validado · <a href="login.html" class="text-copper underline">Acceder</a></div>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Cupón aplicado info -->
+        <div class="bg-paper-2 border border-line rounded-2xl p-4 mb-8 flex items-start gap-3">
+          <svg class="text-copper shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s-8-4.5-8-11a8 8 0 0 1 16 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="11" r="3"/></svg>
+          <div class="text-sm">
+            <strong>Envío a:</strong> Calle Bernabé Soriano 12, 3º B · 23001 Jaén · entrega 28/04
+            <a href="checkout.html" class="block text-xs text-copper hover:underline mt-1">Cambiar dirección o velocidad</a>
+          </div>
+        </div>
+
+        <!-- Aceptación legal -->
+        <div class="space-y-3 mb-6 text-sm">
+          <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="w-4 h-4 mt-0.5"/><span>He leído y acepto los <a href="terminos.html" class="link-underline">términos y condiciones</a> y la <a href="privacidad.html" class="link-underline">política de privacidad</a></span></label>
+          <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="w-4 h-4 mt-0.5"/><span class="text-graphite">Quiero recibir consejos de electricistas y novedades de producto (puedes darte de baja cuando quieras)</span></label>
+        </div>
+
+        <div class="flex justify-between flex-wrap gap-4 mt-10">
+          <a href="checkout.html" class="btn btn-ghost">← Volver a entrega</a>
+          <a href="pedido-confirmado.html" class="btn btn-primary">Pagar 34,10 €<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></a>
+        </div>
+
+        <p class="text-xs text-graphite text-center mt-6">Al pagar aceptas que la transacción se procesa por Stripe en nuestro nombre. Recibirás un email con la factura.</p>
+      </div>
+
+      <!-- ========== ASIDE RESUMEN ========== -->
+      <aside>
+        <div class="lg:sticky lg:top-6 space-y-4">
+          <div class="bg-white border border-line rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 bg-paper-2 border-b border-line flex justify-between items-center"><h2 class="font-serif text-lg font-medium">Tu pedido</h2><a href="carrito.html" class="text-xs text-copper hover:underline">Editar</a></div>
+            <div class="divide-y divide-line">
+              <div class="p-4 flex gap-3 items-center">
+                <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></div>
+                <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">Interruptor Simón 27 10A</div><div class="text-xs text-graphite font-mono">×1</div></div>
+                <span class="font-mono text-sm">5,90 €</span>
+              </div>
+              <div class="p-4 flex gap-3 items-center">
+                <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg></div>
+                <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">Destornillador aislado 1000V</div><div class="text-xs text-graphite font-mono">×1</div></div>
+                <span class="font-mono text-sm">8,40 €</span>
+              </div>
+              <div class="p-4 flex gap-3 items-center">
+                <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div>
+                <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">Polímetro digital A03</div><div class="text-xs text-graphite font-mono">×1</div></div>
+                <span class="font-mono text-sm">14,90 €</span>
+              </div>
+            </div>
+            <div class="p-5 space-y-2 text-sm border-t border-line">
+              <div class="flex justify-between"><span class="text-graphite">Subtotal</span><span class="font-mono">29,20 €</span></div>
+              <div class="flex justify-between"><span class="text-graphite">Envío estándar</span><span class="font-mono">4,90 €</span></div>
+              <div class="flex justify-between"><span class="text-graphite">IVA (21%)</span><span class="font-mono">5,06 €</span></div>
+              <div class="pt-3 border-t border-line flex items-baseline justify-between"><span class="font-medium">Total</span><span class="font-serif text-2xl font-medium">34,10 €</span></div>
+            </div>
+          </div>
+
+          <div class="bg-paper-2 border border-line rounded-2xl p-4 flex items-center gap-3 text-sm">
+            <span class="w-8 h-8 rounded-full bg-stock/15 text-stock grid place-items-center shrink-0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <span class="text-graphite">Pago seguro 3D Secure · datos cifrados extremo a extremo</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <div data-component="site-footer"></div>
+
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+  <script>
+    document.querySelectorAll('.pay-method').forEach(c=>{
+      c.addEventListener('click',e=>{
+        const inp=c.querySelector('input');
+        if(!inp||inp.disabled) return;
+        document.querySelectorAll('.pay-method').forEach(o=>o.classList.remove('is-on'));
+        inp.checked=true;c.classList.add('is-on');
+      });
+    });
+  </script>
+</body>
+</html>

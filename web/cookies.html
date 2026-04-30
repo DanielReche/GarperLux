@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Política de cookies · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="assets/css/styles.css" />
+<style>
+  .legal h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,3vw,2rem);line-height:1.2;margin-top:2.5rem;margin-bottom:1rem;letter-spacing:-.01em}
+  .legal p{margin-bottom:1rem;line-height:1.7;color:var(--graphite)}
+  .legal strong{color:var(--ink)}
+  .legal ul{list-style:disc;padding-left:1.25rem;margin-bottom:1rem;color:var(--graphite)}
+  .legal ul li{margin-bottom:.4rem;line-height:1.6}
+  /* Toggle switch */
+  .switch{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;cursor:pointer;inset:0;background:var(--line);border-radius:999px;transition:.2s}
+  .slider::before{position:absolute;content:"";height:18px;width:18px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  input:checked+.slider{background:var(--ink)}
+  input:checked+.slider::before{transform:translateX(20px)}
+  input:disabled+.slider{background:var(--stock);opacity:.6;cursor:not-allowed}
+  .cookie-table{width:100%;border-collapse:collapse;font-size:13px}
+  .cookie-table th{text-align:left;padding:.6rem .8rem;background:var(--paper-2);font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--graphite);border-bottom:1px solid var(--line)}
+  .cookie-table td{padding:.7rem .8rem;border-bottom:1px solid var(--line);vertical-align:top;color:var(--graphite)}
+  .cookie-table td:first-child{font-family:var(--mono);font-size:12px;color:var(--ink);white-space:nowrap}
+</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><span class="text-ink">Cookies</span></nav></div>
+
+<section class="container-x py-10 md:py-14 border-b border-line">
+  <div class="max-w-3xl">
+    <div class="eyebrow text-copper mb-3">Solo las que hacen falta</div>
+    <h1 class="font-serif font-medium leading-[0.95] tracking-[-0.02em]" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">Cookies.</h1>
+    <p class="text-graphite mt-3 text-lg">Las técnicas son obligatorias, las analíticas son anónimas y las de marketing las decides tú. Aquí puedes cambiar lo que quieras cuando quieras.</p>
+  </div>
+</section>
+
+<!-- Panel ajustes -->
+<section class="container-x py-10">
+  <div class="max-w-3xl">
+    <h2 class="font-serif text-2xl font-medium mb-2">Tus preferencias</h2>
+    <p class="text-graphite text-sm mb-6">Activa o desactiva cada categoría. Los cambios se aplican al instante en este navegador.</p>
+
+    <div class="space-y-3">
+
+      <!-- Técnicas -->
+      <div class="bg-white border border-line rounded-2xl p-5">
+        <div class="flex items-start gap-4 flex-wrap">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-3 mb-1 flex-wrap">
+              <h3 class="font-medium">Técnicas</h3>
+              <span class="pill pill-stock text-[10px]">Siempre activas</span>
+            </div>
+            <p class="text-sm text-graphite">Necesarias para que el sitio funcione: mantener tu sesión, recordar el carrito, prevenir fraude. Sin ellas no podemos prestar el servicio.</p>
+          </div>
+          <label class="switch"><input type="checkbox" checked disabled/><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <!-- Preferencias -->
+      <div class="bg-white border border-line rounded-2xl p-5">
+        <div class="flex items-start gap-4 flex-wrap">
+          <div class="flex-1 min-w-0">
+            <h3 class="font-medium mb-1">Preferencias</h3>
+            <p class="text-sm text-graphite">Recuerdan ajustes como el modo de vista (particular/profesional), tu provincia para envíos o el idioma. Mejoran la experiencia, no son críticas.</p>
+          </div>
+          <label class="switch"><input type="checkbox" checked/><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <!-- Analíticas -->
+      <div class="bg-white border border-line rounded-2xl p-5">
+        <div class="flex items-start gap-4 flex-wrap">
+          <div class="flex-1 min-w-0">
+            <h3 class="font-medium mb-1">Analíticas anónimas</h3>
+            <p class="text-sm text-graphite">Nos dicen qué páginas funcionan, dónde se atascan los usuarios y qué tutoriales son los más vistos. Datos agregados, sin identificarte.</p>
+            <div class="text-xs text-graphite font-mono mt-2">Proveedor: Plausible Analytics (UE) · sin huella digital · sin transferencia fuera del EEE</div>
+          </div>
+          <label class="switch"><input type="checkbox" checked/><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <!-- Marketing -->
+      <div class="bg-white border border-line rounded-2xl p-5">
+        <div class="flex items-start gap-4 flex-wrap">
+          <div class="flex-1 min-w-0">
+            <h3 class="font-medium mb-1">Marketing y redes</h3>
+            <p class="text-sm text-graphite">Permiten medir si has llegado desde una campaña concreta o si has visto vídeos embebidos de YouTube. Si las desactivas, los vídeos te pedirán confirmación antes de cargar.</p>
+          </div>
+          <label class="switch"><input type="checkbox"/><span class="slider"></span></label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <button class="btn btn-primary btn-sm">Guardar mis preferencias</button>
+      <button class="btn btn-ghost btn-sm">Aceptar todas</button>
+      <button class="btn btn-ghost btn-sm">Rechazar opcionales</button>
+    </div>
+  </div>
+</section>
+
+<!-- Detalle por cookie -->
+<section class="container-x pb-20"><div class="max-w-3xl legal">
+
+    <h2>Detalle de las cookies que usamos</h2>
+    <p>Estas son las cookies concretas que verás en tu navegador. Si una no aparece en esta tabla, házlo saber a <a href="mailto:dpo@garperlux.es" class="link-underline">dpo@garperlux.es</a>.</p>
+
+    <h3 class="font-medium mt-7 mb-3">Técnicas (obligatorias)</h3>
+    <div class="bg-white border border-line rounded-xl overflow-hidden">
+      <table class="cookie-table">
+        <thead><tr><th>Nombre</th><th>Para qué sirve</th><th>Duración</th></tr></thead>
+        <tbody>
+          <tr><td>glx_session</td><td>Mantiene tu sesión iniciada después del login</td><td>Sesión</td></tr>
+          <tr><td>glx_cart</td><td>Guarda los productos del carrito mientras navegas</td><td>14 días</td></tr>
+          <tr><td>glx_csrf</td><td>Previene ataques de falsificación de petición</td><td>Sesión</td></tr>
+          <tr><td>cookie_consent</td><td>Recuerda tus preferencias de cookies</td><td>12 meses</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="font-medium mt-7 mb-3">Preferencias</h3>
+    <div class="bg-white border border-line rounded-xl overflow-hidden">
+      <table class="cookie-table">
+        <thead><tr><th>Nombre</th><th>Para qué sirve</th><th>Duración</th></tr></thead>
+        <tbody>
+          <tr><td>glx_role_view</td><td>Recuerda si prefieres vista particular o profesional</td><td>6 meses</td></tr>
+          <tr><td>glx_province</td><td>Recuerda tu provincia para mostrar disponibilidad de almacén</td><td>6 meses</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="font-medium mt-7 mb-3">Analíticas (Plausible)</h3>
+    <div class="bg-white border border-line rounded-xl overflow-hidden">
+      <table class="cookie-table">
+        <thead><tr><th>Nombre</th><th>Para qué sirve</th><th>Duración</th></tr></thead>
+        <tbody>
+          <tr><td>plausible_*</td><td>Medición agregada de páginas vistas y rutas. No usa identificadores únicos.</td><td>1 día</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="font-medium mt-7 mb-3">Marketing y terceros</h3>
+    <div class="bg-white border border-line rounded-xl overflow-hidden">
+      <table class="cookie-table">
+        <thead><tr><th>Nombre</th><th>Origen</th><th>Duración</th></tr></thead>
+        <tbody>
+          <tr><td>YT_*</td><td>YouTube · solo si reproduces un videotutorial embebido</td><td>6-24 meses</td></tr>
+          <tr><td>utm_*</td><td>Origen de campaña (lo que viene en la URL al pulsar un anuncio)</td><td>30 días</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Cómo borrarlas desde el navegador</h2>
+    <p>Además de los controles de arriba, puedes borrar cookies directamente desde la configuración del navegador:</p>
+    <ul>
+      <li><strong>Chrome</strong> · Ajustes → Privacidad y seguridad → Cookies y otros datos</li>
+      <li><strong>Firefox</strong> · Preferencias → Privacidad y seguridad → Cookies y datos del sitio</li>
+      <li><strong>Safari</strong> · Preferencias → Privacidad → Gestionar datos de sitios web</li>
+      <li><strong>Edge</strong> · Configuración → Privacidad → Cookies y permisos del sitio</li>
+    </ul>
+
+    <p class="text-xs mt-8 pt-6 border-t border-line">Última revisión: 15/04/2026. Para más información sobre el tratamiento de datos personales asociado a estas cookies, consulta nuestra <a href="privacidad.html" class="link-underline">política de privacidad</a>.</p>
+
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="assets/js/main.js"></script>
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+</body></html>

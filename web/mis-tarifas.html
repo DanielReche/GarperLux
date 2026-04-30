@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mis tarifas pro · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="assets/css/styles.css" />
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink">Mis tarifas pro</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="mis-tarifas"></aside>
+
+<main>
+  <div class="mb-8"><div class="eyebrow text-copper mb-2">Tu condición pro</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Mis tarifas profesionales.</h1></div>
+
+  <!-- Banner descuento general -->
+  <div class="bg-ink text-paper rounded-2xl p-7 mb-6 relative overflow-hidden">
+    <div class="absolute -top-10 -right-10 w-[300px] h-[300px] filament-glow opacity-30"></div>
+    <div class="relative grid md:grid-cols-[1fr_auto] gap-5 items-center">
+      <div>
+        <div class="eyebrow text-filament mb-2">Descuento general aplicado</div>
+        <div class="font-serif text-7xl font-medium leading-none">−22<span class="text-4xl">%</span></div>
+        <p class="text-paper/70 mt-3 max-w-md">Aplicado automáticamente sobre el PVP de cualquier producto del catálogo. Visible en cada ficha de producto y en el carrito.</p>
+      </div>
+      <div class="text-right">
+        <div class="font-mono text-xs text-paper/60 mb-1">Tu descuento medio real</div>
+        <div class="font-serif text-4xl font-medium">21,8%</div>
+        <div class="font-mono text-[10px] text-paper/50 mt-1">en últimos 6 meses</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escalado por volumen -->
+  <div class="bg-white border border-line rounded-2xl p-6 mb-6">
+    <h2 class="font-serif text-xl font-medium mb-2">Escalado por volumen</h2>
+    <p class="text-sm text-graphite mb-5">Encima del descuento general, sumas extra cuando compras más unidades del mismo SKU.</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-paper-2 rounded-xl p-4"><div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">1+ uds</div><div class="font-serif text-2xl font-medium">−22%</div><div class="text-[10px] text-graphite font-mono">descuento base</div></div>
+      <div class="bg-paper-2 rounded-xl p-4"><div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">10+ uds</div><div class="font-serif text-2xl font-medium text-filament">−27%</div><div class="text-[10px] text-graphite font-mono">+5%</div></div>
+      <div class="bg-paper-2 rounded-xl p-4"><div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">25+ uds</div><div class="font-serif text-2xl font-medium text-filament">−31%</div><div class="text-[10px] text-graphite font-mono">+9%</div></div>
+      <div class="bg-paper-2 rounded-xl p-4"><div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">100+ uds</div><div class="font-serif text-2xl font-medium text-filament">−36%</div><div class="text-[10px] text-graphite font-mono">+14%</div></div>
+    </div>
+  </div>
+
+  <!-- Categorías con tarifa especial -->
+  <div class="bg-white border border-line rounded-2xl overflow-hidden mb-6">
+    <div class="px-6 py-4 border-b border-line"><h2 class="font-serif text-xl font-medium">Tarifas especiales por categoría</h2><p class="text-sm text-graphite mt-1">Algunas categorías tienen condiciones particulares por acuerdo con el fabricante.</p></div>
+    <div class="divide-y divide-line">
+      <div class="p-5 grid grid-cols-[1fr_auto_auto] gap-4 items-center"><div><div class="font-medium">Schneider Electric · gama doméstica</div><div class="text-xs text-graphite">Magnetotérmicos, diferenciales, protectores</div></div><div class="text-xs font-mono text-graphite">PVP base</div><div class="font-mono font-medium text-filament">−25%</div></div>
+      <div class="p-5 grid grid-cols-[1fr_auto_auto] gap-4 items-center"><div><div class="font-medium">Simón · gama 27</div><div class="text-xs text-graphite">Mecanismos serie 27 completa</div></div><div class="text-xs font-mono text-graphite">PVP base</div><div class="font-mono font-medium text-filament">−24%</div></div>
+      <div class="p-5 grid grid-cols-[1fr_auto_auto] gap-4 items-center"><div><div class="font-medium">Cableado al corte (por metros)</div><div class="text-xs text-graphite">Manguera 3×1.5, 3×2.5, 5×4 H07V-K</div></div><div class="text-xs font-mono text-graphite">PVP base</div><div class="font-mono font-medium text-filament">−18%</div></div>
+      <div class="p-5 grid grid-cols-[1fr_auto_auto] gap-4 items-center"><div><div class="font-medium">Iluminación LED Philips Hue</div><div class="text-xs text-graphite">Restricción del fabricante</div></div><div class="text-xs font-mono text-graphite">PVP base</div><div class="font-mono font-medium text-graphite">−10%</div></div>
+    </div>
+  </div>
+
+  <!-- Pago aplazado -->
+  <div class="bg-paper-2 border border-line rounded-2xl p-6">
+    <h2 class="font-serif text-xl font-medium mb-3">Pago aplazado a 30 días</h2>
+    <p class="text-graphite text-sm mb-4">Como cliente profesional validado, puedes pagar tus pedidos en transferencia a 30 días sin recargo. Límite mensual configurado: <strong class="text-ink font-mono">3.000 €</strong>.</p>
+    <div class="bg-white rounded-lg p-4 mb-4">
+      <div class="flex justify-between text-sm mb-2"><span class="text-graphite">Saldo usado este mes</span><span class="font-mono font-medium">1.842 € / 3.000 €</span></div>
+      <div class="h-2 bg-paper-2 rounded-full overflow-hidden"><div class="h-full bg-filament" style="width: 61%"></div></div>
+    </div>
+    <a href="contacto.html" class="link-underline text-sm">Solicitar ampliación de límite →</a>
+  </div>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="assets/js/main.js"></script><script src="assets/js/auth.js"></script>
+<script>if(glxRequireAuth()){const u=glxGetUser();if(u.role!=='pro'){location.href='area-personal.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}</script>
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+</body></html>

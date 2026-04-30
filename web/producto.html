@@ -1,0 +1,763 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interruptor Simón 27 10A blanco · Tienda · GarperLux</title>
+  <meta name="description" content="Interruptor unipolar Simón 27 10A en color blanco. Stock real, ficha técnica oficial, instalación en 20 minutos. Para particular y profesional autorizado." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <style>
+    /* DUAL VIEW TOGGLE */
+    [data-active-view="particular"] .view-pro { display: none; }
+    [data-active-view="pro"] .view-particular { display: none; }
+    [data-active-view="pro"] body, body[data-active-view="pro"] { background: #FCFAF6; }
+
+    .view-toggle {
+      display: inline-flex; padding: 4px; background: var(--paper-2);
+      border-radius: 999px; border: 1px solid var(--line);
+    }
+    .view-toggle button {
+      padding: 0.55rem 1.1rem; border-radius: 999px; font-size: 13px;
+      font-weight: 500; color: var(--graphite); cursor: pointer;
+      transition: all .25s ease; display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .view-toggle button.is-active {
+      background: var(--ink); color: var(--paper);
+      box-shadow: 0 4px 12px -4px rgba(11,13,18,0.4);
+    }
+    .view-toggle button:not(.is-active):hover { color: var(--ink); }
+
+    /* Tabs */
+    .tab-btn { padding: 1rem 0; font-weight: 500; color: var(--graphite); border-bottom: 2px solid transparent; transition: all .2s; cursor: pointer; }
+    .tab-btn.is-active { color: var(--ink); border-bottom-color: var(--filament); }
+    .tab-pane { display: none; }
+    .tab-pane.is-active { display: block; }
+
+    /* Variant swatches */
+    .var-sw { width: 56px; height: 56px; border-radius: 12px; border: 2px solid var(--line); cursor: pointer; position: relative; transition: all .2s; }
+    .var-sw:hover { border-color: var(--graphite); }
+    .var-sw.is-active { border-color: var(--ink); box-shadow: 0 0 0 3px var(--filament); }
+
+    /* Pro pricing strip */
+    .pro-tag { background: linear-gradient(135deg, var(--filament-glow), var(--filament)); color: var(--ink); }
+  </style>
+</head>
+
+<body data-active-view="particular" class="bg-paper text-ink">
+
+  <!-- TOP BAR + HEADER -->
+  <div class="bg-ink text-paper text-[12.5px]">
+    <div class="container-x flex items-center justify-between py-2">
+      <span class="opacity-90 hidden sm:inline-flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg> Envíos gratis desde 75 €</span>
+      <a href="login.html" class="link-underline opacity-90">Tarifas profesionales</a>
+    </div>
+  </div>
+  <div data-component="site-header"></div>
+
+  <!-- BREADCRUMBS -->
+  <div class="container-x pt-5 pb-2">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap">
+      <a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="tienda.html" class="hover:text-ink">Tienda</a><span class="opacity-50">/</span>
+      <a href="categoria.html" class="hover:text-ink">Mecanismos</a><span class="opacity-50">/</span>
+      <a href="categoria.html" class="hover:text-ink">Interruptores</a><span class="opacity-50">/</span>
+      <span class="text-ink">Simón 27 10A blanco</span>
+    </nav>
+  </div>
+
+  <!-- ============ TOGGLE DUAL VIEW (sticky bar) ============ -->
+  <div class="container-x pt-6 pb-4">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="text-sm text-graphite">
+        <span class="font-mono uppercase tracking-wider text-[11px] block mb-0.5">Mostrando ficha en</span>
+        <span data-view-label class="text-ink font-medium">vista para particular (no técnica)</span>
+      </div>
+      <div class="view-toggle" role="tablist" aria-label="Cambiar vista de la ficha">
+        <button data-view="particular" class="is-active" role="tab" aria-selected="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Particular
+        </button>
+        <button data-view="pro" role="tab" aria-selected="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4M9 9V5h6v4"/></svg>
+          Profesional
+          <span class="text-[10px] font-mono opacity-70">SKU · ficha PDF · stock</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ HERO PRODUCTO: GALERÍA + INFO ============ -->
+  <section class="container-x pb-12">
+    <div class="grid lg:grid-cols-12 gap-8 lg:gap-14">
+
+      <!-- ============ GALERÍA ============ -->
+      <div class="lg:col-span-7">
+        <div class="grid grid-cols-[80px_1fr] gap-4">
+          <!-- Thumbnails -->
+          <div class="flex flex-col gap-2 order-2 md:order-1">
+            <button class="aspect-square rounded-lg border-2 border-ink overflow-hidden bg-paper-2 grid place-items-center">
+              <img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=200&q=80" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.parentNode.innerHTML='<svg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.5\' opacity=\'0.4\'><rect x=\'4\' y=\'4\' width=\'16\' height=\'16\' rx=\'2\'/></svg>'"/>
+            </button>
+            <button class="aspect-square rounded-lg border-2 border-line overflow-hidden bg-paper-2 grid place-items-center hover:border-graphite">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-graphite/40"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+            </button>
+            <button class="aspect-square rounded-lg border-2 border-line overflow-hidden bg-paper-2 grid place-items-center hover:border-graphite">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-graphite/40"><circle cx="12" cy="12" r="6"/></svg>
+            </button>
+            <button class="aspect-square rounded-lg border-2 border-line overflow-hidden bg-ink grid place-items-center hover:border-filament">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-filament"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            </button>
+            <button class="aspect-square rounded-lg border-2 border-line overflow-hidden bg-paper-2 grid place-items-center text-xs font-mono text-graphite hover:border-graphite">
+              +3
+            </button>
+          </div>
+
+          <!-- Imagen principal -->
+          <div class="order-1 md:order-2">
+            <div class="aspect-square rounded-2xl overflow-hidden bg-paper-2 relative">
+              <img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=1200&q=80" alt="Interruptor Simón 27 10A blanco" class="w-full h-full object-cover" loading="lazy" onerror="this.parentNode.innerHTML+='<div class=\'w-full h-full grid place-items-center text-graphite/30\'><svg width=\'180\' height=\'180\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'0.8\'><rect x=\'4\' y=\'4\' width=\'16\' height=\'16\' rx=\'2\'/><rect x=\'9\' y=\'9\' width=\'6\' height=\'6\' rx=\'0.5\'/></svg></div>'"/>
+              <div class="absolute top-4 left-4 flex gap-2">
+                <span class="pill bg-white/95 text-ink">Simón</span>
+                <span class="pill pill-stock">En stock</span>
+              </div>
+              <div class="absolute bottom-4 right-4">
+                <button class="w-11 h-11 rounded-full bg-white/95 grid place-items-center hover:bg-paper transition-colors" aria-label="Zoom">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Strip vista profesional -->
+            <div class="view-pro mt-4 grid grid-cols-3 gap-2">
+              <button class="bg-white border border-line rounded-lg p-3 hover:border-ink transition-colors flex items-center gap-3">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-warn"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <div class="text-left text-xs">
+                  <div class="font-medium">Ficha técnica</div>
+                  <div class="font-mono text-[10px] text-graphite">PDF · 380 KB</div>
+                </div>
+              </button>
+              <button class="bg-white border border-line rounded-lg p-3 hover:border-ink transition-colors flex items-center gap-3">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-electric"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.39 0 4.68.94 6.36 2.64"/></svg>
+                <div class="text-left text-xs">
+                  <div class="font-medium">Declaración CE</div>
+                  <div class="font-mono text-[10px] text-graphite">PDF · 120 KB</div>
+                </div>
+              </button>
+              <button class="bg-white border border-line rounded-lg p-3 hover:border-ink transition-colors flex items-center gap-3">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-graphite"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM16 13H8M16 17H8M10 9H8"/></svg>
+                <div class="text-left text-xs">
+                  <div class="font-medium">Manual instalación</div>
+                  <div class="font-mono text-[10px] text-graphite">PDF · 180 KB</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ INFO PRODUCTO ============ -->
+      <div class="lg:col-span-5">
+        <div class="space-y-5">
+
+          <!-- Marca + valoración -->
+          <div class="flex items-center justify-between text-sm">
+            <a href="marcas.html" class="link-underline font-medium">Simón</a>
+            <div class="flex items-center gap-2 text-graphite">
+              <div class="flex">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <span class="font-mono text-xs">4.8 · 142 valoraciones</span>
+            </div>
+          </div>
+
+          <!-- Título -->
+          <h1 class="font-serif font-medium leading-[1.05] tracking-[-0.01em]" style="font-size: clamp(1.75rem, 3.5vw, 2.5rem);">
+            Interruptor Simón 27<br/>10A blanco
+          </h1>
+
+          <!-- SKU PRO ONLY -->
+          <div class="view-pro">
+            <div class="bg-ink text-paper rounded-xl p-4 flex items-center justify-between">
+              <div>
+                <div class="font-mono text-[10px] uppercase tracking-wider text-paper/60 mb-1">Referencia</div>
+                <div class="font-mono text-2xl font-medium tracking-tight">27101-31</div>
+              </div>
+              <div class="text-right">
+                <div class="font-mono text-[10px] uppercase tracking-wider text-paper/60 mb-1">EAN</div>
+                <div class="font-mono text-sm">8410100271019</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DESCRIPCIÓN PARTICULAR ONLY -->
+          <p class="view-particular text-graphite text-lg leading-relaxed">
+            El interruptor de toda la vida, en su versión actualizada. Encaja en cualquier caja universal de 60 mm, marco de la gama 27 (vendido aparte) y se monta con destornillador plano en menos de cinco minutos.
+          </p>
+
+          <!-- PRECIO DUAL -->
+          <div class="border-y border-line py-5">
+            <!-- Precio particular -->
+            <div class="view-particular">
+              <div class="flex items-baseline gap-3 mb-1">
+                <span class="font-serif text-4xl md:text-5xl font-medium">5,90 €</span>
+                <span class="text-sm text-graphite">IVA incluido</span>
+              </div>
+              <div class="text-sm text-graphite">o desde 0,49 € en 12 meses sin intereses</div>
+            </div>
+            <!-- Precio profesional -->
+            <div class="view-pro space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-paper-2 rounded-lg p-3">
+                  <div class="font-mono text-[10px] uppercase tracking-wider text-graphite mb-1">PVP particular</div>
+                  <div class="font-serif text-2xl font-medium line-through text-graphite">5,90 €</div>
+                </div>
+                <div class="rounded-lg p-3 pro-tag">
+                  <div class="font-mono text-[10px] uppercase tracking-wider mb-1">Tarifa pro</div>
+                  <div class="font-serif text-2xl font-medium">4,60 €</div>
+                </div>
+              </div>
+              <div class="text-xs font-mono text-graphite flex items-center justify-between">
+                <span>Descuento profesional aplicado: <strong class="text-stock">−22%</strong></span>
+                <span>Base imp. 3,80 € · IVA 21%</span>
+              </div>
+              <div class="bg-paper-2 rounded-lg p-3 text-xs text-graphite">
+                <div class="font-medium text-ink mb-1.5">Escalado por volumen</div>
+                <div class="grid grid-cols-3 gap-2 font-mono">
+                  <div><span class="text-graphite">10+ uds</span><br/><strong class="text-ink">4,30 €</strong></div>
+                  <div><span class="text-graphite">25+ uds</span><br/><strong class="text-ink">4,05 €</strong></div>
+                  <div><span class="text-graphite">100+ uds</span><br/><strong class="text-ink">3,80 €</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VARIANTES (color/acabado) -->
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-medium">Acabado: <span class="text-graphite font-normal">Blanco</span></span>
+              <span class="text-xs font-mono text-graphite">3 disponibles</span>
+            </div>
+            <div class="flex gap-3">
+              <button class="var-sw is-active" style="background:#FFFFFF;" aria-label="Blanco"></button>
+              <button class="var-sw" style="background:#F0E8D8;" aria-label="Marfil"></button>
+              <button class="var-sw" style="background:linear-gradient(135deg,#C0C0C0,#808080);" aria-label="Aluminio"></button>
+            </div>
+          </div>
+
+          <!-- AMPERAJE -->
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-medium">Amperaje: <span class="text-graphite font-normal font-mono">10 A</span></span>
+            </div>
+            <div class="flex gap-2">
+              <button class="px-4 py-2 rounded-lg bg-ink text-paper text-sm font-mono font-medium">10 A</button>
+              <button class="px-4 py-2 rounded-lg bg-paper-2 hover:bg-paper-3 text-sm font-mono">16 A</button>
+              <button class="px-4 py-2 rounded-lg bg-paper-2 hover:bg-paper-3 text-sm font-mono">20 A</button>
+            </div>
+          </div>
+
+          <!-- STOCK -->
+          <div class="view-particular bg-paper-2 rounded-xl p-4 flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-stock animate-pulse"></span>
+            <div class="flex-1">
+              <div class="text-sm font-medium">En stock · 70 unidades</div>
+              <div class="text-xs text-graphite">Si pides antes de las 17:00, sale hoy mismo.</div>
+            </div>
+          </div>
+
+          <!-- STOCK PRO POR ALMACÉN -->
+          <div class="view-pro bg-white border border-line rounded-xl overflow-hidden">
+            <div class="px-4 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite flex items-center justify-between">
+              <span>Stock por almacén</span>
+              <span class="text-stock">● Total: 70 uds</span>
+            </div>
+            <div class="divide-y divide-line">
+              <div class="flex items-center justify-between px-4 py-3 text-sm">
+                <div>
+                  <div class="font-medium">Jaén · Las Lagunillas</div>
+                  <div class="text-xs text-graphite font-mono">Sede central</div>
+                </div>
+                <div class="font-mono"><span class="text-stock font-medium">47 uds</span></div>
+              </div>
+              <div class="flex items-center justify-between px-4 py-3 text-sm">
+                <div>
+                  <div class="font-medium">Madrid · Coslada</div>
+                  <div class="text-xs text-graphite font-mono">Almacén norte</div>
+                </div>
+                <div class="font-mono"><span class="text-stock font-medium">23 uds</span></div>
+              </div>
+              <div class="flex items-center justify-between px-4 py-3 text-sm bg-paper/50">
+                <div class="text-xs text-graphite">Próxima reposición prevista</div>
+                <div class="font-mono text-xs">+200 uds · 28-04-2026</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CANTIDAD + CTAs -->
+          <div class="flex gap-3 items-stretch">
+            <div class="flex items-center bg-white border border-line rounded-full overflow-hidden">
+              <button class="w-12 h-12 grid place-items-center hover:bg-paper-2" aria-label="Restar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+              <input type="number" value="1" class="w-14 text-center bg-transparent font-mono font-medium outline-none" min="1"/>
+              <button class="w-12 h-12 grid place-items-center hover:bg-paper-2" aria-label="Sumar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+            <button class="btn btn-primary flex-1 justify-center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              Añadir al carrito
+            </button>
+          </div>
+
+          <!-- DUDAS PARTICULAR / PRO QUICK ACTIONS -->
+          <div class="view-particular grid grid-cols-2 gap-3">
+            <a href="contacto.html" class="btn btn-ghost justify-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+              ¿Tienes dudas?
+            </a>
+            <a href="mis-favoritos.html" class="btn btn-ghost justify-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              Guardar para luego
+            </a>
+          </div>
+
+          <div class="view-pro grid grid-cols-3 gap-2">
+            <button class="btn btn-sm btn-ghost justify-center">+ Mis favoritos</button>
+            <a href="crear-presupuesto.html" class="btn btn-sm btn-ghost justify-center">+ Crear presupuesto</a>
+            <a href="repetir-compra.html" class="btn btn-sm btn-ghost justify-center">Repetir compra</a>
+          </div>
+
+          <!-- COMPATIBILIDAD PARTICULAR -->
+          <div class="view-particular border-t border-line pt-5 space-y-3">
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-full bg-stock/10 grid place-items-center text-stock shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <div class="text-sm">
+                <strong class="text-ink">Encaja con caja universal estándar</strong>
+                <p class="text-graphite">Las que ya tienes en casa, da igual el año de instalación.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-full bg-stock/10 grid place-items-center text-stock shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <div class="text-sm">
+                <strong class="text-ink">Marco de gama 27 vendido aparte</strong>
+                <p class="text-graphite">No incluye marco. <a href="categoria.html" class="link-underline">Ver marcos compatibles</a></p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-full bg-electric/10 grid place-items-center text-electric shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              </div>
+              <div class="text-sm">
+                <strong class="text-ink">¿No estás seguro de si te vale?</strong>
+                <p class="text-graphite">Mira el <a href="tutorial.html" class="link-underline">tutorial de cambiar un interruptor</a> y verás si encaja con tu instalación.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ENVÍO INFO -->
+          <div class="border-t border-line pt-4 grid grid-cols-3 gap-3 text-xs">
+            <div>
+              <div class="font-medium text-ink mb-1">Envío 24–48 h</div>
+              <div class="text-graphite">Gratis desde 75 €</div>
+            </div>
+            <div>
+              <div class="font-medium text-ink mb-1">Devolución 30 días</div>
+              <div class="text-graphite">Sin preguntas</div>
+            </div>
+            <div>
+              <div class="font-medium text-ink mb-1">Pago seguro</div>
+              <div class="text-graphite">Visa · MC · Bizum</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TUTORIAL VINCULADO (puente aprender→comprar, D-006) ============ -->
+  <section class="view-particular bg-ink text-paper">
+    <div class="container-x py-14 md:py-16">
+      <div class="grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-8">
+          <div class="eyebrow text-filament mb-4 flex items-center gap-3">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Aprende a montarlo en 25 minutos
+          </div>
+          <h2 class="font-serif text-3xl md:text-4xl font-medium leading-tight mb-3">
+            Tenemos un tutorial paso a paso para este interruptor.
+          </h2>
+          <p class="text-paper/70 max-w-xl leading-relaxed">
+            Antonio cambió el suyo solo, sin llamar a nadie. Tutorial revisado por Alfonso Torres (instalador autorizado) con checklist de seguridad y 6 pasos numerados.
+          </p>
+        </div>
+        <div class="lg:col-span-4 lg:text-right">
+          <a href="tutorial.html" class="btn btn-primary">
+            Ver el tutorial
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TABS: DESCRIPCIÓN / ESPECIF / RESEÑAS / PREGUNTAS ============ -->
+  <section class="container-x py-16 md:py-20">
+    <!-- Tab nav -->
+    <div class="flex gap-8 border-b border-line mb-10 overflow-x-auto" role="tablist">
+      <button class="tab-btn is-active whitespace-nowrap" data-tab="desc">Descripción</button>
+      <button class="tab-btn whitespace-nowrap" data-tab="spec">Especificaciones técnicas</button>
+      <button class="tab-btn whitespace-nowrap" data-tab="rev">Reseñas <span class="font-mono text-xs text-graphite">(142)</span></button>
+      <button class="tab-btn whitespace-nowrap" data-tab="qa">Preguntas y respuestas <span class="font-mono text-xs text-graphite">(8)</span></button>
+    </div>
+
+    <!-- Tab panes -->
+    <div class="grid lg:grid-cols-12 gap-10">
+
+      <!-- DESCRIPCIÓN -->
+      <div class="tab-pane is-active lg:col-span-8 space-y-5 max-w-3xl" data-pane="desc">
+        <h3 class="font-serif text-2xl font-medium">Un mecanismo que se elige porque ya lo conoces.</h3>
+        <p class="text-graphite leading-relaxed text-lg">El interruptor unipolar de la <strong class="text-ink">gama Simón 27</strong> es probablemente el mecanismo más vendido en España. Lo encuentras en pisos, viviendas unifamiliares y reformas porque es robusto, fácil de instalar y mantiene una estética limpia que no se queda anticuada.</p>
+        <p class="text-graphite leading-relaxed">Su <strong class="text-ink">cuerpo de termoplástico libre de halógenos</strong> resiste bien el tiempo y los pequeños arcos eléctricos del uso diario. La conexión es por tornillo (no a presión), con un solo borne por terminal: introduces el cable pelado 8 mm, aprietas, y queda firme.</p>
+        <p class="text-graphite leading-relaxed">Compatible con <strong class="text-ink">cualquier caja universal de 60 mm</strong>, sistema de garras estándar, y se combina con marcos de la propia gama 27 (que se venden aparte para que puedas elegir el acabado que mejor vaya con tu vivienda: blanco alpino, marfil, aluminio, champagne, madera).</p>
+
+        <!-- Highlights -->
+        <div class="grid sm:grid-cols-2 gap-3 pt-4">
+          <div class="flex gap-3 p-4 rounded-lg bg-paper-2 border border-line">
+            <div class="w-10 h-10 rounded-lg bg-white grid place-items-center shrink-0 text-electric">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="text-sm">
+              <div class="font-semibold mb-0.5">Norma UNE-EN 60669-1</div>
+              <div class="text-graphite text-xs">Mecanismos para instalaciones eléctricas fijas en uso doméstico</div>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4 rounded-lg bg-paper-2 border border-line">
+            <div class="w-10 h-10 rounded-lg bg-white grid place-items-center shrink-0 text-copper">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div class="text-sm">
+              <div class="font-semibold mb-0.5">Vida útil declarada 40.000 ciclos</div>
+              <div class="text-graphite text-xs">≈ 25 años de uso doméstico habitual</div>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4 rounded-lg bg-paper-2 border border-line">
+            <div class="w-10 h-10 rounded-lg bg-white grid place-items-center shrink-0 text-stock">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.39 0 4.68.94 6.36 2.64"/></svg>
+            </div>
+            <div class="text-sm">
+              <div class="font-semibold mb-0.5">Fabricado en España</div>
+              <div class="text-graphite text-xs">Planta de Olot (Girona), Simón S.A.</div>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4 rounded-lg bg-paper-2 border border-line">
+            <div class="w-10 h-10 rounded-lg bg-white grid place-items-center shrink-0 text-warn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <div class="text-sm">
+              <div class="font-semibold mb-0.5">Garantía 3 años</div>
+              <div class="text-graphite text-xs">Defectos de fabricación cubiertos por GarperLux</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESPECIFICACIONES (siempre visibles a la derecha como aside) -->
+      <aside class="lg:col-span-4">
+        <div class="bg-white border border-line rounded-2xl p-6 sticky top-24">
+          <div class="eyebrow text-copper mb-4">Especificaciones técnicas</div>
+          <div class="text-sm">
+            <div class="spec-row"><span>Marca</span><span class="dots"></span><span class="font-mono">Simón</span></div>
+            <div class="spec-row"><span>Gama</span><span class="dots"></span><span class="font-mono">Simón 27</span></div>
+            <div class="spec-row"><span>Tipo</span><span class="dots"></span><span class="font-mono">Interruptor unipolar</span></div>
+            <div class="spec-row"><span>Tensión nominal</span><span class="dots"></span><span class="font-mono">250 V CA</span></div>
+            <div class="spec-row"><span>Intensidad nominal</span><span class="dots"></span><span class="font-mono">10 AX</span></div>
+            <div class="spec-row"><span>Conexión</span><span class="dots"></span><span class="font-mono">Tornillo</span></div>
+            <div class="spec-row"><span>Bornes</span><span class="dots"></span><span class="font-mono">2</span></div>
+            <div class="spec-row"><span>Sección máx.</span><span class="dots"></span><span class="font-mono">2,5 mm²</span></div>
+            <div class="spec-row"><span>Acabado</span><span class="dots"></span><span class="font-mono">Blanco</span></div>
+            <div class="spec-row"><span>Material</span><span class="dots"></span><span class="font-mono">Termoplástico</span></div>
+            <div class="spec-row"><span>Grado IP</span><span class="dots"></span><span class="font-mono">IP20</span></div>
+            <div class="spec-row"><span>Norma</span><span class="dots"></span><span class="font-mono">UNE-EN 60669-1</span></div>
+            <div class="spec-row"><span>Dimensiones</span><span class="dots"></span><span class="font-mono">22×22×24mm</span></div>
+            <div class="spec-row !border-b-0"><span>Peso</span><span class="dots"></span><span class="font-mono">25 g</span></div>
+          </div>
+          <button class="btn btn-ghost btn-sm w-full justify-center mt-5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Descargar ficha (PDF)
+          </button>
+        </div>
+      </aside>
+
+      <!-- ESPECIFICACIONES tab pane -->
+      <div class="tab-pane lg:col-span-12" data-pane="spec">
+        <div class="grid md:grid-cols-2 gap-x-12 gap-y-6">
+          <div>
+            <h3 class="eyebrow text-copper mb-4">Eléctricas</h3>
+            <div class="text-sm">
+              <div class="spec-row"><span>Tensión nominal</span><span class="dots"></span><span class="font-mono">250 V CA</span></div>
+              <div class="spec-row"><span>Intensidad nominal</span><span class="dots"></span><span class="font-mono">10 AX</span></div>
+              <div class="spec-row"><span>Frecuencia</span><span class="dots"></span><span class="font-mono">50/60 Hz</span></div>
+              <div class="spec-row"><span>Resistencia aislamiento</span><span class="dots"></span><span class="font-mono">≥ 5 MÎ©</span></div>
+            </div>
+          </div>
+          <div>
+            <h3 class="eyebrow text-copper mb-4">Mecánicas</h3>
+            <div class="text-sm">
+              <div class="spec-row"><span>Sistema fijación</span><span class="dots"></span><span class="font-mono">Garras + tornillo</span></div>
+              <div class="spec-row"><span>Caja compatible</span><span class="dots"></span><span class="font-mono">Universal 60mm</span></div>
+              <div class="spec-row"><span>Vida útil</span><span class="dots"></span><span class="font-mono">40.000 ciclos</span></div>
+              <div class="spec-row"><span>Temperatura uso</span><span class="dots"></span><span class="font-mono">-5 a +40 °C</span></div>
+            </div>
+          </div>
+          <div>
+            <h3 class="eyebrow text-copper mb-4">Conexión</h3>
+            <div class="text-sm">
+              <div class="spec-row"><span>Tipo borne</span><span class="dots"></span><span class="font-mono">Tornillo M3</span></div>
+              <div class="spec-row"><span>Sección hilo rígido</span><span class="dots"></span><span class="font-mono">1 a 2,5 mm²</span></div>
+              <div class="spec-row"><span>Sección hilo flex.</span><span class="dots"></span><span class="font-mono">0,75 a 1,5 mm²</span></div>
+              <div class="spec-row"><span>Par apriete</span><span class="dots"></span><span class="font-mono">0,5 N·m</span></div>
+            </div>
+          </div>
+          <div>
+            <h3 class="eyebrow text-copper mb-4">Certificaciones</h3>
+            <div class="text-sm">
+              <div class="spec-row"><span>Norma</span><span class="dots"></span><span class="font-mono">UNE-EN 60669-1</span></div>
+              <div class="spec-row"><span>Marcado CE</span><span class="dots"></span><span class="font-mono text-stock">✓</span></div>
+              <div class="spec-row"><span>RoHS</span><span class="dots"></span><span class="font-mono text-stock">✓</span></div>
+              <div class="spec-row"><span>Libre halógenos</span><span class="dots"></span><span class="font-mono text-stock">✓</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESEÑAS tab pane -->
+      <div class="tab-pane lg:col-span-12" data-pane="rev">
+        <div class="grid lg:grid-cols-3 gap-10">
+          <div>
+            <div class="font-serif text-6xl font-medium leading-none mb-2">4.8</div>
+            <div class="flex mb-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div class="text-sm text-graphite">Sobre 142 valoraciones verificadas</div>
+            <div class="space-y-1 mt-5 max-w-xs">
+              <div class="flex items-center gap-2 text-xs"><span class="font-mono w-3">5</span><div class="flex-1 h-1.5 bg-paper-2 rounded-full overflow-hidden"><div class="h-full bg-filament" style="width:78%"></div></div><span class="font-mono text-graphite w-8 text-right">110</span></div>
+              <div class="flex items-center gap-2 text-xs"><span class="font-mono w-3">4</span><div class="flex-1 h-1.5 bg-paper-2 rounded-full overflow-hidden"><div class="h-full bg-filament" style="width:18%"></div></div><span class="font-mono text-graphite w-8 text-right">26</span></div>
+              <div class="flex items-center gap-2 text-xs"><span class="font-mono w-3">3</span><div class="flex-1 h-1.5 bg-paper-2 rounded-full overflow-hidden"><div class="h-full bg-filament" style="width:3%"></div></div><span class="font-mono text-graphite w-8 text-right">4</span></div>
+              <div class="flex items-center gap-2 text-xs"><span class="font-mono w-3">2</span><div class="flex-1 h-1.5 bg-paper-2 rounded-full overflow-hidden"><div class="h-full bg-filament" style="width:1%"></div></div><span class="font-mono text-graphite w-8 text-right">1</span></div>
+              <div class="flex items-center gap-2 text-xs"><span class="font-mono w-3">1</span><div class="flex-1 h-1.5 bg-paper-2 rounded-full overflow-hidden"><div class="h-full bg-filament" style="width:1%"></div></div><span class="font-mono text-graphite w-8 text-right">1</span></div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-2 space-y-5">
+            <article class="border-b border-line pb-5">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center font-medium text-sm">A</div>
+                  <div>
+                    <div class="font-medium text-sm">Antonio M.</div>
+                    <div class="text-xs text-graphite font-mono">Compra verificada · hace 12 días</div>
+                  </div>
+                </div>
+                <div class="flex">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+              </div>
+              <h4 class="font-medium mb-1">Justo el que tenía y a buen precio</h4>
+              <p class="text-graphite text-sm leading-relaxed">Tenía que cambiar el de la cocina porque empezaba a hacer chispa. Llegué siguiendo el tutorial vinculado y compré el kit. Lo monté en 25 minutos. Encaja perfecto con los marcos de Simón 27 que ya tengo.</p>
+            </article>
+
+            <article class="border-b border-line pb-5">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-copper text-paper grid place-items-center font-medium text-sm">JL</div>
+                  <div>
+                    <div class="font-medium text-sm">Jose Luis (El Chispas)</div>
+                    <div class="text-xs text-graphite font-mono">Instalador · cliente pro · hace 1 mes</div>
+                  </div>
+                </div>
+                <div class="flex">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+              </div>
+              <h4 class="font-medium mb-1">Mi referencia básica para todas las instalaciones</h4>
+              <p class="text-graphite text-sm leading-relaxed">Compro este modelo por cajas. La tarifa pro y el escalado de precio compensan, y nunca me ha dado problemas en obra. La descarga de albaranes funciona bien también.</p>
+            </article>
+
+            <button class="link-underline text-sm">Ver las 142 reseñas</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREGUNTAS Y RESPUESTAS -->
+      <div class="tab-pane lg:col-span-12 space-y-3 max-w-3xl" data-pane="qa">
+        <details class="bg-paper-2 border border-line rounded-xl p-5 group open:border-ink">
+          <summary class="flex items-start justify-between gap-4 cursor-pointer list-none">
+            <h4 class="font-medium">¿Incluye el marco?</h4>
+            <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+          </summary>
+          <p class="text-graphite text-sm mt-3">No, este producto es solo el mecanismo del interruptor. El marco se vende aparte para que puedas elegir el acabado (blanco alpino, marfil, aluminio, etc.) que mejor encaje con tu vivienda.</p>
+        </details>
+        <details class="bg-paper-2 border border-line rounded-xl p-5 group open:border-ink">
+          <summary class="flex items-start justify-between gap-4 cursor-pointer list-none">
+            <h4 class="font-medium">¿Vale para sustituir un mecanismo de Niessen u otra marca?</h4>
+            <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+          </summary>
+          <p class="text-graphite text-sm mt-3">El mecanismo encaja en cualquier caja universal estándar de 60 mm. Pero el marco que tengas ahora (de Niessen, BJC u otra marca) NO es compatible con este interruptor: tendrás que cambiar también el marco a uno de la gama Simón 27.</p>
+        </details>
+        <details class="bg-paper-2 border border-line rounded-xl p-5 group open:border-ink">
+          <summary class="flex items-start justify-between gap-4 cursor-pointer list-none">
+            <h4 class="font-medium">¿Sirve para zonas húmedas como un baño?</h4>
+            <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+          </summary>
+          <p class="text-graphite text-sm mt-3">Tiene IP20, así que vale para baño SIEMPRE QUE estés fuera del volumen de protección de la ducha o bañera. Para zonas con agua directa necesitas un mecanismo estanco IP44 o IP55.</p>
+        </details>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ PRODUCTOS RELACIONADOS ============ -->
+  <section class="bg-paper-2 border-y border-line">
+    <div class="container-x py-16 md:py-20">
+      <div class="flex items-end justify-between mb-8 flex-wrap gap-4">
+        <div>
+          <div class="eyebrow text-copper mb-2">Habitualmente se compra con</div>
+          <h2 class="font-serif text-3xl font-medium">Para no tener que pedirlo dos veces.</h2>
+        </div>
+        <a href="categoria.html" class="link-underline text-sm">Ver toda la gama Simón 27</a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="producto.html" class="card-prod group">
+          <div class="img grid place-items-center text-graphite/30">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-graphite">Simón · gama 27</div>
+            <h3 class="text-[14px] font-medium leading-snug">Marco 1 elemento blanco</h3>
+            <div class="font-mono text-[11px] text-graphite/70">SKU 27610-31</div>
+          </div>
+          <div class="font-serif text-lg font-medium">2,40 €</div>
+        </a>
+        <a href="producto.html" class="card-prod group">
+          <div class="img grid place-items-center text-graphite/30">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="6" y="3" width="12" height="18" rx="1"/></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-graphite">Solera</div>
+            <h3 class="text-[14px] font-medium leading-snug">Caja universal empotrar 60mm</h3>
+            <div class="font-mono text-[11px] text-graphite/70">SKU SOL-CU60</div>
+          </div>
+          <div class="font-serif text-lg font-medium">0,90 €</div>
+        </a>
+        <a href="producto.html" class="card-prod group">
+          <div class="img grid place-items-center text-graphite/30">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-graphite">Wiha</div>
+            <h3 class="text-[14px] font-medium leading-snug">Destornillador aislado 1000V 3mm</h3>
+            <div class="font-mono text-[11px] text-graphite/70">SKU WH-DA-3</div>
+          </div>
+          <div class="font-serif text-lg font-medium">8,40 €</div>
+        </a>
+        <a href="producto.html" class="card-prod group">
+          <div class="img grid place-items-center text-graphite/30">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-graphite">Uni-T</div>
+            <h3 class="text-[14px] font-medium leading-snug">Polímetro digital A03 básico</h3>
+            <div class="font-mono text-[11px] text-graphite/70">SKU UNI-T-A03</div>
+          </div>
+          <div class="font-serif text-lg font-medium">14,90 €</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div data-component="site-footer"></div>
+
+  <!-- Mobile + search overlays -->
+  <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <nav class="px-5 py-6">
+      <a href="hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a>
+      <a href="tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif text-filament">Tienda</a>
+      <a href="servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a>
+      <a href="solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a>
+      <a href="quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a>
+    </nav>
+  </div>
+
+  <div data-search-overlay class="fixed inset-0 z-50 bg-ink/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="container-x pt-24"><button data-search-close class="absolute top-6 right-6 text-paper p-3 hover:bg-white/10 rounded-full"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="max-w-3xl mx-auto"><input type="search" placeholder="¿Qué necesitas?" class="w-full bg-transparent text-paper text-2xl md:text-4xl font-serif pb-5 border-b-2 border-white/20 focus:border-filament outline-none placeholder:text-paper/30"/></div>
+    </div>
+  </div>
+
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+  <script>
+    // ===== DUAL VIEW TOGGLE =====
+    const viewBtns = document.querySelectorAll('[data-view]');
+    const viewLabel = document.querySelector('[data-view-label]');
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        document.body.dataset.activeView = view;
+        viewBtns.forEach(b => b.classList.toggle('is-active', b.dataset.view === view));
+        if (viewLabel) viewLabel.textContent = view === 'pro'
+          ? 'vista profesional (técnica, con SKU y descargas)'
+          : 'vista para particular (no técnica)';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    // ===== TABS =====
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        tabBtns.forEach(b => b.classList.toggle('is-active', b.dataset.tab === tab));
+        tabPanes.forEach(p => p.classList.toggle('is-active', p.dataset.pane === tab));
+      });
+    });
+  </script>
+</body>
+</html>

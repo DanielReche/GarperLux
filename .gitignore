@@ -1,0 +1,5 @@
+backend/database/*.sqlite
+backend/database/*.sqlite-shm
+backend/database/*.sqlite-wal
+node_modules/
+.playwright-mcp/

@@ -1,0 +1,228 @@
+/* =========================================================
+   GarperLux — Sistema de estilos base
+   Complementa a Tailwind Play CDN. Aquí: tokens, tipografía,
+   animaciones y componentes que no quedan limpios con utilities.
+   ========================================================= */
+
+:root {
+  --ink: #0B0D12;
+  --ink-soft: #1C1F26;
+  --ink-2: #2A2F38;
+  --graphite: #40454F;
+  --graphite-2: #6B7280;
+  --line: #E5DED0;
+  --line-dark: rgba(245, 241, 234, 0.12);
+  --paper: #F7F3EC;
+  --paper-2: #EFE9DE;
+  --paper-3: #E4DCCA;
+  --filament: #E8A545;
+  --filament-glow: #FFC878;
+  --copper: #B8753A;
+  --electric: #1E3A8A;
+  --stock: #16A34A;
+  --warn: #DC2626;
+  --caution: #D97706;
+
+  --serif: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+}
+
+/* --------- Reset específico --------- */
+* { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+}
+img, svg { display: block; max-width: 100%; }
+
+::selection { background: var(--filament); color: var(--ink); }
+
+/* --------- Tipografía --------- */
+.font-serif { font-family: var(--serif); font-feature-settings: "ss01", "ss02"; }
+.font-mono  { font-family: var(--mono); }
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.display {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.75rem, 7vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+.display em { font-style: italic; font-weight: 400; color: var(--filament); }
+
+.h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.05; letter-spacing: -0.015em; }
+.h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.75rem, 3.5vw, 2.75rem); line-height: 1.1; letter-spacing: -0.01em; }
+.h3 { font-family: var(--sans); font-weight: 600; font-size: 1.25rem; line-height: 1.3; }
+
+/* --------- Layout helpers --------- */
+.container-x { width: 100%; max-width: 1440px; margin: 0 auto; padding-inline: clamp(1rem, 4vw, 3rem); }
+.rule { height: 1px; background: var(--line); width: 100%; }
+.rule-dark { height: 1px; background: var(--line-dark); width: 100%; }
+
+/* --------- Botones --------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 0.9rem 1.4rem; border-radius: 999px;
+  font-weight: 600; font-size: 0.9375rem; letter-spacing: 0;
+  transition: all .2s ease; cursor: pointer; border: 1px solid transparent;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--filament); color: var(--ink); }
+.btn-primary:hover { background: var(--filament-glow); transform: translateY(-1px); box-shadow: 0 12px 24px -12px rgba(232,165,69,.6); }
+
+.btn-ink { background: var(--ink); color: var(--paper); }
+.btn-ink:hover { background: var(--ink-soft); }
+
+.btn-ghost { border: 1px solid var(--ink); color: var(--ink); background: transparent; }
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+.btn-ghost-light { border: 1px solid rgba(247,243,236,0.4); color: var(--paper); background: transparent; }
+.btn-ghost-light:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+
+.btn-sm { padding: 0.55rem 1rem; font-size: 0.8125rem; }
+
+/* --------- Pills de estado --------- */
+.pill { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 999px; letter-spacing: 0.02em; }
+.pill-stock { background: #DCFCE7; color: #14532D; }
+.pill-stock::before { content: ''; width: 6px; height: 6px; border-radius: 999px; background: var(--stock); box-shadow: 0 0 0 3px rgba(22,163,74,0.18); }
+.pill-warn { background: rgba(220,38,38,.1); color: var(--warn); }
+.pill-caution { background: rgba(217,119,6,.12); color: var(--caution); }
+.pill-info { background: rgba(30,58,138,.1); color: var(--electric); }
+.pill-dark { background: rgba(245,241,234,0.08); color: var(--paper); border: 1px solid rgba(245,241,234,0.2); }
+
+/* --------- Links --------- */
+.link-underline { position: relative; display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 500; }
+.link-underline::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -3px;
+  height: 1px; background: currentColor; transform-origin: left;
+  transition: transform .3s ease;
+}
+.link-underline:hover::after { transform: scaleX(1.08); }
+
+/* --------- Filament glow (decoración) --------- */
+.filament-glow {
+  background: radial-gradient(ellipse at center, rgba(255,200,120,.45) 0%, rgba(232,165,69,.15) 30%, transparent 65%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+/* --------- Card tutorial --------- */
+.card-tut {
+  position: relative; overflow: hidden; border-radius: 14px;
+  background: var(--paper-2); border: 1px solid var(--line);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.card-tut:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -20px rgba(11,13,18,.25); }
+.card-tut .cover { aspect-ratio: 4/3; background: var(--ink-soft) center/cover no-repeat; }
+
+/* --------- Card producto --------- */
+.card-prod {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;
+  transition: transform .25s ease, border-color .25s ease;
+}
+.card-prod:hover { transform: translateY(-2px); border-color: var(--copper); }
+.card-prod .img { aspect-ratio: 1; background: var(--paper-2); border-radius: 8px; }
+
+/* --------- Scroll horizontal utility --------- */
+.scroll-x {
+  display: flex; gap: 1rem; overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+}
+.scroll-x > * { scroll-snap-align: start; flex: 0 0 auto; }
+.scroll-x::-webkit-scrollbar { height: 6px; }
+.scroll-x::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+
+/* --------- Diagonal ornamento --------- */
+.filament-line {
+  display: block; height: 1px; background: linear-gradient(90deg, transparent, var(--filament) 20%, var(--filament-glow) 50%, var(--filament) 80%, transparent);
+  width: 100%;
+}
+
+/* --------- Marquee / cinta --------- */
+.marquee {
+  display: flex; overflow: hidden; user-select: none; gap: 3rem;
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.marquee__track { display: flex; gap: 3rem; animation: marquee 40s linear infinite; white-space: nowrap; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* --------- Dot leader (listas técnicas) --------- */
+.spec-row { display: grid; grid-template-columns: auto 1fr auto; gap: 0.75rem; align-items: baseline; padding: 0.65rem 0; border-bottom: 1px dashed var(--line); }
+.spec-row .dots { border-bottom: 1px dotted var(--graphite-2); height: 0.5rem; align-self: end; }
+
+/* --------- Hero cinematográfico --------- */
+.hero-cine {
+  position: relative;
+  background: var(--ink);
+  color: var(--paper);
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero-cine::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 75% 35%, rgba(255,200,120,0.22) 0%, transparent 45%),
+    radial-gradient(ellipse at 10% 110%, rgba(184,117,58,0.18) 0%, transparent 40%);
+  z-index: -1;
+}
+.hero-cine::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(245,241,234,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,241,234,0.03) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 70%);
+  z-index: -1;
+}
+
+/* --------- Badge difficulty --------- */
+.badge-diff { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 600; }
+.badge-diff .bar { height: 4px; width: 10px; border-radius: 2px; background: var(--line); }
+.badge-diff .bar.on { background: currentColor; }
+.badge-diff.easy { color: var(--stock); }
+.badge-diff.medium { color: var(--caution); }
+.badge-diff.hard { color: var(--warn); }
+
+/* --------- Alert "cuándo NO hacerlo" --------- */
+.alert-no {
+  border-left: 4px solid var(--warn);
+  background: rgba(220,38,38,0.05);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+}
+
+/* --------- Focus visible accesibilidad --------- */
+:focus-visible { outline: 2px solid var(--filament); outline-offset: 3px; border-radius: 4px; }
+
+/* --------- Animación aparición --------- */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+.fade-up { animation: fadeUp .8s ease both; }
+.fade-up.delay-1 { animation-delay: .12s; }
+.fade-up.delay-2 { animation-delay: .24s; }
+.fade-up.delay-3 { animation-delay: .36s; }
+
+/* --------- Drawer / Overlay open states --------- */
+[data-nav-panel] { will-change: transform; }
+[data-search-overlay].is-open { opacity: 1; pointer-events: auto; }
+
+/* --------- Responsive ajustes --------- */
+@media (max-width: 768px) {
+  .display { font-size: clamp(2.25rem, 10vw, 3.5rem); }
+}

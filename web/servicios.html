@@ -1,0 +1,608 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Servicios técnicos · GarperLux</title>
+  <meta name="description" content="Averías, nuevas instalaciones y mantenimiento eléctrico, de telecomunicaciones, domótica y automatismos. Instaladores autorizados con carnet vigente y presupuesto antes de empezar." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <style>
+    /* Timeline de proceso */
+    .timeline-step { position: relative; padding-left: 2.5rem; }
+    .timeline-step::before { content: ''; position: absolute; left: 0.7rem; top: 0; bottom: 0; width: 1px; background: var(--line); }
+    .timeline-step:last-child::before { display: none; }
+    .timeline-num { position: absolute; left: 0; top: 0; width: 1.6rem; height: 1.6rem; border-radius: 999px; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-family: var(--mono); font-size: 11px; font-weight: 600; }
+
+    /* Matrix cell */
+    .matrix-cell { transition: all .25s ease; cursor: pointer; }
+    .matrix-cell:hover { background: var(--ink); color: var(--paper); }
+    .matrix-cell:hover .arrow { color: var(--filament); }
+  </style>
+</head>
+
+<body class="bg-paper text-ink">
+
+  <!-- TOP BAR + HEADER -->
+  <div class="bg-ink text-paper text-[12.5px]">
+    <div class="container-x flex items-center justify-between py-2">
+      <span class="opacity-90 hidden sm:inline-flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Respuesta en menos de 4 horas hábiles
+      </span>
+      <a href="solicitar-tecnico.html" class="link-underline opacity-90">Pedir presupuesto</a>
+    </div>
+  </div>
+  <div data-component="site-header"></div>
+
+  <!-- BREADCRUMBS -->
+  <div class="container-x pt-5 pb-2">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2">
+      <a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <span class="text-ink">Servicios</span>
+    </nav>
+  </div>
+
+  <!-- ============ HERO SERVICIOS ============ -->
+  <section class="container-x pt-10 md:pt-14 pb-16 md:pb-20">
+    <div class="grid lg:grid-cols-12 gap-10 items-end">
+      <div class="lg:col-span-7">
+        <div class="eyebrow text-copper mb-5 flex items-center gap-3">
+          <span class="w-8 h-px bg-copper"></span>
+          Servicios técnicos · cobertura Andalucía
+        </div>
+        <h1 class="font-serif font-medium leading-[0.96] tracking-[-0.02em]" style="font-size: clamp(2.75rem, 8vw, 6.5rem);">
+          Cuando ya no<br/>
+          puedes <em class="italic text-filament">hacerlo tú,</em><br/>
+          vamos nosotros.
+        </h1>
+        <p class="mt-7 text-graphite text-lg max-w-xl leading-relaxed">
+          Averías urgentes, instalaciones nuevas y mantenimiento programado. Todos nuestros técnicos tienen carnet de baja tensión vigente y presupuesto antes de empezar el trabajo. Sin sorpresas.
+        </p>
+      </div>
+
+      <div class="lg:col-span-5">
+        <div class="grid grid-cols-2 gap-px bg-line border border-line rounded-2xl overflow-hidden">
+          <div class="bg-paper p-5">
+            <div class="font-serif text-3xl font-medium">&lt;4 h</div>
+            <div class="text-xs text-graphite uppercase tracking-wider mt-1">Tiempo de respuesta</div>
+          </div>
+          <div class="bg-paper p-5">
+            <div class="font-serif text-3xl font-medium">100%</div>
+            <div class="text-xs text-graphite uppercase tracking-wider mt-1">Carnet BT vigente</div>
+          </div>
+          <div class="bg-paper p-5">
+            <div class="font-serif text-3xl font-medium">3 años</div>
+            <div class="text-xs text-graphite uppercase tracking-wider mt-1">Garantía mano de obra</div>
+          </div>
+          <div class="bg-paper p-5">
+            <div class="font-serif text-3xl font-medium">8 prov.</div>
+            <div class="text-xs text-graphite uppercase tracking-wider mt-1">Cobertura Andalucía</div>
+          </div>
+        </div>
+        <a href="solicitar-tecnico.html" class="btn btn-primary w-full justify-center mt-4">
+          Solicitar técnico
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MATRIZ TIPO DE SERVICIO × ÁREA TÉCNICA ============ -->
+  <section class="bg-paper-2 border-y border-line">
+    <div class="container-x py-16 md:py-20">
+      <div class="flex items-end justify-between mb-10 flex-wrap gap-4">
+        <div>
+          <div class="eyebrow text-copper mb-3">01 · Qué hacemos</div>
+          <h2 class="h1">Tres formas de <em class="italic">venir a ayudarte</em>.</h2>
+        </div>
+        <p class="text-graphite max-w-md">Cada servicio se aplica a cuatro áreas: electricidad, telecomunicaciones, domótica y automatismos. Pulsa la combinación que necesitas.</p>
+      </div>
+
+      <!-- Matriz -->
+      <div class="bg-white rounded-2xl border border-line overflow-hidden">
+        <!-- Cabecera de columnas -->
+        <div class="grid grid-cols-[1fr_repeat(4,minmax(0,1fr))] bg-ink text-paper text-xs font-mono uppercase tracking-wider">
+          <div class="p-5 border-r border-white/10">Tipo de servicio ↓</div>
+          <div class="p-5 border-r border-white/10 hidden md:block">Electricidad</div>
+          <div class="p-5 border-r border-white/10 hidden md:block">Telecomunicaciones</div>
+          <div class="p-5 border-r border-white/10 hidden md:block">Domótica</div>
+          <div class="p-5 hidden md:block">Automatismos</div>
+          <div class="p-5 col-span-4 md:hidden">Áreas técnicas →</div>
+        </div>
+
+        <!-- Fila 1: Averías -->
+        <div class="grid grid-cols-[1fr_repeat(4,minmax(0,1fr))] border-t border-line">
+          <div class="p-6 border-r border-line bg-paper-2">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="w-9 h-9 rounded-full bg-warn/10 grid place-items-center text-warn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg>
+              </span>
+              <div>
+                <h3 class="font-serif text-xl font-medium leading-tight">Averías</h3>
+                <div class="text-xs text-graphite font-mono">Urgente · &lt;24h</div>
+              </div>
+            </div>
+            <p class="text-sm text-graphite mt-2 hidden md:block">Algo dejó de funcionar. Vamos a diagnosticar y arreglar.</p>
+          </div>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Eléctrica</span>
+              <svg class="arrow text-graphite mt-1 transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Cuadro, circuitos, cortes</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 65 €</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Teleco</span>
+              <svg class="arrow text-graphite mt-1 transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Antena, fibra, redes</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 70 €</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Domótica</span>
+              <svg class="arrow text-graphite mt-1 transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Shelly, Hue, escenas</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 55 €</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Automatismos</span>
+              <svg class="arrow text-graphite mt-1 transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Persiana, garaje, puerta</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 75 €</div>
+          </a>
+        </div>
+
+        <!-- Fila 2: Nuevas instalaciones -->
+        <div class="grid grid-cols-[1fr_repeat(4,minmax(0,1fr))] border-t border-line">
+          <div class="p-6 border-r border-line bg-paper-2">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="w-9 h-9 rounded-full bg-copper/15 grid place-items-center text-copper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M14 9h.01M14 13h.01M14 17h.01"/></svg>
+              </span>
+              <div>
+                <h3 class="font-serif text-xl font-medium leading-tight">Nuevas instalaciones</h3>
+                <div class="text-xs text-graphite font-mono">Planificado · con boletín</div>
+              </div>
+            </div>
+            <p class="text-sm text-graphite mt-2 hidden md:block">Reformas, obra nueva, ampliaciones. Con certificación.</p>
+          </div>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Eléctrica</span>
+              <svg class="arrow text-graphite mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Cuadro completo, vivienda</div>
+            <div class="text-xs font-mono text-copper mt-3">presupuesto a medida</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Teleco</span>
+              <svg class="arrow text-graphite mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Antena colectiva, ICT</div>
+            <div class="text-xs font-mono text-copper mt-3">presupuesto a medida</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Domótica</span>
+              <svg class="arrow text-graphite mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Vivienda inteligente</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 1.200 €</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Automatismos</span>
+              <svg class="arrow text-graphite mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Persianas, puerta garaje</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 380 €</div>
+          </a>
+        </div>
+
+        <!-- Fila 3: Mantenimiento -->
+        <div class="grid grid-cols-[1fr_repeat(4,minmax(0,1fr))] border-t border-line">
+          <div class="p-6 border-r border-line bg-paper-2">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="w-9 h-9 rounded-full bg-electric/10 grid place-items-center text-electric">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              </span>
+              <div>
+                <h3 class="font-serif text-xl font-medium leading-tight">Mantenimiento</h3>
+                <div class="text-xs text-graphite font-mono">Periódico · sin sorpresas</div>
+              </div>
+            </div>
+            <p class="text-sm text-graphite mt-2 hidden md:block">Revisiones programadas para que nada falle a destiempo.</p>
+          </div>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Eléctrica</span>
+              <svg class="arrow text-graphite mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Cuadros, conexiones</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 90 €/año</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Teleco</span>
+              <svg class="arrow text-graphite mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Antenas comunitarias</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 180 €/año</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 border-r border-line bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Domótica</span>
+              <svg class="arrow text-graphite mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Actualización firmware</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 60 €/año</div>
+          </a>
+          <a href="servicio.html" class="matrix-cell p-5 bg-white block">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-medium">Automatismos</span>
+              <svg class="arrow text-graphite mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </div>
+            <div class="text-xs text-graphite/70 mt-1 hidden md:block">Engrase, calibración</div>
+            <div class="text-xs font-mono text-copper mt-3">desde 80 €/año</div>
+          </a>
+        </div>
+      </div>
+
+      <p class="text-xs text-graphite mt-4 font-mono">* Precios indicativos · presupuesto definitivo en visita previa sin compromiso</p>
+    </div>
+  </section>
+
+  <!-- ============ CÓMO TRABAJAMOS — TIMELINE ============ -->
+  <section class="container-x py-20 md:py-28">
+    <div class="grid lg:grid-cols-12 gap-10">
+      <div class="lg:col-span-5">
+        <div class="eyebrow text-copper mb-4">02 · Cómo trabajamos</div>
+        <h2 class="display" style="font-size: clamp(2.25rem, 5vw, 4.5rem);">
+          Sin sustos.<br/>
+          <em class="italic text-filament">Cinco pasos</em><br/>
+          y un boletín si toca.
+        </h2>
+        <p class="mt-6 text-graphite text-lg leading-relaxed max-w-md">
+          Trabajamos con un protocolo público. Sabes qué pasa en cada fase y cuándo. Sin llamadas perdidas ni "ahora vamos".
+        </p>
+      </div>
+
+      <div class="lg:col-span-7 space-y-8">
+        <div class="timeline-step pb-8">
+          <div class="timeline-num">1</div>
+          <h3 class="font-serif text-2xl font-medium leading-tight mb-2">Solicitas</h3>
+          <p class="text-graphite leading-relaxed">A través del formulario web, por teléfono o por WhatsApp. Cuéntanos qué te pasa y, si puedes, mándanos una foto. Eso nos ahorra una visita en muchos casos.</p>
+        </div>
+        <div class="timeline-step pb-8">
+          <div class="timeline-num">2</div>
+          <h3 class="font-serif text-2xl font-medium leading-tight mb-2">Te contactamos en menos de 4 h</h3>
+          <p class="text-graphite leading-relaxed">Para confirmar fecha de visita o, en urgencias, para acudir el mismo día. Si es algo que puedes resolver tú, te derivamos a Hazlo Tú Mismo y no te cobramos.</p>
+        </div>
+        <div class="timeline-step pb-8">
+          <div class="timeline-num">3</div>
+          <h3 class="font-serif text-2xl font-medium leading-tight mb-2">Visita técnica + presupuesto</h3>
+          <p class="text-graphite leading-relaxed">Sin compromiso. Vemos la instalación, evaluamos el alcance y dejamos por escrito todo: materiales, mano de obra, plazos y posibles imprevistos. Si no cuadra, no pasa nada.</p>
+        </div>
+        <div class="timeline-step pb-8">
+          <div class="timeline-num">4</div>
+          <h3 class="font-serif text-2xl font-medium leading-tight mb-2">Realización del trabajo</h3>
+          <p class="text-graphite leading-relaxed">Con el material acordado y los plazos firmados. Te enseñamos lo que hacemos antes de cerrarlo, dejamos la zona limpia y, si surge algo no previsto, lo consultamos antes de actuar.</p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-num">5</div>
+          <h3 class="font-serif text-2xl font-medium leading-tight mb-2">Entrega + boletín / certificación</h3>
+          <p class="text-graphite leading-relaxed">Si la instalación lo requiere, sellamos boletín eléctrico y te lo entregamos junto con la garantía de mano de obra (3 años). Albarán, factura y todos los documentos en tu área personal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ZONA DE COBERTURA ============ -->
+  <section class="bg-ink text-paper relative overflow-hidden">
+    <div class="absolute top-1/4 right-1/4 w-[500px] h-[500px] filament-glow opacity-30"></div>
+    <div class="container-x py-20 md:py-24 relative">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-5">
+          <div class="eyebrow text-filament mb-4">03 · Cobertura</div>
+          <h2 class="h1 text-paper mb-5">
+            Damos servicio en<br/>
+            <em class="italic text-filament">toda Andalucía.</em>
+          </h2>
+          <p class="text-paper/70 leading-relaxed mb-8 max-w-md">
+            Nuestra sede está en el Campus Las Lagunillas (Jaén), pero trabajamos en las 8 provincias andaluzas con técnicos colaboradores autorizados.
+          </p>
+
+          <div class="grid grid-cols-2 gap-2 mb-6">
+            <div class="flex items-center gap-2 text-sm text-paper/80"><span class="w-1.5 h-1.5 rounded-full bg-filament"></span> Jaén · sede</div>
+            <div class="flex items-center gap-2 text-sm text-paper/80"><span class="w-1.5 h-1.5 rounded-full bg-paper/50"></span> Granada</div>
+            <div class="flex items-center gap-2 text-sm text-paper/80"><span class="w-1.5 h-1.5 rounded-full bg-paper/50"></span> Córdoba</div>
+            <div class="flex items-center gap-2 text-sm text-paper/80"><span class="w-1.5 h-1.5 rounded-full bg-paper/50"></span> Sevilla</div>
+            <div class="flex items-center gap-2 text-sm text-paper/80"><span class="w-1.5 h-1.5 rounded-full bg-paper/50"></span> Málaga</div>
+            <div class="flex items-center gap-2 text-sm text-paper/80"><span class="w-1.5 h-1.5 rounded-full bg-paper/50"></span> Almería</div>
+            <div class="flex items-center gap-2 text-sm text-paper/80"><span class="w-1.5 h-1.5 rounded-full bg-paper/50"></span> Cádiz</div>
+            <div class="flex items-center gap-2 text-sm text-paper/80"><span class="w-1.5 h-1.5 rounded-full bg-paper/50"></span> Huelva</div>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-sm">
+            <div class="font-medium mb-1">¿Tu provincia no está?</div>
+            <div class="text-paper/70">Llámanos al 953 00 00 00 — algunas zonas limítrofes (Albacete, Ciudad Real) las cubrimos puntualmente.</div>
+          </div>
+        </div>
+
+        <!-- Mapa Andalucía estilizado -->
+        <div class="lg:col-span-7">
+          <div class="aspect-[4/3] relative rounded-2xl bg-white/5 border border-white/10 p-8 overflow-hidden">
+            <svg viewBox="0 0 800 600" class="w-full h-full" aria-label="Mapa estilizado de Andalucía">
+              <!-- Forma global Andalucía simplificada (no precisa, decorativa) -->
+              <path d="M 100 250 Q 80 280 100 320 L 130 360 Q 150 400 200 420 L 280 450 Q 350 470 420 450 L 500 430 Q 580 420 640 380 L 700 340 Q 730 300 720 260 L 700 220 Q 670 200 620 200 L 540 220 Q 470 230 400 220 L 320 200 Q 250 195 180 215 Q 130 230 100 250 Z" fill="rgba(255,200,120,0.06)" stroke="rgba(255,200,120,0.3)" stroke-width="1.5"/>
+
+              <!-- Provincias -->
+              <!-- Jaén (destacada) -->
+              <g class="cursor-pointer">
+                <circle cx="430" cy="240" r="14" fill="#E8A545" />
+                <circle cx="430" cy="240" r="22" fill="none" stroke="#E8A545" stroke-width="1" opacity="0.5">
+                  <animate attributeName="r" values="14;28;14" dur="2s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <text x="430" y="280" text-anchor="middle" fill="#FFC878" font-family="Fraunces" font-size="20" font-style="italic">Jaén</text>
+                <text x="430" y="298" text-anchor="middle" fill="rgba(255,200,120,0.6)" font-family="JetBrains Mono" font-size="9">SEDE · Las Lagunillas</text>
+              </g>
+              <!-- Otras provincias -->
+              <g fill="#F7F3EC" font-family="Fraunces" font-size="14" font-style="italic" text-anchor="middle">
+                <circle cx="320" cy="280" r="6" fill="#F7F3EC" opacity="0.7"/>
+                <text x="320" y="310" opacity="0.7">Córdoba</text>
+
+                <circle cx="200" cy="320" r="6" fill="#F7F3EC" opacity="0.7"/>
+                <text x="200" y="350" opacity="0.7">Sevilla</text>
+
+                <circle cx="120" cy="380" r="6" fill="#F7F3EC" opacity="0.7"/>
+                <text x="120" y="410" opacity="0.7">Huelva</text>
+
+                <circle cx="220" cy="400" r="6" fill="#F7F3EC" opacity="0.7"/>
+                <text x="220" y="430" opacity="0.7">Cádiz</text>
+
+                <circle cx="370" cy="380" r="6" fill="#F7F3EC" opacity="0.7"/>
+                <text x="370" y="410" opacity="0.7">Málaga</text>
+
+                <circle cx="500" cy="320" r="6" fill="#F7F3EC" opacity="0.7"/>
+                <text x="500" y="350" opacity="0.7">Granada</text>
+
+                <circle cx="620" cy="340" r="6" fill="#F7F3EC" opacity="0.7"/>
+                <text x="620" y="370" opacity="0.7">Almería</text>
+              </g>
+
+              <!-- Línea decorativa -->
+              <line x1="430" y1="240" x2="320" y2="280" stroke="rgba(255,200,120,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+              <line x1="430" y1="240" x2="500" y2="320" stroke="rgba(255,200,120,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+            </svg>
+
+            <!-- Leyenda flotante -->
+            <div class="absolute bottom-5 left-5 bg-paper text-ink text-xs font-mono px-3 py-2 rounded-md">
+              ● Sede principal · Las Lagunillas
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CASOS REALES — SHOWCASE EDITORIAL ============ -->
+  <section class="container-x py-20 md:py-28">
+    <div class="flex items-end justify-between mb-12 flex-wrap gap-4">
+      <div>
+        <div class="eyebrow text-copper mb-3">04 · Trabajos realizados</div>
+        <h2 class="h1">Casos reales.<br/><em class="italic font-serif text-graphite">Con foto y sin posturas.</em></h2>
+      </div>
+      <a href="quienes-somos.html#trabajos" class="link-underline text-sm">Ver el portafolio completo
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="grid md:grid-cols-12 gap-6">
+      <!-- Caso 1 grande -->
+      <a href="quienes-somos.html#trabajos" class="md:col-span-7 group block">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-ink relative">
+          <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=1200&q=80" alt="" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" loading="lazy" onerror="this.style.display='none'"/>
+          <div class="absolute top-4 left-4 flex gap-2">
+            <span class="pill pill-dark">Nuevas instalaciones</span>
+            <span class="pill pill-dark">Eléctrica</span>
+          </div>
+          <div class="absolute bottom-4 left-4 right-4">
+            <span class="font-mono text-xs text-paper/60 uppercase tracking-wider">CASO 047 · Mengíbar (Jaén)</span>
+          </div>
+        </div>
+        <div class="mt-5">
+          <h3 class="font-serif text-2xl md:text-3xl font-medium leading-tight mb-3">Vivienda unifamiliar de 180 m² · cuadro completo</h3>
+          <p class="text-graphite leading-relaxed mb-3">Renovación íntegra del cuadro eléctrico tras detectar un magnetotérmico saltado constantemente. 12 circuitos nuevos, IGA reemplazado y boletín registrado en industria.</p>
+          <div class="flex items-center gap-5 text-xs font-mono text-graphite">
+            <span>Plazo: 3 días</span><span>·</span>
+            <span>Equipo: 2 técnicos</span><span>·</span>
+            <span>Boletín: emitido</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Caso 2 -->
+      <a href="quienes-somos.html#trabajos" class="md:col-span-5 group block">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-ink-soft relative">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80" alt="" class="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-700" loading="lazy" onerror="this.style.display='none'"/>
+          <div class="absolute top-4 left-4 flex gap-2">
+            <span class="pill pill-dark">Domótica</span>
+          </div>
+          <div class="absolute bottom-4 left-4 right-4">
+            <span class="font-mono text-xs text-paper/60 uppercase tracking-wider">CASO 052 · Granada</span>
+          </div>
+        </div>
+        <div class="mt-5">
+          <h3 class="font-serif text-2xl font-medium leading-tight mb-3">Domotización completa de salón y cocina</h3>
+          <p class="text-graphite leading-relaxed mb-3">Persianas motorizadas, escenas de luz y sensores de presencia integrados con Home Assistant.</p>
+          <div class="flex items-center gap-4 text-xs font-mono text-graphite">
+            <span>2 días</span><span>·</span><span>1 técnico</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Caso 3 -->
+      <a href="quienes-somos.html#trabajos" class="md:col-span-4 group block">
+        <div class="aspect-square rounded-2xl overflow-hidden relative bg-paper-2">
+          <img src="https://images.unsplash.com/photo-1632833239869-a37e3a5806d2?auto=format&fit=crop&w=800&q=80" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" onerror="this.style.display='none'"/>
+          <div class="absolute top-4 left-4 flex gap-2">
+            <span class="pill bg-warn text-paper">Avería urgente</span>
+          </div>
+        </div>
+        <h3 class="font-serif text-xl font-medium leading-tight mt-4 mb-1">Comunidad sin luz tras tormenta</h3>
+        <p class="text-graphite text-sm">Resuelto en 2 horas un sábado. Diferencial principal averiado.</p>
+      </a>
+
+      <a href="quienes-somos.html#trabajos" class="md:col-span-4 group block">
+        <div class="aspect-square rounded-2xl overflow-hidden relative" style="background: linear-gradient(135deg, #B8753A, #1C1F26);">
+          <div class="absolute inset-0 grid place-items-center text-paper/30">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8"><rect x="6" y="3" width="12" height="18" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="absolute top-4 left-4 flex gap-2">
+            <span class="pill pill-dark">Telecomunicaciones</span>
+          </div>
+        </div>
+        <h3 class="font-serif text-xl font-medium leading-tight mt-4 mb-1">Videoportero para 24 vecinos</h3>
+        <p class="text-graphite text-sm">Sustitución de telefonillo analógico por sistema digital con app.</p>
+      </a>
+
+      <a href="quienes-somos.html#trabajos" class="md:col-span-4 group block">
+        <div class="aspect-square rounded-2xl overflow-hidden relative bg-paper-3">
+          <div class="absolute inset-0 grid place-items-center text-graphite/30">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="absolute top-4 left-4 flex gap-2">
+            <span class="pill bg-electric/15 text-electric border border-electric/30">Mantenimiento</span>
+          </div>
+        </div>
+        <h3 class="font-serif text-xl font-medium leading-tight mt-4 mb-1">Mantenimiento anual local comercial</h3>
+        <p class="text-graphite text-sm">Revisión preventiva de cuadro y luminarias en establecimiento de 320 m².</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FAQs SERVICIOS ============ -->
+  <section class="bg-paper-2 border-y border-line">
+    <div class="container-x py-20 md:py-24">
+      <div class="grid lg:grid-cols-12 gap-10">
+        <div class="lg:col-span-4">
+          <div class="eyebrow text-copper mb-4">05 · Preguntas frecuentes</div>
+          <h2 class="h1 mb-6">Antes de pedir cita, lo que más nos preguntan.</h2>
+          <a href="solicitar-tecnico.html" class="btn btn-ink">Solicitar técnico</a>
+        </div>
+
+        <div class="lg:col-span-8 space-y-3">
+          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
+            <summary class="flex items-start justify-between gap-6 cursor-pointer list-none">
+              <h3 class="font-serif text-xl font-medium leading-tight">¿La visita técnica es gratuita?</h3>
+              <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <p class="mt-4 text-graphite leading-relaxed">Sí, en todos los casos de instalación nueva o mantenimiento. En averías cobramos un mínimo de 30 € por desplazamiento si finalmente no contratas el trabajo, pero se descuenta del presupuesto si decides seguir adelante.</p>
+          </details>
+          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
+            <summary class="flex items-start justify-between gap-6 cursor-pointer list-none">
+              <h3 class="font-serif text-xl font-medium leading-tight">¿Atendéis urgencias fuera de horario?</h3>
+              <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <p class="mt-4 text-graphite leading-relaxed">Sí, en Jaén capital y zona metropolitana 24/7. En el resto de la provincia, hasta las 22:00. En las demás provincias andaluzas, horario laboral. Las urgencias fuera de horario llevan recargo del 50 %, que se indica antes de aceptar el servicio.</p>
+          </details>
+          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
+            <summary class="flex items-start justify-between gap-6 cursor-pointer list-none">
+              <h3 class="font-serif text-xl font-medium leading-tight">¿Emitís boletín eléctrico?</h3>
+              <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <p class="mt-4 text-graphite leading-relaxed">Sí. Todos nuestros técnicos tienen carnet de baja tensión vigente, así que podemos sellar boletín cuando la instalación lo requiere (obra nueva, ampliaciones, contrato nuevo). Lo registramos directamente en industria.</p>
+          </details>
+          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
+            <summary class="flex items-start justify-between gap-6 cursor-pointer list-none">
+              <h3 class="font-serif text-xl font-medium leading-tight">¿Qué garantía dais en los trabajos?</h3>
+              <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <p class="mt-4 text-graphite leading-relaxed">Tres años de garantía en mano de obra a partir de la entrega del trabajo. Los materiales tienen la garantía propia del fabricante (habitualmente 2 años para mecanismos, 5 años para protecciones eléctricas y luminarias profesionales).</p>
+          </details>
+          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
+            <summary class="flex items-start justify-between gap-6 cursor-pointer list-none">
+              <h3 class="font-serif text-xl font-medium leading-tight">¿Puedo comprar yo el material y que vosotros solo lo instaléis?</h3>
+              <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <p class="mt-4 text-graphite leading-relaxed">Sí, pero con dos matices: la garantía sobre el material la asume el fabricante (no nosotros), y si el material no cumple la normativa o no es adecuado para el caso, te lo decimos antes de empezar. Recuerda que en nuestra <a href="tienda.html" class="link-underline">tienda</a> tienes precio profesional aunque no seas instalador.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section class="bg-ink text-paper relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-[400px] h-[400px] filament-glow opacity-50"></div>
+    <div class="container-x py-20 md:py-24 relative">
+      <div class="grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-8">
+          <div class="eyebrow text-filament mb-4">¿Listo para empezar?</div>
+          <h2 class="display text-paper" style="font-size: clamp(2.25rem, 5.5vw, 5rem);">
+            Cuéntanos qué te pasa.<br/>
+            <em class="italic text-filament">Te respondemos hoy.</em>
+          </h2>
+          <p class="mt-6 text-paper/70 text-lg leading-relaxed max-w-xl">
+            Formulario guiado en 5 pasos. Si lo que necesitas es algo simple que puedes hacer tú, te derivamos al tutorial sin cobrarte nada.
+          </p>
+        </div>
+        <div class="lg:col-span-4 lg:text-right">
+          <a href="solicitar-tecnico.html" class="btn btn-primary text-base">
+            Solicitar técnico
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div data-component="site-footer"></div>
+
+  <!-- Mobile + search overlays -->
+  <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <nav class="px-5 py-6">
+      <a href="hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a>
+      <a href="tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Tienda</a>
+      <a href="servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif text-filament">Servicios</a>
+      <a href="solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a>
+      <a href="quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a>
+    </nav>
+  </div>
+
+  <div data-search-overlay class="fixed inset-0 z-50 bg-ink/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="container-x pt-24"><button data-search-close class="absolute top-6 right-6 text-paper p-3 hover:bg-white/10 rounded-full"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="max-w-3xl mx-auto"><input type="search" placeholder="¿Qué necesitas?" class="w-full bg-transparent text-paper text-2xl md:text-4xl font-serif pb-5 border-b-2 border-white/20 focus:border-filament outline-none placeholder:text-paper/30"/></div>
+    </div>
+  </div>
+
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+</body>
+</html>

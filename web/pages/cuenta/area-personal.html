@@ -1,0 +1,508 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="../../">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi área personal · GarperLux</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <style>
+    /* DUAL VIEW */
+    [data-active-view="particular"] .view-pro { display: none; }
+    [data-active-view="pro"] .view-particular { display: none; }
+    [data-active-view="pro"] body { background: #FCFAF6; }
+
+    .view-toggle { display: inline-flex; padding: 4px; background: var(--paper-2); border-radius: 999px; border: 1px solid var(--line); }
+    .view-toggle button { padding: 0.5rem 1rem; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--graphite); cursor: pointer; transition: all .25s; }
+    .view-toggle button.is-active { background: var(--ink); color: var(--paper); }
+
+    .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; font-size: 14px; color: var(--graphite); transition: all .15s; }
+    .nav-item:hover { background: var(--paper-2); color: var(--ink); }
+    .nav-item.is-active { background: var(--ink); color: var(--paper); font-weight: 500; }
+
+    .stat-card { background: white; border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem; }
+
+    /* Sparkline minimal */
+    .spark { height: 32px; width: 100%; }
+  </style>
+</head>
+
+<body data-active-view="particular" class="bg-paper text-ink">
+
+  <!-- HEADER GLOBAL (igual al resto) -->
+  <div data-component="site-header"></div>
+
+  <!-- (El toggle demo se ha movido al pie del sidebar) -->
+  <div class="container-x pt-6 pb-2"></div>
+
+  <!-- ============ LAYOUT: SIDEBAR + MAIN ============ -->
+  <section class="container-x pb-20">
+    <div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+
+      <!-- ============ SIDEBAR (renderizado por auth.js según rol) ============ -->
+      <aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start lg:max-h-[calc(100vh-3rem)] overflow-y-auto" data-active="dashboard"></aside>
+      <!-- Sidebar viejo (oculto, se mantiene como fallback inerte) -->
+      <aside class="hidden">
+
+        <!-- Identidad usuario (cambia según rol) -->
+        <div class="view-particular bg-white border border-line rounded-2xl p-5 mb-5">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-full bg-ink text-paper grid place-items-center font-medium text-lg">A</div>
+            <div>
+              <div class="font-medium">Antonio García</div>
+              <div class="text-xs text-graphite font-mono">Cliente desde 2026-04</div>
+            </div>
+          </div>
+          <div class="text-xs text-graphite">antonio.garcia@correo.com</div>
+        </div>
+
+        <div class="view-pro bg-ink text-paper rounded-2xl p-5 mb-5">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-full bg-filament text-ink grid place-items-center font-medium text-lg">JL</div>
+            <div>
+              <div class="font-medium">Jose Luis García</div>
+              <div class="text-[11px] text-paper/60 font-mono">"El Chispas"</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="pill pill-stock !bg-stock/15 text-stock !border-0">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+              BT vigente
+            </span>
+            <span class="text-paper/60 font-mono">−22% PVP</span>
+          </div>
+          <div class="text-[11px] text-paper/60 mt-3 pt-3 border-t border-white/10 font-mono">Carnet caduca: 2031-04 · CIF B12345678</div>
+        </div>
+
+        <!-- Navegación particular -->
+        <nav class="view-particular space-y-1">
+          <a href="area-personal.html" class="nav-item is-active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            Dashboard
+          </a>
+          <a href="mis-pedidos.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Mis pedidos <span class="ml-auto text-xs font-mono text-graphite">3</span></a>
+          <a href="mis-solicitudes.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg> Mis solicitudes <span class="ml-auto text-xs font-mono text-filament">1 activa</span></a>
+          <a href="mis-favoritos.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/></svg> Mis favoritos <span class="ml-auto text-xs font-mono text-graphite">12</span></a>
+          <a href="tutoriales-guardados.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Tutoriales guardados</a>
+          <div class="px-2 pt-4 pb-2 text-[11px] font-mono uppercase tracking-wider text-graphite">Configuración</div>
+          <a href="direcciones.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Direcciones</a>
+          <a href="metodos-pago.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Métodos de pago</a>
+          <a href="datos-personales.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg> Datos personales</a>
+          <a href="#" class="nav-item text-warn hover:!bg-warn/5 hover:!text-warn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Cerrar sesión</a>
+        </nav>
+
+        <!-- Navegación profesional -->
+        <nav class="view-pro space-y-1">
+          <a href="area-personal.html" class="nav-item is-active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg> Panel general</a>
+          <a href="mis-tarifas.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Mis tarifas pro <span class="ml-auto text-[10px] font-mono pill pill-stock">−22%</span></a>
+          <a href="albaranes.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Albaranes <span class="ml-auto text-xs font-mono text-graphite">42</span></a>
+          <a href="facturas.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> Facturas <span class="ml-auto text-xs font-mono text-graphite">38</span></a>
+          <a href="mis-pedidos.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Mis pedidos <span class="ml-auto text-xs font-mono text-graphite">42</span></a>
+          <a href="mis-presupuestos.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Mis presupuestos <span class="ml-auto text-xs font-mono text-filament">2 abiertos</span></a>
+          <a href="repetir-compra.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/><path d="M3 12h4l3-9 4 18 3-9h4"/></svg> Repetir compra</a>
+          <a href="mis-favoritos.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/></svg> Mis favoritos <span class="ml-auto text-xs font-mono text-graphite">87</span></a>
+          <div class="px-2 pt-4 pb-2 text-[11px] font-mono uppercase tracking-wider text-graphite">Configuración</div>
+          <a href="datos-fiscales.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> Datos fiscales</a>
+          <a href="direcciones.html" class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg> Direcciones de obra</a>
+          <a href="#" class="nav-item text-warn hover:!bg-warn/5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Cerrar sesión</a>
+        </nav>
+      </aside>
+
+      <!-- ============ MAIN CONTENT ============ -->
+      <main>
+
+        <!-- ============ DASHBOARD PARTICULAR ============ -->
+        <div class="view-particular space-y-7">
+
+          <!-- Greeting -->
+          <div>
+            <div class="eyebrow text-copper mb-2">Buenas tardes,</div>
+            <h1 class="font-serif font-medium leading-[0.98] tracking-[-0.015em]" style="font-size: clamp(2.25rem, 5vw, 3.5rem);">
+              Antonio.
+            </h1>
+            <p class="text-graphite text-lg mt-2">Aquí tienes el resumen de tus pedidos y solicitudes.</p>
+          </div>
+
+          <!-- Stat cards -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="stat-card">
+              <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-2">Pedidos en curso</div>
+              <div class="font-serif text-3xl font-medium">1</div>
+              <div class="text-xs text-stock mt-1">Sale hoy mismo</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-2">Solicitudes activas</div>
+              <div class="font-serif text-3xl font-medium">1</div>
+              <div class="text-xs text-filament mt-1">En revisión</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-2">Favoritos</div>
+              <div class="font-serif text-3xl font-medium">12</div>
+              <div class="text-xs text-graphite mt-1">3 nuevos esta semana</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-2">Tutoriales guardados</div>
+              <div class="font-serif text-3xl font-medium">7</div>
+              <div class="text-xs text-graphite mt-1">2 sin terminar</div>
+            </div>
+          </div>
+
+          <!-- Último pedido (con tracking) -->
+          <div class="bg-white rounded-2xl border border-line overflow-hidden">
+            <div class="px-6 py-4 border-b border-line flex items-center justify-between flex-wrap gap-3">
+              <div>
+                <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-0.5">Pedido #GLX-04-1184</div>
+                <h3 class="font-serif text-xl font-medium">Tu pedido sale hoy</h3>
+              </div>
+              <span class="pill pill-info">En preparación</span>
+            </div>
+
+            <!-- Tracking horizontal -->
+            <div class="px-6 py-5">
+              <div class="grid grid-cols-4 relative">
+                <div class="absolute top-3 left-0 right-0 h-px bg-line z-0"></div>
+                <div class="absolute top-3 left-0 h-px bg-stock z-10" style="width: 50%;"></div>
+                <div class="relative text-center">
+                  <span class="block w-6 h-6 rounded-full bg-stock text-paper grid place-items-center mx-auto z-20 relative"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <div class="text-xs font-medium mt-2">Recibido</div>
+                  <div class="text-[10px] font-mono text-graphite">26/04 · 12:30</div>
+                </div>
+                <div class="relative text-center">
+                  <span class="block w-6 h-6 rounded-full bg-stock text-paper grid place-items-center mx-auto z-20 relative"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <div class="text-xs font-medium mt-2">Pago confirmado</div>
+                  <div class="text-[10px] font-mono text-graphite">26/04 · 12:31</div>
+                </div>
+                <div class="relative text-center">
+                  <span class="block w-6 h-6 rounded-full bg-filament text-ink grid place-items-center mx-auto z-20 relative animate-pulse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+                  <div class="text-xs font-medium mt-2">En preparación</div>
+                  <div class="text-[10px] font-mono text-filament">Ahora</div>
+                </div>
+                <div class="relative text-center">
+                  <span class="block w-6 h-6 rounded-full bg-paper-2 border border-line grid place-items-center mx-auto z-20 relative"></span>
+                  <div class="text-xs font-medium mt-2 text-graphite">Entregado</div>
+                  <div class="text-[10px] font-mono text-graphite">est. 28/04</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resumen items -->
+            <div class="px-6 py-4 bg-paper-2 border-t border-line">
+              <div class="flex items-center justify-between flex-wrap gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="flex -space-x-2">
+                    <div class="w-10 h-10 rounded-lg bg-white border-2 border-paper-2 grid place-items-center text-graphite/40">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-white border-2 border-paper-2 grid place-items-center text-graphite/40">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-white border-2 border-paper-2 grid place-items-center text-graphite/40">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/></svg>
+                    </div>
+                  </div>
+                  <div class="text-sm">
+                    <div class="font-medium">Kit Cambiar interruptor (3 productos)</div>
+                    <div class="text-graphite text-xs font-mono">Total: 16,45 €</div>
+                  </div>
+                </div>
+                <a href="carrito.html" class="btn btn-sm btn-ghost">Ver detalle</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Solicitud técnica activa -->
+          <div class="bg-paper-2 rounded-2xl border border-line p-6">
+            <div class="flex items-start justify-between flex-wrap gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="pill bg-warn text-paper">Avería</span>
+                  <span class="pill pill-info">En revisión</span>
+                </div>
+                <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">Solicitud GLX-2026-04-2748</div>
+                <h3 class="font-serif text-xl font-medium leading-tight mb-1">Salta el automático al enchufar el microondas</h3>
+                <p class="text-graphite text-sm">Recibida hace 12 minutos · Te llamaremos antes de las 22:42</p>
+              </div>
+              <a href="solicitud-confirmacion.html" class="btn btn-sm btn-ink">Ver estado</a>
+            </div>
+          </div>
+
+          <!-- Recomendaciones según historial -->
+          <div>
+            <div class="flex items-end justify-between mb-5">
+              <div>
+                <div class="eyebrow text-copper mb-1">Para ti</div>
+                <h2 class="font-serif text-2xl font-medium">Tutoriales que pueden interesarte.</h2>
+              </div>
+              <a href="hazlo-tu-mismo.html" class="text-sm text-copper hover:underline">Ver biblioteca →</a>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-4">
+              <a href="tutorial.html" class="card-tut group">
+                <div class="cover aspect-[4/3]" style="background:#EFE9DE;"></div>
+                <div class="p-4">
+                  <span class="pill pill-caution text-[10px] mb-2">Iluminación</span>
+                  <h3 class="font-serif text-base font-medium leading-snug">Bombilla parpadea o hace ruido</h3>
+                </div>
+              </a>
+              <a href="tutorial.html" class="card-tut group">
+                <div class="cover aspect-[4/3]" style="background:#E4DCCA;"></div>
+                <div class="p-4">
+                  <span class="pill pill-info text-[10px] mb-2">Mecanismos</span>
+                  <h3 class="font-serif text-base font-medium leading-snug">Cambiar un enchufe doble</h3>
+                </div>
+              </a>
+              <a href="tutorial.html" class="card-tut group">
+                <div class="cover aspect-[4/3]" style="background:linear-gradient(135deg,#1C1F26,#0B0D12);"></div>
+                <div class="p-4">
+                  <span class="pill pill-warn text-[10px] mb-2">⚠ Seguridad</span>
+                  <h3 class="font-serif text-base font-medium leading-snug">Cuándo NO hacerlo tú mismo</h3>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ DASHBOARD PROFESIONAL ============ -->
+        <div class="view-pro space-y-7">
+
+          <!-- Greeting pro -->
+          <div class="flex items-end justify-between flex-wrap gap-4">
+            <div>
+              <div class="eyebrow text-copper mb-2">Buenas, instalador.</div>
+              <h1 class="font-serif font-medium leading-[0.98] tracking-[-0.015em]" style="font-size: clamp(2.25rem, 5vw, 3.5rem);">
+                Jose Luis.
+              </h1>
+              <p class="text-graphite text-lg mt-2">Resumen de abril 2026 · 26 días.</p>
+            </div>
+            <div class="flex gap-2">
+              <a href="tienda.html" class="btn btn-ink">+ Nuevo pedido</a>
+              <a href="crear-presupuesto.html" class="btn btn-ghost">Crear presupuesto</a>
+            </div>
+          </div>
+
+          <!-- KPI cards pro -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="stat-card relative overflow-hidden">
+              <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-2">Comprado este mes</div>
+              <div class="font-serif text-3xl font-medium">1.842 €</div>
+              <div class="text-xs text-stock mt-1 flex items-center gap-1">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l5-5 5 5"/></svg>
+                +18% vs marzo
+              </div>
+              <svg class="spark mt-3" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline fill="none" stroke="#16A34A" stroke-width="1.5" points="0,24 12,18 24,20 36,12 48,16 60,8 72,14 84,6 100,4"/></svg>
+            </div>
+            <div class="stat-card relative overflow-hidden">
+              <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-2">Ahorrado vs PVP</div>
+              <div class="font-serif text-3xl font-medium text-filament">405 €</div>
+              <div class="text-xs text-graphite mt-1">Tarifa pro −22%</div>
+              <svg class="spark mt-3" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline fill="none" stroke="#E8A545" stroke-width="1.5" points="0,28 12,22 24,24 36,18 48,20 60,14 72,16 84,10 100,8"/></svg>
+            </div>
+            <div class="stat-card">
+              <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-2">Pedidos abril</div>
+              <div class="font-serif text-3xl font-medium">14</div>
+              <div class="text-xs text-graphite mt-1">3 con envío hoy</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-2">Albaranes este mes</div>
+              <div class="font-serif text-3xl font-medium">14</div>
+              <a href="albaranes.html" class="text-xs text-copper hover:underline mt-1 inline-block">Descargar todos →</a>
+            </div>
+          </div>
+
+          <!-- Últimos albaranes (lista densa) -->
+          <div class="bg-white rounded-2xl border border-line overflow-hidden">
+            <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+              <div>
+                <div class="eyebrow text-copper mb-1">Últimos albaranes</div>
+                <h3 class="font-serif text-xl font-medium">Listos para descargar.</h3>
+              </div>
+              <a href="albaranes.html" class="text-sm text-copper hover:underline">Ver los 42 →</a>
+            </div>
+            <div class="divide-y divide-line text-sm">
+              <a href="albaran.html" class="px-6 py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center hover:bg-paper-2/50">
+                <div class="font-mono text-xs text-graphite">26/04</div>
+                <div>
+                  <div class="font-mono font-medium">ALB-2026-1184</div>
+                  <div class="text-xs text-graphite">14 productos · Pedido GLX-04-1184</div>
+                </div>
+                <div class="font-mono font-medium text-right">218,40 €</div>
+                <div class="flex gap-2">
+                  <button class="text-graphite hover:text-ink p-1.5" aria-label="Ver"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                  <button class="text-graphite hover:text-ink p-1.5" aria-label="PDF"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+                </div>
+              </a>
+              <a href="albaran.html" class="px-6 py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center hover:bg-paper-2/50">
+                <div class="font-mono text-xs text-graphite">25/04</div>
+                <div>
+                  <div class="font-mono font-medium">ALB-2026-1178</div>
+                  <div class="text-xs text-graphite">8 productos · Reposición Schneider</div>
+                </div>
+                <div class="font-mono font-medium text-right">94,60 €</div>
+                <div class="flex gap-2">
+                  <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                  <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+                </div>
+              </a>
+              <a href="albaran.html" class="px-6 py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center hover:bg-paper-2/50">
+                <div class="font-mono text-xs text-graphite">22/04</div>
+                <div>
+                  <div class="font-mono font-medium">ALB-2026-1162</div>
+                  <div class="text-xs text-graphite">62 productos · Obra C/ Bernabé Soriano</div>
+                </div>
+                <div class="font-mono font-medium text-right">487,30 €</div>
+                <div class="flex gap-2">
+                  <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                  <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+                </div>
+              </a>
+              <a href="albaran.html" class="px-6 py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center hover:bg-paper-2/50">
+                <div class="font-mono text-xs text-graphite">19/04</div>
+                <div>
+                  <div class="font-mono font-medium">ALB-2026-1141</div>
+                  <div class="text-xs text-graphite">22 productos · Stock taller</div>
+                </div>
+                <div class="font-mono font-medium text-right">186,90 €</div>
+                <div class="flex gap-2">
+                  <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                  <button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+                </div>
+              </a>
+            </div>
+            <div class="px-6 py-3 bg-paper-2 border-t border-line flex items-center justify-between text-xs">
+              <span class="font-mono text-graphite">Total mes: <strong class="text-ink">14 albaranes · 1.842,40 €</strong></span>
+              <button class="text-copper hover:underline">Exportar mes en CSV</button>
+            </div>
+          </div>
+
+          <!-- Reposición sugerida -->
+          <div class="bg-paper-2 rounded-2xl border border-line p-6">
+            <div class="flex items-end justify-between mb-5 flex-wrap gap-2">
+              <div>
+                <div class="eyebrow text-copper mb-1">Reposición sugerida</div>
+                <h3 class="font-serif text-xl font-medium">Lo que sueles agotar.</h3>
+              </div>
+              <span class="text-xs font-mono text-graphite">basado en compras de los últimos 6 meses</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div class="bg-white rounded-xl p-4 border border-line">
+                <div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Simón · 27</div>
+                <div class="text-sm font-medium leading-snug mb-2">Interruptor 27 10A blanco</div>
+                <div class="font-mono text-xs text-graphite mb-3">Última compra: 25 uds · hace 12 días</div>
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-sm font-medium text-filament">4,30 €/u</span>
+                  <button class="btn btn-sm btn-ink !py-1 !px-3 text-xs">+ 25 uds</button>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 border border-line">
+                <div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">3M</div>
+                <div class="text-sm font-medium leading-snug mb-2">Cinta aislante 10m blanca</div>
+                <div class="font-mono text-xs text-graphite mb-3">Última compra: 20 uds · hace 8 días</div>
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-sm font-medium text-filament">1,68 €/u</span>
+                  <button class="btn btn-sm btn-ink !py-1 !px-3 text-xs">+ 20 uds</button>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 border border-line">
+                <div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Wago</div>
+                <div class="text-sm font-medium leading-snug mb-2">Clema 222 3 hilos</div>
+                <div class="font-mono text-xs text-graphite mb-3">Última compra: 100 uds · hace 5 días</div>
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-sm font-medium text-filament">0,32 €/u</span>
+                  <button class="btn btn-sm btn-ink !py-1 !px-3 text-xs">+ 100 uds</button>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 border border-line">
+                <div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Schneider</div>
+                <div class="text-sm font-medium leading-snug mb-2">Magnetotérmico iC60N 16A</div>
+                <div class="font-mono text-xs text-graphite mb-3">Última compra: 5 uds · hace 18 días</div>
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-sm font-medium text-filament">21,40 €/u</span>
+                  <button class="btn btn-sm btn-ink !py-1 !px-3 text-xs">+ 5 uds</button>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 flex justify-end">
+              <button class="btn btn-primary">
+                Añadir todo al carrito (75 uds · 312,40 €)
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Presupuestos abiertos -->
+          <div class="bg-white rounded-2xl border border-line overflow-hidden">
+            <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+              <div>
+                <div class="eyebrow text-copper mb-1">Presupuestos abiertos</div>
+                <h3 class="font-serif text-xl font-medium">2 esperando respuesta del cliente.</h3>
+              </div>
+              <a href="crear-presupuesto.html" class="btn btn-sm btn-ink">+ Nuevo</a>
+            </div>
+            <div class="divide-y divide-line">
+              <a href="presupuesto.html" class="px-6 py-4 flex items-center justify-between flex-wrap gap-3 hover:bg-paper-2/50">
+                <div>
+                  <div class="font-mono text-xs text-graphite mb-0.5">PRES-2026-0028</div>
+                  <div class="font-medium">Renovación cuadro · Familia López</div>
+                  <div class="text-xs text-graphite mt-0.5">Enviado hace 3 días · 24 productos</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-serif text-xl font-medium">486,30 €</div>
+                  <span class="pill pill-caution text-[10px]">Pendiente</span>
+                </div>
+              </a>
+              <a href="presupuesto.html" class="px-6 py-4 flex items-center justify-between flex-wrap gap-3 hover:bg-paper-2/50">
+                <div>
+                  <div class="font-mono text-xs text-graphite mb-0.5">PRES-2026-0027</div>
+                  <div class="font-medium">Domótica salón · Sr. Martínez</div>
+                  <div class="text-xs text-graphite mt-0.5">Enviado hace 5 días · 9 productos</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-serif text-xl font-medium">312,40 €</div>
+                  <span class="pill pill-caution text-[10px]">Pendiente</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- FOOTER compacto -->
+  <div data-component="site-footer"></div>
+
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    // Requerir sesión: si no hay, manda al login
+    if (!glxRequireAuth()) { /* redirige */ }
+    else {
+      const user = glxGetUser();
+      // Setear vista según rol real (no toggle demo)
+      document.body.dataset.activeView = user.role;
+      // Actualizar el botón del header con el nombre del usuario
+      const nameLabel = document.querySelector('[data-current-name]');
+      if (nameLabel) nameLabel.textContent = user.name;
+      // Renderizar sidebar dinámico
+      const sb = document.getElementById('glx-sidebar');
+      if (sb) sb.innerHTML = glxRenderSidebar(sb.dataset.active);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solicitar presupuesto · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="assets/css/styles.css" />
+<style>
+.field{width:100%;padding:.85rem 1rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink)}
+.field:focus{outline:none;border-color:var(--ink)}
+.tag-pill{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.1rem;background:white;border:1.5px solid var(--line);border-radius:14px;cursor:pointer;transition:all .15s;font-size:14px}
+.tag-pill:hover{border-color:var(--graphite)}
+.tag-pill input{display:none}
+.tag-pill.is-on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="carrito.html" class="hover:text-ink">Tu carrito</a><span class="opacity-50">/</span><span class="text-ink">Solicitar presupuesto</span></nav></div>
+
+<section class="container-x py-10 pb-20">
+  <div class="grid lg:grid-cols-[1fr_400px] gap-10 lg:gap-12">
+
+    <!-- ========== FORM ========== -->
+    <div>
+      <div class="mb-8">
+        <div class="eyebrow text-copper mb-2">Para empresas, comunidades y AAPP</div>
+        <h1 class="font-serif font-medium leading-[0.95] tracking-[-0.02em]" style="font-size: clamp(2.25rem, 5vw, 3.5rem);">Solicitar<br/>presupuesto.</h1>
+        <p class="text-graphite mt-3 max-w-xl leading-relaxed">Cuando el pedido necesita aprobación interna, factura por adelantado o tiene volumen suficiente para negociar precio. Lo recibirás firmado en menos de 24 h hábiles.</p>
+      </div>
+
+      <form class="space-y-8">
+
+        <!-- Tipo de cliente -->
+        <div>
+          <h2 class="font-serif text-xl font-medium mb-1">1 · ¿Quién pide el presupuesto?</h2>
+          <p class="text-sm text-graphite mb-4">Esto nos ayuda a aplicar la fiscalidad correcta y los plazos adecuados.</p>
+          <div class="flex flex-wrap gap-3">
+            <label class="tag-pill is-on"><input type="radio" name="cliente" checked/>🏢 Empresa privada</label>
+            <label class="tag-pill"><input type="radio" name="cliente"/>??? Comunidad de vecinos</label>
+            <label class="tag-pill"><input type="radio" name="cliente"/>??? Administración pública</label>
+            <label class="tag-pill"><input type="radio" name="cliente"/>?? Asociación · ONG</label>
+            <label class="tag-pill"><input type="radio" name="cliente"/>👤 Particular (gran proyecto)</label>
+          </div>
+        </div>
+
+        <!-- Datos -->
+        <div class="bg-white border border-line rounded-2xl p-6">
+          <h2 class="font-serif text-xl font-medium mb-1">2 · Datos del solicitante</h2>
+          <p class="text-sm text-graphite mb-5">A nombre de quién emitiremos el presupuesto.</p>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Razón social / Nombre</label><input type="text" class="field" placeholder="Ej. Comunidad de Propietarios Olivos 12"/></div>
+            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CIF / NIF</label><input type="text" class="field font-mono" placeholder="H-12345678"/></div>
+            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Persona de contacto</label><input type="text" class="field"/></div>
+            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Email</label><input type="email" class="field"/></div>
+            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono</label><input type="tel" class="field font-mono"/></div>
+            <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Dirección de facturación</label><input type="text" class="field" placeholder="Calle, CP, localidad"/></div>
+            <div data-aapp-only style="display:none" class="sm:col-span-2 bg-paper-2 rounded-xl p-4">
+              <h3 class="font-medium text-sm mb-2">Códigos DIR3 (administración pública)</h3>
+              <div class="grid grid-cols-3 gap-2"><input type="text" placeholder="Oficina contable" class="field font-mono text-xs"/><input type="text" placeholder="Órgano gestor" class="field font-mono text-xs"/><input type="text" placeholder="Unidad tramitadora" class="field font-mono text-xs"/></div>
+              <div class="text-[11px] text-graphite mt-2">Los puedes encontrar en la web del organismo bajo "Datos de facturación electrónica".</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Productos -->
+        <div class="bg-white border border-line rounded-2xl p-6">
+          <h2 class="font-serif text-xl font-medium mb-1">3 · Productos del carrito</h2>
+          <p class="text-sm text-graphite mb-5">3 artículos · puedes editar cantidades antes de enviar.</p>
+
+          <div class="divide-y divide-line">
+            <div class="py-3 grid grid-cols-[1fr_70px_90px_90px] gap-3 items-center text-sm">
+              <div class="font-medium">Interruptor Simón 27 10A blanco</div>
+              <input type="number" value="1" class="field !py-1.5 !px-2 text-right font-mono"/>
+              <div class="text-right font-mono text-graphite">5,90 €</div>
+              <div class="text-right font-mono font-medium">5,90 €</div>
+            </div>
+            <div class="py-3 grid grid-cols-[1fr_70px_90px_90px] gap-3 items-center text-sm">
+              <div class="font-medium">Destornillador aislado 1000V 3mm</div>
+              <input type="number" value="1" class="field !py-1.5 !px-2 text-right font-mono"/>
+              <div class="text-right font-mono text-graphite">8,40 €</div>
+              <div class="text-right font-mono font-medium">8,40 €</div>
+            </div>
+            <div class="py-3 grid grid-cols-[1fr_70px_90px_90px] gap-3 items-center text-sm">
+              <div class="font-medium">Polímetro digital A03 básico</div>
+              <input type="number" value="1" class="field !py-1.5 !px-2 text-right font-mono"/>
+              <div class="text-right font-mono text-graphite">14,90 €</div>
+              <div class="text-right font-mono font-medium">14,90 €</div>
+            </div>
+          </div>
+
+          <button type="button" class="text-xs text-copper hover:underline mt-3">+ Añadir más productos</button>
+        </div>
+
+        <!-- Detalles -->
+        <div class="bg-white border border-line rounded-2xl p-6">
+          <h2 class="font-serif text-xl font-medium mb-1">4 · Detalles del proyecto</h2>
+          <p class="text-sm text-graphite mb-5">Información que nos ayuda a ajustar plazos y condiciones.</p>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Plazo de entrega ideal</label><select class="field"><option>Lo antes posible</option><option>En las próximas 2 semanas</option><option>Este mes</option><option>Próximo mes</option><option>Sin urgencia</option></select></div>
+            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Validez requerida</label><select class="field"><option>10 días</option><option>15 días</option><option>30 días</option><option>60 días (típico AAPP)</option></select></div>
+            <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Comentarios</label><textarea class="field" rows="3" placeholder="Si necesitas que el pedido se reparta en varias entregas, plazos especiales, o cualquier otra particularidad."></textarea></div>
+          </div>
+        </div>
+
+        <!-- Aviso -->
+        <div class="bg-paper-2 border border-line rounded-2xl p-5 flex items-start gap-3 text-sm">
+          <svg class="text-graphite shrink-0 mt-0.5" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <div class="text-graphite">El presupuesto se envía firmado al email indicado en menos de 24 h hábiles. Solicitarlo no genera reserva de stock. La reserva se confirma al aceptar el presupuesto.</div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="flex justify-between flex-wrap gap-3 pt-2">
+          <a href="carrito.html" class="btn btn-ghost">Volver al carrito</a>
+          <button class="btn btn-primary">Enviar solicitud<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ========== ASIDE ========== -->
+    <aside>
+      <div class="lg:sticky lg:top-6 space-y-4">
+
+        <div class="bg-white border border-line rounded-2xl overflow-hidden">
+          <div class="px-6 py-4 bg-paper-2 border-b border-line">
+            <h2 class="font-serif text-lg font-medium">Resumen del presupuesto</h2>
+            <p class="text-xs text-graphite font-mono mt-0.5">3 productos · Bruto sin IVA</p>
+          </div>
+          <div class="p-5 space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-graphite">Material</span><span class="font-mono">29,20 €</span></div>
+            <div class="flex justify-between"><span class="text-graphite">Portes (estimado)</span><span class="font-mono">4,90 €</span></div>
+            <div class="flex justify-between font-medium"><span>Base imponible</span><span class="font-mono">34,10 €</span></div>
+            <div class="flex justify-between text-graphite"><span>IVA 21%</span><span class="font-mono">7,16 €</span></div>
+            <div class="pt-3 border-t border-line flex items-baseline justify-between">
+              <span class="font-medium">Total con IVA</span>
+              <span class="font-serif text-2xl">41,26 €</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-paper-2 border border-line rounded-2xl p-5 text-sm">
+          <h3 class="font-medium mb-3">Cómo va a ir</h3>
+          <ol class="space-y-3">
+            <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">01</span><span class="text-graphite">Envías la solicitud con tus datos.</span></li>
+            <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">02</span><span class="text-graphite">Te confirmamos disponibilidad y, si procede, descuento por volumen.</span></li>
+            <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">03</span><span class="text-graphite">Te enviamos el presupuesto firmado en PDF en &lt; 24 h hábiles.</span></li>
+            <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">04</span><span class="text-graphite">Aceptas y reservamos stock. Pago al recibir factura, según condiciones acordadas.</span></li>
+          </ol>
+        </div>
+
+        <div class="bg-ink text-paper rounded-2xl p-5">
+          <div class="eyebrow text-filament mb-2">¿Eres instalador profesional?</div>
+          <p class="text-sm text-paper/70 mb-4">Las cuentas pro pueden generar presupuestos para sus propios clientes finales con un descuento del 22% aplicado.</p>
+          <a href="login.html" class="btn btn-ghost-light btn-sm w-full justify-center">Acceder al área pro</a>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+</section>
+  <div data-component="site-footer"></div>
+
+<script src="assets/js/main.js"></script>
+<script>
+document.querySelectorAll('.tag-pill').forEach(p=>{
+  p.addEventListener('change',()=>{
+    const i=p.querySelector('input');
+    if(i.type==='radio'){document.querySelectorAll(`.tag-pill input[name="${i.name}"]`).forEach(o=>o.closest('.tag-pill').classList.remove('is-on'));}
+    if(i.checked)p.classList.add('is-on');
+    document.querySelectorAll('[data-aapp-only]').forEach(e => { e.style.display = document.querySelector('input[name=cliente]:checked')?.parentElement.textContent.includes('Administración') ? '' : 'none'; });
+  });
+});
+</script>
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+</body></html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <base href="../../">
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Añadir dirección · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="assets/css/styles.css" />
+<style>
+.field{width:100%;padding:.85rem 1rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink)}
+.field:focus{outline:none;border-color:var(--ink)}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}
+.nav-item:hover{background:var(--paper-2);color:var(--ink)}
+.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}
+.tag-pill{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem .9rem;background:white;border:1.5px solid var(--line);border-radius:999px;font-size:13px;cursor:pointer;transition:all .15s}
+.tag-pill:hover{border-color:var(--graphite)}
+.tag-pill input{display:none}
+.tag-pill.is-on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap"><a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><a href="direcciones.html" class="hover:text-ink">Direcciones</a><span class="opacity-50">/</span><span class="text-ink">Añadir nueva</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="direcciones"></aside>
+
+<main class="max-w-2xl">
+  <a href="direcciones.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2 mb-5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver a direcciones</a>
+
+  <div class="mb-8">
+    <div class="eyebrow text-copper mb-2">Nueva dirección</div>
+    <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Añadir dirección.</h1>
+    <p class="text-graphite mt-2" data-pro-only style="display:none">Para los pros: usa "Dirección de obra" para que aparezca en albaranes y presupuestos como ubicación del trabajo.</p>
+    <p class="text-graphite mt-2" data-particular-only>Puedes guardar tantas como necesites: casa, trabajo, comunidad de vecinos, etc.</p>
+  </div>
+
+  <form class="space-y-6">
+
+    <!-- Tipo de dirección -->
+    <div>
+      <h2 class="font-medium mb-3">¿Para qué es?</h2>
+      <div class="flex flex-wrap gap-2">
+        <label class="tag-pill is-on"><input type="radio" name="tipo" value="envio" checked/>📦 Envío de pedidos</label>
+        <label class="tag-pill"><input type="radio" name="tipo" value="factura"/>🧾 Facturación</label>
+        <label class="tag-pill" data-pro-only style="display:none"><input type="radio" name="tipo" value="obra"/>🔧 Obra (cliente final)</label>
+      </div>
+    </div>
+
+    <!-- Etiqueta -->
+    <div>
+      <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Etiqueta para identificarla</label>
+      <input type="text" placeholder="Ej. Casa, Trabajo, Sra. López, Comunidad Olivos" class="field"/>
+      <div class="text-[11px] text-graphite mt-1">Solo la verás tú. Si está en blanco, usaremos la dirección.</div>
+    </div>
+
+    <!-- Datos del destinatario -->
+    <div class="bg-white border border-line rounded-2xl p-5 md:p-6">
+      <h2 class="font-serif text-lg font-medium mb-4">¿A nombre de quién va?</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nombre</label><input type="text" class="field" placeholder="Antonio"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Apellidos</label><input type="text" class="field" placeholder="García Ruiz"/></div>
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Empresa <span class="text-graphite/60 normal-case">(opcional)</span></label><input type="text" class="field" placeholder="Razón social, comunidad, etc."/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono de contacto</label><input type="tel" class="field font-mono" placeholder="600 000 000"/><div class="text-[11px] text-graphite mt-1">El transportista lo usa para avisar.</div></div>
+        <div data-pro-only style="display:none"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Persona de contacto en obra</label><input type="text" class="field" placeholder="Si no eres tú quien recibe"/></div>
+      </div>
+    </div>
+
+    <!-- Dirección -->
+    <div class="bg-white border border-line rounded-2xl p-5 md:p-6">
+      <h2 class="font-serif text-lg font-medium mb-4">Ubicación</h2>
+      <div class="grid sm:grid-cols-3 gap-4">
+
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Calle, avenida, plaza…</label><input type="text" class="field" placeholder="Ej. Calle Bernabé Soriano"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nº</label><input type="text" class="field" placeholder="12"/></div>
+
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Bloque</label><input type="text" class="field" placeholder="opcional"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Escalera</label><input type="text" class="field" placeholder="opcional"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Piso · puerta</label><input type="text" class="field" placeholder="3º B"/></div>
+
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CP</label><input type="text" maxlength="5" class="field font-mono" placeholder="23001" id="cp-input"/><div class="text-[11px] text-graphite mt-1" id="cp-hint">Lo escribimos antes para autocompletar el resto.</div></div>
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Localidad</label><input type="text" class="field" placeholder="Jaén" id="loc-input"/></div>
+
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Provincia</label><input type="text" class="field" placeholder="Jaén" id="prov-input"/></div>
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">País</label><select class="field"><option>España</option></select></div>
+      </div>
+    </div>
+
+    <!-- Indicaciones -->
+    <div>
+      <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Indicaciones para el repartidor</label>
+      <textarea class="field" rows="3" placeholder="Ej. El timbre no funciona, llamad por teléfono. Dejar en portería si no estoy. Furgón tipo medio, no entra el tráiler."></textarea>
+    </div>
+
+    <!-- Predeterminada -->
+    <div class="bg-paper-2 border border-line rounded-xl p-4 space-y-2">
+      <label class="flex items-start gap-2 cursor-pointer text-sm"><input type="checkbox" class="w-4 h-4 mt-0.5"/><span>Establecer como dirección predeterminada de envío</span></label>
+      <label class="flex items-start gap-2 cursor-pointer text-sm" data-pro-only style="display:none"><input type="checkbox" class="w-4 h-4 mt-0.5"/><span>Asociar a un cliente de mi cartera <span class="text-graphite text-xs">(para presupuestos pro)</span></span></label>
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex justify-between flex-wrap gap-3 pt-4">
+      <a href="direcciones.html" class="btn btn-ghost btn-sm">Cancelar</a>
+      <button class="btn btn-primary">Guardar dirección<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
+    </div>
+  </form>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="assets/js/main.js"></script><script src="assets/js/auth.js"></script>
+<script>
+if(glxRequireAuth()){const u=glxGetUser();document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);
+  if(u.role==='pro'){document.querySelectorAll('[data-pro-only]').forEach(e=>e.style.display='');document.querySelectorAll('[data-particular-only]').forEach(e=>e.style.display='none');}
+}
+// Autocompletar CP → localidad/provincia (mock)
+const CP_MAP={'23001':['Jaén','Jaén'],'23004':['Jaén','Jaén'],'23009':['Jaén','Jaén'],'28001':['Madrid','Madrid'],'08001':['Barcelona','Barcelona'],'41001':['Sevilla','Sevilla']};
+document.getElementById('cp-input').addEventListener('input',e=>{
+  const v=e.target.value.replace(/\D/g,'').slice(0,5);e.target.value=v;
+  if(v.length===5&&CP_MAP[v]){document.getElementById('loc-input').value=CP_MAP[v][0];document.getElementById('prov-input').value=CP_MAP[v][1];document.getElementById('cp-hint').textContent='Localidad y provincia rellenadas automáticamente.';document.getElementById('cp-hint').style.color='var(--stock)';}
+});
+</script>
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+</body></html>

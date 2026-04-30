@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Albaranes · Mi área · GarperLux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
+<link rel="stylesheet" href="assets/css/styles.css" />
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><span class="text-ink">Albaranes</span></nav></div>
+
+<section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="albaranes"></aside>
+
+<main>
+  <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+    <div><div class="eyebrow text-copper mb-2">Documentos comerciales</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Albaranes.</h1><p class="text-graphite mt-2">42 albaranes en tu cuenta · 14 este mes</p></div>
+    <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Exportar CSV</button><button class="btn btn-sm btn-ink">Descargar todos PDF</button></div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="grid sm:grid-cols-[1fr_auto_auto_auto] gap-3 mb-6">
+    <div class="relative"><input type="search" placeholder="Buscar por nº, obra, fabricante o SKU…" class="w-full pl-10 pr-3 py-2.5 bg-white border border-line rounded-lg text-sm outline-none focus:border-ink"/><svg class="absolute left-3 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
+    <select class="bg-white border border-line rounded-lg text-sm py-2.5 px-3 outline-none focus:border-ink"><option>Abril 2026</option><option>Marzo 2026</option><option>Trimestre 1 2026</option><option>Año 2026</option><option>Año 2025</option></select>
+    <select class="bg-white border border-line rounded-lg text-sm py-2.5 px-3 outline-none focus:border-ink"><option>Todas las obras</option><option>Familia López</option><option>C/ Bernabé Soriano</option><option>Stock taller</option></select>
+    <button class="btn btn-sm btn-ghost">+ Filtros</button>
+  </div>
+
+  <!-- Resumen mes -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Albaranes mes</div><div class="font-serif text-2xl font-medium">14</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Total mes</div><div class="font-serif text-2xl font-medium">1.842 €</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Productos mes</div><div class="font-serif text-2xl font-medium">218</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Pendiente factur.</div><div class="font-serif text-2xl font-medium text-filament">3</div></div>
+  </div>
+
+  <!-- Tabla densa -->
+  <div class="bg-white border border-line rounded-2xl overflow-hidden">
+    <div class="px-5 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite grid grid-cols-[80px_120px_1fr_90px_110px_60px] gap-3"><span>Fecha</span><span>Albarán</span><span>Concepto · obra</span><span>Items</span><span>Total</span><span></span></div>
+    <div class="divide-y divide-line">
+      <a href="albaran.html" class="px-5 py-3 grid grid-cols-[80px_120px_1fr_90px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">26/04</div><div class="font-mono font-medium">ALB-2026-1184</div><div><div class="font-medium">Kit Cambiar interruptor + accesorios</div><div class="text-xs text-graphite">Stock taller · Schneider, Simón, Wiha</div></div><div class="font-mono">14</div><div class="font-mono font-medium">218,40 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="albaran.html" class="px-5 py-3 grid grid-cols-[80px_120px_1fr_90px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">25/04</div><div class="font-mono font-medium">ALB-2026-1178</div><div><div class="font-medium">Reposición Schneider</div><div class="text-xs text-graphite">Stock taller · 8 magnetotérmicos + 6 diferenciales</div></div><div class="font-mono">8</div><div class="font-mono font-medium">94,60 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="albaran.html" class="px-5 py-3 grid grid-cols-[80px_120px_1fr_90px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">22/04</div><div class="font-mono font-medium">ALB-2026-1162</div><div><div class="font-medium">Renovación cuadro vivienda + cableado</div><div class="text-xs text-graphite">C/ Bernabé Soriano · 62 productos varios</div></div><div class="font-mono">62</div><div class="font-mono font-medium">487,30 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="albaran.html" class="px-5 py-3 grid grid-cols-[80px_120px_1fr_90px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">19/04</div><div class="font-mono font-medium">ALB-2026-1141</div><div><div class="font-medium">Stock taller mensual</div><div class="text-xs text-graphite">Cinta aislante, clemas, fichas, punteras</div></div><div class="font-mono">22</div><div class="font-mono font-medium">186,90 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="albaran.html" class="px-5 py-3 grid grid-cols-[80px_120px_1fr_90px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">15/04</div><div class="font-mono font-medium">ALB-2026-1098</div><div><div class="font-medium">Domótica Sr. Martínez · escenas Shelly</div><div class="text-xs text-graphite">Familia López · 5 módulos Shelly + cableado</div></div><div class="font-mono">5</div><div class="font-mono font-medium">312,40 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+      <a href="albaran.html" class="px-5 py-3 grid grid-cols-[80px_120px_1fr_90px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">11/04</div><div class="font-mono font-medium">ALB-2026-1052</div><div><div class="font-medium">Cableado al corte 100m + 50m</div><div class="text-xs text-graphite">C/ Bernabé Soriano · manguera 3×1.5 y 5×4</div></div><div class="font-mono">2</div><div class="font-mono font-medium">228,00 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
+    </div>
+    <div class="px-5 py-3 bg-paper-2 border-t border-line flex items-center justify-between text-xs flex-wrap gap-2"><span class="font-mono text-graphite">1-6 de 14 · Total mes <strong class="text-ink">1.842,40 €</strong></span><div class="flex items-center gap-1"><button class="px-2 py-1 hover:bg-paper-3 rounded text-graphite">«</button><button class="px-2 py-1 bg-ink text-paper rounded">1</button><button class="px-2 py-1 hover:bg-paper-3 rounded">2</button><button class="px-2 py-1 hover:bg-paper-3 rounded">3</button><button class="px-2 py-1 hover:bg-paper-3 rounded text-graphite">»</button></div></div>
+  </div>
+</main>
+</div></section>
+  <div data-component="site-footer"></div>
+
+<script src="assets/js/main.js"></script><script src="assets/js/auth.js"></script>
+<script>if(glxRequireAuth()){const u=glxGetUser();if(u.role!=='pro'){location.href='area-personal.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}</script>
+  <script src="assets/js/component-loader.js"></script>
+  <script src="data/api.js"></script>
+  <script src="assets/js/backend-integration.js"></script>
+  <script src="assets/js/catalog-ui.js"></script>
+</body></html>
