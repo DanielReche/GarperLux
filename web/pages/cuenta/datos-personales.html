@@ -18,16 +18,27 @@
 <aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="datos-personales"></aside>
 
 <main class="max-w-3xl">
+  <form id="profile-form" class="space-y-5">
   <div class="mb-8"><div class="eyebrow text-copper mb-2">Configuración</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Datos personales.</h1></div>
+
+  <div class="bg-paper-2 border border-line rounded-2xl p-5 mb-5">
+    <div class="flex items-center justify-between gap-4 flex-wrap">
+      <div>
+        <div class="text-xs font-mono uppercase tracking-wider text-graphite mb-1">Perfil guardado</div>
+        <div id="profile-full-name-badge" class="font-serif text-xl font-medium">Cargando...</div>
+      </div>
+      <div id="profile-email-badge" class="text-xs font-mono text-graphite"></div>
+    </div>
+  </div>
 
   <!-- Identidad -->
   <div class="bg-white border border-line rounded-2xl p-6 mb-5">
     <h2 class="font-serif text-xl font-medium mb-5">Identidad</h2>
     <div class="grid sm:grid-cols-2 gap-4">
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nombre</label><input type="text" class="field" value="Antonio"/></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Apellidos</label><input type="text" class="field" value="García López"/></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">DNI / NIE</label><input type="text" class="field font-mono" value="12345678X"/></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Fecha de nacimiento</label><input type="date" class="field font-mono" value="1980-03-12"/></div>
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nombre</label><input id="profile-first-name" name="firstName" type="text" class="field" placeholder="Nombre"/></div>
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Apellidos</label><input id="profile-last-name" name="lastName" type="text" class="field" placeholder="Apellidos"/></div>
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">DNI / NIE</label><input id="profile-fiscal-id" name="fiscalId" type="text" class="field font-mono" placeholder="12345678X"/></div>
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Fecha de nacimiento</label><input id="profile-birth-date" name="birthDate" type="date" class="field font-mono"/></div>
     </div>
   </div>
 
@@ -35,8 +46,8 @@
   <div class="bg-white border border-line rounded-2xl p-6 mb-5">
     <h2 class="font-serif text-xl font-medium mb-5">Contacto</h2>
     <div class="space-y-4">
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Email</label><div class="flex gap-2"><input type="email" class="field flex-1" value="antonio.garcia@correo.com"/><span class="pill pill-stock self-center text-[10px]">Verificado</span></div></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono</label><div class="flex gap-2"><input type="tel" class="field flex-1 font-mono" value="600 123 456"/><span class="pill pill-stock self-center text-[10px]">Verificado</span></div></div>
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Email</label><div class="flex gap-2"><input id="profile-email" name="email" type="email" class="field flex-1" placeholder="nombre@correo.com"/><span class="pill pill-stock self-center text-[10px]">Verificado</span></div></div>
+      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono</label><div class="flex gap-2"><input id="profile-phone" name="phone" type="tel" class="field flex-1 font-mono" placeholder="600 123 456"/><span class="pill pill-stock self-center text-[10px]">Verificado</span></div></div>
     </div>
   </div>
 
@@ -44,34 +55,36 @@
   <div class="bg-white border border-line rounded-2xl p-6 mb-5">
     <h2 class="font-serif text-xl font-medium mb-5">Comunicaciones</h2>
     <div class="space-y-4">
-      <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="w-4 h-4 mt-1" checked/><div><div class="font-medium text-sm">Email de seguimiento de pedidos y solicitudes</div><div class="text-xs text-graphite">Confirmaciones, cambios de estado, llegada del pedido</div></div></label>
-      <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="w-4 h-4 mt-1" checked/><div><div class="font-medium text-sm">Newsletter mensual con novedades y ofertas</div><div class="text-xs text-graphite">Una vez al mes, prometido</div></div></label>
-      <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="w-4 h-4 mt-1"/><div><div class="font-medium text-sm">Recordatorios de tutoriales sin terminar</div><div class="text-xs text-graphite">Si dejas a medias un tutorial, te lo recordamos a la semana</div></div></label>
-      <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="w-4 h-4 mt-1"/><div><div class="font-medium text-sm">SMS solo para urgencias técnicas</div><div class="text-xs text-graphite">Únicamente si tienes un servicio técnico programado</div></div></label>
+      <label class="flex items-start gap-3 cursor-pointer"><input id="profile-order-notifications" name="orderNotifications" type="checkbox" class="w-4 h-4 mt-1"/><div><div class="font-medium text-sm">Email de seguimiento de pedidos y solicitudes</div><div class="text-xs text-graphite">Confirmaciones, cambios de estado, llegada del pedido</div></div></label>
+      <label class="flex items-start gap-3 cursor-pointer"><input id="profile-marketing-email" name="marketingEmail" type="checkbox" class="w-4 h-4 mt-1"/><div><div class="font-medium text-sm">Newsletter mensual con novedades y ofertas</div><div class="text-xs text-graphite">Una vez al mes, prometido</div></div></label>
+      <label class="flex items-start gap-3 cursor-pointer"><input id="profile-tutorial-reminders" name="tutorialReminders" type="checkbox" class="w-4 h-4 mt-1"/><div><div class="font-medium text-sm">Recordatorios de tutoriales sin terminar</div><div class="text-xs text-graphite">Si dejas a medias un tutorial, te lo recordamos a la semana</div></div></label>
+      <label class="flex items-start gap-3 cursor-pointer"><input id="profile-sms-urgency" name="smsUrgency" type="checkbox" class="w-4 h-4 mt-1"/><div><div class="font-medium text-sm">SMS solo para urgencias técnicas</div><div class="text-xs text-graphite">Únicamente si tienes un servicio técnico programado</div></div></label>
     </div>
   </div>
 
   <!-- Contraseña -->
   <div class="bg-white border border-line rounded-2xl p-6 mb-5">
     <h2 class="font-serif text-xl font-medium mb-5">Contraseña</h2>
-    <p class="text-sm text-graphite mb-4">Última cambio hace 47 días</p>
-    <a href="/pages/auth/recuperar-password.html?token=demo" class="btn btn-ghost btn-sm">Cambiar contraseña</a>
+    <p id="profile-password-hint" class="text-sm text-graphite mb-4">Cargando último cambio...</p>
+    <a href="/pages/auth/recuperar-password.html" class="btn btn-ghost btn-sm">Cambiar contraseña</a>
   </div>
 
   <!-- Acciones -->
   <div class="flex justify-between flex-wrap gap-4 mt-8">
-    <div class="flex gap-2"><button class="btn btn-primary">Guardar cambios</button><button class="btn btn-ghost btn-sm">Cancelar</button></div>
-    <button class="text-sm text-warn hover:underline">Borrar mi cuenta</button>
+    <div class="flex gap-2"><button type="submit" class="btn btn-primary">Guardar cambios</button><button id="profile-cancel" type="button" class="btn btn-ghost btn-sm">Cancelar</button></div>
+    <button type="button" class="text-sm text-warn hover:underline">Borrar mi cuenta</button>
   </div>
+  </form>
 </main>
 </div></section>
   <div data-component="site-footer"></div>
 
-<script src="/assets/js/main.js"></script><script src="/assets/js/auth.js"></script>
-<script>if(glxRequireAuth()){const u=glxGetUser();if(u.role==='pro'){location.href='/pages/cuenta/datos-fiscales.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}</script>
-  <script src="/assets/js/component-loader.js"></script>
-  <script src="/data/api.js"></script>
-  <script src="/assets/js/backend-integration.js"></script>
-  <script src="/assets/js/catalog-ui.js"></script>
+<script src="/assets/js/component-loader.js"></script>
+<script src="/data/api.js"></script>
+<script src="/assets/js/backend-integration.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/catalog-ui.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/profile-integration.js"></script>
 </body></html>
 

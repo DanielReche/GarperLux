@@ -325,6 +325,17 @@ function migrate(db) {
     );
   `);
 
+
+  const usersColumns = db.prepare('PRAGMA table_info(users)').all().map((row) => row.name);
+  const addColumn = (columnSql, columnName) => {
+    if (!usersColumns.includes(columnName)) db.exec(`ALTER TABLE users ADD COLUMN ${columnSql}`);
+  };
+
+  addColumn('birth_date TEXT', 'birth_date');
+  addColumn('marketing_email INTEGER NOT NULL DEFAULT 1', 'marketing_email');
+  addColumn('order_notifications INTEGER NOT NULL DEFAULT 1', 'order_notifications');
+  addColumn('tutorial_reminders INTEGER NOT NULL DEFAULT 0', 'tutorial_reminders');
+  addColumn('sms_urgency INTEGER NOT NULL DEFAULT 0', 'sms_urgency');
   ensureColumn(db, 'payment_methods', 'brand', 'TEXT');
   ensureColumn(db, 'payment_methods', 'exp_month', 'TEXT');
   ensureColumn(db, 'payment_methods', 'exp_year', 'TEXT');

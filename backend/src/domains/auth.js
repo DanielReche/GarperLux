@@ -13,6 +13,11 @@ function publicUser(user) {
     email: user.email,
     phone: user.phone,
     fiscalId: user.fiscal_id,
+    birthDate: user.birth_date,
+    marketingEmail: !!user.marketing_email,
+    orderNotifications: !!user.order_notifications,
+    tutorialReminders: !!user.tutorial_reminders,
+    smsUrgency: !!user.sms_urgency,
     proDiscount: user.pro_discount,
   };
 }
@@ -54,9 +59,25 @@ function registerAuthRoutes(router) {
       const role = payload.role === 'pro' ? 'pro' : 'particular';
       const db = getDb();
       const result = db.prepare(`
-        INSERT INTO users (role, full_name, email, password_hash, phone, fiscal_id, pro_discount)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `).run(role, payload.fullName, String(payload.email).toLowerCase(), hashPassword(payload.password), payload.phone || null, payload.fiscalId || null, role === 'pro' ? 10 : 0);
+        INSERT INTO users (
+          role, full_name, email, password_hash, phone, fiscal_id, birth_date,
+          marketing_email, order_notifications, tutorial_reminders, sms_urgency, pro_discount
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        role,
+        payload.fullName,
+        String(payload.email).toLowerCase(),
+        hashPassword(payload.password),
+        payload.phone || null,
+        payload.fiscalId || null,
+        payload.birthDate || null,
+        payload.marketingEmail === false ? 0 : 1,
+        payload.orderNotifications === false ? 0 : 1,
+        payload.tutorialReminders === true ? 1 : 0,
+        payload.smsUrgency === true ? 1 : 0,
+        role === 'pro' ? 10 : 0
+      );
       const user = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid);
       const token = createSession(db, user.id);
       return created(res, { token, user: publicUser(user) });

@@ -2,17 +2,55 @@ const { getDb } = require('../db');
 const { readJson, requireFields, handleInputError } = require('../http');
 const { ok, created, noContent, fail } = require('../response');
 const { requireAuth } = require('../middleware/auth');
+const { publicUser } = require('./auth');
 
 function registerAccountRoutes(router) {
+  router.get('/api/account/profile', (req, res) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    return ok(res, publicUser(getDb().prepare('SELECT * FROM users WHERE id = ?').get(user.id)));
+  });
+
   router.patch('/api/account/profile', async (req, res) => {
     const user = requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
-      const fullName = payload.fullName || [payload.firstName, payload.lastName].filter(Boolean).join(' ').trim() || user.full_name;
-      getDb().prepare('UPDATE users SET full_name = ?, phone = COALESCE(?, phone), fiscal_id = COALESCE(?, fiscal_id) WHERE id = ?')
-        .run(fullName, payload.phone || null, payload.fiscalId || null, user.id);
-      return ok(res, { id: user.id, fullName, phone: payload.phone || user.phone, fiscalId: payload.fiscalId || user.fiscal_id });
+      const db = getDb();
+      const current = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+      const fullName = payload.fullName || [payload.firstName, payload.lastName].filter(Boolean).join(' ').trim() || current.full_name;
+      const email = payload.email ? String(payload.email).toLowerCase() : current.email;
+      const birthDate = Object.prototype.hasOwnProperty.call(payload, 'birthDate')
+        ? payload.birthDate || payload.birth_date || null
+        : (payload.birth_date || current.birth_date);
+      // end TEMP LOGS
+      const marketingEmail = Object.prototype.hasOwnProperty.call(payload, 'marketingEmail') ? (payload.marketingEmail ? 1 : 0) : current.marketing_email;
+      const orderNotifications = Object.prototype.hasOwnProperty.call(payload, 'orderNotifications') ? (payload.orderNotifications ? 1 : 0) : current.order_notifications;
+      const tutorialReminders = Object.prototype.hasOwnProperty.call(payload, 'tutorialReminders') ? (payload.tutorialReminders ? 1 : 0) : current.tutorial_reminders;
+      const smsUrgency = Object.prototype.hasOwnProperty.call(payload, 'smsUrgency') ? (payload.smsUrgency ? 1 : 0) : current.sms_urgency;
+
+      try {
+        db.prepare(`
+          UPDATE users SET
+            full_name = ?,
+            email = ?,
+            phone = COALESCE(?, phone),
+            fiscal_id = COALESCE(?, fiscal_id),
+            birth_date = ?,
+            marketing_email = ?,
+            order_notifications = ?,
+            tutorial_reminders = ?,
+            sms_urgency = ?
+          WHERE id = ?
+        `).run(fullName, email, payload.phone || null, payload.fiscalId || null, birthDate, marketingEmail, orderNotifications, tutorialReminders, smsUrgency, user.id);
+      } catch (error) {
+        if (String(error.message).includes('UNIQUE')) {
+          return fail(res, 409, 'EMAIL_EXISTS', 'Ya existe una cuenta con ese email.');
+        }
+        throw error;
+      }
+      const updated = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+      return ok(res, publicUser(updated));
     } catch (error) {
       if (!handleInputError(res, error)) throw error;
     }

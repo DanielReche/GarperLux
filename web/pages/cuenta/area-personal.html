@@ -489,20 +489,10 @@
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
   <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/account-integration.js"></script>
   <script>
-    // Requerir sesión: si no hay, manda al login
-    if (!glxRequireAuth()) { /* redirige */ }
-    else {
-      const user = glxGetUser();
-      // Setear vista según rol real (no toggle demo)
-      document.body.dataset.activeView = user.role;
-      // Actualizar el botón del header con el nombre del usuario
-      const nameLabel = document.querySelector('[data-current-name]');
-      if (nameLabel) nameLabel.textContent = user.name;
-      // Renderizar sidebar dinámico
-      const sb = document.getElementById('glx-sidebar');
-      if (sb) sb.innerHTML = glxRenderSidebar(sb.dataset.active);
-    }
+    // Inicializar área personal dinámicamente (usas la API real)
+    if (typeof initAccountPage === 'function') initAccountPage();
   </script>
 </body>
 </html>

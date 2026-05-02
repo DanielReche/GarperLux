@@ -11,7 +11,7 @@ function currentUser(req) {
   const token = getBearerToken(req);
   if (!token) return null;
   return getDb().prepare(`
-    SELECT users.id, users.role, users.full_name, users.email, users.phone, users.fiscal_id, users.pro_discount
+    SELECT users.id, users.role, users.full_name, users.email, users.phone, users.fiscal_id, users.birth_date, users.marketing_email, users.order_notifications, users.tutorial_reminders, users.sms_urgency, users.pro_discount
     FROM sessions
     JOIN users ON users.id = sessions.user_id
     WHERE sessions.token = ? AND sessions.expires_at > CURRENT_TIMESTAMP
