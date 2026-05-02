@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="/.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cableado y Canalizaciones · Tienda · GarperLux</title>
+  <meta name="description" content="Cableado y canalizaciones profesionales con filtros por tipo, formato, sección, color del aislante y canalización." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <style>
+    .filter-check { display: flex; align-items: center; gap: 10px; padding: 7px 0; cursor: pointer; font-size: 14px; color: var(--graphite); transition: color .15s; }
+    .filter-check:hover { color: var(--ink); }
+    .filter-check input { appearance: none; width: 16px; height: 16px; border: 1.5px solid var(--line); border-radius: 4px; cursor: pointer; transition: all .15s; flex-shrink: 0; }
+    .filter-check input:checked { background: var(--ink); border-color: var(--ink); }
+    .filter-check input:checked::after { content: '✓'; color: var(--paper); font-size: 11px; display: flex; align-items: center; justify-content: center; height: 100%; line-height: 1; }
+    .filter-check .count { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--graphite); opacity: 0.6; }
+    .facet-pill { display:inline-flex; align-items:center; gap:.5rem; padding:.55rem .85rem; border-radius:9999px; border:1px solid var(--line); background:var(--paper-2); color:var(--ink); font-size:12px; }
+    .facet-pill.is-active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .facet-card { background:#fff; border:1px solid var(--line); border-radius:1rem; padding:1rem; }
+    .facet-title { display:flex; align-items:center; justify-content:space-between; font-family: Fraunces, Georgia, serif; font-size:1.05rem; margin-bottom:.75rem; }
+    .facet-list { display:grid; gap:.35rem; }
+    .facet-row { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.6rem .75rem; border-radius:.85rem; background:var(--paper); border:1px solid transparent; }
+    .facet-row:hover { border-color: var(--line); background:#fff; }
+    .facet-row label { display:flex; align-items:center; gap:.6rem; flex:1; cursor:pointer; }
+    .facet-count { font-family: var(--mono); font-size:11px; color:var(--graphite); opacity:.65; }
+    .hidden { display:none !important; }
+  </style>
+</head>
+
+<body class="bg-paper text-ink">
+  <div class="bg-ink text-paper text-[12.5px]">
+    <div class="container-x flex items-center justify-between py-2">
+      <span class="opacity-90 hidden sm:inline">12.480 referencias · stock verificado</span>
+      <a href="/pages/auth/login.html" class="link-underline opacity-90">Tarifas profesionales</a>
+    </div>
+  </div>
+  <div data-component="site-header"></div>
+
+  <div class="container-x pt-5 pb-2">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap">
+      <a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="/pages/tienda/tienda.html" class="hover:text-ink">Tienda</a><span class="opacity-50">/</span>
+      <span class="text-ink">Cableado y Canalizaciones</span>
+    </nav>
+  </div>
+
+  <section class="container-x pt-8 pb-8">
+    <div class="grid lg:grid-cols-12 gap-8 items-end">
+      <div class="lg:col-span-7">
+        <h1 class="font-serif font-medium leading-[0.95] tracking-[-0.02em] mb-4" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
+          Cableado y Canalizaciones.
+        </h1>
+        <p class="text-graphite text-lg max-w-xl leading-relaxed">
+          Cables, mangueras, tubos y accesorios. Filtra por tipo de producto, formato, sección, color del aislante o tipo de canalización.
+        </p>
+      </div>
+      <div class="lg:col-span-5 flex items-end gap-4 flex-wrap">
+        <div class="flex-1 min-w-0">
+          <div class="font-mono text-xs text-graphite uppercase tracking-wider mb-1">Subcategorías</div>
+          <div class="flex flex-wrap gap-1.5">
+            <button class="facet-pill is-active" type="button" data-main-facet="all">Todos · 9.248</button>
+            <button class="facet-pill" type="button" data-main-facet="cables">Cables</button>
+            <button class="facet-pill" type="button" data-main-facet="canalizaciones">Canalizaciones</button>
+            <button class="facet-pill" type="button" data-main-facet="hilo">Hilo</button>
+            <button class="facet-pill" type="button" data-main-facet="manguera">Manguera</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="filament-line mt-10"></div>
+  </section>
+
+  <section class="container-x pb-20">
+    <div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-12">
+      <aside class="lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto -mx-2 px-2">
+        <div class="space-y-6">
+          <div class="bg-white border border-line rounded-xl p-4">
+            <label class="font-mono text-[11px] text-graphite uppercase tracking-wider mb-2 block">Buscar por referencia / SKU</label>
+            <div class="relative">
+              <input type="search" placeholder="Ej: PRY-MNG3-1.5" class="w-full pl-9 pr-3 py-2.5 bg-paper border border-line rounded-lg text-sm font-mono placeholder:text-graphite/50 focus:border-ink outline-none" />
+              <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="eyebrow text-graphite">Filtros activos</span>
+              <button class="text-xs text-graphite hover:text-warn underline">Limpiar todos</button>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-ink text-paper text-xs rounded-full">Cables <button class="hover:text-warn">×</button></span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-ink text-paper text-xs rounded-full">Hilo <button class="hover:text-warn">×</button></span>
+            </div>
+          </div>
+
+          <details open class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Familia</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="radio" name="family" value="cables" checked/> Cables <span class="count">5.128</span></label>
+              <label class="filter-check"><input type="radio" name="family" value="canalizaciones"/> Canalizaciones <span class="count">4.120</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5" id="facetCablesRoot">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Tipo</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox" checked/> Uso interior <span class="count">412</span></label>
+              <label class="filter-check"><input type="checkbox"/> Uso exterior <span class="count">236</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5" id="facetFormatoRoot">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Formato</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="radio" name="cableFormato" value="hilo" checked/> Hilo <span class="count">281</span></label>
+              <label class="filter-check"><input type="radio" name="cableFormato" value="manguera"/> Manguera <span class="count">367</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5 hidden" id="facetHiloSection">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Sección</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> 1.5 mm² <span class="count">104</span></label>
+              <label class="filter-check"><input type="checkbox"/> 2.5 mm² <span class="count">98</span></label>
+              <label class="filter-check"><input type="checkbox"/> 6 mm² <span class="count">46</span></label>
+              <label class="filter-check"><input type="checkbox"/> 10 mm² <span class="count">33</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5 hidden" id="facetHiloColorSection">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Color del aislante</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> Negro (Fase) <span class="count">92</span></label>
+              <label class="filter-check"><input type="checkbox"/> Marrón (Fase) <span class="count">71</span></label>
+              <label class="filter-check"><input type="checkbox"/> Gris (Fase) <span class="count">53</span></label>
+              <label class="filter-check"><input type="checkbox"/> Azul (Neutro) <span class="count">127</span></label>
+              <label class="filter-check"><input type="checkbox"/> Verde/Amarillo (Tierra) <span class="count">88</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5 hidden" id="facetMangueraSection">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Número de hilos</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> 2 hilos <span class="count">61</span></label>
+              <label class="filter-check"><input type="checkbox"/> 3 hilos <span class="count">74</span></label>
+              <label class="filter-check"><input type="checkbox"/> 4 hilos <span class="count">42</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5 hidden" id="facetMangueraSeccionSection">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Sección de los hilos</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> 1.5 mm² <span class="count">49</span></label>
+              <label class="filter-check"><input type="checkbox"/> 2.5 mm² <span class="count">57</span></label>
+              <label class="filter-check"><input type="checkbox"/> 4 mm² <span class="count">33</span></label>
+              <label class="filter-check"><input type="checkbox"/> 6 mm² <span class="count">18</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5 hidden" id="facetCanalizacionesTipoSection">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Tipo</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="radio" name="canalizacionesTipo"/> Tubos corrugados <span class="count">128</span></label>
+              <label class="filter-check"><input type="radio" name="canalizacionesTipo"/> Tubos rígidos <span class="count">64</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5 hidden" id="facetCanalizacionesDiametroSection">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Diámetro</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> 16 mm <span class="count">45</span></label>
+              <label class="filter-check"><input type="checkbox"/> 20 mm <span class="count">52</span></label>
+              <label class="filter-check"><input type="checkbox"/> 25 mm <span class="count">18</span></label>
+              <label class="filter-check"><input type="checkbox"/> 32 mm <span class="count">77</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5 hidden" id="facetCanalizacionesLongitudSection">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Longitud</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> 5 m <span class="count">34</span></label>
+              <label class="filter-check"><input type="checkbox"/> 20 m <span class="count">66</span></label>
+              <label class="filter-check"><input type="checkbox"/> 50 m <span class="count">41</span></label>
+              <label class="filter-check"><input type="checkbox"/> 100 m <span class="count">51</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Precio</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <input type="number" value="0" class="w-full px-2.5 py-1.5 bg-paper border border-line rounded-md text-sm font-mono"/>
+                <span class="text-graphite text-xs">a</span>
+                <input type="number" value="200" class="w-full px-2.5 py-1.5 bg-paper border border-line rounded-md text-sm font-mono"/>
+                <span class="text-graphite text-sm">€</span>
+              </div>
+              <div class="relative h-1.5 bg-paper-2 rounded-full">
+                <div class="absolute h-full bg-ink rounded-full" style="left: 8%; right: 22%;"></div>
+                <div class="absolute -top-1.5 w-4 h-4 rounded-full bg-ink border-2 border-paper" style="left: calc(8% - 8px);"></div>
+                <div class="absolute -top-1.5 w-4 h-4 rounded-full bg-ink border-2 border-paper" style="right: calc(22% - 8px);"></div>
+              </div>
+            </div>
+          </details>
+
+          <div class="bg-white border border-line rounded-xl p-4 flex items-center justify-between">
+            <button id="resetCable" class="btn btn-ghost">Limpiar</button>
+            <button id="applyCable" class="btn btn-primary">Aplicar</button>
+          </div>
+        </div>
+      </aside>
+
+      <div>
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-6 pb-4 border-b border-line">
+          <div class="font-mono text-sm text-graphite">Mostrando <span class="text-ink font-medium">1–12</span> de <span class="text-ink font-medium">9.248</span> resultados</div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs text-graphite">Ordenar:</label>
+            <select class="bg-paper border border-line rounded-lg text-sm py-1.5 px-3 outline-none focus:border-ink">
+              <option>Más vendidos</option>
+              <option>Precio: menor a mayor</option>
+              <option>Precio: mayor a menor</option>
+              <option>Novedades</option>
+            </select>
+            <div class="flex border border-line rounded-lg overflow-hidden">
+              <button class="p-2 bg-ink text-paper" aria-label="Vista grid"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+              <button class="p-2 bg-paper hover:bg-paper-2" aria-label="Vista lista"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative">
+              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=80" alt="" class="w-full h-full object-cover rounded-lg" loading="lazy" onerror="this.style.display='none'"/>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">450 m</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Prysmian</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Cable manguera 3×1.5 H07V-K</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU PRY-MNG3-1.5</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">1,40 €<span class="text-xs font-mono font-normal text-graphite">/m</span></div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c2.5 3 4 7 4 10s-1.5 7-4 10c-2.5-3-4-7-4-10s1.5-7 4-10z"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">68 uds</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Prysmian</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Cable H07V-K 1.5 mm² negro</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU PRY-H07-15-B</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">0,18 €<span class="text-xs font-mono font-normal text-graphite">/m</span></div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 11h6"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">23 uds</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Schneider</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Tubo corrugado 20mm gris</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU TUB-20-GR</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">2,10 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+        </div>
+
+        <div class="mt-12 flex items-center justify-between flex-wrap gap-4 pt-6 border-t border-line">
+          <div class="text-sm text-graphite font-mono">Página <span class="text-ink font-medium">1</span> de 35</div>
+          <div class="flex items-center gap-1">
+            <button disabled class="w-10 h-10 rounded-lg border border-line text-graphite opacity-50 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <button class="w-10 h-10 rounded-lg bg-ink text-paper font-mono text-sm">1</button>
+            <button class="w-10 h-10 rounded-lg hover:bg-paper-2 font-mono text-sm">2</button>
+            <button class="w-10 h-10 rounded-lg hover:bg-paper-2 font-mono text-sm">3</button>
+            <span class="px-2 text-graphite">…</span>
+            <button class="w-10 h-10 rounded-lg hover:bg-paper-2 font-mono text-sm">35</button>
+            <button class="w-10 h-10 rounded-lg border border-line hover:bg-paper-2 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+          <select class="bg-paper border border-line rounded-lg text-sm py-1.5 px-3 outline-none focus:border-ink">
+            <option>12 por página</option>
+            <option>24 por página</option>
+            <option>48 por página</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper-2 border-t border-line">
+    <div class="container-x py-16">
+      <div class="grid lg:grid-cols-12 gap-10">
+        <div class="lg:col-span-4">
+          <div class="eyebrow text-copper mb-3">Sobre la categoría</div>
+          <h2 class="font-serif text-3xl font-medium leading-tight">Cables y canalizaciones<br/><em class="italic">para instalaciones profesionales</em>.</h2>
+        </div>
+        <div class="lg:col-span-8 prose-content text-graphite leading-relaxed space-y-4 max-w-3xl">
+          <p>La categoría de <strong class="text-ink">Cableado y Canalizaciones</strong> agrupa tanto los conductores eléctricos como los sistemas que los protegen y guían. Aquí puedes separar rápidamente cables de interior o exterior, elegir entre hilo o manguera y refinar por sección o color del aislante.</p>
+          <p>Cuando la instalación exige ordenar trazados o proteger líneas, la rama de <strong class="text-ink">canalizaciones</strong> permite distinguir entre tubo corrugado, tubo rígido o canaleta. Así reduces el catálogo a lo que realmente encaja con tu obra o reforma.</p>
+          <p>Si quieres seguir con la misma lógica visual, esta página ya respeta la estética editorial de la tienda y enlaza desde la familia 03 de la portada de tienda.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-component="site-footer"></div>
+
+  <!-- Mobile + search overlays -->
+  <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="/assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <nav class="px-5 py-6">
+      <a href="/pages/aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a>
+      <a href="/pages/tienda/tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Tienda</a>
+      <a href="/pages/servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a>
+      <a href="/pages/servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a>
+      <a href="/pages/empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a>
+    </nav>
+  </div>
+
+  <div data-search-overlay class="fixed inset-0 z-50 bg-ink/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="container-x pt-24">
+      <button data-search-close class="absolute top-6 right-6 text-paper p-3 hover:bg-white/10 rounded-full"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="max-w-3xl mx-auto">
+        <div class="eyebrow text-filament mb-4">Buscar en GarperLux</div>
+        <input type="search" placeholder="¿Qué necesitas?" class="w-full bg-transparent text-paper text-2xl md:text-4xl font-serif pb-5 border-b-2 border-white/20 focus:border-filament outline-none placeholder:text-paper/30"/>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('garperlux:components-ready', function() {
+      // Asegurar que el nav principal sea visible tras cargar el componente
+      const headerNav = document.querySelector('[data-header] nav[aria-label="Principal"]');
+      if (headerNav) {
+        headerNav.classList.remove('hidden');
+        headerNav.classList.add('lg:flex');
+      }
+      const facetButtons = document.querySelectorAll('[data-main-facet]');
+      const facetCablesRoot = document.getElementById('facetCablesRoot');
+      const facetFormatoRoot = document.getElementById('facetFormatoRoot');
+      const facetHiloSection = document.getElementById('facetHiloSection');
+      const facetHiloColorSection = document.getElementById('facetHiloColorSection');
+      const facetMangueraSection = document.getElementById('facetMangueraSection');
+      const facetMangueraSeccionSection = document.getElementById('facetMangueraSeccionSection');
+      const facetCanalizacionesTipoSection = document.getElementById('facetCanalizacionesTipoSection');
+      const facetCanalizacionesDiametroSection = document.getElementById('facetCanalizacionesDiametroSection');
+    const facetCanalizacionesLongitudSection = document.getElementById('facetCanalizacionesLongitudSection');
+
+    function setMainFacet(mode) {
+      facetButtons.forEach((button) => button.classList.toggle('is-active', button.dataset.mainFacet === mode));
+      
+      // Modo Cables
+      if (mode === 'cables' || mode === 'hilo' || mode === 'manguera') {
+        facetCablesRoot.classList.remove('hidden');
+        facetFormatoRoot.classList.remove('hidden');
+        facetCanalizacionesTipoSection.classList.add('hidden');
+        facetCanalizacionesDiametroSection.classList.add('hidden');
+        facetCanalizacionesLongitudSection.classList.add('hidden');
+        
+        if (mode === 'hilo') {
+          facetHiloSection.classList.remove('hidden');
+          facetHiloColorSection.classList.remove('hidden');
+          facetMangueraSection.classList.add('hidden');
+          facetMangueraSeccionSection.classList.add('hidden');
+        } else if (mode === 'manguera') {
+          facetHiloSection.classList.add('hidden');
+          facetHiloColorSection.classList.add('hidden');
+          facetMangueraSection.classList.remove('hidden');
+          facetMangueraSeccionSection.classList.remove('hidden');
+        } else {
+          facetHiloSection.classList.remove('hidden');
+          facetHiloColorSection.classList.remove('hidden');
+          facetMangueraSection.classList.remove('hidden');
+          facetMangueraSeccionSection.classList.remove('hidden');
+        }
+      }
+      // Modo Canalizaciones
+      else if (mode === 'canalizaciones') {
+        facetCablesRoot.classList.remove('hidden');
+        facetFormatoRoot.classList.add('hidden');
+        facetHiloSection.classList.add('hidden');
+        facetHiloColorSection.classList.add('hidden');
+        facetMangueraSection.classList.add('hidden');
+        facetMangueraSeccionSection.classList.add('hidden');
+        facetCanalizacionesTipoSection.classList.remove('hidden');
+        facetCanalizacionesDiametroSection.classList.remove('hidden');
+        facetCanalizacionesLongitudSection.classList.remove('hidden');
+      }
+      // Modo All
+      else if (mode === 'all') {
+        facetCablesRoot.classList.remove('hidden');
+        facetFormatoRoot.classList.remove('hidden');
+        facetHiloSection.classList.remove('hidden');
+        facetHiloColorSection.classList.remove('hidden');
+        facetMangueraSection.classList.remove('hidden');
+        facetMangueraSeccionSection.classList.remove('hidden');
+        facetCanalizacionesTipoSection.classList.add('hidden');
+        facetCanalizacionesDiametroSection.classList.add('hidden');
+        facetCanalizacionesLongitudSection.classList.add('hidden');
+      }
+    }
+
+    facetButtons.forEach((button) => button.addEventListener('click', () => setMainFacet(button.dataset.mainFacet)));
+
+    // Controlar el filtro "Familia" (Cables vs Canalizaciones)
+    function updateFamilyFilters() {
+      const familySelected = document.querySelector('input[name="family"]:checked');
+      if (!familySelected) return;
+      
+      if (familySelected.value === 'cables') {
+        facetFormatoRoot.classList.remove('hidden');
+        facetCanalizacionesTipoSection.classList.add('hidden');
+        facetCanalizacionesDiametroSection.classList.add('hidden');
+        facetCanalizacionesLongitudSection.classList.add('hidden');
+        // Mostrar los dependientes de Formato
+        const selectedFormat = document.querySelector('input[name="cableFormato"]:checked');
+        if (selectedFormat) {
+          if (selectedFormat.value === 'hilo') {
+            facetHiloSection.classList.remove('hidden');
+            facetHiloColorSection.classList.remove('hidden');
+            facetMangueraSection.classList.add('hidden');
+            facetMangueraSeccionSection.classList.add('hidden');
+          } else if (selectedFormat.value === 'manguera') {
+            facetHiloSection.classList.add('hidden');
+            facetHiloColorSection.classList.add('hidden');
+            facetMangueraSection.classList.remove('hidden');
+            facetMangueraSeccionSection.classList.remove('hidden');
+          }
+        } else {
+          facetHiloSection.classList.remove('hidden');
+          facetHiloColorSection.classList.remove('hidden');
+          facetMangueraSection.classList.remove('hidden');
+          facetMangueraSeccionSection.classList.remove('hidden');
+        }
+      } else if (familySelected.value === 'canalizaciones') {
+        facetFormatoRoot.classList.add('hidden');
+        facetHiloSection.classList.add('hidden');
+        facetHiloColorSection.classList.add('hidden');
+        facetMangueraSection.classList.add('hidden');
+        facetMangueraSeccionSection.classList.add('hidden');
+        facetCanalizacionesTipoSection.classList.remove('hidden');
+        facetCanalizacionesDiametroSection.classList.remove('hidden');
+        facetCanalizacionesLongitudSection.classList.remove('hidden');
+      }
+    }
+    
+    document.querySelectorAll('input[name="family"]').forEach((input) => {
+      input.addEventListener('change', updateFamilyFilters);
+    });
+
+    document.querySelectorAll('input[name="cableFormato"]').forEach((input) => {
+      input.addEventListener('change', (event) => {
+        const familySelected = document.querySelector('input[name="family"]:checked');
+        // Solo aplicar si Cables está seleccionado en el filtro "Familia"
+        if (familySelected && familySelected.value === 'cables') {
+          if (event.target.value === 'hilo') {
+            facetHiloSection.classList.remove('hidden');
+            facetHiloColorSection.classList.remove('hidden');
+            facetMangueraSection.classList.add('hidden');
+            facetMangueraSeccionSection.classList.add('hidden');
+          } else if (event.target.value === 'manguera') {
+            facetHiloSection.classList.add('hidden');
+            facetHiloColorSection.classList.add('hidden');
+            facetMangueraSection.classList.remove('hidden');
+            facetMangueraSeccionSection.classList.remove('hidden');
+          }
+        }
+      });
+    });
+
+    document.getElementById('resetCable') && document.getElementById('resetCable').addEventListener('click', () => {
+      document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach((input) => input.checked = false);
+      document.querySelector('[data-main-facet="all"]').classList.add('is-active');
+      setMainFacet('all');
+    });
+
+    document.getElementById('applyCable') && document.getElementById('applyCable').addEventListener('click', () => {
+      alert('Aplicar filtros (placeholder)');
+    });
+
+    // Inicializar los filtros según la selección actual
+    updateFamilyFilters();
+    setMainFacet('all');
+    });
+  </script>
+
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
+</body>
+</html>

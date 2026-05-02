@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="/.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iluminación · GarperLux</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-paper text-ink">
+  <div data-component="site-header"></div>
+
+  <div class="container-x pt-8 pb-6">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2 mb-4">
+      <a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="/pages/tienda/tienda.html" class="hover:text-ink">Tienda</a><span class="opacity-50">/</span>
+      <span class="text-ink">Iluminación</span>
+    </nav>
+
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <div class="eyebrow text-copper mb-2">Familia</div>
+        <h1 class="font-serif text-4xl">Iluminación</h1>
+        <p class="text-graphite mt-2">Bombillas, tubos, tiras LED y plafones.</p>
+      </div>
+      <div class="text-sm text-graphite">12.184 referencias</div>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-6">
+      <!-- Filters -->
+      <aside class="md:col-span-1 bg-white border border-line rounded-2xl p-5">
+        <h3 class="font-mono text-xs text-graphite uppercase tracking-wider mb-3">Filtros</h3>
+
+        <div class="mb-4">
+          <div class="font-mono text-[12px] text-graphite mb-2">Tipo de producto</div>
+          <div class="flex flex-col gap-2">
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="tipo" value="Bombillas"> Bombillas</label>
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="tipo" value="Tubos"> Tubos</label>
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="tipo" value="Tiras LED"> Tiras LED</label>
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="tipo" value="Plafones"> Plafones</label>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="font-mono text-[12px] text-graphite mb-2">Temperatura de color</div>
+          <div class="flex flex-col gap-2">
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="temp" value="3000"> 3000K (Cálido)</label>
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="temp" value="4000"> 4000K (Neutro)</label>
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="temp" value="5000"> 5000K (Frío)</label>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="font-mono text-[12px] text-graphite mb-2">Fabricante</div>
+          <div class="flex flex-col gap-2">
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="brand" value="Osram"> Osram</label>
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="brand" value="Philips"> Philips</label>
+            <label class="flex items-center gap-2"><input type="checkbox" data-filter="brand" value="Matel"> Matel</label>
+          </div>
+        </div>
+
+        <div class="flex justify-between">
+          <button id="resetFilters" class="btn btn-ghost">Limpiar</button>
+          <button id="applyFilters" class="btn btn-primary">Aplicar</button>
+        </div>
+      </aside>
+
+      <!-- Products -->
+      <main class="md:col-span-3">
+        <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Philips</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Bombilla LED E27 9W 4000K</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU 8718699-04</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">3,40 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center transition-colors">+</button>
+            </div>
+          </div>
+
+          <div class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30"></div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Osram</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Plafón LED 18W 4000K</h3>
+            </div>
+            <div class="flex items-end justify-between mt-1"><div class="font-serif text-xl font-medium">24,90 €</div><button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center transition-colors">+</button></div>
+          </div>
+
+          <div class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30"></div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Matel</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Tira LED 5m 3000K</h3>
+            </div>
+            <div class="flex items-end justify-between mt-1"><div class="font-serif text-xl font-medium">12,50 €</div><button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center transition-colors">+</button></div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-center"><button class="btn btn-ghost">Cargar más</button></div>
+      </main>
+    </div>
+  </div>
+
+  <div data-component="site-footer"></div>
+
+  <script>
+    const apply = document.getElementById('applyFilters');
+    const reset = document.getElementById('resetFilters');
+    apply && apply.addEventListener('click', () => { alert('Aplicar filtros (placeholder)'); });
+    reset && reset.addEventListener('click', () => { document.querySelectorAll('[data-filter]').forEach(i=>i.checked=false); });
+  </script>
+</body>
+</html>
