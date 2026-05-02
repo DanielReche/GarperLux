@@ -67,7 +67,7 @@
             <button class="px-3 py-1.5 rounded-full bg-paper-2 text-graphite text-xs font-mono hover:bg-paper-3">Por código de barras</button>
           </div>
           <div class="relative">
-            <input type="search" placeholder="Ej: Schneider iC60N o 27101-31" class="w-full pl-12 pr-4 py-4 bg-paper border border-line rounded-xl text-[15px] placeholder:text-graphite/60 focus:border-ink outline-none font-mono" />
+            <input id="tienda-search" type="search" placeholder="Ej: Schneider iC60N o 27101-31" class="w-full pl-12 pr-4 py-4 bg-paper border border-line rounded-xl text-[15px] placeholder:text-graphite/60 focus:border-ink outline-none font-mono" />
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-graphite" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
           </div>
         </div>
@@ -494,5 +494,18 @@
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+    (function(){
+      const input = document.getElementById('tienda-search');
+      if (!input) return;
+      input.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        const q = input.value.trim();
+        if (!q) return;
+        e.preventDefault();
+        window.location.href = '/pages/tienda/buscador.html?q=' + encodeURIComponent(q);
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -116,7 +116,8 @@
         const query = input.value.trim();
         if (!query) return;
         event.preventDefault();
-        location.href = `${depth}buscador.html?q=${encodeURIComponent(query)}`;
+        // Redirect to the canonical tienda search page using absolute path
+        location.href = `/pages/tienda/buscador.html?q=${encodeURIComponent(query)}`;
       });
     });
   };

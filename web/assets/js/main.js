@@ -101,7 +101,8 @@
       const query = input.value.trim();
       if (!query) return;
       e.preventDefault();
-      window.location.href = 'buscador.html?q=' + encodeURIComponent(query);
+      // Use absolute path to ensure correct resolution regardless of <base> or current URL
+      window.location.href = '/pages/tienda/buscador.html?q=' + encodeURIComponent(query);
     });
   });
 
