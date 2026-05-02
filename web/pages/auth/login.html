@@ -152,14 +152,14 @@
               <span class="text-xs text-graphite">· entrar sin contraseña</span>
             </div>
             <div class="grid grid-cols-2 gap-2">
-              <button onclick="glxSetSession('particular'); location.href='/pages/auth/area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-ink transition-colors">
+              <button onclick="glxSetSession('particular'); location.href='/pages/cuenta/area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-ink transition-colors">
                 <div class="flex items-center gap-2 mb-1">
                   <span class="w-6 h-6 rounded-full bg-ink text-paper grid place-items-center font-medium text-[11px]">A</span>
                   <span class="text-sm font-medium">Antonio</span>
                 </div>
                 <div class="text-[11px] text-graphite">Particular</div>
               </button>
-              <button onclick="glxSetSession('pro'); location.href='/pages/auth/area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-filament transition-colors">
+              <button onclick="glxSetSession('pro'); location.href='/pages/cuenta/area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-filament transition-colors">
                 <div class="flex items-center gap-2 mb-1">
                   <span class="w-6 h-6 rounded-full bg-filament text-ink grid place-items-center font-medium text-[10px]">JL</span>
                   <span class="text-sm font-medium">El Chispas</span>
@@ -183,14 +183,14 @@
             <form class="space-y-4">
               <div>
                 <label class="text-sm font-medium mb-1.5 block">Email <span class="text-warn">*</span></label>
-                <input type="email" class="field" placeholder="tu@correo.com" required/>
+                <input type="email" name="email" class="field" placeholder="tu@correo.com" required/>
               </div>
               <div>
                 <div class="flex items-center justify-between mb-1.5">
                   <label class="text-sm font-medium">Contraseña <span class="text-warn">*</span></label>
                   <a href="/pages/auth/recuperar-password.html" class="text-xs text-copper hover:underline">¿La olvidaste?</a>
                 </div>
-                <input type="password" class="field" placeholder="••••••••" required/>
+                <input type="password" name="password" class="field" placeholder="••••••••" required/>
               </div>
               <label class="flex items-center gap-2 cursor-pointer text-sm text-graphite">
                 <input type="checkbox" class="w-4 h-4"/> Mantener sesión iniciada
@@ -256,28 +256,28 @@
               <!-- COMÚN -->
               <div>
                 <label class="text-sm font-medium mb-1.5 block">Email <span class="text-warn">*</span></label>
-                <input type="email" class="field" placeholder="tu@correo.com" required/>
+                <input type="email" name="email" class="field" placeholder="tu@correo.com" required/>
               </div>
 
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="text-sm font-medium mb-1.5 block">Contraseña <span class="text-warn">*</span></label>
-                  <input type="password" class="field" placeholder="••••••••" required/>
+                  <input type="password" name="password" class="field" placeholder="••••••••" required/>
                 </div>
                 <div>
                   <label class="text-sm font-medium mb-1.5 block">Repite <span class="text-warn">*</span></label>
-                  <input type="password" class="field" placeholder="••••••••" required/>
+                  <input type="password" name="passwordConfirm" class="field" placeholder="••••••••" required/>
                 </div>
               </div>
 
               <div>
                 <label class="text-sm font-medium mb-1.5 block">Nombre completo <span class="text-warn">*</span></label>
-                <input type="text" class="field" placeholder="Antonio García López" required/>
+                <input type="text" name="fullName" class="field" placeholder="Antonio García López" required/>
               </div>
 
               <div>
                 <label class="text-sm font-medium mb-1.5 block">Teléfono <span class="text-graphite font-normal">(opcional)</span></label>
-                <input type="tel" class="field font-mono" placeholder="600 123 456"/>
+                <input type="tel" name="phone" class="field font-mono" placeholder="600 123 456"/>
               </div>
 
               <!-- ============ EXTRA PRO ============ -->
@@ -431,11 +431,36 @@
     // Hash support
     if (location.hash === '#registro' || location.hash === '#registro-pro') showTab('register');
 
+    const getApi = () => window.GarperLuxApi;
+    const redirectParam = new URLSearchParams(location.search).get('redirect') || '';
+    const redirectMap = {
+      'area-personal.html': '/pages/cuenta/area-personal.html',
+      'admin.html': '/pages/sistema/admin.html',
+    };
+    const redirectTarget = redirectMap[redirectParam] || redirectParam || '/pages/cuenta/area-personal.html';
+    const notify = (message) => {
+      if (window.glxToast) window.glxToast(message);
+      else window.alert(message);
+    };
+
     // Selector rol particular/pro
     const roleCards = document.querySelectorAll('.role-card');
     const proSection = document.querySelector('.pro-section');
     const ctaParticular = document.querySelector('[data-cta="particular"]');
     const ctaPro = document.querySelector('[data-cta="pro"]');
+    const proFields = proSection.querySelectorAll('input, select, textarea, button');
+
+    const setProFieldsEnabled = (enabled) => {
+      proFields.forEach((field) => {
+        if (!field.dataset.originalRequired && field.required) {
+          field.dataset.originalRequired = '1';
+        }
+        field.disabled = !enabled;
+        field.required = enabled && field.dataset.originalRequired === '1';
+      });
+    };
+
+    setProFieldsEnabled(false);
 
     roleCards.forEach(card => {
       card.addEventListener('click', () => {
@@ -446,33 +471,79 @@
         proSection.classList.toggle('is-active', isPro);
         ctaParticular.classList.toggle('hidden', isPro);
         ctaPro.classList.toggle('hidden', !isPro);
+        setProFieldsEnabled(isPro);
       });
     });
 
     // Si llegamos con hash de registro pro, activar
     if (location.hash === '#registro-pro') {
       document.querySelector('.role-card[data-role="pro"]').click();
+    } else {
+      setProFieldsEnabled(false);
     }
 
-    // Form de login simulado: cualquier email vale, redirige a área personal
-    document.querySelector('[data-pane="login"] form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = e.target.querySelector('input[type="email"]').value.toLowerCase();
-      // Heurística simple: si el email parece pro lo metemos como pro, si no particular
-      const role = (email.includes('chispas') || email.includes('instalador')) ? 'pro' : 'particular';
-      glxSetSession(role);
-      const params = new URLSearchParams(location.search);
-      const redirect = params.get('redirect');
-      location.href = redirect || '/pages/auth/area-personal.html';
-    });
+    document.querySelector('[data-pane="login"] form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const form = event.currentTarget;
+      const email = form.querySelector('input[name="email"]').value.trim().toLowerCase();
+      const password = form.querySelector('input[name="password"]').value;
+      const api = getApi();
 
-    // Form de registro: cae como particular o pro según role-card
-    document.querySelector('[data-pane="register"] form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const role = document.querySelector('.role-card.is-selected').dataset.role || 'particular';
-      glxSetSession(role);
-      location.href = '/pages/auth/area-personal.html';
-    });
+      try {
+        if (api) {
+          const user = await api.login(email, password);
+          await window.glxSyncSessionToLegacyAuth?.();
+          notify(`Sesión iniciada como ${user.fullName}`);
+          location.href = redirectTarget;
+          return;
+        }
+
+        const role = (email.includes('chispas') || email.includes('instalador')) ? 'pro' : 'particular';
+        glxSetSession(role);
+        location.href = redirectTarget;
+      } catch (error) {
+        notify(error.message);
+      }
+    }, true);
+
+    document.querySelector('[data-pane="register"] form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const role = formData.get('role') === 'pro' ? 'pro' : 'particular';
+      const email = String(formData.get('email') || '').trim().toLowerCase();
+      const password = String(formData.get('password') || '');
+      const passwordConfirm = String(formData.get('passwordConfirm') || '');
+      const fullName = String(formData.get('fullName') || '').trim() || 'Cliente GarperLux';
+      const phone = String(formData.get('phone') || '').trim();
+      const api = getApi();
+
+      if (password !== passwordConfirm) {
+        notify('Las contraseñas no coinciden.');
+        return;
+      }
+
+      try {
+        if (api) {
+          const data = await api.request('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ role, email, password, fullName, phone: phone || null }),
+          });
+          if (data?.token) api.setToken(data.token);
+          await window.glxSyncSessionToLegacyAuth?.();
+          notify(`Cuenta creada como ${fullName}`);
+          location.href = redirectTarget;
+          return;
+        }
+
+        glxSetSession(role);
+        location.href = redirectTarget;
+      } catch (error) {
+        notify(error.message);
+      }
+    }, true);
   </script>
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>

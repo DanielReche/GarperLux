@@ -51,6 +51,8 @@
     }
   }
 
+  window.glxSyncSessionToLegacyAuth = syncSessionToLegacyAuth;
+
   const addCartBadge = (count) => {
     document.querySelectorAll('[data-cart-count]').forEach((el) => { el.textContent = count; });
     document.querySelectorAll('a[href="/pages/tienda/carrito.html"]').forEach((link) => {
@@ -89,60 +91,7 @@
   };
 
   function bindLogin() {
-    if (page !== '/pages/auth/login.html') return;
-
-    document.querySelectorAll('button[onclick*="glxSetSession"]').forEach((button) => {
-      button.addEventListener('click', async (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        const role = button.getAttribute('onclick').includes('pro') ? 'pro' : 'particular';
-        const email = role === 'pro' ? 'chispas@instaladoreseljaen.es' : 'antonio.garcia@correo.com';
-        try {
-          const user = await api.login(email, 'garperlux123');
-          await syncSessionToLegacyAuth();
-          toast(`Sesión iniciada como ${user.fullName}`);
-          location.href = new URLSearchParams(location.search).get('redirect') || '/pages/cuenta/area-personal.html';
-        } catch (error) {
-          toast(error.message);
-        }
-      }, true);
-    });
-
-    document.querySelector('[data-pane="login"] form')?.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      const form = event.currentTarget;
-      try {
-        const user = await api.login(
-          form.querySelector('input[type="email"]').value.trim(),
-          form.querySelector('input[type="password"]').value
-        );
-        await syncSessionToLegacyAuth();
-        toast(`Sesión iniciada como ${user.fullName}`);
-        location.href = new URLSearchParams(location.search).get('redirect') || '/pages/cuenta/area-personal.html';
-      } catch (error) {
-        toast(error.message);
-      }
-    }, true);
-
-    document.querySelector('[data-pane="register"] form')?.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      const form = event.currentTarget;
-      const role = document.querySelector('input[name="role"]:checked')?.value || 'particular';
-      const fields = [...form.querySelectorAll('input')];
-      const email = fields.find((input) => input.type === 'email')?.value.trim();
-      const password = fields.find((input) => input.type === 'password')?.value;
-      const fullName = fields.find((input) => input.type === 'text' && input.value.trim())?.value.trim() || 'Cliente GarperLux';
-      try {
-        const data = await api.request('/auth/register', { method: 'POST', body: JSON.stringify({ role, email, password, fullName }) });
-        if (data?.token) api.setToken(data.token);
-        await syncSessionToLegacyAuth();
-        location.href = '/pages/cuenta/area-personal.html';
-      } catch (error) {
-        toast(error.message);
-      }
-    }, true);
+    return;
   }
 
   function bindPasswordRecovery() {
