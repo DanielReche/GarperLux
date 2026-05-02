@@ -226,3 +226,7 @@ img, svg { display: block; max-width: 100%; }
 @media (max-width: 768px) {
   .display { font-size: clamp(2.25rem, 10vw, 3.5rem); }
 }
+
+/* --------- Breadcrumbs styling & separator --------- */
+nav.text-xs a { text-decoration: underline; text-underline-offset: 2px; }
+nav.text-xs .opacity-50 { margin: 0 .4rem; color: var(--graphite-2); }

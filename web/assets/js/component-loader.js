@@ -49,10 +49,25 @@
     });
   };
 
+  const updateBreadcrumbs = (root = document) => {
+    try {
+      root.querySelectorAll('nav.text-xs').forEach((nav) => {
+        nav.querySelectorAll('.opacity-50').forEach((sep) => {
+          if (sep.textContent.trim() === '/') sep.textContent = '»';
+        });
+        nav.querySelectorAll('a').forEach((a) => a.classList.add('underline'));
+      });
+    } catch (e) {
+      // ignore
+    }
+  };
+
   const notifyReady = () => {
     document.querySelectorAll('[data-year]').forEach((node) => {
       node.textContent = new Date().getFullYear();
     });
+    // Ensure breadcrumbs in the final document are transformed
+    try { updateBreadcrumbs(document); } catch (e) {}
     document.dispatchEvent(new CustomEvent('garperlux:components-ready'));
   };
 
@@ -124,6 +139,8 @@
         template.innerHTML = await response.text();
         localizeFragment(template.content);
         markActiveNav(template.content);
+        // Update breadcrumbs inside loaded fragment
+        try { updateBreadcrumbs(template.content); } catch (e) {}
         slot.replaceWith(template.content.cloneNode(true));
       } catch (error) {
         console.warn(error.message);
