@@ -115,6 +115,12 @@ function registerOrderRoutes(router) {
       addOrderEvent(db, result.lastInsertRowid, 'preparing', 'En preparación', 'Estamos preparando el pedido en almacén.');
       db.prepare('UPDATE carts SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run('ordered', cart.id);
       db.prepare('INSERT INTO documents (user_id, type, code, related_order_code, total) VALUES (?, ?, ?, ?, ?)').run(user.id, 'invoice', `FAC-${code}`, code, totals.total);
+      
+      const updateStock = db.prepare('UPDATE products SET stock = MAX(0, stock - ?) WHERE id = ?');
+      for (const item of summary.items) {
+        updateStock.run(item.quantity, item.id);
+      }
+
       return created(res, { code, status: 'confirmed', total: totals.total, totals, shippingMethod: totals.shippingMethod, coupon: totals.coupon });
     } catch (error) {
       if (!handleInputError(res, error)) throw error;

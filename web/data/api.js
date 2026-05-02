@@ -21,7 +21,10 @@ window.GarperLuxApi = (() => {
     if (response.status === 204) return null;
     const payload = await response.json();
     if (!response.ok || payload.ok === false) {
-      throw new Error(payload.error?.message || 'Error de comunicación con GarperLux.');
+      const error = new Error(payload.error?.message || 'Error de comunicación con GarperLux.');
+      error.code = payload.error?.code || 'REQUEST_ERROR';
+      error.details = payload.error?.details || null;
+      throw error;
     }
     return payload.data;
   }
@@ -66,7 +69,11 @@ window.GarperLuxApi = (() => {
     serviceRequests: () => request('/service-requests'),
     documents: (type) => request(`/documents${type ? `?type=${encodeURIComponent(type)}` : ''}`),
     addresses: () => request('/account/addresses'),
+    address: (id) => request(`/account/addresses/${encodeURIComponent(id)}`),
     addAddress: (payload) => request('/account/addresses', { method: 'POST', body: JSON.stringify(payload) }),
+    updateAddress: (id, payload) => request(`/account/addresses/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+    setDefaultAddress: (id) => request(`/account/addresses/${encodeURIComponent(id)}/default`, { method: 'PATCH' }),
+    deleteAddress: (id) => request(`/account/addresses/${encodeURIComponent(id)}`, { method: 'DELETE' }),
     paymentMethods: () => request('/account/payment-methods'),
     addPaymentMethod: (payload) => request('/account/payment-methods', { method: 'POST', body: JSON.stringify(payload) }),
     setDefaultPaymentMethod: (id) => request(`/account/payment-methods/${encodeURIComponent(id)}/default`, { method: 'PATCH' }),

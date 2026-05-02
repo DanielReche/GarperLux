@@ -119,7 +119,8 @@ function migrate(db) {
       province TEXT NOT NULL,
       postal_code TEXT NOT NULL,
       phone TEXT,
-      is_default INTEGER NOT NULL DEFAULT 0
+      is_default INTEGER NOT NULL DEFAULT 0,
+      is_billing INTEGER NOT NULL DEFAULT 0
     );
 
     CREATE TABLE IF NOT EXISTS payment_methods (
@@ -341,6 +342,7 @@ function migrate(db) {
   ensureColumn(db, 'payment_methods', 'exp_year', 'TEXT');
   ensureColumn(db, 'payment_methods', 'holder', 'TEXT');
   ensureColumn(db, 'payment_methods', 'allow_recurring', 'INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'addresses', 'is_billing', 'INTEGER NOT NULL DEFAULT 0');
 }
 
 function ensureColumn(db, table, column, definition) {

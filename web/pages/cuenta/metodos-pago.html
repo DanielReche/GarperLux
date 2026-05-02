@@ -24,42 +24,36 @@
   </div>
 
   <!-- Tarjetas guardadas -->
-  <div class="grid md:grid-cols-2 gap-5 mb-10">
-    <div class="card-pay">
-      <div class="absolute top-0 right-0 w-40 h-40 filament-glow opacity-30"></div>
-      <div class="flex items-start justify-between mb-10 relative">
-        <span class="font-mono text-[10px] uppercase tracking-wider text-paper/60">Predeterminada</span>
-        <span class="font-serif italic text-lg">VISA</span>
-      </div>
-      <div class="font-mono text-xl tracking-widest mb-4 relative">•••• •••• •••• 4242</div>
-      <div class="flex justify-between text-xs font-mono text-paper/70 relative">
-        <div><div class="text-[9px] uppercase">Titular</div><div>ANTONIO GARCÍA</div></div>
-        <div><div class="text-[9px] uppercase">Caduca</div><div>09/28</div></div>
-      </div>
-    </div>
-    <a href="/pages/cuenta/anadir-tarjeta.html" class="bg-paper-2 border-2 border-dashed border-line rounded-2xl p-6 grid place-items-center text-center min-h-[200px] hover:border-ink transition-colors cursor-pointer">
-      <div>
-        <div class="w-12 h-12 mx-auto rounded-full bg-white grid place-items-center mb-3"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></div>
-        <div class="font-medium">Añadir nueva tarjeta</div>
-        <div class="text-xs text-graphite">Visa, Mastercard, Amex</div>
-      </div>
-    </a>
+  <div id="glx-payment-methods-list" class="grid md:grid-cols-2 gap-5 mb-10">
+    <!-- Se llenará vía JS con payment-methods-integration.js -->
   </div>
 
   <!-- Otros métodos -->
   <h2 class="font-serif text-xl font-medium mb-4">Otros métodos disponibles</h2>
-  <div class="bg-white border border-line rounded-2xl divide-y divide-line">
-    <div class="p-5 flex items-center justify-between flex-wrap gap-3">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite font-mono font-semibold text-xs">BIZ</div>
-        <div>
-          <div class="font-medium">Bizum</div>
-          <div class="text-xs text-graphite font-mono">Conectado al teléfono terminado en 56</div>
+  <div class="bg-white border border-line rounded-2xl divide-y divide-line" id="otros-metodos-container">
+    <div class="p-5 flex flex-col gap-3 transition-colors" id="bizum-container">
+      <div class="flex items-center justify-between flex-wrap cursor-pointer" id="btn-bizum">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite font-mono font-semibold text-xs">BIZ</div>
+          <div>
+            <div class="font-medium">Bizum</div>
+            <div class="text-xs text-graphite font-mono" id="bizum-status">Sin configurar</div>
+          </div>
         </div>
+        <button class="text-sm text-copper hover:underline" id="bizum-action">Vincular</button>
       </div>
-      <span class="pill pill-stock text-[10px]">Activo</span>
+      <form id="bizum-form" class="hidden mt-2 pt-3 border-t border-line flex flex-wrap items-end gap-3 w-full">
+        <div class="flex-grow">
+          <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Número de teléfono</label>
+          <div class="flex items-center gap-2">
+            <input type="tel" id="glx-bizum-phone-input" class="field" placeholder="Ej. 600 000 000" required>
+            <button type="button" id="bizum-use-account-phone" class="btn btn-ghost border border-line text-xs whitespace-nowrap hidden px-3">Usar teléfono de la cuenta</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Bizum</button>
+      </form>
     </div>
-    <div class="p-5 flex items-center justify-between flex-wrap gap-3">
+    <div class="p-5 flex items-center justify-between flex-wrap gap-3 cursor-pointer hover:bg-paper-2 transition-colors" onclick="window.location.href='https://paypal.com'">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-electric font-serif italic font-semibold">P</div>
         <div>
@@ -98,5 +92,6 @@
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/payment-methods-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
 </body></html>

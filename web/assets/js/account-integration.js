@@ -118,6 +118,9 @@
             if (span) span.textContent = String(val);
           }
         });
+        // Also update the dedicated order count span by ID (used when sidebar active item is mis-pedidos)
+        const orderCountEl = document.getElementById('glx-nav-order-count');
+        if (orderCountEl) orderCountEl.textContent = String(orders.length || 0);
       }
     } catch (err) {
       // avoid breaking page — log for debugging

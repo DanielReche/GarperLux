@@ -18,6 +18,10 @@
   };
   const publicAuthlessPages = new Set(['/pages/auth/recuperar-password.html', '/pages/empresa/contacto.html', '/pages/empresa/trabaja-con-nosotros.html', '/pages/servicios/seguir-solicitud.html']);
   const CHECKOUT_KEY = 'garperlux_checkout_draft';
+  const DEMO_CREDENTIALS = {
+    particular: { email: 'antonio.garcia@correo.com', password: 'garperlux123' },
+    pro: { email: 'chispas@instaladoreseljaen.es', password: 'garperlux123' },
+  };
 
   const toast = (message) => {
     if (window.glxToast) return window.glxToast(message);
@@ -58,7 +62,21 @@
     }
   }
 
+  async function syncLegacySessionToApi() {
+    if (api.getToken()) return api.me().catch(() => null);
+    const legacy = typeof window.glxGetSession === 'function' ? window.glxGetSession() : null;
+    const creds = legacy?.role ? DEMO_CREDENTIALS[legacy.role] : null;
+    if (!creds) return null;
+    try {
+      await api.login(creds.email, creds.password);
+      return await syncSessionToLegacyAuth();
+    } catch {
+      return null;
+    }
+  }
+
   window.glxSyncSessionToLegacyAuth = syncSessionToLegacyAuth;
+  window.glxEnsureApiSession = syncLegacySessionToApi;
 
   const addCartBadge = (count) => {
     document.querySelectorAll('[data-cart-count]').forEach((el) => { el.textContent = count; });
@@ -150,23 +168,35 @@
     }, true);
   }
 
-  const renderProductCard = (product) => `
+  const renderProductCard = (product) => {
+    let stockColor = 'bg-warn';
+    let stockText = 'Agotado';
+    if (product.stock > 10) {
+      stockColor = 'bg-stock';
+      stockText = `${product.stock} uds`;
+    } else if (product.stock > 0) {
+      stockColor = 'bg-caution';
+      stockText = `${product.stock} uds`;
+    }
+    return `
   <a href="/pages/tienda/producto.html?sku=${encodeURIComponent(product.sku)}" class="card-prod group" data-sku="${product.sku}">
       <div class="aspect-square bg-paper-2 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent"></div>
         <span class="relative font-serif text-4xl text-graphite/20">GL</span>
+        <span class="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium text-paper ${stockColor}"><span class="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0"></span>${stockText}</span>
       </div>
       <div class="space-y-2">
         <div class="font-mono text-[11px] text-graphite/70">SKU ${product.sku}</div>
         <h3 class="font-medium leading-tight group-hover:text-copper transition-colors">${product.name}</h3>
         <div class="flex items-end justify-between">
-          <div><span class="font-serif text-xl font-medium">${money(product.price)}</span><span class="block text-[11px] text-stock">${product.stock} uds. stock</span></div>
+          <div><span class="font-serif text-xl font-medium">${money(product.price)}</span></div>
           <button type="button" data-add-cart data-sku="${product.sku}" class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors" aria-label="Añadir">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
           </button>
         </div>
       </div>
     </a>`;
+  };
 
   function bindCatalogActions() {
     document.addEventListener('click', async (event) => {
@@ -230,7 +260,11 @@
     const products = await api.products(page === '/pages/tienda/categoria.html' ? { category: 'mecanismos' } : {});
     const grids = [...document.querySelectorAll('.card-prod')].map((card) => card.parentElement).filter(Boolean);
     const grid = grids.find((candidate) => candidate.querySelectorAll('.card-prod').length >= 4);
-    if (grid) grid.innerHTML = products.slice(0, page === '/pages/tienda/categoria.html' ? 12 : 8).map(renderProductCard).join('');
+    if (grid) {
+      grid.innerHTML = products.slice(0, page === '/pages/tienda/categoria.html' ? 12 : 8).map(renderProductCard).join('');
+      // Notify catalog-ui.js that the grid has been re-rendered with real data
+      document.dispatchEvent(new CustomEvent('glxCatalogRendered', { detail: { products } }));
+    }
   }
 
   const SHIPPING_COST = 4.9;
@@ -1476,6 +1510,7 @@
 
   document.addEventListener('garperlux:components-ready', () => {
     if (publicAuthlessPages.has(page)) return;
+    syncLegacySessionToApi();
     syncSessionToLegacyAuth();
     refreshCartCount();
   });

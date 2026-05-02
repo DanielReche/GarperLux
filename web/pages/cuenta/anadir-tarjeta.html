@@ -64,7 +64,7 @@
     </div>
 
     <!-- Form -->
-    <form class="space-y-4">
+    <form id="add-card-form" class="space-y-4">
       <div>
         <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Número de tarjeta</label>
         <div class="relative">
@@ -96,7 +96,7 @@
         <h3 class="font-medium text-sm mb-3">Dirección de facturación</h3>
         <div class="space-y-3">
           <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="radio" name="bill" checked/>Misma que mi dirección por defecto</label>
-          <div class="ml-6 text-xs text-graphite font-mono">Calle Bernabé Soriano 12, 3º B · 23001 Jaén</div>
+          <div class="ml-6 text-xs text-graphite font-mono">Usaremos tu dirección de facturación predeterminada</div>
           <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="radio" name="bill"/>Usar otra dirección</label>
         </div>
       </div>
@@ -107,17 +107,17 @@
       </div>
 
       <label class="flex items-start gap-2 text-sm cursor-pointer">
-        <input type="checkbox" class="w-4 h-4 mt-0.5" checked/>
+        <input type="checkbox" class="w-4 h-4 mt-0.5" checked data-input-default/>
         <span class="text-graphite">Establecer como tarjeta predeterminada para mis compras</span>
       </label>
       <label class="flex items-start gap-2 text-sm cursor-pointer">
-        <input type="checkbox" class="w-4 h-4 mt-0.5"/>
+        <input type="checkbox" class="w-4 h-4 mt-0.5" data-input-recurring/>
         <span class="text-graphite">Permitir uso para pedidos recurrentes (cargos automáticos · puedes desactivarlo en cualquier momento)</span>
       </label>
 
       <div class="flex justify-between flex-wrap gap-3 pt-4">
         <a href="/pages/cuenta/metodos-pago.html" class="btn btn-ghost btn-sm">Cancelar</a>
-        <button class="btn btn-primary">Guardar tarjeta<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
+        <button type="submit" class="btn btn-primary">Guardar tarjeta<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
       </div>
 
       <div class="flex justify-center gap-3 pt-4 mt-4 border-t border-line text-graphite text-xs font-mono">
@@ -147,6 +147,61 @@ exp.addEventListener('input',e=>{
   e.target.value=v;pvExp.textContent=v||'MM/AA';
 });
 name.addEventListener('input',e=>{pvName.textContent=e.target.value||'Tu nombre';});
+
+// Form submission logic
+const form = document.getElementById('add-card-form');
+if (form) {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      const api = window.GarperLuxApi;
+      if (!api) throw new Error('API no disponible');
+      
+      const cardNumber = num.value.replace(/\s/g, '');
+      const last4 = cardNumber.length >= 4 ? cardNumber.slice(-4) : '0000';
+      const parts = exp.value.split('/');
+      const expMonth = parts[0] || '12';
+      const expYear = parts[1] || '99';
+
+      const now = new Date();
+      const curY = now.getFullYear() % 100;
+      const curM = now.getMonth() + 1;
+      const nYear = parseInt(expYear, 10);
+      const nMonth = parseInt(expMonth, 10);
+
+      if (nYear < curY || (nYear === curY && nMonth < curM)) {
+        alert('La tarjeta introducida ya ha caducado. Por favor, revisa la fecha de caducidad e introduce una válida.');
+        return;
+      }
+
+      const holder = name.value.trim() || 'Titular';
+      const isDefault = document.querySelector('[data-input-default]').checked;
+      const allowRecurring = document.querySelector('[data-input-recurring]').checked;
+
+      // Dummy logic to identify brand (simplistic)
+      let brand = 'Visa';
+      if (cardNumber.startsWith('5')) brand = 'Mastercard';
+      if (cardNumber.startsWith('3')) brand = 'Amex';
+      
+      const payload = {
+        type: 'card',
+        label: `${brand} terminada en ${last4}`,
+        last4,
+        brand,
+        expMonth,
+        expYear,
+        holder,
+        isDefault,
+        allowRecurring
+      };
+
+      await api.addPaymentMethod(payload);
+      location.href = '/pages/cuenta/metodos-pago.html';
+    } catch (err) {
+      alert(err?.message || 'Error al guardar la tarjeta.');
+    }
+  });
+}
 </script>
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>

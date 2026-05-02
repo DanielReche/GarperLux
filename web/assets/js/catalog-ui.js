@@ -234,11 +234,64 @@
     requestAnimationFrame(applyFilters);
   }
 
+  function updateStockPill(pill, stock) {
+    // Remove all previous state classes
+    pill.classList.remove(
+      'pill-stock', 'pill-caution', 'pill-warn',
+      'bg-stock', 'bg-warn', 'bg-caution',
+      'bg-white', 'border', 'border-line',
+      'text-ink', 'text-paper',
+      'flex', 'items-center', 'gap-1.5'
+    );
+    pill.classList.add('inline-flex', 'items-center', 'gap-1', 'px-2', 'py-0.5', 'rounded-full', 'text-[10px]', 'font-medium', 'text-paper');
+
+    let bgClass = 'bg-warn';
+    let text = 'Agotado';
+    if (stock > 10) {
+      bgClass = 'bg-stock';
+      text = `${stock} uds`;
+    } else if (stock > 0) {
+      bgClass = 'bg-caution';
+      text = `${stock} uds`;
+    }
+    pill.classList.add(bgClass);
+    pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0"></span>${text}`;
+  }
+
+  function applyStockToCards(products) {
+    document.querySelectorAll('.card-prod').forEach(card => {
+      const skuMatch = card.textContent.match(/SKU\s+([A-Z0-9._-]+)/i);
+      if (!skuMatch) return;
+      const sku = skuMatch[1];
+      const product = products.find(p => p.sku === sku);
+      if (product == null) return;
+      const pill = card.querySelector('.pill');
+      if (pill) updateStockPill(pill, product.stock);
+    });
+  }
+
+  function bindDynamicStock() {
+    const api = window.GarperLuxApi;
+    if (!api) return;
+
+    // Primary: listen for async catalog render event fired by backend-integration.js
+    document.addEventListener('glxCatalogRendered', (e) => {
+      const products = e.detail && e.detail.products;
+      if (products) applyStockToCards(products);
+    });
+
+    // Fallback: update stock on any pre-rendered static pills
+    if (document.querySelector('.card-prod .pill')) {
+      api.products().then(products => applyStockToCards(products)).catch(() => {});
+    }
+  }
+
   const productState = {
     acabado: 'Blanco',
     amperaje: '10 A',
     skuBase: '27101',
     variants: [],
+    baseStock: 0,
   };
 
   const variantSuffix = { blanco: '31', marfil: '32', aluminio: '39' };
@@ -261,9 +314,22 @@
     document.querySelectorAll('button').forEach((button) => {
       if (/añadir|carrito/i.test(button.textContent)) button.dataset.sku = sku;
     });
-    const stockNode = [...document.querySelectorAll('*')]
-      .find((node) => !node.children.length && /en stock|unidades|uds/i.test(node.textContent || ''));
-    if (stockNode && matchedVariant) stockNode.textContent = `En stock · ${matchedVariant.stock} unidades`;
+    
+    const stockToDisplay = matchedVariant ? matchedVariant.stock : productState.baseStock;
+    document.querySelectorAll('*').forEach((node) => {
+      if (!node.children.length && /en stock|unidades|uds/i.test(node.textContent || '')) {
+        if (/● Total/i.test(node.textContent)) {
+          node.textContent = `● Total: ${stockToDisplay} uds`;
+        } else if (/En stock/i.test(node.textContent) && /unidades/i.test(node.textContent)) {
+          node.textContent = `En stock · ${stockToDisplay} unidades`;
+        } else if (node.textContent.includes('70 unidades')) {
+          node.textContent = node.textContent.replace('70 unidades', `${stockToDisplay} unidades`);
+        } else if (node.textContent.includes('70 uds')) {
+          node.textContent = node.textContent.replace('70 uds', `${stockToDisplay} uds`);
+        }
+      }
+    });
+
     document.querySelectorAll('*').forEach((node) => {
       if (node.children.length || !/SKU\s+[A-Z0-9._-]+/i.test(node.textContent)) return;
       node.textContent = node.textContent.replace(/SKU\s+[A-Z0-9._-]+/i, `SKU ${sku}`);
@@ -333,6 +399,7 @@
     if (api) {
       const currentSku = new URLSearchParams(location.search).get('sku') || '27101-31';
       api.product(currentSku).then((product) => {
+        if (product) productState.baseStock = product.stock;
         if (Array.isArray(product?.variants)) productState.variants = product.variants;
         updateProductSelection();
       }).catch(() => updateProductSelection());
@@ -344,5 +411,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     bindFilters();
     bindProductOptions();
+    bindDynamicStock();
   });
 })();

@@ -38,7 +38,7 @@
     <p class="text-graphite mt-2" data-particular-only>Puedes guardar tantas como necesites: casa, trabajo, comunidad de vecinos, etc.</p>
   </div>
 
-  <form class="space-y-6">
+  <form id="add-address-form" class="space-y-6">
 
     <!-- Tipo de dirección -->
     <div>
@@ -52,8 +52,8 @@
 
     <!-- Etiqueta -->
     <div>
-      <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Etiqueta para identificarla</label>
-      <input type="text" placeholder="Ej. Casa, Trabajo, Sra. López, Comunidad Olivos" class="field"/>
+        <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Etiqueta para identificarla</label>
+      <input id="label" name="label" type="text" placeholder="Ej. Casa, Trabajo, Sra. López, Comunidad Olivos" class="field"/>
       <div class="text-[11px] text-graphite mt-1">Solo la verás tú. Si está en blanco, usaremos la dirección.</div>
     </div>
 
@@ -61,10 +61,10 @@
     <div class="bg-white border border-line rounded-2xl p-5 md:p-6">
       <h2 class="font-serif text-lg font-medium mb-4">¿A nombre de quién va?</h2>
       <div class="grid sm:grid-cols-2 gap-4">
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nombre</label><input type="text" class="field" placeholder="Antonio"/></div>
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Apellidos</label><input type="text" class="field" placeholder="García Ruiz"/></div>
-        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Empresa <span class="text-graphite/60 normal-case">(opcional)</span></label><input type="text" class="field" placeholder="Razón social, comunidad, etc."/></div>
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono de contacto</label><input type="tel" class="field font-mono" placeholder="600 000 000"/><div class="text-[11px] text-graphite mt-1">El transportista lo usa para avisar.</div></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nombre</label><input id="first-name" name="firstName" type="text" class="field" placeholder="Antonio"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Apellidos</label><input id="last-name" name="lastName" type="text" class="field" placeholder="García Ruiz"/></div>
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Empresa <span class="text-graphite/60 normal-case">(opcional)</span></label><input id="company" name="company" type="text" class="field" placeholder="Razón social, comunidad, etc."/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono de contacto</label><input id="phone" name="phone" type="tel" class="field font-mono" placeholder="600 000 000"/><div class="text-[11px] text-graphite mt-1">El transportista lo usa para avisar.</div></div>
         <div data-pro-only style="display:none"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Persona de contacto en obra</label><input type="text" class="field" placeholder="Si no eres tú quien recibe"/></div>
       </div>
     </div>
@@ -74,17 +74,17 @@
       <h2 class="font-serif text-lg font-medium mb-4">Ubicación</h2>
       <div class="grid sm:grid-cols-3 gap-4">
 
-        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Calle, avenida, plaza…</label><input type="text" class="field" placeholder="Ej. Calle Bernabé Soriano"/></div>
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nº</label><input type="text" class="field" placeholder="12"/></div>
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Calle, avenida, plaza…</label><input id="line1" name="line1" type="text" class="field" placeholder="Ej. Calle Bernabé Soriano"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nº</label><input id="number" name="number" type="text" class="field" placeholder="12"/></div>
 
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Bloque</label><input type="text" class="field" placeholder="opcional"/></div>
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Escalera</label><input type="text" class="field" placeholder="opcional"/></div>
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Piso · puerta</label><input type="text" class="field" placeholder="3º B"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Bloque</label><input id="block" name="block" type="text" class="field" placeholder="opcional"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Escalera</label><input id="staircase" name="staircase" type="text" class="field" placeholder="opcional"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Piso · puerta</label><input id="floor-door" name="floorDoor" type="text" class="field" placeholder="3º B"/></div>
 
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CP</label><input type="text" maxlength="5" class="field font-mono" placeholder="23001" id="cp-input"/><div class="text-[11px] text-graphite mt-1" id="cp-hint">Lo escribimos antes para autocompletar el resto.</div></div>
-        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Localidad</label><input type="text" class="field" placeholder="Jaén" id="loc-input"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CP</label><input id="cp-input" name="postalCode" type="text" maxlength="5" class="field font-mono" placeholder="23001"/><div class="text-[11px] text-graphite mt-1" id="cp-hint">Lo escribimos antes para autocompletar el resto.</div></div>
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Localidad</label><input id="loc-input" name="city" type="text" class="field" placeholder="Jaén"/></div>
 
-        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Provincia</label><input type="text" class="field" placeholder="Jaén" id="prov-input"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Provincia</label><input id="prov-input" name="province" type="text" class="field" placeholder="Jaén"/></div>
         <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">País</label><select class="field"><option>España</option></select></div>
       </div>
     </div>
@@ -97,14 +97,14 @@
 
     <!-- Predeterminada -->
     <div class="bg-paper-2 border border-line rounded-xl p-4 space-y-2">
-      <label class="flex items-start gap-2 cursor-pointer text-sm"><input type="checkbox" class="w-4 h-4 mt-0.5"/><span>Establecer como dirección predeterminada de envío</span></label>
+      <label class="flex items-start gap-2 cursor-pointer text-sm"><input id="is-default" name="isDefault" type="checkbox" class="w-4 h-4 mt-0.5"/><span>Establecer como dirección predeterminada de envío</span></label>
       <label class="flex items-start gap-2 cursor-pointer text-sm" data-pro-only style="display:none"><input type="checkbox" class="w-4 h-4 mt-0.5"/><span>Asociar a un cliente de mi cartera <span class="text-graphite text-xs">(para presupuestos pro)</span></span></label>
     </div>
 
     <!-- Acciones -->
     <div class="flex justify-between flex-wrap gap-3 pt-4">
-      <a href="/pages/cuenta/direcciones.html" class="btn btn-ghost btn-sm">Cancelar</a>
-      <button class="btn btn-primary">Guardar dirección<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
+        <a href="/pages/cuenta/direcciones.html" class="btn btn-ghost btn-sm">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Guardar dirección<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
     </div>
   </form>
 </main>
@@ -125,6 +125,7 @@ document.getElementById('cp-input').addEventListener('input',e=>{
 </script>
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
-  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/backend-integration.js?v=4"></script>
+  <script src="/assets/js/add-address.js?v=4"></script>
   <script src="/assets/js/catalog-ui.js"></script>
 </body></html>

@@ -119,16 +119,101 @@ function registerAccountRoutes(router) {
     return ok(res, getDb().prepare('SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id));
   });
 
+  router.get('/api/account/addresses/:id', (req, res, { params }) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    const address = getDb().prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
+    if (!address) return fail(res, 404, 'ADDRESS_NOT_FOUND', 'Dirección no encontrada.');
+    return ok(res, address);
+  });
+
+  router.patch('/api/account/addresses/:id', async (req, res, { params }) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    try {
+      const current = getDb().prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
+      if (!current) return fail(res, 404, 'ADDRESS_NOT_FOUND', 'Dirección no encontrada.');
+      const payload = await readJson(req);
+      const normalized = {
+        label: String(payload.label || current.label || '').trim(),
+        recipient: String(payload.recipient || current.recipient || '').trim(),
+        line1: String(payload.line1 || current.line1 || '').trim(),
+        city: String(payload.city || current.city || '').trim(),
+        province: String(payload.province || current.province || '').trim(),
+        postalCode: String(payload.postalCode || payload.postal_code || current.postal_code || '').trim(),
+        phone: Object.prototype.hasOwnProperty.call(payload, 'phone') ? (payload.phone || null) : current.phone,
+        isDefault: Object.prototype.hasOwnProperty.call(payload, 'isDefault') ? !!payload.isDefault : !!current.is_default,
+        isBilling: Object.prototype.hasOwnProperty.call(payload, 'isBilling') ? !!payload.isBilling : !!current.is_billing,
+      };
+      requireFields(normalized, ['line1', 'city', 'province', 'postalCode']);
+      const label = normalized.label || normalized.line1 || 'Dirección';
+      const recipient = normalized.recipient || user.full_name;
+      if (!recipient) return fail(res, 422, 'MISSING_FIELD', 'El destinatario es obligatorio.');
+      const db = getDb();
+      if (normalized.isDefault) db.prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?').run(user.id);
+      db.prepare(`
+        UPDATE addresses SET
+          label = ?,
+          recipient = ?,
+          line1 = ?,
+          city = ?,
+          province = ?,
+          postal_code = ?,
+          phone = ?,
+          is_default = ?,
+          is_billing = ?
+        WHERE id = ? AND user_id = ?
+      `).run(label, recipient, normalized.line1, normalized.city, normalized.province, normalized.postalCode, normalized.phone, normalized.isDefault ? 1 : 0, normalized.isBilling ? 1 : 0, params.id, user.id);
+      return ok(res, db.prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id));
+    } catch (error) {
+      if (!handleInputError(res, error)) throw error;
+    }
+  });
+
+  router.patch('/api/account/addresses/:id/default', (req, res, { params }) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    const db = getDb();
+    const address = db.prepare('SELECT id FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
+    if (!address) return fail(res, 404, 'ADDRESS_NOT_FOUND', 'Dirección no encontrada.');
+    db.prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?').run(user.id);
+    db.prepare('UPDATE addresses SET is_default = 1 WHERE id = ? AND user_id = ?').run(params.id, user.id);
+    return ok(res, db.prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id));
+  });
+
+  router.delete('/api/account/addresses/:id', (req, res, { params }) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    const result = getDb().prepare('DELETE FROM addresses WHERE id = ? AND user_id = ?').run(params.id, user.id);
+    if (!result.changes) return fail(res, 404, 'ADDRESS_NOT_FOUND', 'Dirección no encontrada.');
+    return noContent(res);
+  });
+
   router.post('/api/account/addresses', async (req, res) => {
     const user = requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
-      requireFields(payload, ['label', 'recipient', 'line1', 'city', 'province', 'postalCode']);
+      const normalized = {
+        label: String(payload.label || '').trim(),
+        recipient: String(payload.recipient || '').trim(),
+        line1: String(payload.line1 || '').trim(),
+        city: String(payload.city || '').trim(),
+        province: String(payload.province || '').trim(),
+        postalCode: String(payload.postalCode || payload.postal_code || '').trim(),
+        phone: payload.phone || null,
+        isDefault: !!payload.isDefault,
+        isBilling: !!payload.isBilling,
+      };
+
+      requireFields(normalized, ['line1', 'city', 'province', 'postalCode']);
+      const label = String(normalized.label || normalized.line1 || 'Dirección').trim();
+      const recipient = String(normalized.recipient || user.full_name || '').trim();
+      if (!recipient) return fail(res, 422, 'MISSING_FIELD', 'El destinatario es obligatorio.');
       const result = getDb().prepare(`
-        INSERT INTO addresses (user_id, label, recipient, line1, city, province, postal_code, phone, is_default)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(user.id, payload.label, payload.recipient, payload.line1, payload.city, payload.province, payload.postalCode, payload.phone || null, payload.isDefault ? 1 : 0);
+        INSERT INTO addresses (user_id, label, recipient, line1, city, province, postal_code, phone, is_default, is_billing)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(user.id, label, recipient, normalized.line1, normalized.city, normalized.province, normalized.postalCode, normalized.phone, normalized.isDefault ? 1 : 0, normalized.isBilling ? 1 : 0);
       return created(res, { id: result.lastInsertRowid });
     } catch (error) {
       if (!handleInputError(res, error)) throw error;

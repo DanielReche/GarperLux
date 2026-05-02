@@ -61,7 +61,7 @@ function glxLogout() {
 const GLX_NAV_PARTICULAR = [
   { key: 'dashboard', href: '/pages/cuenta/area-personal.html', label: 'Dashboard', section: 'main',
     icon: '<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>' },
-  { key: 'mis-pedidos', href: '/pages/cuenta/mis-pedidos.html', label: 'Mis pedidos', section: 'main', count: '3',
+  { key: 'mis-pedidos', href: '/pages/cuenta/mis-pedidos.html', label: 'Mis pedidos', section: 'main', countId: 'glx-nav-order-count',
     icon: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>' },
   { key: 'mis-solicitudes', href: '/pages/cuenta/mis-solicitudes.html', label: 'Mis solicitudes', section: 'main', count: '1 activa', countClass: 'text-filament',
     icon: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>' },
@@ -86,7 +86,7 @@ const GLX_NAV_PRO = [
     icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
   { key: 'facturas', href: '/pages/cuenta/facturas.html', label: 'Facturas', section: 'main', count: '38',
     icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8M16 17H8M10 9H8"/>' },
-  { key: 'mis-pedidos', href: '/pages/cuenta/mis-pedidos.html', label: 'Mis pedidos', section: 'main', count: '42',
+  { key: 'mis-pedidos', href: '/pages/cuenta/mis-pedidos.html', label: 'Mis pedidos', section: 'main', countId: 'glx-nav-order-count',
     icon: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>' },
   { key: 'mis-presupuestos', href: '/pages/cuenta/mis-presupuestos.html', label: 'Mis presupuestos', section: 'main', count: '2 abiertos', countClass: 'text-filament',
     icon: '<circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/>' },
@@ -139,7 +139,14 @@ function glxRenderSidebar(activeKey) {
   const renderItem = (it) => {
     const isActive = it.key === activeKey;
     const cls = `nav-item${isActive ? ' is-active' : ''}`;
-    const countHtml = it.count ? `<span class="ml-auto text-xs font-mono ${it.countClass || 'text-graphite'}">${it.count}</span>` : '';
+    let countHtml = '';
+    if (it.countId) {
+      // Dynamic count — rendered as a white span when active so it contrasts with dark bg
+      const countCls = isActive ? 'text-white' : (it.countClass || 'text-graphite');
+      countHtml = `<span id="${it.countId}" class="ml-auto text-xs font-mono ${countCls}">…</span>`;
+    } else if (it.count) {
+      countHtml = `<span class="ml-auto text-xs font-mono ${it.countClass || 'text-graphite'}">${it.count}</span>`;
+    }
     return `<a href="${it.href}" class="${cls}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${it.icon}</svg>
       ${it.label}${countHtml}

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <base href="/.">
@@ -56,14 +56,9 @@
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
   <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/account-integration.js"></script>
   <script>
-    if (glxRequireAuth()) {
-      const user = glxGetUser();
-      document.body.dataset.activeView = user.role;
-      document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent = user.name);
-      const sb = document.getElementById('glx-sidebar');
-      sb.innerHTML = glxRenderSidebar(sb.dataset.active);
-    }
+    if (typeof initAccountPage === 'function') initAccountPage();
   </script>
 </body>
 </html>

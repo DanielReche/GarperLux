@@ -46,7 +46,7 @@
     <div class="container-x py-16 md:py-20 relative">
       <div class="max-w-2xl mx-auto text-center">
         <span class="inline-flex w-16 h-16 rounded-full bg-stock text-paper grid place-items-center mx-auto mb-6"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
-        <h1 class="font-serif font-medium leading-[0.96] mb-3" style="font-size: clamp(2.25rem, 5vw, 3.5rem);">Gracias, Antonio.<br/><em class="text-filament not-italic">Tu pedido está en marcha.</em></h1>
+        <h1 class="font-serif font-medium leading-[0.96] mb-3" style="font-size: clamp(2.25rem, 5vw, 3.5rem);">Gracias, <span id="glx-user-name">Cliente</span>.<br/><em class="text-filament not-italic">Tu pedido está en marcha.</em></h1>
         <p class="text-paper/70 max-w-xl mx-auto leading-relaxed">Hemos recibido tu pago y empezamos a prepararlo. Te enviamos un email con la factura y el seguimiento.</p>
 
         <div class="mt-8 inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-5 py-3">
@@ -161,7 +161,10 @@
   <script src="/assets/js/auth.js"></script>
   <script>
     const u=glxGetUser();
-    if(u)document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);
+    if(u){
+      document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);
+      document.getElementById('glx-user-name') && (document.getElementById('glx-user-name').textContent=u.name || 'Cliente');
+    }
   </script>
 </body>
 </html>

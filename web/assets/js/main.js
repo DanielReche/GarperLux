@@ -149,6 +149,7 @@
   // ---------- Static form feedback ----------
   document.querySelectorAll('form').forEach((form) => {
     if (form.hasAttribute('onsubmit') || form.closest('[data-pane]')) return;
+    if (['add-address-form', 'profile-form'].includes(form.id)) return;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       toast('Solicitud enviada en modo prototipo.');
