@@ -343,6 +343,7 @@ function migrate(db) {
   ensureColumn(db, 'payment_methods', 'holder', 'TEXT');
   ensureColumn(db, 'payment_methods', 'allow_recurring', 'INTEGER NOT NULL DEFAULT 0');
   ensureColumn(db, 'addresses', 'is_billing', 'INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'documents', 'payload_json', "TEXT NOT NULL DEFAULT '{}'");
 }
 
 function ensureColumn(db, table, column, definition) {
@@ -355,6 +356,7 @@ function seed(db) {
   if (users > 0) {
     ensureAdminUser(db);
     seedProductVariants(db);
+    seedDemoAccountData(db);
     return;
   }
 
@@ -420,12 +422,456 @@ function seed(db) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(2, 'Jose Luis García - El Chispas Instalaciones', 'B12345678', 'Autónomo', 'General', '4321 — Instalaciones eléctricas', 'BT-123456-AND', '2031-04', 'Andalucía', 'Polígono Los Olivares, nave 24', '23009', 'Jaén', 'Jaén', 'España', 'ES1200491234567890123456');
 
-  db.prepare(`
-    INSERT INTO tutorials (slug, title, difficulty, safety_level, minutes, reviewer, related_product_skus)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).run('cambiar-interruptor-sin-riesgos', 'Cambiar un interruptor sin riesgos', 'media', 'basic', 35, 'Alfonso Torres', JSON.stringify(['SIM-75201-39']));
+  seedTutorialsCatalog(db);
 
   seedProductVariants(db);
+  seedDemoAccountData(db);
+}
+
+function seedTutorialsCatalog(db) {
+  const insertTutorial = db.prepare(`
+    INSERT OR IGNORE INTO tutorials (slug, title, difficulty, safety_level, minutes, reviewer, related_product_skus)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  const tutorials = [
+    ['cambiar-interruptor-sin-riesgos', 'Cambiar un interruptor sin riesgos', 'media', 'basic', 35, 'Alfonso Torres', ['SIM-75201-39']],
+    ['cambiar-interruptor-desgastado', 'Cambiar un interruptor desgastado sin volverte loco', 'media', 'basic', 25, 'Alfonso Torres', ['27101-31']],
+    ['instalar-videoportero-wifi', 'Instalar un videoportero con Wi-Fi', 'avanzada', 'medium', 50, 'Pedro Ramírez', ['SHL-1M-G3']],
+    ['voltios-vatios-amperios-en-5-min', 'Voltios, vatios y amperios en 5 minutos', 'basica', 'basic', 8, 'Equipo GarperLux', []],
+    ['cortar-luz-circuito-correcto', 'Cómo cortar la luz del circuito correcto', 'basica', 'basic', 12, 'Alfonso Torres', ['A9F74225']],
+    ['polimetro-sin-miedo', 'Qué es un polímetro y cómo usarlo sin miedo', 'media', 'basic', 18, 'Equipo GarperLux', ['UNI-T-A03']],
+    ['temperatura-de-color', 'Entender la temperatura de color', 'basica', 'basic', 10, 'Equipo GarperLux', ['LED-A60-9W-2700K']],
+    ['cambiar-enchufe-doble', 'Cambiar un enchufe doble', 'media', 'basic', 22, 'Alfonso Torres', ['27431-31']],
+  ];
+  tutorials.forEach((row) => insertTutorial.run(row[0], row[1], row[2], row[3], row[4], row[5], JSON.stringify(row[6])));
+}
+
+function seedDemoAccountData(db) {
+  // Idempotent: solo insertar si el usuario aún no tiene datos demo.
+  // Asegura tutoriales catálogo (puede faltar en DBs preexistentes con un único tutorial).
+  seedTutorialsCatalog(db);
+
+  const antonio = db.prepare('SELECT id FROM users WHERE email = ?').get('antonio.garcia@correo.com');
+  const chispas = db.prepare('SELECT id FROM users WHERE email = ?').get('chispas@instaladoreseljaen.es');
+
+  const skuToId = (sku) => db.prepare('SELECT id FROM products WHERE sku = ?').get(sku)?.id;
+  const tutorialBySlug = (slug) => db.prepare('SELECT id FROM tutorials WHERE slug = ?').get(slug)?.id;
+
+  const insertFavorite = db.prepare('INSERT OR IGNORE INTO favorites (user_id, product_id) VALUES (?, ?)');
+  const insertSaved = db.prepare(`
+    INSERT OR IGNORE INTO saved_tutorials (user_id, tutorial_id, progress, notes)
+    VALUES (?, ?, ?, ?)
+  `);
+  const insertServiceRequest = db.prepare(`
+    INSERT INTO service_requests (code, user_id, status, service_type, urgency, address, description, payload_json, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  const insertServiceEvent = db.prepare(`
+    INSERT INTO service_request_events (service_request_id, status, title, description, happened_at)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+
+  // ===== ANTONIO (particular) =====
+  if (antonio) {
+    const hasFavs = db.prepare('SELECT COUNT(*) AS n FROM favorites WHERE user_id = ?').get(antonio.id).n;
+    if (!hasFavs) {
+      ['27101-31', '8718699-04', 'UNI-T-A03', 'A9F74225', 'SHL-1M-G3', 'WH-DA-3'].forEach((sku) => {
+        const id = skuToId(sku);
+        if (id) insertFavorite.run(antonio.id, id);
+      });
+    }
+
+    const hasSaved = db.prepare('SELECT COUNT(*) AS n FROM saved_tutorials WHERE user_id = ?').get(antonio.id).n;
+    if (!hasSaved) {
+      [
+        ['cambiar-interruptor-desgastado', 65, 'Pendiente paso 5: probar conmutación.'],
+        ['instalar-videoportero-wifi', 22, null],
+        ['voltios-vatios-amperios-en-5-min', 100, null],
+        ['cortar-luz-circuito-correcto', 100, null],
+        ['polimetro-sin-miedo', 100, null],
+        ['temperatura-de-color', 100, null],
+        ['cambiar-enchufe-doble', 100, null],
+      ].forEach(([slug, progress, notes]) => {
+        const id = tutorialBySlug(slug);
+        if (id) insertSaved.run(antonio.id, id, progress, notes);
+      });
+    }
+
+    const hasRequests = db.prepare('SELECT COUNT(*) AS n FROM service_requests WHERE user_id = ?').get(antonio.id).n;
+    if (!hasRequests) {
+      const seedRequest = (req) => {
+        const result = insertServiceRequest.run(req.code, antonio.id, req.status, req.service_type, req.urgency, req.address, req.description, JSON.stringify(req.payload), req.created_at);
+        req.events.forEach((ev) => insertServiceEvent.run(result.lastInsertRowid, ev.status, ev.title, ev.description, ev.happened_at));
+      };
+      seedRequest({
+        code: 'GLX-2026-04-2748',
+        status: 'reviewing',
+        service_type: 'Avería eléctrica',
+        urgency: 'urgent',
+        address: 'Calle Real 12, Mengíbar (Jaén)',
+        description: 'Salta el automático al enchufar el microondas.',
+        payload: { category: 'electricidad', contactPhone: '600111222' },
+        created_at: '2026-04-26 18:42:00',
+        events: [
+          { status: 'received', title: 'Solicitud recibida', description: 'Hemos registrado la solicitud.', happened_at: '2026-04-26 18:42:00' },
+          { status: 'reviewing', title: 'En revisión', description: 'Estamos revisando la información para asignar técnico.', happened_at: '2026-04-26 18:55:00' },
+        ],
+      });
+      seedRequest({
+        code: 'GLX-2026-03-2104',
+        status: 'resolved',
+        service_type: 'Cambio de magnetotérmico defectuoso',
+        urgency: 'normal',
+        address: 'Calle Real 12, Mengíbar (Jaén)',
+        description: 'Magnetotérmico de cocina con disparo intermitente.',
+        payload: { category: 'protecciones', technician: 'Alfonso T.', invoiceTotal: 125.4 },
+        created_at: '2026-03-15 10:10:00',
+        events: [
+          { status: 'received', title: 'Solicitud recibida', description: null, happened_at: '2026-03-15 10:10:00' },
+          { status: 'scheduled', title: 'Visita programada', description: 'Cita confirmada con Alfonso T.', happened_at: '2026-03-16 09:00:00' },
+          { status: 'resolved', title: 'Resuelto', description: 'Magnetotérmico sustituido y verificado.', happened_at: '2026-03-18 13:25:00' },
+        ],
+      });
+      seedRequest({
+        code: 'GLX-2026-02-1487',
+        status: 'resolved',
+        service_type: 'Instalación de videoportero Wi-Fi',
+        urgency: 'normal',
+        address: 'Calle Real 12, Mengíbar (Jaén)',
+        description: 'Instalación de videoportero Shelly con conexión Wi-Fi.',
+        payload: { category: 'domotica', technician: 'Pedro R.', invoiceTotal: 298.0 },
+        created_at: '2026-02-18 11:00:00',
+        events: [
+          { status: 'received', title: 'Solicitud recibida', description: null, happened_at: '2026-02-18 11:00:00' },
+          { status: 'resolved', title: 'Resuelto', description: 'Videoportero instalado y configurado.', happened_at: '2026-02-22 17:45:00' },
+        ],
+      });
+      seedRequest({
+        code: 'GLX-2026-01-0892',
+        status: 'cancelled',
+        service_type: 'Revisión preventiva anual',
+        urgency: 'normal',
+        address: 'Calle Real 12, Mengíbar (Jaén)',
+        description: 'Revisión preventiva del cuadro eléctrico.',
+        payload: { category: 'mantenimiento' },
+        created_at: '2026-01-10 09:00:00',
+        events: [
+          { status: 'received', title: 'Solicitud recibida', description: null, happened_at: '2026-01-10 09:00:00' },
+          { status: 'cancelled', title: 'Cancelada por el cliente', description: 'El cliente reagendará más adelante.', happened_at: '2026-01-15 12:30:00' },
+        ],
+      });
+    }
+  }
+
+  // ===== JOSE LUIS "EL CHISPAS" (pro) =====
+  if (chispas) {
+    const hasFavs = db.prepare('SELECT COUNT(*) AS n FROM favorites WHERE user_id = ?').get(chispas.id).n;
+    if (!hasFavs) {
+      // Para pro mostramos lista densa de material habitual.
+      ['27101-31', '27201-31', '27431-31', '75101-39', '27502-31', 'A9F74225', 'SCH-A9R60240', 'SHL-1M-G3', 'PRY-MNG3-1.5', 'LEG-401222', 'LX-PR50-65', 'LED-A60-9W-2700K', 'UNI-T-A03', 'WH-DA-3', '8718699-04'].forEach((sku) => {
+        const id = skuToId(sku);
+        if (id) insertFavorite.run(chispas.id, id);
+      });
+    }
+
+    const hasSaved = db.prepare('SELECT COUNT(*) AS n FROM saved_tutorials WHERE user_id = ?').get(chispas.id).n;
+    if (!hasSaved) {
+      [
+        ['cambiar-interruptor-sin-riesgos', 100, null],
+        ['polimetro-sin-miedo', 100, null],
+        ['cortar-luz-circuito-correcto', 100, null],
+      ].forEach(([slug, progress, notes]) => {
+        const id = tutorialBySlug(slug);
+        if (id) insertSaved.run(chispas.id, id, progress, notes);
+      });
+    }
+
+    seedProOrders(db, chispas.id);
+    seedProQuotes(db, chispas.id);
+    seedProRecurringOrders(db, chispas.id);
+  }
+}
+
+function moneyRound(n) { return Math.round(Number(n) * 100) / 100; }
+
+function seedProOrders(db, userId) {
+  const has = db.prepare('SELECT COUNT(*) AS n FROM orders WHERE user_id = ?').get(userId).n;
+  if (has) return;
+
+  const skuRow = (sku) => db.prepare('SELECT id, sku, name, price FROM products WHERE sku = ?').get(sku);
+  const proDiscount = Number(db.prepare('SELECT pro_discount FROM users WHERE id = ?').get(userId).pro_discount || 0);
+  const applyPro = (price) => moneyRound(price * (1 - proDiscount / 100));
+
+  const insertOrder = db.prepare(`
+    INSERT INTO orders (code, user_id, status, total, payload_json, created_at)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+  const insertOrderEvent = db.prepare(`
+    INSERT INTO order_events (order_id, status, title, description, happened_at)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+  const insertDocument = db.prepare(`
+    INSERT INTO documents (user_id, type, code, related_order_code, total, payload_json, issued_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  // Definición declarativa: cada plantilla genera un pedido con sus albaranes/facturas.
+  const ORDERS = [
+    {
+      code: 'GLX-2026-04-1184', status: 'completed', created_at: '2026-04-26 11:42:00',
+      worksite: 'Stock taller', customer: 'Stock taller', address: 'Polígono Los Olivares, nave 24 · 23009 Jaén',
+      shippingMethod: { id: 'pickup', label: 'Recogida en almacén', price: 0, eta: 'Inmediato' },
+      paymentMethod: { id: 'transfer', label: 'Transferencia · 30 días', type: 'bank_transfer' },
+      lines: [
+        ['27101-31', 8], ['A9F74225', 5], ['LED-A60-9W-2700K', 12], ['PRY-MNG3-1.5', 50],
+      ],
+      eventsExtra: [
+        { status: 'shipped', title: 'Preparado en almacén', description: 'Recogida disponible.', happened_at: '2026-04-26 12:00:00' },
+        { status: 'completed', title: 'Entregado y firmado', description: 'Albarán firmado por J.L. García.', happened_at: '2026-04-26 12:14:00' },
+      ],
+      documents: { invoice: { code: 'FAC-2026-04-184', issued_at: '2026-04-26 14:32:00', dueAt: '2026-05-26', paid: false }, delivery: { code: 'ALB-2026-04-1184', issued_at: '2026-04-26 12:14:00', signedBy: 'J.L. García' } },
+    },
+    {
+      code: 'GLX-2026-04-1178', status: 'completed', created_at: '2026-04-25 10:18:00',
+      worksite: 'Stock taller', customer: 'Stock taller', address: 'Polígono Los Olivares, nave 24 · 23009 Jaén',
+      shippingMethod: { id: 'standard', label: 'Envío estándar', price: 0, eta: '24-48 h' },
+      paymentMethod: { id: 'card', label: 'Visa •••• 4242', type: 'card' },
+      lines: [['A9F74225', 8], ['SCH-A9R60240', 6]],
+      eventsExtra: [{ status: 'completed', title: 'Entregado', description: null, happened_at: '2026-04-26 09:30:00' }],
+      documents: { invoice: { code: 'FAC-2026-04-178', issued_at: '2026-04-25 11:00:00', dueAt: null, paid: true }, delivery: { code: 'ALB-2026-04-1178', issued_at: '2026-04-26 09:30:00', signedBy: 'J.L. García' } },
+    },
+    {
+      code: 'GLX-2026-04-1162', status: 'completed', created_at: '2026-04-22 09:05:00',
+      worksite: 'C/ Bernabé Soriano 12', customer: 'Familia López', address: 'Calle Bernabé Soriano 12 · 23001 Jaén',
+      shippingMethod: { id: 'standard', label: 'Envío a obra', price: 0, eta: 'Mañana' },
+      paymentMethod: { id: 'transfer', label: 'Transferencia · 30 días', type: 'bank_transfer' },
+      lines: [
+        ['LEG-401222', 1], ['A9F74225', 4], ['SCH-A9R60240', 2], ['27101-31', 12],
+        ['27201-31', 6], ['27431-31', 8], ['75101-39', 14], ['PRY-MNG3-1.5', 80],
+      ],
+      eventsExtra: [
+        { status: 'shipped', title: 'Enviado a obra', description: 'Transportista local.', happened_at: '2026-04-22 17:00:00' },
+        { status: 'completed', title: 'Entregado en obra', description: 'Recibido por María López.', happened_at: '2026-04-23 10:20:00' },
+      ],
+      documents: { invoice: { code: 'FAC-2026-04-162', issued_at: '2026-04-22 18:30:00', dueAt: '2026-05-22', paid: false }, delivery: { code: 'ALB-2026-04-1162', issued_at: '2026-04-23 10:20:00', signedBy: 'M. López Ruiz' } },
+    },
+    {
+      code: 'GLX-2026-04-1141', status: 'completed', created_at: '2026-04-19 12:35:00',
+      worksite: 'Stock taller', customer: 'Stock taller', address: 'Polígono Los Olivares, nave 24 · 23009 Jaén',
+      shippingMethod: { id: 'pickup', label: 'Recogida en almacén', price: 0, eta: 'Inmediato' },
+      paymentMethod: { id: 'card', label: 'Visa •••• 4242', type: 'card' },
+      lines: [['UNI-T-A03', 2], ['PRY-MNG3-1.5', 50], ['LED-A60-9W-2700K', 24], ['8718699-04', 16]],
+      eventsExtra: [{ status: 'completed', title: 'Recogido', description: null, happened_at: '2026-04-19 13:50:00' }],
+      documents: { invoice: { code: 'FAC-2026-04-141', issued_at: '2026-04-19 13:00:00', dueAt: null, paid: true }, delivery: { code: 'ALB-2026-04-1141', issued_at: '2026-04-19 13:50:00', signedBy: 'J.L. García' } },
+    },
+    {
+      code: 'GLX-2026-04-1098', status: 'completed', created_at: '2026-04-15 16:40:00',
+      worksite: 'Familia López · Domótica', customer: 'Familia López', address: 'Calle Bernabé Soriano 12 · 23001 Jaén',
+      shippingMethod: { id: 'standard', label: 'Envío a obra', price: 0, eta: '24 h' },
+      paymentMethod: { id: 'transfer', label: 'Transferencia · 30 días', type: 'bank_transfer' },
+      lines: [['SHL-1M-G3', 5], ['WH-DA-3', 2], ['LX-PR50-65', 1]],
+      eventsExtra: [{ status: 'completed', title: 'Instalado', description: 'Escenas Shelly programadas.', happened_at: '2026-04-16 19:00:00' }],
+      documents: { invoice: { code: 'FAC-2026-04-098', issued_at: '2026-04-15 17:30:00', dueAt: '2026-05-15', paid: false }, delivery: { code: 'ALB-2026-04-1098', issued_at: '2026-04-16 19:00:00', signedBy: 'M. López Ruiz' } },
+    },
+    {
+      code: 'GLX-2026-03-0982', status: 'completed', created_at: '2026-03-28 09:10:00',
+      worksite: 'Stock taller', customer: 'Stock taller', address: 'Polígono Los Olivares, nave 24 · 23009 Jaén',
+      shippingMethod: { id: 'standard', label: 'Envío estándar', price: 0, eta: '48 h' },
+      paymentMethod: { id: 'card', label: 'Visa •••• 4242', type: 'card' },
+      lines: [['27101-31', 25], ['27201-31', 10], ['PRY-MNG3-1.5', 100], ['8718699-04', 20]],
+      eventsExtra: [{ status: 'completed', title: 'Entregado', description: null, happened_at: '2026-03-30 11:00:00' }],
+      documents: { invoice: { code: 'FAC-2026-03-082', issued_at: '2026-03-28 10:00:00', dueAt: null, paid: true }, delivery: { code: 'ALB-2026-03-0982', issued_at: '2026-03-30 11:00:00', signedBy: 'J.L. García' } },
+    },
+    {
+      code: 'GLX-2026-03-0871', status: 'completed', created_at: '2026-03-12 14:20:00',
+      worksite: 'Sr. Martínez · Avda. Andalucía', customer: 'Sr. Martínez', address: 'Avda. Andalucía 18 · 23005 Jaén',
+      shippingMethod: { id: 'standard', label: 'Envío a obra', price: 0, eta: '48 h' },
+      paymentMethod: { id: 'transfer', label: 'Transferencia · 30 días', type: 'bank_transfer' },
+      lines: [['SHL-1M-G3', 4], ['27502-31', 3], ['PRY-MNG3-1.5', 30]],
+      eventsExtra: [{ status: 'completed', title: 'Entregado', description: null, happened_at: '2026-03-14 12:00:00' }],
+      documents: { invoice: { code: 'FAC-2026-03-071', issued_at: '2026-03-12 15:00:00', dueAt: null, paid: true }, delivery: { code: 'ALB-2026-03-0871', issued_at: '2026-03-14 12:00:00', signedBy: 'A. Martínez' } },
+    },
+  ];
+
+  for (const tmpl of ORDERS) {
+    const items = [];
+    let subtotal = 0;
+    for (const [sku, qty] of tmpl.lines) {
+      const p = skuRow(sku);
+      if (!p) continue;
+      const unitPro = applyPro(p.price);
+      const lineTotal = moneyRound(unitPro * qty);
+      subtotal += lineTotal;
+      items.push({ id: p.id, sku: p.sku, name: p.name, price: p.price, proPrice: unitPro, quantity: qty, lineTotal });
+    }
+    subtotal = moneyRound(subtotal);
+    const tax = moneyRound(subtotal * 0.21);
+    const total = moneyRound(subtotal + tax);
+
+    const orderPayload = {
+      cart: { items, subtotal },
+      checkout: {
+        shippingAddress: tmpl.address,
+        shippingMethod: tmpl.shippingMethod.id,
+        worksite: tmpl.worksite,
+        customer: tmpl.customer,
+        addressLabel: tmpl.address,
+        summary: tmpl.worksite,
+      },
+      totals: { subtotal, tax, shipping: 0, discount: 0, total, shippingMethod: tmpl.shippingMethod, coupon: null },
+      paymentMethod: tmpl.paymentMethod,
+    };
+
+    const result = insertOrder.run(tmpl.code, userId, tmpl.status, total, JSON.stringify(orderPayload), tmpl.created_at);
+    const orderId = result.lastInsertRowid;
+    insertOrderEvent.run(orderId, 'confirmed', 'Pedido recibido', 'Hemos registrado el pedido correctamente.', tmpl.created_at);
+    insertOrderEvent.run(orderId, 'paid', 'Pago confirmado', `Pago confirmado con ${tmpl.paymentMethod.label}.`, tmpl.created_at);
+    insertOrderEvent.run(orderId, 'preparing', 'En preparación', 'Estamos preparando el pedido en almacén.', tmpl.created_at);
+    (tmpl.eventsExtra || []).forEach((ev) => insertOrderEvent.run(orderId, ev.status, ev.title, ev.description, ev.happened_at));
+
+    // Documentos asociados (albarán + factura) con payload_json para el detalle.
+    const baseDocPayload = {
+      orderCode: tmpl.code,
+      worksite: tmpl.worksite,
+      customer: tmpl.customer,
+      address: tmpl.address,
+      items,
+      subtotal,
+      tax,
+      total,
+      paymentMethod: tmpl.paymentMethod,
+    };
+
+    if (tmpl.documents.delivery) {
+      const d = tmpl.documents.delivery;
+      insertDocument.run(userId, 'delivery_note', d.code, tmpl.code, subtotal, JSON.stringify({ ...baseDocPayload, signedBy: d.signedBy, signedAt: d.issued_at, status: 'delivered' }), d.issued_at);
+    }
+    if (tmpl.documents.invoice) {
+      const f = tmpl.documents.invoice;
+      insertDocument.run(userId, 'invoice', f.code, tmpl.code, total, JSON.stringify({ ...baseDocPayload, dueAt: f.dueAt, paid: f.paid, status: f.paid ? 'paid' : 'pending' }), f.issued_at);
+    }
+  }
+}
+
+function seedProQuotes(db, userId) {
+  const has = db.prepare('SELECT COUNT(*) AS n FROM quotes WHERE user_id = ?').get(userId).n;
+  if (has) return;
+  const proDiscount = Number(db.prepare('SELECT pro_discount FROM users WHERE id = ?').get(userId).pro_discount || 0);
+  const applyPro = (p) => moneyRound(p * (1 - proDiscount / 100));
+  const skuRow = (sku) => db.prepare('SELECT id, sku, name, price FROM products WHERE sku = ?').get(sku);
+
+  const insertQuote = db.prepare(`
+    INSERT INTO quotes (code, user_id, status, title, total, payload_json, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  const QUOTES = [
+    {
+      code: 'PRES-2026-0028', status: 'sent',
+      title: 'Renovación cuadro · Familia López',
+      created_at: '2026-04-24 18:20:00', validityDays: 10,
+      customer: { name: 'Familia López', contact: 'María López Ruiz', email: 'maria.lopez@gmail.com', phone: '660 555 777', address: 'Calle Bernabé Soriano 12, 3º A · 23001 Jaén' },
+      description: 'Renovación completa del cuadro general de protección de la vivienda según REBT actualizado.',
+      lines: [
+        { kind: 'product', sku: 'LEG-401222', quantity: 1 },
+        { kind: 'product', sku: 'A9F74225', quantity: 8 },
+        { kind: 'product', sku: 'SCH-A9R60240', quantity: 2 },
+        { kind: 'free', concept: 'Cableado interior cuadro + peinetas + bornas', quantity: 1, unitPrice: 38.90, note: 'Material auxiliar' },
+        { kind: 'free', concept: 'Mano de obra · jornada 8 h instalador BT', quantity: 8, unitPrice: 35.00, note: 'Incluye desmontaje + montaje + pruebas' },
+        { kind: 'free', concept: 'Boletín eléctrico oficial sellado', quantity: 1, unitPrice: 85.00, note: 'Modelo MTD para tramitar con compañía' },
+      ],
+      conditions: ['Forma de pago: 30 % al aceptar · 70 % al finalizar', 'Tiempo de ejecución: 1 día laboral', 'Garantía: 3 años en mano de obra · garantía fabricante en material', 'No incluye: obra civil derivada de tirar tabiques o canalización nueva'],
+    },
+    {
+      code: 'PRES-2026-0027', status: 'sent',
+      title: 'Domótica salón · Sr. Martínez',
+      created_at: '2026-04-22 11:10:00', validityDays: 10,
+      customer: { name: 'Sr. Martínez', contact: 'Antonio Martínez', email: 'a.martinez@correo.com', phone: '655 444 333', address: 'Avda. Andalucía 18 · 23005 Jaén' },
+      description: 'Instalación domótica salón con escenas Shelly y persianas motorizadas.',
+      lines: [
+        { kind: 'product', sku: 'SHL-1M-G3', quantity: 5 },
+        { kind: 'product', sku: '27502-31', quantity: 3 },
+        { kind: 'product', sku: 'PRY-MNG3-1.5', quantity: 30 },
+        { kind: 'free', concept: 'Programación escenas Home Assistant', quantity: 1, unitPrice: 75.00, note: 'Configuración y prueba' },
+        { kind: 'free', concept: 'Mano de obra · 4 h instalador BT', quantity: 4, unitPrice: 35.00, note: 'Instalación + cableado' },
+      ],
+      conditions: ['Pago al finalizar', 'Tiempo de ejecución: 4 horas', 'Garantía: 2 años configuración + fabricante en material'],
+    },
+    {
+      code: 'PRES-2026-0024', status: 'accepted',
+      title: 'Iluminación local comercial · Café Plaza',
+      created_at: '2026-03-18 09:30:00', validityDays: 15,
+      customer: { name: 'Café Plaza', contact: 'Lucía Fernández', email: 'lucia@cafeplaza.es', phone: '953 111 222', address: 'Plaza de la Constitución 4 · 23001 Jaén' },
+      description: 'Sustitución completa de iluminación a LED en local comercial.',
+      lines: [
+        { kind: 'product', sku: 'LX-PR50-65', quantity: 4 },
+        { kind: 'product', sku: 'LED-A60-9W-2700K', quantity: 30 },
+        { kind: 'product', sku: '8718699-04', quantity: 12 },
+        { kind: 'free', concept: 'Mano de obra · 6 h instalador BT', quantity: 6, unitPrice: 35.00, note: '' },
+      ],
+      conditions: ['Forma de pago: 50 % al aceptar · 50 % al finalizar', 'Tiempo de ejecución: 1 jornada'],
+    },
+    {
+      code: 'PRES-2026-0019', status: 'rejected',
+      title: 'Climatización oficina · GestoríaJaén',
+      created_at: '2026-02-12 16:00:00', validityDays: 15,
+      customer: { name: 'GestoríaJaén', contact: 'Pedro Ruiz', email: 'pedro@gestoriajaen.com', phone: '953 200 100', address: 'C/ Roldán y Marín 12 · 23001 Jaén' },
+      description: 'Instalación eléctrica para nuevo equipo de climatización industrial.',
+      lines: [
+        { kind: 'free', concept: 'Línea eléctrica dedicada 6mm²', quantity: 25, unitPrice: 4.20, note: 'Por metro' },
+        { kind: 'product', sku: 'A9F74225', quantity: 1 },
+        { kind: 'free', concept: 'Mano de obra · 5 h', quantity: 5, unitPrice: 35.00, note: '' },
+      ],
+      conditions: ['Pago contra factura 30 días', 'Validez 15 días'],
+    },
+    {
+      code: 'PRES-2026-0029', status: 'draft',
+      title: 'Borrador · Reforma cocina',
+      created_at: '2026-04-30 12:00:00', validityDays: 10,
+      customer: { name: '', contact: '', email: '', phone: '', address: '' },
+      description: 'Borrador en preparación.',
+      lines: [],
+      conditions: [],
+    },
+  ];
+
+  for (const q of QUOTES) {
+    const enriched = q.lines.map((line) => {
+      if (line.kind === 'product') {
+        const p = skuRow(line.sku);
+        if (!p) return null;
+        const unit = applyPro(p.price);
+        return { kind: 'product', sku: p.sku, name: p.name, quantity: line.quantity, unitPrice: unit, originalPrice: p.price, lineTotal: moneyRound(unit * line.quantity) };
+      }
+      return { kind: 'free', concept: line.concept, quantity: line.quantity, unitPrice: line.unitPrice, note: line.note || '', lineTotal: moneyRound(line.unitPrice * line.quantity) };
+    }).filter(Boolean);
+    const subtotal = moneyRound(enriched.reduce((s, l) => s + l.lineTotal, 0));
+    const tax = moneyRound(subtotal * 0.21);
+    const total = moneyRound(subtotal + tax);
+    const payload = { ...q, items: enriched, subtotal, tax, total };
+    insertQuote.run(q.code, userId, q.status, q.title, total, JSON.stringify(payload), q.created_at);
+  }
+}
+
+function seedProRecurringOrders(db, userId) {
+  const has = db.prepare('SELECT COUNT(*) AS n FROM recurring_orders WHERE user_id = ?').get(userId).n;
+  if (has) return;
+  const insertRec = db.prepare(`
+    INSERT INTO recurring_orders (code, user_id, name, frequency, next_run_at, status, payload_json, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  const items = [
+    { sku: '27101-31', name: 'Interruptor Simón 27 10A blanco', quantity: 25, unitPrice: 4.23 },
+    { sku: 'PRY-MNG3-1.5', name: 'Cable manguera 3x1,5 mm²', quantity: 100, unitPrice: 0.90 },
+    { sku: 'LED-A60-9W-2700K', name: 'Bombilla LED A60 9W cálida', quantity: 24, unitPrice: 3.51 },
+  ];
+  const subtotal = moneyRound(items.reduce((s, it) => s + it.quantity * it.unitPrice, 0));
+  insertRec.run(
+    'REC-2026-0001', userId, 'Reposición taller mensual', 'monthly', '2026-05-05',
+    'active',
+    JSON.stringify({ items, subtotal, dayOfMonth: 5, addressLabel: 'Polígono Los Olivares, nave 24 · 23009 Jaén', paymentMethodLabel: 'Aplazado 30 días (cuenta pro)' }),
+    '2026-04-05 09:00:00'
+  );
 }
 
 

@@ -19,56 +19,30 @@
 
 <main>
   <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
-    <div><div class="eyebrow text-copper mb-2">Servicios técnicos</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Mis solicitudes.</h1></div>
+    <div>
+      <div class="eyebrow text-copper mb-2">Servicios técnicos</div>
+      <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Mis solicitudes.</h1>
+      <p class="text-graphite mt-2 text-sm" data-sr-summary>Cargando…</p>
+    </div>
     <a href="/pages/servicios/solicitar-tecnico.html" class="btn btn-primary">+ Nueva solicitud</a>
   </div>
 
-  <!-- Solicitud activa destacada -->
-  <div class="bg-ink text-paper rounded-2xl p-6 mb-5 relative overflow-hidden">
-    <div class="absolute top-0 right-0 w-[300px] h-[300px] filament-glow opacity-30"></div>
-    <div class="relative grid md:grid-cols-[1fr_auto] gap-5 items-start">
-      <div>
-        <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="pill bg-warn text-paper">Avería</span><span class="pill pill-dark">Electricidad</span><span class="pill pill-info">En revisión</span></div>
-        <div class="font-mono text-xs text-paper/60 mb-1">GLX-2026-04-2748</div>
-        <h2 class="font-serif text-2xl font-medium leading-tight mb-2">Salta el automático al enchufar el microondas</h2>
-        <p class="text-paper/70 text-sm leading-relaxed">Recibida el 26/04/2026 a las 18:42 · Te llamaremos antes de las 22:42 hoy.</p>
-      </div>
-      <a href="/pages/servicios/solicitud-confirmacion.html" class="btn btn-primary">Ver estado<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+  <!-- Solicitudes activas -->
+  <div data-sr-active class="space-y-4 mb-8"></div>
+
+  <!-- Histórico -->
+  <div data-sr-history-wrap hidden>
+    <h2 class="font-serif text-xl font-medium mb-4 mt-2">Histórico</h2>
+    <div class="bg-white border border-line rounded-2xl overflow-hidden">
+      <div class="divide-y divide-line" data-sr-history></div>
     </div>
   </div>
 
-  <!-- Histórico -->
-  <h2 class="font-serif text-xl font-medium mb-4 mt-8">Histórico</h2>
-  <div class="bg-white border border-line rounded-2xl overflow-hidden">
-    <div class="divide-y divide-line">
-      <div class="p-5 grid sm:grid-cols-[auto_1fr_auto] gap-4 items-center">
-        <div class="w-10 h-10 rounded-full bg-stock/15 text-stock grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <div>
-          <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-mono text-xs text-graphite">GLX-2026-03-2104</span><span class="pill pill-stock text-[10px]">Resuelto</span></div>
-          <div class="font-medium">Cambio de magnetotérmico defectuoso</div>
-          <div class="text-xs text-graphite mt-0.5">Resuelto el 18/03/2026 · Técnico: Alfonso T.</div>
-        </div>
-        <div class="text-right"><div class="font-mono font-medium">125,40 €</div><a href="/pages/cuenta/factura.html" class="text-xs text-copper hover:underline">Descargar factura</a></div>
-      </div>
-      <div class="p-5 grid sm:grid-cols-[auto_1fr_auto] gap-4 items-center">
-        <div class="w-10 h-10 rounded-full bg-stock/15 text-stock grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <div>
-          <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-mono text-xs text-graphite">GLX-2026-02-1487</span><span class="pill pill-stock text-[10px]">Resuelto</span></div>
-          <div class="font-medium">Instalación de videoportero Wi-Fi</div>
-          <div class="text-xs text-graphite mt-0.5">Resuelto el 22/02/2026 · Técnico: Pedro R.</div>
-        </div>
-        <div class="text-right"><div class="font-mono font-medium">298,00 €</div><a href="/pages/cuenta/factura.html" class="text-xs text-copper hover:underline">Descargar factura</a></div>
-      </div>
-      <div class="p-5 grid sm:grid-cols-[auto_1fr_auto] gap-4 items-center">
-        <div class="w-10 h-10 rounded-full bg-graphite/10 text-graphite grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></div>
-        <div>
-          <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-mono text-xs text-graphite">GLX-2026-01-0892</span><span class="pill pill-warn text-[10px]">Cancelado</span></div>
-          <div class="font-medium">Revisión preventiva anual</div>
-          <div class="text-xs text-graphite mt-0.5">Cancelado por el cliente el 15/01/2026</div>
-        </div>
-        <div class="text-right text-graphite text-sm">Sin coste</div>
-      </div>
-    </div>
+  <!-- Estado vacío -->
+  <div data-sr-empty hidden class="text-center py-16 px-6 border border-dashed border-line rounded-2xl text-graphite">
+    <p class="font-serif text-2xl mb-2 text-ink">Aún no tienes solicitudes.</p>
+    <p class="text-sm mb-6">Cuando pidas un técnico, aquí podrás seguir el estado en tiempo real.</p>
+    <a href="/pages/servicios/solicitar-tecnico.html" class="btn btn-primary">Solicitar un técnico</a>
   </div>
 
   <!-- CTA Hazlo Tú Mismo -->
@@ -90,4 +64,139 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+
+    const STATUS_META = {
+      received:  { label: 'Recibida',      pillCls: 'pill pill-info',                tone: 'active' },
+      reviewing: { label: 'En revisión',   pillCls: 'pill pill-info',                tone: 'active' },
+      scheduled: { label: 'Programada',    pillCls: 'pill bg-filament/15 text-copper', tone: 'active' },
+      in_progress:{ label: 'En curso',     pillCls: 'pill pill-info',                tone: 'active' },
+      resolved:  { label: 'Resuelto',      pillCls: 'pill pill-stock',               tone: 'closed' },
+      cancelled: { label: 'Cancelado',     pillCls: 'pill pill-warn',                tone: 'closed' },
+    };
+    const isClosed = (s) => STATUS_META[s]?.tone === 'closed';
+    const fmtDate = (iso) => {
+      if (!iso) return '';
+      const d = new Date(iso.replace(' ', 'T'));
+      if (isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    };
+    const fmtDateTime = (iso) => {
+      if (!iso) return '';
+      const d = new Date(iso.replace(' ', 'T'));
+      if (isNaN(d.getTime())) return iso;
+      return d.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    };
+    const money = (v) => `${Number(v||0).toFixed(2).replace('.', ',')} €`;
+
+    const summary = document.querySelector('[data-sr-summary]');
+    const activeWrap = document.querySelector('[data-sr-active]');
+    const historyWrap = document.querySelector('[data-sr-history-wrap]');
+    const historyList = document.querySelector('[data-sr-history]');
+    const emptyState = document.querySelector('[data-sr-empty]');
+
+    const renderActiveCard = (sr) => {
+      const meta = STATUS_META[sr.status] || { label: sr.status, pillCls: 'pill pill-info' };
+      const pill = `<span class="${meta.pillCls}">${meta.label}</span>`;
+      const cancelBtn = ['received','reviewing','scheduled'].includes(sr.status)
+        ? `<button class="btn btn-sm btn-ghost text-paper border-paper/30 hover:bg-paper/10" data-sr-cancel="${sr.code}">Cancelar</button>`
+        : '';
+      return `
+        <div class="bg-ink text-paper rounded-2xl p-6 relative overflow-hidden" data-sr-card="${sr.code}">
+          <div class="absolute top-0 right-0 w-[300px] h-[300px] filament-glow opacity-30"></div>
+          <div class="relative grid md:grid-cols-[1fr_auto] gap-5 items-start">
+            <div>
+              <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <span class="pill bg-warn text-paper">${sr.urgency === 'urgent' ? 'Urgente' : 'Solicitud'}</span>
+                <span class="pill pill-dark">${sr.service_type || 'Servicio técnico'}</span>
+                ${pill}
+              </div>
+              <div class="font-mono text-xs text-paper/60 mb-1">${sr.code}</div>
+              <h2 class="font-serif text-2xl font-medium leading-tight mb-2">${sr.service_type || 'Solicitud técnica'}</h2>
+              <p class="text-paper/70 text-sm leading-relaxed">Recibida el ${fmtDateTime(sr.created_at)} · ${sr.address || 'Dirección por confirmar'}</p>
+            </div>
+            <div class="flex flex-col gap-2 items-end">
+              <a href="/pages/servicios/seguir-solicitud.html?code=${encodeURIComponent(sr.code)}" class="btn btn-primary">Ver estado<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+              ${cancelBtn}
+            </div>
+          </div>
+        </div>`;
+    };
+
+    const renderHistoryRow = (sr) => {
+      const meta = STATUS_META[sr.status] || { label: sr.status, pillCls: 'pill pill-info' };
+      const isResolved = sr.status === 'resolved';
+      const isCancelled = sr.status === 'cancelled';
+      const iconWrap = isResolved
+        ? `<div class="w-10 h-10 rounded-full bg-stock/15 text-stock grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div>`
+        : `<div class="w-10 h-10 rounded-full bg-graphite/10 text-graphite grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></div>`;
+      const technician = sr.payload?.technician ? ` · Técnico: ${sr.payload.technician}` : '';
+      const totalCol = sr.payload?.invoiceTotal
+        ? `<div class="text-right"><div class="font-mono font-medium">${money(sr.payload.invoiceTotal)}</div><a href="/pages/cuenta/factura.html" class="text-xs text-copper hover:underline">Descargar factura</a></div>`
+        : `<div class="text-right text-graphite text-sm">${isCancelled ? 'Sin coste' : ''}</div>`;
+      return `
+        <div class="p-5 grid sm:grid-cols-[auto_1fr_auto] gap-4 items-center">
+          ${iconWrap}
+          <div>
+            <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-mono text-xs text-graphite">${sr.code}</span><span class="${meta.pillCls} text-[10px]">${meta.label}</span></div>
+            <div class="font-medium">${sr.service_type || 'Solicitud técnica'}</div>
+            <div class="text-xs text-graphite mt-0.5">${isResolved ? 'Resuelto' : 'Cancelado'} el ${fmtDate(sr.created_at)}${technician}</div>
+          </div>
+          ${totalCol}
+        </div>`;
+    };
+
+    const cancelRequest = async (code) => {
+      if (!confirm('¿Seguro que quieres cancelar esta solicitud?')) return;
+      try {
+        await api.cancelServiceRequest(code);
+        glxToast('Solicitud cancelada.');
+        await reload();
+      } catch (e) { glxToast(e.message); }
+    };
+
+    const reload = async () => {
+      try {
+        const list = await api.serviceRequests();
+        const active = list.filter((sr) => !isClosed(sr.status));
+        const history = list.filter((sr) => isClosed(sr.status));
+
+        const total = list.length;
+        const activeCount = active.length;
+        if (!total) {
+          summary.textContent = '—';
+          activeWrap.innerHTML = '';
+          historyWrap.hidden = true;
+          emptyState.hidden = false;
+          return;
+        }
+        emptyState.hidden = true;
+        summary.textContent = `${total} solicitud${total === 1 ? '' : 'es'} en total · ${activeCount} activa${activeCount === 1 ? '' : 's'}`;
+
+        activeWrap.innerHTML = active.map(renderActiveCard).join('');
+        if (history.length) {
+          historyWrap.hidden = false;
+          historyList.innerHTML = history.map(renderHistoryRow).join('');
+        } else {
+          historyWrap.hidden = true;
+        }
+      } catch (e) {
+        glxToast(e.message || 'No se pudieron cargar tus solicitudes.');
+      }
+    };
+
+    document.querySelector('main').addEventListener('click', (ev) => {
+      const cancel = ev.target.closest('[data-sr-cancel]');
+      if (cancel) { ev.preventDefault(); cancelRequest(cancel.dataset.srCancel); }
+    });
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(reload);
+      else reload();
+    });
+    if (api.getToken()) reload();
+  })();
+  </script>
 </body></html>

@@ -42,6 +42,7 @@
         role: user.role,
         name: user.fullName.split(' ')[0],
         fullName: user.fullName,
+        nickname: user.role === 'pro' ? 'El Chispas' : null,
         email: user.email,
         phone: user.phone || null,
         fiscalId: user.fiscalId || null,
@@ -52,9 +53,13 @@
         smsUrgency: !!user.smsUrgency,
         initial: user.fullName.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase(),
         discount: user.proDiscount,
+        cif: user.fiscalId || null,
+        btCard: user.role === 'pro' ? 'BT-123456-AND' : null,
+        btExpiry: user.role === 'pro' ? '2031-04' : null,
         at: Date.now(),
       }));
       document.querySelectorAll('[data-current-name]').forEach((el) => { el.textContent = user.fullName; });
+      await window.glxRefreshSidebarCounts?.();
       return user;
     } catch {
       api.setToken(null);
@@ -80,15 +85,6 @@
 
   const addCartBadge = (count) => {
     document.querySelectorAll('[data-cart-count]').forEach((el) => { el.textContent = count; });
-    document.querySelectorAll('a[href="/pages/tienda/carrito.html"]').forEach((link) => {
-      if (link.querySelector('[data-cart-count]')) return;
-      link.classList.add('relative');
-      const badge = document.createElement('span');
-      badge.dataset.cartCount = '';
-      badge.className = 'absolute -top-0.5 -right-0.5 bg-filament text-ink text-[10px] font-semibold rounded-full w-[18px] h-[18px] flex items-center justify-center';
-      badge.textContent = count;
-      link.appendChild(badge);
-    });
   };
 
   async function refreshCartCount() {
@@ -1075,14 +1071,16 @@
   }
 
   function bindQuoteForms() {
-    if (!['/pages/servicios/solicitar-presupuesto.html', '/pages/cuenta/crear-presupuesto.html'].includes(page)) return;
+    // crear-presupuesto.html ahora gestiona su propio submit con estructura completa.
+    if (page === '/pages/cuenta/crear-presupuesto.html') return;
+    if (page !== '/pages/servicios/solicitar-presupuesto.html') return;
     const submitQuote = async (event) => {
       event.preventDefault();
       event.stopImmediatePropagation();
       if (!requireSession()) return;
       try {
         const title = document.querySelector('input[placeholder*="Título"], input[placeholder*="Razón"], input[placeholder*="Nombre"]')?.value || 'Presupuesto GarperLux';
-        const quote = await api.quote({ title, source: page, items: [] });
+        const quote = await api.createQuote({ title, source: page, items: [] });
         toast(`Presupuesto ${quote.code} guardado.`);
         location.href = `/pages/cuenta/presupuesto.html?code=${encodeURIComponent(quote.code)}`;
       } catch (error) {
@@ -1307,43 +1305,22 @@
     }
   }
 
-  function backendPanel(title, rows, emptyText) {
-    const main = document.querySelector('main');
-    if (!main || document.querySelector('[data-backend-panel]')) return;
-    const panel = document.createElement('section');
-    panel.dataset.backendPanel = '';
-    panel.className = 'container-x mt-6';
-    panel.innerHTML = `
-      <div class="bg-white border border-line rounded-2xl p-5 shadow-sm">
-        <div class="flex items-center justify-between gap-4 mb-4">
-          <h2 class="font-serif text-xl font-medium">${title}</h2>
-          <span class="font-mono text-xs text-stock">Datos backend</span>
-        </div>
-        <div class="grid gap-2">${rows.length ? rows.join('') : `<p class="text-sm text-graphite">${emptyText}</p>`}</div>
-      </div>`;
-    main.prepend(panel);
-  }
-
   async function bindAccountPages() {
     if (!api.getToken()) return;
     try {
       if (page === '/pages/cuenta/mis-pedidos.html') {
-        const orders = await api.orders();
-        backendPanel('Pedidos reales', orders.map((order) => `<a href="/pages/cuenta/mis-pedido.html?order=${order.code}" class="flex justify-between gap-4 rounded-xl bg-paper-2 p-3"><span>${order.code} · ${order.status}</span><strong>${money(order.total)}</strong></a>`), 'Todavía no hay pedidos en la base de datos.');
         await renderOrdersPage();
       }
       if (page === '/pages/cuenta/mis-solicitudes.html') {
-        const requests = await api.serviceRequests();
-        backendPanel('Solicitudes técnicas reales', requests.map((request) => `<a href="/pages/servicios/seguir-solicitud.html?code=${request.code}" class="flex justify-between gap-4 rounded-xl bg-paper-2 p-3"><span>${request.code} · ${request.service_type}</span><strong>${request.status}</strong></a>`), 'Todavía no hay solicitudes técnicas reales.');
+        // La página renderiza por sí misma desde /api/service-requests.
       }
       if (page === '/pages/cuenta/mis-presupuestos.html') {
-        const quotes = await api.quotes();
-        backendPanel('Presupuestos reales', quotes.map((quote) => `<a href="/pages/cuenta/presupuesto.html?code=${quote.code}" class="flex justify-between gap-4 rounded-xl bg-paper-2 p-3"><span>${quote.code} · ${quote.title}</span><strong>${money(quote.total)}</strong></a>`), 'Todavía no hay presupuestos reales.');
+        // Esta página ya renderiza su listado completo desde /api/quotes.
       }
       if (page === '/pages/cuenta/facturas.html' || page === '/pages/cuenta/albaranes.html') {
-        const docs = await api.documents(page === '/pages/cuenta/facturas.html' ? 'invoice' : 'delivery_note');
-        backendPanel(page === '/pages/cuenta/facturas.html' ? 'Facturas reales' : 'Albaranes reales', docs.map((doc) => `<div class="flex justify-between gap-4 rounded-xl bg-paper-2 p-3"><span>${doc.code} · ${doc.type}</span><strong>${money(doc.total)}</strong></div>`), 'Todavía no hay documentos reales.');
+        // Estas páginas ya renderizan sus documentos completos desde /api/documents.
       }
+      await window.glxRefreshSidebarCounts?.();
     } catch (error) {
       toast(error.message);
     }
@@ -1500,6 +1477,7 @@
     bindAccountForms();
     bindCommerceForms();
     bindSupportForms();
+    await window.glxRefreshSidebarCounts?.();
     await bindSearchPage();
     await bindCatalogPages().catch((error) => toast(error.message));
     await bindProductPage();
@@ -1510,8 +1488,8 @@
 
   document.addEventListener('garperlux:components-ready', () => {
     if (publicAuthlessPages.has(page)) return;
-    syncLegacySessionToApi();
-    syncSessionToLegacyAuth();
+    syncLegacySessionToApi().finally(() => window.glxRefreshSidebarCounts?.());
+    syncSessionToLegacyAuth().finally(() => window.glxRefreshSidebarCounts?.());
     refreshCartCount();
   });
 

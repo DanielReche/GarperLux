@@ -93,6 +93,75 @@ function registerCommerceRoutes(router) {
     return ok(res, rows.map((row) => ({ ...row, payload: parseJson(row.payload_json, {}) })));
   });
 
+  router.get('/api/recurring-orders/:code', (req, res, { params }) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    const row = getDb().prepare('SELECT * FROM recurring_orders WHERE code = ? AND user_id = ?').get(params.code, user.id);
+    if (!row) return fail(res, 404, 'RECURRING_NOT_FOUND', 'Pedido recurrente no encontrado.');
+    return ok(res, { ...row, payload: parseJson(row.payload_json, {}) });
+  });
+
+  router.delete('/api/recurring-orders/:code', (req, res, { params }) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    const result = getDb().prepare('DELETE FROM recurring_orders WHERE code = ? AND user_id = ?').run(params.code, user.id);
+    if (!result.changes) return fail(res, 404, 'RECURRING_NOT_FOUND', 'Pedido recurrente no encontrado.');
+    return ok(res, { code: params.code, deleted: true });
+  });
+
+  router.get('/api/account/reorder-suggestions', (req, res) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    const fullUser = getDb().prepare('SELECT pro_discount FROM users WHERE id = ?').get(user.id);
+    const proDiscount = Number(fullUser?.pro_discount || 0);
+    const orders = getDb().prepare(`SELECT id, code, payload_json, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC`).all(user.id);
+    const aggregate = new Map();
+    const now = Date.now();
+    for (const order of orders) {
+      const payload = parseJson(order.payload_json, {});
+      const items = payload.cart?.items || [];
+      const orderDate = new Date(String(order.created_at).replace(' ', 'T')).getTime();
+      const ageDays = isFinite(orderDate) ? Math.max(0, Math.round((now - orderDate) / 86400000)) : null;
+      for (const item of items) {
+        if (!item.sku) continue;
+        const existing = aggregate.get(item.sku) || { sku: item.sku, name: item.name, totalQty: 0, lastQty: 0, lastAtDays: ageDays, occurrences: 0, unitPrice: item.proPrice || item.price };
+        existing.totalQty += Number(item.quantity || 0);
+        existing.occurrences += 1;
+        if (existing.lastAtDays == null || (ageDays != null && ageDays < existing.lastAtDays)) {
+          existing.lastAtDays = ageDays;
+          existing.lastQty = Number(item.quantity || 0);
+        }
+        aggregate.set(item.sku, existing);
+      }
+    }
+
+    const enriched = [];
+    for (const item of aggregate.values()) {
+      const product = getDb().prepare('SELECT id, sku, name, price, stock FROM products WHERE sku = ?').get(item.sku);
+      if (!product) continue;
+      const unit = proDiscount > 0 ? Math.round(product.price * (1 - proDiscount / 100) * 100) / 100 : product.price;
+      const avgPerOrder = item.totalQty / item.occurrences;
+      // Heurística simple: tasa diaria ~ totalQty / max(lastAtDays, 30); previsión = lastQty / tasa
+      const dailyRate = item.totalQty / Math.max(item.lastAtDays || 30, 30);
+      const predictedDaysLeft = dailyRate > 0 ? Math.round(item.lastQty / dailyRate) : null;
+      enriched.push({
+        sku: product.sku,
+        name: product.name,
+        productId: product.id,
+        stock: product.stock,
+        unitPrice: unit,
+        originalPrice: product.price,
+        suggestedQty: Math.max(1, Math.round(avgPerOrder)),
+        lastQty: item.lastQty,
+        lastAtDays: item.lastAtDays,
+        occurrences: item.occurrences,
+        predictedDaysLeft,
+      });
+    }
+    enriched.sort((a, b) => b.occurrences - a.occurrences || (a.lastAtDays || 999) - (b.lastAtDays || 999));
+    return ok(res, enriched.slice(0, 12));
+  });
+
   router.post('/api/recurring-orders', async (req, res) => {
     const user = requireAuth(req, res);
     if (!user) return;

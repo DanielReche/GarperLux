@@ -22,6 +22,9 @@
 .day-pill:hover{border-color:var(--graphite)}
 .day-pill input{display:none}
 .day-pill.is-on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.search-suggestion{position:absolute;top:100%;left:0;right:0;z-index:30;background:white;border:1px solid var(--line);border-radius:0 0 10px 10px;max-height:240px;overflow-y:auto;box-shadow:0 12px 24px -12px rgba(11,13,18,.18)}
+.search-suggestion button{display:block;width:100%;text-align:left;padding:.6rem .9rem;font-size:13px}
+.search-suggestion button:hover{background:var(--paper-2)}
 </style>
 </head>
 <body class="bg-paper text-ink">
@@ -38,42 +41,33 @@
   <div class="mb-8">
     <div class="eyebrow text-copper mb-2">Automatización pro</div>
     <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Pedido recurrente.</h1>
-    <p class="text-graphite mt-2 max-w-xl">Define qué quieres recibir y cada cuánto. Te enviamos un email para confirmar antes de cada salida. Si no contestas en 24 h, sale igualmente.</p>
+    <p class="text-graphite mt-2 max-w-xl">Define qué quieres recibir y cada cuánto. Te enviamos un email para confirmar antes de cada salida.</p>
   </div>
 
-  <form class="space-y-6">
+  <form id="recurring-form" class="space-y-6">
 
     <!-- Nombre -->
     <div class="bg-white border border-line rounded-2xl p-6">
       <h2 class="font-serif text-xl font-medium mb-1">1 · Nombre del pedido recurrente</h2>
       <p class="text-sm text-graphite mb-4">Para identificarlo cuando tengas varios.</p>
-      <input type="text" class="field" placeholder="Ej. Reposición taller mensual"/>
+      <input type="text" class="field" name="name" required placeholder="Ej. Reposición taller mensual"/>
     </div>
 
     <!-- Frecuencia -->
     <div class="bg-white border border-line rounded-2xl p-6">
       <h2 class="font-serif text-xl font-medium mb-1">2 · ¿Cada cuánto?</h2>
-      <p class="text-sm text-graphite mb-4">Lo más habitual es mensual, pero si trabajas obras grandes, puedes ponerlo cada dos semanas.</p>
+      <p class="text-sm text-graphite mb-4">Lo más habitual es mensual. Si trabajas obras grandes, puedes ponerlo cada dos semanas.</p>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-        <label class="freq-card"><input type="radio" name="freq"/><div class="font-medium">Semanal</div><div class="text-xs text-graphite mt-1">Cada 7 días</div></label>
-        <label class="freq-card"><input type="radio" name="freq"/><div class="font-medium">Quincenal</div><div class="text-xs text-graphite mt-1">Cada 14 días</div></label>
-        <label class="freq-card is-on"><input type="radio" name="freq" checked/><div class="font-medium">Mensual</div><div class="text-xs text-graphite mt-1">Cada 30 días</div></label>
-        <label class="freq-card"><input type="radio" name="freq"/><div class="font-medium">Personalizado</div><div class="text-xs text-graphite mt-1">Tú decides</div></label>
+        <label class="freq-card"><input type="radio" name="freq" value="weekly"/><div class="font-medium">Semanal</div><div class="text-xs text-graphite mt-1">Cada 7 días</div></label>
+        <label class="freq-card"><input type="radio" name="freq" value="biweekly"/><div class="font-medium">Quincenal</div><div class="text-xs text-graphite mt-1">Cada 14 días</div></label>
+        <label class="freq-card is-on"><input type="radio" name="freq" value="monthly" checked/><div class="font-medium">Mensual</div><div class="text-xs text-graphite mt-1">Cada 30 días</div></label>
+        <label class="freq-card"><input type="radio" name="freq" value="custom"/><div class="font-medium">Personalizado</div><div class="text-xs text-graphite mt-1">Tú decides</div></label>
       </div>
 
       <div>
         <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-2 block">Día del mes preferido para la salida</label>
-        <div class="flex flex-wrap gap-1.5 mb-3">
-          <label class="day-pill"><input type="radio" name="dia"/>1</label>
-          <label class="day-pill"><input type="radio" name="dia"/>2</label>
-          <label class="day-pill"><input type="radio" name="dia"/>3</label>
-          <label class="day-pill is-on"><input type="radio" name="dia" checked/>5</label>
-          <label class="day-pill"><input type="radio" name="dia"/>10</label>
-          <label class="day-pill"><input type="radio" name="dia"/>15</label>
-          <label class="day-pill"><input type="radio" name="dia"/>20</label>
-          <label class="day-pill"><input type="radio" name="dia"/>25</label>
-        </div>
+        <div class="flex flex-wrap gap-1.5 mb-3" id="day-picker"></div>
         <div class="text-xs text-graphite">Si cae en festivo, sale el siguiente día hábil.</div>
       </div>
     </div>
@@ -82,36 +76,22 @@
     <div class="bg-white border border-line rounded-2xl overflow-hidden">
       <div class="p-6 border-b border-line">
         <h2 class="font-serif text-xl font-medium mb-1">3 · Productos del recurrente</h2>
-        <p class="text-sm text-graphite">5 productos · 150 unidades · 280,10 €</p>
+        <p class="text-sm text-graphite" data-prod-summary>Sin productos. Añade los que quieras reponer.</p>
       </div>
-      <div class="divide-y divide-line">
-        <div class="p-5 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-          <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></div>
-          <div><div class="font-medium">Interruptor Simón 27 10A blanco</div><div class="text-xs text-graphite font-mono">SKU 27101-31</div></div>
-          <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="25" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none"/><button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3">+</button></div>
-          <button type="button" class="text-xs text-warn hover:underline">Quitar</button>
+
+      <div class="p-6 pb-0">
+        <div class="relative mb-3">
+          <input type="search" id="product-search" autocomplete="off" placeholder="Buscar producto del catálogo por SKU o nombre…" class="w-full pl-10 pr-3 py-2.5 bg-paper-2 border border-line rounded-lg text-sm outline-none focus:border-ink"/>
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <div id="product-suggestions" class="search-suggestion" hidden></div>
         </div>
-        <div class="p-5 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-          <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/></svg></div>
-          <div><div class="font-medium">Cinta aislante 3M 10m blanca</div><div class="text-xs text-graphite font-mono">SKU 3M-CA-10W</div></div>
-          <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="20" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none"/><button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3">+</button></div>
-          <button type="button" class="text-xs text-warn hover:underline">Quitar</button>
-        </div>
-        <div class="p-5 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-          <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
-          <div><div class="font-medium">Clema Wago 222 3 hilos (caja 50)</div><div class="text-xs text-graphite font-mono">SKU WG-222-415</div></div>
-          <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="100" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none"/><button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3">+</button></div>
-          <button type="button" class="text-xs text-warn hover:underline">Quitar</button>
-        </div>
-        <div class="p-5 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-          <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg></div>
-          <div><div class="font-medium">Magnetotérmico Schneider iC60N 16A</div><div class="text-xs text-graphite font-mono">SKU A9F74216</div></div>
-          <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="5" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none"/><button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3">+</button></div>
-          <button type="button" class="text-xs text-warn hover:underline">Quitar</button>
+        <div class="flex gap-2 mb-4 flex-wrap">
+          <button type="button" class="text-xs text-copper hover:underline" data-import-suggestions>+ Importar reposición sugerida</button>
         </div>
       </div>
-      <div class="p-4 bg-paper-2 border-t border-line">
-        <button type="button" class="text-sm text-copper hover:underline">+ Añadir más productos al recurrente</button>
+
+      <div class="divide-y divide-line" id="rec-lines">
+        <div class="p-5 text-center text-sm text-graphite" data-empty-row>Aún no hay productos.</div>
       </div>
     </div>
 
@@ -121,42 +101,25 @@
       <div class="space-y-4">
         <div>
           <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Dirección de envío</label>
-          <select class="field"><option>Polígono Los Olivares, nave 24 · 23009 Jaén (taller)</option><option>Calle Bernabé Soriano 12 · 23001 Jaén (obra activa)</option><option>+ Nueva dirección</option></select>
+          <select class="field" name="addressId" id="address-select"><option value="">Cargando…</option></select>
         </div>
         <div>
           <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Método de pago</label>
-          <select class="field"><option>Aplazado 30 días (cuenta pro)</option><option>Visa •••• 4242</option><option>Transferencia</option></select>
+          <select class="field" name="paymentMethodId" id="payment-select"><option value="">Cargando…</option></select>
         </div>
-        <div>
-          <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Velocidad de envío</label>
-          <select class="field"><option>Estándar 24-48 h (gratis al ser recurrente)</option><option>Recogida en almacén Jaén</option></select>
-        </div>
-      </div>
-    </div>
-
-    <!-- Aviso confirmación -->
-    <div class="bg-stock/5 border border-stock/30 rounded-2xl p-5 flex items-start gap-3">
-      <span class="w-10 h-10 rounded-full bg-stock text-paper grid place-items-center shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6 12 13 2 6"/></svg></span>
-      <div>
-        <div class="font-medium">Email 48 h antes de cada salida</div>
-        <p class="text-sm text-graphite mt-1">Te avisamos para que ajustes cantidades, pauses una entrega concreta o canceles definitivamente. Si no respondes, sale con la última configuración.</p>
       </div>
     </div>
 
     <!-- Próximas salidas -->
     <div class="bg-paper-2 border border-line rounded-2xl p-6">
       <h2 class="font-serif text-lg font-medium mb-4">Próximas salidas previstas</h2>
-      <div class="grid sm:grid-cols-3 gap-3 text-center">
-        <div class="bg-white rounded-xl p-4 border-2 border-filament"><div class="text-[10px] font-mono uppercase text-filament">Próxima</div><div class="font-serif text-xl font-medium mt-1">05/05/2026</div><div class="text-xs text-graphite font-mono mt-1">280,10 €</div></div>
-        <div class="bg-white rounded-xl p-4 border border-line"><div class="text-[10px] font-mono uppercase text-graphite">Siguiente</div><div class="font-serif text-xl font-medium mt-1">05/06/2026</div><div class="text-xs text-graphite font-mono mt-1">~280,10 €</div></div>
-        <div class="bg-white rounded-xl p-4 border border-line"><div class="text-[10px] font-mono uppercase text-graphite">Tercera</div><div class="font-serif text-xl font-medium mt-1">05/07/2026</div><div class="text-xs text-graphite font-mono mt-1">~280,10 €</div></div>
-      </div>
+      <div class="grid sm:grid-cols-3 gap-3 text-center" data-next-runs>—</div>
     </div>
 
     <!-- Acciones -->
     <div class="flex justify-between flex-wrap gap-3 pt-4">
       <a href="/pages/cuenta/repetir-compra.html" class="btn btn-ghost">Cancelar</a>
-      <button class="btn btn-primary">Activar pedido recurrente<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
+      <button type="submit" class="btn btn-primary">Activar pedido recurrente<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
     </div>
   </form>
 </main>
@@ -166,10 +129,202 @@
 <script src="/assets/js/main.js"></script><script src="/assets/js/auth.js"></script>
 <script>
 if(glxRequireAuth()){const u=glxGetUser();if(u.role!=='pro'){location.href='/pages/cuenta/area-personal.html';}else{document.querySelector('[data-current-name]') && (document.querySelector('[data-current-name]').textContent=u.name);const sb=document.getElementById('glx-sidebar');sb.innerHTML=glxRenderSidebar(sb.dataset.active);}}
-document.querySelectorAll('.freq-card,.day-pill').forEach(c=>{c.addEventListener('click',()=>{const i=c.querySelector('input');if(!i)return;document.querySelectorAll(`input[name="${i.name}"]`).forEach(o=>o.closest('.freq-card,.day-pill').classList.remove('is-on'));i.checked=true;c.classList.add('is-on');});});
 </script>
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+    const money = (v) => `${Number(v||0).toFixed(2).replace('.', ',')} €`;
+    const fmtDate = (d) => d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+    const form = document.getElementById('recurring-form');
+    const linesContainer = document.getElementById('rec-lines');
+    const searchInput = document.getElementById('product-search');
+    const suggestions = document.getElementById('product-suggestions');
+    const dayPicker = document.getElementById('day-picker');
+
+    let proDiscount = 0;
+    let products = [];
+    let lines = []; // {sku, name, quantity, unitPrice}
+    let dayOfMonth = 5;
+    let frequency = 'monthly';
+
+    // Pintamos selector de día
+    [1,2,3,5,10,15,20,25].forEach((d) => {
+      const lbl = document.createElement('label');
+      lbl.className = 'day-pill' + (d === dayOfMonth ? ' is-on' : '');
+      lbl.innerHTML = `<input type="radio" name="dia" value="${d}" ${d===dayOfMonth?'checked':''}/>${d}`;
+      lbl.addEventListener('click', () => { dayOfMonth = d; document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('is-on')); lbl.classList.add('is-on'); previewNextRuns(); });
+      dayPicker.appendChild(lbl);
+    });
+
+    document.querySelectorAll('.freq-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        const input = card.querySelector('input');
+        if (!input) return;
+        document.querySelectorAll('.freq-card').forEach((c) => c.classList.remove('is-on'));
+        card.classList.add('is-on');
+        input.checked = true;
+        frequency = input.value;
+        previewNextRuns();
+      });
+    });
+
+    const renderLines = () => {
+      const totalUnits = lines.reduce((s,l)=>s+Number(l.quantity||0),0);
+      const totalAmount = lines.reduce((s,l)=>s+Number(l.quantity||0)*Number(l.unitPrice||0),0);
+      document.querySelector('[data-prod-summary]').textContent = lines.length ? `${lines.length} producto${lines.length===1?'':'s'} · ${totalUnits} uds · ${money(totalAmount)}` : 'Sin productos. Añade los que quieras reponer.';
+      if (!lines.length) { linesContainer.innerHTML = '<div class="p-5 text-center text-sm text-graphite" data-empty-row>Aún no hay productos.</div>'; previewNextRuns(); return; }
+      linesContainer.innerHTML = lines.map((l, idx) => `
+        <div class="p-5 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
+          <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></div>
+          <div><div class="font-medium">${l.name}</div><div class="text-xs text-graphite font-mono">SKU ${l.sku} · ${money(l.unitPrice)}/u</div></div>
+          <div class="flex items-center bg-paper-2 rounded-full overflow-hidden">
+            <button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3" data-rec-dec="${idx}">−</button>
+            <input type="number" min="1" value="${l.quantity}" class="w-14 text-center bg-transparent font-mono text-sm font-medium outline-none" data-rec-qty="${idx}"/>
+            <button type="button" class="w-7 h-7 grid place-items-center hover:bg-paper-3" data-rec-inc="${idx}">+</button>
+          </div>
+          <button type="button" class="text-xs text-warn hover:underline" data-rec-remove="${idx}">Quitar</button>
+        </div>
+      `).join('');
+      previewNextRuns();
+    };
+
+    linesContainer.addEventListener('click', (ev) => {
+      const dec = ev.target.closest('[data-rec-dec]');
+      const inc = ev.target.closest('[data-rec-inc]');
+      const rm = ev.target.closest('[data-rec-remove]');
+      if (dec) { lines[+dec.dataset.recDec].quantity = Math.max(1, lines[+dec.dataset.recDec].quantity - 1); renderLines(); }
+      else if (inc) { lines[+inc.dataset.recInc].quantity += 1; renderLines(); }
+      else if (rm) { lines.splice(+rm.dataset.recRemove, 1); renderLines(); }
+    });
+    linesContainer.addEventListener('input', (ev) => {
+      const qty = ev.target.closest('[data-rec-qty]');
+      if (qty) { lines[+qty.dataset.recQty].quantity = Math.max(1, Number(qty.value)||1); renderLines(); }
+    });
+
+    document.querySelector('[data-import-suggestions]').addEventListener('click', async () => {
+      try {
+        const sugg = await api.reorderSuggestions();
+        if (!sugg.length) { glxToast('No hay sugerencias todavía.'); return; }
+        for (const s of sugg) {
+          if (lines.find((l)=>l.sku===s.sku)) continue;
+          lines.push({ sku: s.sku, name: s.name, quantity: s.suggestedQty, unitPrice: s.unitPrice });
+        }
+        renderLines();
+        glxToast(`${sugg.length} producto${sugg.length===1?'':'s'} añadido${sugg.length===1?'':'s'} desde sugerencias.`);
+      } catch (e) { glxToast(e.message); }
+    });
+
+    // Buscador catálogo
+    let lastQuery = '';
+    const search = async () => {
+      const q = searchInput.value.trim();
+      if (q.length < 2) { suggestions.hidden = true; return; }
+      if (q === lastQuery) return;
+      lastQuery = q;
+      try {
+        if (!products.length) products = await api.products({});
+        const matches = products.filter((p) => `${p.sku} ${p.name}`.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
+        if (!matches.length) suggestions.innerHTML = '<div class="px-3 py-2 text-xs text-graphite">Sin resultados.</div>';
+        else suggestions.innerHTML = matches.map((p) => `<button type="button" data-pick-sku="${p.sku}"><strong>${p.name}</strong> <span class="text-graphite font-mono">SKU ${p.sku} · ${money(p.price)}</span></button>`).join('');
+        suggestions.hidden = false;
+      } catch {}
+    };
+    searchInput.addEventListener('input', search);
+    document.addEventListener('click', (ev) => { if (!ev.target.closest('#product-search') && !ev.target.closest('#product-suggestions')) suggestions.hidden = true; });
+    suggestions.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('[data-pick-sku]');
+      if (!btn) return;
+      const product = products.find((p) => p.sku === btn.dataset.pickSku);
+      if (product) {
+        const unit = proDiscount > 0 ? Math.round(product.price * (1 - proDiscount/100) * 100) / 100 : product.price;
+        if (lines.find((l)=>l.sku===product.sku)) { glxToast('Ya está en la lista.'); }
+        else { lines.push({ sku: product.sku, name: product.name, quantity: 1, unitPrice: unit }); renderLines(); }
+        searchInput.value = '';
+        suggestions.hidden = true;
+      }
+    });
+
+    const previewNextRuns = () => {
+      const node = document.querySelector('[data-next-runs]');
+      const totalAmount = lines.reduce((s,l)=>s+l.quantity*l.unitPrice,0);
+      const dates = nextThreeDates(frequency, dayOfMonth);
+      node.innerHTML = dates.map((d, i) => `<div class="bg-white rounded-xl p-4 border ${i===0?'border-2 border-filament':'border-line'}"><div class="text-[10px] font-mono uppercase ${i===0?'text-filament':'text-graphite'}">${i===0?'Próxima':(i===1?'Siguiente':'Tercera')}</div><div class="font-serif text-xl font-medium mt-1">${fmtDate(d)}</div><div class="text-xs text-graphite font-mono mt-1">${i===0?money(totalAmount):'~'+money(totalAmount)}</div></div>`).join('');
+    };
+
+    function nextThreeDates(freq, day) {
+      const out = [];
+      const today = new Date();
+      let next = new Date(today.getFullYear(), today.getMonth(), day);
+      if (next.getTime() <= today.getTime()) next = new Date(today.getFullYear(), today.getMonth() + 1, day);
+      out.push(next);
+      for (let i = 0; i < 2; i++) {
+        const last = out[out.length - 1];
+        const incDays = freq === 'weekly' ? 7 : freq === 'biweekly' ? 14 : 30;
+        if (freq === 'monthly') {
+          out.push(new Date(last.getFullYear(), last.getMonth() + 1, day));
+        } else {
+          out.push(new Date(last.getFullYear(), last.getMonth(), last.getDate() + incDays));
+        }
+      }
+      return out;
+    }
+
+    const loadAccountOptions = async () => {
+      try {
+        const [addresses, methods] = await Promise.all([api.addresses().catch(()=>[]), api.paymentMethods().catch(()=>[])]);
+        const aSel = document.getElementById('address-select');
+        const pSel = document.getElementById('payment-select');
+        aSel.innerHTML = addresses.length ? addresses.map((a) => `<option value="${a.id}">${a.label}${a.line1?` · ${a.line1}`:''} · ${a.city}</option>`).join('') : '<option value="">Sin direcciones registradas</option>';
+        pSel.innerHTML = methods.length ? methods.map((m) => `<option value="${m.id}">${m.label}${m.last4?` · ••••${m.last4}`:''}</option>`).join('') : '<option value="">Sin métodos registrados</option>';
+      } catch {}
+    };
+
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(form);
+      const name = fd.get('name')?.toString().trim();
+      if (!name) { glxToast('Pon un nombre al pedido recurrente.'); return; }
+      if (!lines.length) { glxToast('Añade al menos un producto.'); return; }
+      const subtotal = Math.round(lines.reduce((s,l)=>s+l.quantity*l.unitPrice,0)*100)/100;
+      const next = nextThreeDates(frequency, dayOfMonth)[0];
+      const aSel = document.getElementById('address-select');
+      const pSel = document.getElementById('payment-select');
+      const payload = {
+        name,
+        frequency,
+        nextRunAt: `${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,'0')}-${String(next.getDate()).padStart(2,'0')}`,
+        items: lines,
+        subtotal,
+        dayOfMonth,
+        addressId: aSel.value || null,
+        addressLabel: aSel.selectedOptions[0]?.textContent || null,
+        paymentMethodId: pSel.value || null,
+        paymentMethodLabel: pSel.selectedOptions[0]?.textContent || null,
+      };
+      try {
+        const created = await api.createRecurringOrder(payload);
+        glxToast(`Pedido recurrente ${created.code} activado.`);
+        location.href = '/pages/cuenta/repetir-compra.html';
+      } catch (e) { glxToast(e.message); }
+    });
+
+    const init = async () => {
+      try { const me = await api.me(); proDiscount = Number(me.proDiscount || 0); } catch {}
+      await loadAccountOptions();
+      try { products = await api.products({}); } catch {}
+      previewNextRuns();
+    };
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(init);
+      else init();
+    });
+    if (api.getToken()) init();
+  })();
+  </script>
 </body></html>

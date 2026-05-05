@@ -21,64 +21,62 @@
   <div class="mb-8"><div class="eyebrow text-copper mb-2">Configuración pro</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Datos fiscales.</h1><p class="text-graphite mt-2">Estos datos aparecen en albaranes, facturas y boletines emitidos.</p></div>
 
   <!-- Validación pro -->
-  <div class="bg-stock/5 border border-stock/30 rounded-2xl p-5 mb-6 flex items-start gap-3">
+  <div class="bg-stock/5 border border-stock/30 rounded-2xl p-5 mb-6 flex items-start gap-3" data-bt-banner hidden>
     <span class="w-10 h-10 rounded-full bg-stock text-paper grid place-items-center shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
     <div>
       <div class="font-medium">Cuenta profesional validada</div>
-      <p class="text-sm text-graphite mt-1">Tu carnet de baja tensión está vigente y verificado en industria. Tarifa pro activa.</p>
+      <p class="text-sm text-graphite mt-1" data-bt-msg>Tu carnet de baja tensión está vigente y verificado en industria. Tarifa pro activa.</p>
     </div>
   </div>
 
-  <!-- Empresa / Autónomo -->
-  <div class="bg-white border border-line rounded-2xl p-6 mb-5">
-    <h2 class="font-serif text-xl font-medium mb-5">Datos de empresa / autónomo</h2>
-    <div class="grid sm:grid-cols-2 gap-4">
-      <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Razón social / Nombre fiscal</label><input type="text" class="field" value="Jose Luis García - El Chispas Instalaciones"/></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CIF / NIF</label><input type="text" class="field font-mono" value="B12345678"/></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Forma jurídica</label><select class="field"><option>Autónomo</option><option>S.L.</option><option>S.A.</option><option>Cooperativa</option></select></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Régimen IVA</label><select class="field"><option>General</option><option>Recargo equivalencia</option><option>Exento</option></select></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Actividad CNAE</label><input type="text" class="field font-mono" value="4321 — Instalaciones eléctricas"/></div>
+  <form id="fiscal-form" class="space-y-5">
+    <!-- Empresa / Autónomo -->
+    <div class="bg-white border border-line rounded-2xl p-6">
+      <h2 class="font-serif text-xl font-medium mb-5">Datos de empresa / autónomo</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Razón social / Nombre fiscal</label><input type="text" class="field" name="legalName" required/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CIF / NIF</label><input type="text" class="field font-mono" name="taxId" required/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Forma jurídica</label><select class="field" name="legalForm"><option value="">—</option><option>Autónomo</option><option>S.L.</option><option>S.A.</option><option>Cooperativa</option></select></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Régimen IVA</label><select class="field" name="vatRegime"><option value="">—</option><option>General</option><option>Recargo equivalencia</option><option>Exento</option></select></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Actividad CNAE</label><input type="text" class="field font-mono" name="cnae"/></div>
+      </div>
     </div>
-  </div>
 
-  <!-- Carnet BT -->
-  <div class="bg-white border border-line rounded-2xl p-6 mb-5">
-    <h2 class="font-serif text-xl font-medium mb-5 flex items-center gap-2">Carnet de baja tensión <span class="pill pill-stock text-[10px]">Vigente</span></h2>
-    <div class="grid sm:grid-cols-3 gap-4">
-      <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nº carnet</label><input type="text" class="field font-mono" value="BT-123456-AND"/></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Caducidad</label><input type="month" class="field font-mono" value="2031-04"/></div>
-      <div class="sm:col-span-3"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Comunidad emisora</label><select class="field"><option>Andalucía</option><option>Madrid</option><option>Cataluña</option><option>Castilla-La Mancha</option></select></div>
+    <!-- Carnet BT -->
+    <div class="bg-white border border-line rounded-2xl p-6">
+      <h2 class="font-serif text-xl font-medium mb-5 flex items-center gap-2">Carnet de baja tensión <span class="pill pill-stock text-[10px]" data-bt-status>—</span></h2>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nº carnet</label><input type="text" class="field font-mono" name="licenseNumber"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Caducidad</label><input type="month" class="field font-mono" name="licenseExpires"/></div>
+        <div class="sm:col-span-3"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Comunidad emisora</label><select class="field" name="licenseRegion"><option value="">—</option><option>Andalucía</option><option>Madrid</option><option>Cataluña</option><option>Castilla-La Mancha</option><option>Comunidad Valenciana</option><option>Galicia</option><option>País Vasco</option></select></div>
+      </div>
     </div>
-    <div class="mt-5 pt-5 border-t border-line text-sm text-graphite flex items-center justify-between">
-      <span>Documento subido: carnet_anverso.pdf · 1,2 MB</span>
-      <button class="text-copper hover:underline">Subir nueva copia</button>
+
+    <!-- Dirección fiscal -->
+    <div class="bg-white border border-line rounded-2xl p-6">
+      <h2 class="font-serif text-xl font-medium mb-5">Dirección fiscal</h2>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="sm:col-span-3"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Dirección</label><input type="text" class="field" name="fiscalAddress"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CP</label><input type="text" class="field font-mono" name="postalCode"/></div>
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Localidad</label><input type="text" class="field" name="city"/></div>
+        <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Provincia</label><input type="text" class="field" name="province"/></div>
+        <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">País</label><input type="text" class="field" name="country" value="España"/></div>
+      </div>
     </div>
-  </div>
 
-  <!-- Dirección fiscal -->
-  <div class="bg-white border border-line rounded-2xl p-6 mb-5">
-    <h2 class="font-serif text-xl font-medium mb-5">Dirección fiscal</h2>
-    <div class="grid sm:grid-cols-3 gap-4">
-      <div class="sm:col-span-3"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Dirección</label><input type="text" class="field" value="Polígono Los Olivares, nave 24"/></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CP</label><input type="text" class="field font-mono" value="23009"/></div>
-      <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Localidad</label><input type="text" class="field" value="Jaén"/></div>
-      <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Provincia</label><input type="text" class="field" value="Jaén"/></div>
-      <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">País</label><select class="field"><option>España</option></select></div>
+    <!-- IBAN devoluciones -->
+    <div class="bg-white border border-line rounded-2xl p-6">
+      <h2 class="font-serif text-xl font-medium mb-2">IBAN para devoluciones y abonos</h2>
+      <p class="text-sm text-graphite mb-4">Solo lo usamos cuando te debemos dinero (devoluciones, regularizaciones).</p>
+      <input type="text" class="field font-mono" name="iban"/>
     </div>
-  </div>
 
-  <!-- IBAN devoluciones -->
-  <div class="bg-white border border-line rounded-2xl p-6 mb-5">
-    <h2 class="font-serif text-xl font-medium mb-2">IBAN para devoluciones y abonos</h2>
-    <p class="text-sm text-graphite mb-4">Solo lo usamos cuando te debemos dinero (devoluciones, regularizaciones).</p>
-    <input type="text" class="field font-mono" value="ES12 0049 1234 5678 9012 3456"/>
-  </div>
-
-  <!-- Acciones -->
-  <div class="flex justify-between flex-wrap gap-4 mt-8">
-    <div class="flex gap-2"><button class="btn btn-primary">Guardar cambios</button><button class="btn btn-ghost btn-sm">Cancelar</button></div>
-    <a href="/pages/empresa/contacto.html" class="text-sm text-graphite hover:text-ink">¿Cambio importante Contáctanos →?</a>
-  </div>
+    <!-- Acciones -->
+    <div class="flex justify-between flex-wrap gap-4 mt-8">
+      <div class="flex gap-2"><button type="submit" class="btn btn-primary">Guardar cambios</button><button type="button" class="btn btn-ghost btn-sm" data-fiscal-reset>Restablecer</button></div>
+      <a href="/pages/empresa/contacto.html" class="text-sm text-graphite hover:text-ink">¿Cambio importante? Contáctanos →</a>
+    </div>
+  </form>
 </main>
 </div></section>
   <div data-component="site-footer"></div>
@@ -89,4 +87,112 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+    const form = document.getElementById('fiscal-form');
+    const banner = document.querySelector('[data-bt-banner]');
+    const btMsg = document.querySelector('[data-bt-msg]');
+    const btStatus = document.querySelector('[data-bt-status]');
+
+    let original = null;
+
+    const setVal = (name, value) => {
+      const el = form.elements.namedItem(name);
+      if (el) el.value = value ?? '';
+    };
+
+    const fillForm = (profile) => {
+      const p = profile || {};
+      setVal('legalName', p.legal_name);
+      setVal('taxId', p.tax_id);
+      setVal('legalForm', p.legal_form);
+      setVal('vatRegime', p.vat_regime);
+      setVal('cnae', p.cnae);
+      setVal('licenseNumber', p.license_number);
+      setVal('licenseExpires', p.license_expires);
+      setVal('licenseRegion', p.license_region);
+      setVal('fiscalAddress', p.fiscal_address);
+      setVal('postalCode', p.postal_code);
+      setVal('city', p.city);
+      setVal('province', p.province);
+      setVal('country', p.country || 'España');
+      setVal('iban', p.iban);
+      original = JSON.stringify(serialize());
+      updateBtBanner(p.license_number, p.license_expires);
+    };
+
+    const updateBtBanner = (number, expires) => {
+      if (!number) {
+        banner.hidden = true;
+        btStatus.textContent = 'Sin carnet';
+        btStatus.className = 'pill pill-warn text-[10px]';
+        return;
+      }
+      banner.hidden = false;
+      btStatus.textContent = 'Vigente';
+      btStatus.className = 'pill pill-stock text-[10px]';
+      if (expires) {
+        const exp = new Date(expires + '-01');
+        const monthsLeft = Math.round((exp.getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30));
+        if (monthsLeft < 6) {
+          btStatus.textContent = `Caduca en ${monthsLeft} meses`;
+          btStatus.className = 'pill pill-caution text-[10px]';
+          btMsg.textContent = `Tu carnet caduca pronto (${expires}). Renueva antes para no perder la tarifa pro.`;
+        } else {
+          btMsg.textContent = `Tu carnet de baja tensión está vigente hasta ${expires} y verificado en industria. Tarifa pro activa.`;
+        }
+      }
+    };
+
+    const serialize = () => ({
+      legalName: form.elements.legalName.value.trim(),
+      taxId: form.elements.taxId.value.trim(),
+      legalForm: form.elements.legalForm.value || null,
+      vatRegime: form.elements.vatRegime.value || null,
+      cnae: form.elements.cnae.value || null,
+      licenseNumber: form.elements.licenseNumber.value || null,
+      licenseExpires: form.elements.licenseExpires.value || null,
+      licenseRegion: form.elements.licenseRegion.value || null,
+      fiscalAddress: form.elements.fiscalAddress.value || null,
+      postalCode: form.elements.postalCode.value || null,
+      city: form.elements.city.value || null,
+      province: form.elements.province.value || null,
+      country: form.elements.country.value || 'España',
+      iban: form.elements.iban.value || null,
+    });
+
+    const load = async () => {
+      try {
+        const profile = await api.fiscalProfile();
+        fillForm(profile);
+      } catch (e) { glxToast(e.message); }
+    };
+
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const payload = serialize();
+      if (!payload.legalName || !payload.taxId) {
+        glxToast('La razón social y el CIF/NIF son obligatorios.');
+        return;
+      }
+      try {
+        const saved = await api.saveFiscalProfile(payload);
+        glxToast('Datos fiscales guardados.');
+        fillForm(saved);
+      } catch (e) { glxToast(e.message); }
+    });
+
+    document.querySelector('[data-fiscal-reset]')?.addEventListener('click', () => {
+      load();
+      glxToast('Cambios descartados.');
+    });
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(load);
+      else load();
+    });
+    if (api.getToken()) load();
+  })();
+  </script>
 </body></html>

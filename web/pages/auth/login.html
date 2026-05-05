@@ -61,7 +61,8 @@
 
 <body class="bg-paper text-ink overflow-x-hidden">
 
-  <div class="grid lg:grid-cols-2 min-h-screen">
+  <div class="min-h-screen flex flex-col">
+    <div class="grid lg:grid-cols-2 flex-1">
 
     <!-- ============ PANEL IZQUIERDO: BRANDING ============ -->
     <aside class="hidden lg:flex relative bg-ink text-paper overflow-hidden flex-col">
@@ -127,7 +128,6 @@
         <blockquote class="font-serif italic text-xl leading-snug mb-3">
           "Por fin una web que no me cambia los albaranes de sitio cada mes."
         </blockquote>
-  <div data-component="site-footer"></div>
       </div>
     </aside>
 
@@ -144,30 +144,6 @@
 
       <div class="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-14">
         <div class="w-full max-w-md">
-
-          <!-- DEMO BOTONES (entrar con rol simulado) -->
-          <div class="bg-paper-3 border border-copper/30 rounded-xl p-4 mb-6">
-            <div class="flex items-center gap-2 mb-3">
-              <span class="font-mono text-[10px] uppercase tracking-wider text-copper font-semibold">Demo prototipo</span>
-              <span class="text-xs text-graphite">· entrar sin contraseña</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="glxSetSession('particular'); location.href='/pages/cuenta/area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-ink transition-colors">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="w-6 h-6 rounded-full bg-ink text-paper grid place-items-center font-medium text-[11px]">A</span>
-                  <span class="text-sm font-medium">Antonio</span>
-                </div>
-                <div class="text-[11px] text-graphite">Particular</div>
-              </button>
-              <button onclick="glxSetSession('pro'); location.href='/pages/cuenta/area-personal.html';" class="text-left p-3 rounded-lg bg-white border border-line hover:border-filament transition-colors">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="w-6 h-6 rounded-full bg-filament text-ink grid place-items-center font-medium text-[10px]">JL</span>
-                  <span class="text-sm font-medium">El Chispas</span>
-                </div>
-                <div class="text-[11px] text-graphite">Instalador pro</div>
-              </button>
-            </div>
-          </div>
 
           <!-- Tabs principales -->
           <div class="flex border-b border-line mb-8">
@@ -414,9 +390,13 @@
         </div>
       </div>
     </main>
+    </div>
+
+    <div data-component="site-footer"></div>
   </div>
 
   <script src="/assets/js/auth.js"></script>
+  <script src="/data/api.js"></script>
   <script>
     // Tabs login/register
     const tabs = document.querySelectorAll('.auth-tab');
@@ -546,7 +526,6 @@
     }, true);
   </script>
   <script src="/assets/js/component-loader.js"></script>
-  <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
 </body>

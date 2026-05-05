@@ -37,7 +37,10 @@ function glxSetSession(role) {
   if (!user) return;
   localStorage.setItem(GLX_KEY, JSON.stringify({ ...user, at: Date.now() }));
 }
-function glxClearSession() { localStorage.removeItem(GLX_KEY); }
+function glxClearSession() {
+  localStorage.removeItem(GLX_KEY);
+  localStorage.removeItem('garperlux_api_token');
+}
 function glxIsAuthed() { return !!glxGetSession(); }
 function glxGetUser() { return glxGetSession(); }
 function glxGetRole() { return glxGetSession()?.role || null; }
@@ -61,13 +64,13 @@ function glxLogout() {
 const GLX_NAV_PARTICULAR = [
   { key: 'dashboard', href: '/pages/cuenta/area-personal.html', label: 'Dashboard', section: 'main',
     icon: '<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>' },
-  { key: 'mis-pedidos', href: '/pages/cuenta/mis-pedidos.html', label: 'Mis pedidos', section: 'main', countId: 'glx-nav-order-count',
+  { key: 'mis-pedidos', href: '/pages/cuenta/mis-pedidos.html', label: 'Mis pedidos', section: 'main', countKey: 'orders',
     icon: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>' },
-  { key: 'mis-solicitudes', href: '/pages/cuenta/mis-solicitudes.html', label: 'Mis solicitudes', section: 'main', count: '1 activa', countClass: 'text-filament',
+  { key: 'mis-solicitudes', href: '/pages/cuenta/mis-solicitudes.html', label: 'Mis solicitudes', section: 'main', countKey: 'serviceRequests', countClass: 'text-filament',
     icon: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>' },
-  { key: 'mis-favoritos', href: '/pages/cuenta/mis-favoritos.html', label: 'Mis favoritos', section: 'main', count: '12',
+  { key: 'mis-favoritos', href: '/pages/cuenta/mis-favoritos.html', label: 'Mis favoritos', section: 'main', countKey: 'favorites',
     icon: '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>' },
-  { key: 'tutoriales-guardados', href: '/pages/cuenta/tutoriales-guardados.html', label: 'Tutoriales guardados', section: 'main',
+  { key: 'tutoriales-guardados', href: '/pages/cuenta/tutoriales-guardados.html', label: 'Tutoriales guardados', section: 'main', countKey: 'tutorials',
     icon: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/>' },
   { key: 'direcciones', href: '/pages/cuenta/direcciones.html', label: 'Direcciones', section: 'config',
     icon: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>' },
@@ -80,19 +83,19 @@ const GLX_NAV_PARTICULAR = [
 const GLX_NAV_PRO = [
   { key: 'dashboard', href: '/pages/cuenta/area-personal.html', label: 'Panel general', section: 'main',
     icon: '<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>' },
-  { key: 'mis-tarifas', href: '/pages/cuenta/mis-tarifas.html', label: 'Mis tarifas pro', section: 'main', count: '−22%', countClass: 'pill pill-stock',
+  { key: 'mis-tarifas', href: '/pages/cuenta/mis-tarifas.html', label: 'Mis tarifas pro', section: 'main', countKey: 'discount', countClass: 'pill pill-stock',
     icon: '<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>' },
-  { key: 'albaranes', href: '/pages/cuenta/albaranes.html', label: 'Albaranes', section: 'main', count: '42',
+  { key: 'albaranes', href: '/pages/cuenta/albaranes.html', label: 'Albaranes', section: 'main', countKey: 'deliveryNotes',
     icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
-  { key: 'facturas', href: '/pages/cuenta/facturas.html', label: 'Facturas', section: 'main', count: '38',
+  { key: 'facturas', href: '/pages/cuenta/facturas.html', label: 'Facturas', section: 'main', countKey: 'invoices',
     icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8M16 17H8M10 9H8"/>' },
-  { key: 'mis-pedidos', href: '/pages/cuenta/mis-pedidos.html', label: 'Mis pedidos', section: 'main', countId: 'glx-nav-order-count',
+  { key: 'mis-pedidos', href: '/pages/cuenta/mis-pedidos.html', label: 'Mis pedidos', section: 'main', countKey: 'orders',
     icon: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>' },
-  { key: 'mis-presupuestos', href: '/pages/cuenta/mis-presupuestos.html', label: 'Mis presupuestos', section: 'main', count: '2 abiertos', countClass: 'text-filament',
+  { key: 'mis-presupuestos', href: '/pages/cuenta/mis-presupuestos.html', label: 'Mis presupuestos', section: 'main', countKey: 'quotesOpen', countClass: 'text-filament',
     icon: '<circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/>' },
-  { key: 'repetir-compra', href: '/pages/cuenta/repetir-compra.html', label: 'Repetir compra', section: 'main',
+  { key: 'repetir-compra', href: '/pages/cuenta/repetir-compra.html', label: 'Repetir compra', section: 'main', countKey: 'recurring',
     icon: '<path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/><path d="M3 12h4l3-9 4 18 3-9h4"/>' },
-  { key: 'mis-favoritos', href: '/pages/cuenta/mis-favoritos.html', label: 'Mis favoritos', section: 'main', count: '87',
+  { key: 'mis-favoritos', href: '/pages/cuenta/mis-favoritos.html', label: 'Mis favoritos', section: 'main', countKey: 'favorites',
     icon: '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>' },
   { key: 'datos-fiscales', href: '/pages/cuenta/datos-fiscales.html', label: 'Datos fiscales', section: 'config',
     icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' },
@@ -140,7 +143,10 @@ function glxRenderSidebar(activeKey) {
     const isActive = it.key === activeKey;
     const cls = `nav-item${isActive ? ' is-active' : ''}`;
     let countHtml = '';
-    if (it.countId) {
+    if (it.countKey) {
+      const countCls = isActive ? 'text-white' : (it.countClass || 'text-graphite');
+      countHtml = `<span data-glx-nav-count="${it.countKey}" class="ml-auto text-xs font-mono ${countCls}">...</span>`;
+    } else if (it.countId) {
       // Dynamic count — rendered as a white span when active so it contrasts with dark bg
       const countCls = isActive ? 'text-white' : (it.countClass || 'text-graphite');
       countHtml = `<span id="${it.countId}" class="ml-auto text-xs font-mono ${countCls}">…</span>`;
@@ -157,8 +163,8 @@ function glxRenderSidebar(activeKey) {
   const config = items.filter(i => i.section === 'config').map(renderItem).join('');
 
   // Botón demo: cambiar de rol (solo prototipo)
-  const otherRole = user.role === 'pro' ? 'particular' : 'pro';
-  const otherLabel = user.role === 'pro' ? 'particular (Antonio)' : 'profesional (El Chispas)';
+  const otherRole = null;
+  const otherLabel = null;
 
   return `${glxRenderUserCard(user)}
     <nav class="space-y-1">
@@ -170,7 +176,7 @@ function glxRenderSidebar(activeKey) {
         Cerrar sesión
       </button>
     </nav>
-    <div class="mt-7 pt-5 border-t border-line">
+    <div class="hidden">
       <div class="text-[11px] font-mono uppercase tracking-wider text-graphite mb-2">Demo prototipo</div>
       <button onclick="glxSwitchRole('${otherRole}')" class="text-xs text-copper hover:underline">→ Cambiar a vista ${otherLabel}</button>
     </div>`;
@@ -191,6 +197,55 @@ function glxSwitchRole(newRole) {
     return;
   }
   location.reload();
+}
+
+function glxSetNavCount(key, value) {
+  document.querySelectorAll(`[data-glx-nav-count="${key}"]`).forEach((node) => {
+    node.textContent = value == null || value === '' ? '' : String(value);
+  });
+}
+
+async function glxRefreshSidebarCounts() {
+  const api = window.GarperLuxApi;
+  const user = glxGetUser();
+  if (!api || !api.getToken || !api.getToken() || !user) return;
+
+  const safe = (promise, fallback = []) => promise.catch(() => fallback);
+  const activeServiceStatuses = new Set(['received', 'reviewing', 'scheduled', 'in_progress']);
+
+  if (user.role === 'pro') {
+    const [me, orders, favorites, quotes, invoices, deliveryNotes, recurring] = await Promise.all([
+      safe(api.me(), null),
+      safe(api.orders()),
+      safe(api.favorites()),
+      safe(api.quotes()),
+      safe(api.documents('invoice')),
+      safe(api.documents('delivery_note')),
+      safe(api.recurringOrders ? api.recurringOrders() : api.request('/recurring-orders')),
+    ]);
+    const discount = Number(me?.proDiscount ?? user.discount ?? 0);
+    glxSetNavCount('discount', discount ? `-${discount}%` : '');
+    glxSetNavCount('orders', orders.length);
+    glxSetNavCount('favorites', favorites.length);
+    glxSetNavCount('invoices', invoices.length);
+    glxSetNavCount('deliveryNotes', deliveryNotes.length);
+    glxSetNavCount('recurring', recurring.length ? recurring.length : '');
+    const openQuotes = quotes.filter((quote) => quote.status === 'sent').length;
+    glxSetNavCount('quotesOpen', openQuotes ? `${openQuotes} abiertos` : '');
+    return;
+  }
+
+  const [orders, serviceRequests, favorites, tutorials] = await Promise.all([
+    safe(api.orders()),
+    safe(api.serviceRequests()),
+    safe(api.favorites()),
+    safe(api.savedTutorials()),
+  ]);
+  const activeRequests = serviceRequests.filter((request) => activeServiceStatuses.has(request.status)).length;
+  glxSetNavCount('orders', orders.length);
+  glxSetNavCount('serviceRequests', activeRequests ? `${activeRequests} activa${activeRequests === 1 ? '' : 's'}` : '');
+  glxSetNavCount('favorites', favorites.length);
+  glxSetNavCount('tutorials', tutorials.length);
 }
 
 /* ============= HEADER USER BUTTON UPDATE ============= */

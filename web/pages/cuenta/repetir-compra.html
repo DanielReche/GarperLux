@@ -8,7 +8,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
 <link rel="stylesheet" href="/assets/css/styles.css" />
-<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}.tab-btn{padding:.75rem 1rem;border-bottom:2px solid transparent;font-size:14px;color:var(--graphite);white-space:nowrap;transition:all .15s}.tab-btn:hover{color:var(--ink)}.tab-btn.is-active{border-color:var(--filament);color:var(--ink);font-weight:500}</style>
 </head>
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
@@ -18,73 +18,51 @@
 <aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="repetir-compra"></aside>
 
 <main>
-  <div class="mb-8"><div class="eyebrow text-copper mb-2">Reposición rápida</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Repetir compra.</h1><p class="text-graphite mt-2">Lo que sueles agotar, basado en tus últimos 6 meses de compras.</p></div>
+  <div class="mb-8"><div class="eyebrow text-copper mb-2">Reposición rápida</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Repetir compra.</h1><p class="text-graphite mt-2" data-rep-summary>Cargando datos de tu historial…</p></div>
 
-  <!-- Tabs -->
-  <div class="flex items-center gap-1 mb-6 border-b border-line overflow-x-auto">
-    <button class="px-4 py-3 border-b-2 border-filament font-medium text-sm whitespace-nowrap">Reposición sugerida</button>
-    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Plantillas guardadas <span class="font-mono text-xs">3</span></button>
-    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Pedidos recurrentes <span class="font-mono text-xs">1</span></button>
+  <div class="flex items-center gap-1 mb-6 border-b border-line overflow-x-auto" data-rep-tabs>
+    <button class="tab-btn is-active" data-tab="suggestion">Reposición sugerida</button>
+    <button class="tab-btn" data-tab="recurring">Pedidos recurrentes <span class="font-mono text-xs ml-1" data-count-recurring>0</span></button>
   </div>
 
   <!-- Reposición sugerida -->
-  <div class="bg-white border border-line rounded-2xl overflow-hidden mb-8">
-    <div class="px-6 py-4 bg-paper-2 border-b border-line flex items-center justify-between flex-wrap gap-3">
-      <div><h2 class="font-serif text-xl font-medium">Lo que sueles agotar</h2><p class="text-xs text-graphite">Algoritmo basado en patrón histórico de tus pedidos</p></div>
-      <div class="flex items-center gap-3"><label class="flex items-center gap-2 text-sm"><input type="checkbox" class="w-4 h-4" checked/> Seleccionar todos</label></div>
-    </div>
-    <div class="divide-y divide-line">
-      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
-        <input type="checkbox" class="w-4 h-4" checked/>
-        <div><div class="font-medium">Interruptor Simón 27 10A blanco</div><div class="text-xs text-graphite font-mono">SKU 27101-31 · última: 25 uds hace 12 días · agotamiento previsto: 6 días</div></div>
-        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="25" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
-        <div class="text-right"><div class="font-mono font-medium text-filament">4,30 €/u</div><div class="text-xs text-graphite font-mono">Total: 107,50 €</div></div>
-        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
+  <section data-tab-panel="suggestion">
+    <div class="bg-white border border-line rounded-2xl overflow-hidden mb-8">
+      <div class="px-6 py-4 bg-paper-2 border-b border-line flex items-center justify-between flex-wrap gap-3">
+        <div><h2 class="font-serif text-xl font-medium">Lo que sueles agotar</h2><p class="text-xs text-graphite">Algoritmo basado en patrón histórico de tus pedidos</p></div>
+        <div class="flex items-center gap-3"><label class="flex items-center gap-2 text-sm"><input type="checkbox" class="w-4 h-4" data-select-all/> Seleccionar todos</label></div>
       </div>
-      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
-        <input type="checkbox" class="w-4 h-4" checked/>
-        <div><div class="font-medium">Cinta aislante 3M 10m blanca</div><div class="text-xs text-graphite font-mono">SKU 3M-CA-10W · última: 20 uds hace 8 días · agotamiento previsto: 9 días</div></div>
-        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="20" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
-        <div class="text-right"><div class="font-mono font-medium text-filament">1,68 €/u</div><div class="text-xs text-graphite font-mono">Total: 33,60 €</div></div>
-        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
-      </div>
-      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
-        <input type="checkbox" class="w-4 h-4" checked/>
-        <div><div class="font-medium">Clema Wago 222 3 hilos (caja 50)</div><div class="text-xs text-graphite font-mono">SKU WG-222-415 · última: 100 uds hace 5 días · agotamiento previsto: 14 días</div></div>
-        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="100" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
-        <div class="text-right"><div class="font-mono font-medium text-filament">0,32 €/u</div><div class="text-xs text-graphite font-mono">Total: 32,00 €</div></div>
-        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
-      </div>
-      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
-        <input type="checkbox" class="w-4 h-4" checked/>
-        <div><div class="font-medium">Magnetotérmico Schneider iC60N 16A</div><div class="text-xs text-graphite font-mono">SKU A9F74216 · última: 5 uds hace 18 días · agotamiento previsto: ya agotado</div></div>
-        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="5" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
-        <div class="text-right"><div class="font-mono font-medium text-filament">21,40 €/u</div><div class="text-xs text-graphite font-mono">Total: 107,00 €</div></div>
-        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
-      </div>
-      <div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center">
-        <input type="checkbox" class="w-4 h-4"/>
-        <div><div class="font-medium">Punteras de cobre 2.5 mm² (caja 100)</div><div class="text-xs text-graphite font-mono">SKU PUN-25-100 · última: 200 uds hace 30 días · agotamiento previsto: 22 días</div></div>
-        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden"><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">−</button><input type="number" value="200" class="w-12 text-center bg-transparent font-mono font-medium outline-none"/><button class="w-8 h-8 grid place-items-center hover:bg-paper-3">+</button></div>
-        <div class="text-right"><div class="font-mono font-medium text-filament">8,40 €/100u</div><div class="text-xs text-graphite font-mono">Total: 16,80 €</div></div>
-        <button class="text-graphite hover:text-warn p-1.5 text-xs">Quitar</button>
+      <div class="divide-y divide-line" data-rep-list></div>
+      <div class="hidden p-10 text-center text-sm text-graphite" data-rep-empty>Aún no hay suficientes pedidos para sugerir reposición. Completa varios pedidos para activar la sugerencia.</div>
+      <div class="px-6 py-4 bg-ink text-paper flex items-center justify-between flex-wrap gap-3">
+        <div><div class="font-mono text-[10px] uppercase tracking-wider text-paper/60 mb-0.5" data-sel-summary>—</div><div class="font-serif text-2xl font-medium" data-sel-total>0,00 €</div></div>
+        <div class="flex gap-2"><button class="btn btn-primary" data-add-selected>Añadir todo al carrito<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button></div>
       </div>
     </div>
-    <div class="px-6 py-4 bg-ink text-paper flex items-center justify-between flex-wrap gap-3">
-      <div><div class="font-mono text-[10px] uppercase tracking-wider text-paper/60 mb-0.5">Total selección · 4 productos · 150 uds</div><div class="font-serif text-2xl font-medium">280,10 €</div></div>
-      <div class="flex gap-2"><button class="btn btn-ghost-light btn-sm">Guardar como plantilla</button><button class="btn btn-primary">Añadir todo al carrito<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button></div>
-    </div>
-  </div>
 
-  <!-- Configurar pedido recurrente -->
-  <div class="bg-paper-2 border border-line rounded-2xl p-6 flex items-start gap-4">
-    <span class="w-10 h-10 rounded-full bg-electric/10 grid place-items-center text-electric shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
-    <div class="flex-1">
-      <h3 class="font-serif text-lg font-medium mb-1">¿Quieres que esto se haga solo cada mes?</h3>
-      <p class="text-sm text-graphite mb-3">Configura un pedido recurrente y se prepara automáticamente. Tú solo recibes un email para confirmar antes de que salga.</p>
-      <a href="/pages/cuenta/pedido-recurrente.html" class="btn btn-sm btn-ink">Configurar pedido recurrente</a>
+    <div class="bg-paper-2 border border-line rounded-2xl p-6 flex items-start gap-4">
+      <span class="w-10 h-10 rounded-full bg-electric/10 grid place-items-center text-electric shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+      <div class="flex-1">
+        <h3 class="font-serif text-lg font-medium mb-1">¿Quieres que esto se haga solo cada mes?</h3>
+        <p class="text-sm text-graphite mb-3">Configura un pedido recurrente y se prepara automáticamente. Tú solo recibes un email para confirmar antes de que salga.</p>
+        <a href="/pages/cuenta/pedido-recurrente.html" class="btn btn-sm btn-ink">Configurar pedido recurrente</a>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Pedidos recurrentes -->
+  <section data-tab-panel="recurring" hidden>
+    <div class="flex items-end justify-between mb-4 flex-wrap gap-3">
+      <h2 class="font-serif text-xl font-medium">Tus pedidos recurrentes</h2>
+      <a href="/pages/cuenta/pedido-recurrente.html" class="btn btn-sm btn-primary">+ Nuevo recurrente</a>
+    </div>
+    <div class="space-y-4" data-rec-list></div>
+    <div class="hidden text-center py-16 px-6 border border-dashed border-line rounded-2xl text-graphite" data-rec-empty>
+      <p class="font-serif text-xl mb-2 text-ink">No tienes pedidos recurrentes activos.</p>
+      <p class="text-sm mb-5">Crea uno para automatizar la reposición de material que necesitas todos los meses.</p>
+      <a href="/pages/cuenta/pedido-recurrente.html" class="btn btn-sm btn-primary">+ Crear pedido recurrente</a>
+    </div>
+  </section>
 </main>
 </div></section>
   <div data-component="site-footer"></div>
@@ -95,4 +73,158 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+    const money = (v) => `${Number(v||0).toFixed(2).replace('.', ',')} €`;
+    const fmtDate = (iso) => { if (!iso) return '—'; const d = new Date(iso.replace(' ','T')); return isNaN(d.getTime()) ? iso : d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}); };
+
+    const list = document.querySelector('[data-rep-list]');
+    const empty = document.querySelector('[data-rep-empty]');
+    const recList = document.querySelector('[data-rec-list]');
+    const recEmpty = document.querySelector('[data-rec-empty]');
+    const summary = document.querySelector('[data-rep-summary]');
+    const selSummary = document.querySelector('[data-sel-summary]');
+    const selTotal = document.querySelector('[data-sel-total]');
+    const tabsBar = document.querySelector('[data-rep-tabs]');
+
+    let suggestions = []; // {sku, ..., qty}
+    let selected = new Set();
+
+    const renderRow = (s) => {
+      const total = s.unitPrice * s.qty;
+      const last = s.lastAtDays != null ? `hace ${s.lastAtDays} día${s.lastAtDays===1?'':'s'}` : '—';
+      const predict = s.predictedDaysLeft != null ? (s.predictedDaysLeft <= 0 ? 'agotamiento previsto: ya agotado' : `agotamiento previsto: ${s.predictedDaysLeft} días`) : '';
+      return `<div class="p-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center" data-row="${s.sku}">
+        <input type="checkbox" class="w-4 h-4" data-row-check="${s.sku}" ${selected.has(s.sku)?'checked':''}/>
+        <div><div class="font-medium">${s.name}</div><div class="text-xs text-graphite font-mono">SKU ${s.sku} · última: ${s.lastQty} uds ${last}${predict ? ' · ' + predict : ''}</div></div>
+        <div class="flex items-center bg-paper-2 rounded-full overflow-hidden">
+          <button type="button" class="w-8 h-8 grid place-items-center hover:bg-paper-3" data-row-dec="${s.sku}">−</button>
+          <input type="number" min="1" value="${s.qty}" class="w-14 text-center bg-transparent font-mono font-medium outline-none" data-row-qty="${s.sku}"/>
+          <button type="button" class="w-8 h-8 grid place-items-center hover:bg-paper-3" data-row-inc="${s.sku}">+</button>
+        </div>
+        <div class="text-right"><div class="font-mono font-medium text-filament">${money(s.unitPrice)}/u</div><div class="text-xs text-graphite font-mono">Total: ${money(total)}</div></div>
+        <button type="button" class="text-graphite hover:text-warn p-1.5 text-xs" data-row-remove="${s.sku}">Quitar</button>
+      </div>`;
+    };
+
+    const renderSuggestions = () => {
+      if (!suggestions.length) { list.innerHTML = ''; empty.classList.remove('hidden'); }
+      else { empty.classList.add('hidden'); list.innerHTML = suggestions.map(renderRow).join(''); }
+      updateSelection();
+    };
+
+    const updateSelection = () => {
+      const sel = suggestions.filter((s) => selected.has(s.sku));
+      const totalUnits = sel.reduce((sum, s) => sum + s.qty, 0);
+      const totalAmount = sel.reduce((sum, s) => sum + s.qty * s.unitPrice, 0);
+      selSummary.textContent = `Selección · ${sel.length} producto${sel.length===1?'':'s'} · ${totalUnits} uds`;
+      selTotal.textContent = money(totalAmount);
+      const allCheckbox = document.querySelector('[data-select-all]');
+      allCheckbox.checked = suggestions.length > 0 && sel.length === suggestions.length;
+    };
+
+    list.addEventListener('click', (ev) => {
+      const dec = ev.target.closest('[data-row-dec]');
+      const inc = ev.target.closest('[data-row-inc]');
+      const rm = ev.target.closest('[data-row-remove]');
+      if (dec) { const s = suggestions.find((x)=>x.sku===dec.dataset.rowDec); if (s) { s.qty = Math.max(1, s.qty - 1); renderSuggestions(); } }
+      else if (inc) { const s = suggestions.find((x)=>x.sku===inc.dataset.rowInc); if (s) { s.qty += 1; renderSuggestions(); } }
+      else if (rm) { suggestions = suggestions.filter((x)=>x.sku!==rm.dataset.rowRemove); selected.delete(rm.dataset.rowRemove); renderSuggestions(); }
+    });
+    list.addEventListener('change', (ev) => {
+      const chk = ev.target.closest('[data-row-check]');
+      const qty = ev.target.closest('[data-row-qty]');
+      if (chk) { if (chk.checked) selected.add(chk.dataset.rowCheck); else selected.delete(chk.dataset.rowCheck); updateSelection(); }
+      if (qty) { const s = suggestions.find((x)=>x.sku===qty.dataset.rowQty); if (s) { s.qty = Math.max(1, Number(qty.value)||1); updateSelection(); } }
+    });
+    document.querySelector('[data-select-all]').addEventListener('change', (ev) => {
+      if (ev.target.checked) suggestions.forEach((s) => selected.add(s.sku));
+      else selected.clear();
+      renderSuggestions();
+    });
+
+    document.querySelector('[data-add-selected]').addEventListener('click', async () => {
+      const sel = suggestions.filter((s) => selected.has(s.sku));
+      if (!sel.length) { glxToast('Selecciona algún producto primero.'); return; }
+      let added = 0;
+      for (const item of sel) {
+        try { await api.addToCart(item.sku, item.qty); added++; } catch (e) { /* ignore */ }
+      }
+      glxToast(`${added} producto${added===1?'':'s'} añadido${added===1?'':'s'} al carrito.`);
+    });
+
+    // Recurrentes
+    const renderRecurring = (recs) => {
+      document.querySelector('[data-count-recurring]').textContent = recs.length;
+      if (!recs.length) { recList.innerHTML = ''; recEmpty.classList.remove('hidden'); return; }
+      recEmpty.classList.add('hidden');
+      recList.innerHTML = recs.map((r) => {
+        const items = r.payload?.items || [];
+        const subtotal = Number(r.payload?.subtotal || items.reduce((s,it)=>s+Number(it.quantity||0)*Number(it.unitPrice||0),0));
+        const FREQ = { weekly: 'Semanal', biweekly: 'Quincenal', monthly: 'Mensual', custom: 'Personalizada' };
+        return `<div class="bg-white border border-line rounded-2xl p-6">
+          <div class="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="font-mono text-xs text-graphite">${r.code}</span><span class="pill pill-stock text-[10px]">${(r.status || 'active').toUpperCase()}</span><span class="font-mono text-xs text-graphite">${FREQ[r.frequency] || r.frequency}</span></div>
+              <h3 class="font-serif text-xl font-medium leading-tight mb-1">${r.name}</h3>
+              <p class="text-graphite text-sm">${items.length} producto${items.length===1?'':'s'} · próxima salida ${fmtDate(r.next_run_at)}</p>
+            </div>
+            <div class="text-right">
+              <div class="font-serif text-2xl font-medium">${money(subtotal)}</div>
+              <div class="text-xs text-graphite font-mono">${r.payload?.addressLabel || ''}</div>
+            </div>
+          </div>
+          <div class="mt-5 pt-5 border-t border-line flex flex-wrap gap-2 justify-between items-center">
+            <div class="flex flex-wrap gap-2">${items.slice(0,3).map((it)=>`<span class="pill bg-paper-2 text-graphite text-[10px]">${it.name || it.sku} · ${it.quantity}</span>`).join('')}</div>
+            <div class="flex gap-2"><button class="btn btn-sm btn-ghost text-warn" data-rec-cancel="${r.code}">Cancelar</button></div>
+          </div>
+        </div>`;
+      }).join('');
+    };
+
+    document.querySelector('[data-rec-list]').addEventListener('click', async (ev) => {
+      const cancel = ev.target.closest('[data-rec-cancel]');
+      if (!cancel) return;
+      if (!confirm('¿Cancelar este pedido recurrente?')) return;
+      try {
+        await api.deleteRecurringOrder(cancel.dataset.recCancel);
+        glxToast('Pedido recurrente cancelado.');
+        const recs = await api.recurringOrders();
+        renderRecurring(recs);
+      } catch (e) { glxToast(e.message); }
+    });
+
+    tabsBar.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('[data-tab]');
+      if (!btn) return;
+      tabsBar.querySelectorAll('button').forEach((b)=>b.classList.toggle('is-active', b.dataset.tab === btn.dataset.tab));
+      document.querySelectorAll('[data-tab-panel]').forEach((p)=>{ p.hidden = p.dataset.tabPanel !== btn.dataset.tab; });
+    });
+
+    const reload = async () => {
+      try {
+        const [sugg, recs] = await Promise.all([
+          api.reorderSuggestions().catch(() => []),
+          api.recurringOrders().catch(() => []),
+        ]);
+        suggestions = sugg.map((s) => ({ ...s, qty: s.suggestedQty }));
+        // Por defecto preseleccionamos los que tienen agotamiento estimado <= 14 días
+        suggestions.forEach((s) => { if (s.predictedDaysLeft != null && s.predictedDaysLeft <= 14) selected.add(s.sku); });
+        renderSuggestions();
+        renderRecurring(recs);
+        summary.textContent = suggestions.length ? `${suggestions.length} producto${suggestions.length===1?'':'s'} candidato${suggestions.length===1?'':'s'} a reposición · ${recs.length} pedido${recs.length===1?'':'s'} recurrente${recs.length===1?'':'s'}` : 'Aún no tenemos suficientes pedidos para hacer sugerencias.';
+      } catch (e) { glxToast(e.message); }
+    };
+
+    // Recurring orders helper en el cliente (api.recurringOrders no estaba expuesto antes)
+    if (!api.recurringOrders) api.recurringOrders = () => api.request('/recurring-orders');
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(reload);
+      else reload();
+    });
+    if (api.getToken()) reload();
+  })();
+  </script>
 </body></html>

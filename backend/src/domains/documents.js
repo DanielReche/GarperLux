@@ -1,6 +1,15 @@
 const { getDb } = require('../db');
-const { ok } = require('../response');
+const { ok, fail } = require('../response');
 const { requireAuth } = require('../middleware/auth');
+
+function parseJson(value, fallback) {
+  try { return JSON.parse(value); } catch { return fallback; }
+}
+
+function decorate(row) {
+  if (!row) return row;
+  return { ...row, payload: parseJson(row.payload_json, {}) };
+}
 
 function registerDocumentRoutes(router) {
   router.get('/api/documents', (req, res) => {
@@ -15,7 +24,35 @@ function registerDocumentRoutes(router) {
       params.push(type);
     }
     const rows = getDb().prepare(`SELECT * FROM documents ${where} ORDER BY issued_at DESC`).all(...params);
-    return ok(res, rows);
+    return ok(res, rows.map(decorate));
+  });
+
+  router.get('/api/documents/summary', (req, res) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    const db = getDb();
+    const row = (sql, ...args) => db.prepare(sql).get(user.id, ...args);
+    // Trimestre en curso = año/trimestre del max(issued_at) del usuario, fallback a now.
+    const stats = {
+      invoices: {
+        total: row(`SELECT COUNT(*) AS n, COALESCE(SUM(total),0) AS sum FROM documents WHERE user_id = ? AND type = 'invoice'`),
+        quarter: row(`SELECT COUNT(*) AS n, COALESCE(SUM(total),0) AS sum FROM documents WHERE user_id = ? AND type = 'invoice' AND issued_at >= date('now','start of month','-2 months','start of month')`),
+        pending: row(`SELECT COUNT(*) AS n, COALESCE(SUM(total),0) AS sum FROM documents WHERE user_id = ? AND type = 'invoice' AND json_extract(payload_json,'$.paid') = 0`),
+      },
+      delivery_notes: {
+        total: row(`SELECT COUNT(*) AS n, COALESCE(SUM(total),0) AS sum FROM documents WHERE user_id = ? AND type = 'delivery_note'`),
+        month: row(`SELECT COUNT(*) AS n, COALESCE(SUM(total),0) AS sum FROM documents WHERE user_id = ? AND type = 'delivery_note' AND issued_at >= date('now','start of month')`),
+      },
+    };
+    return ok(res, stats);
+  });
+
+  router.get('/api/documents/:code', (req, res, { params }) => {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    const row = getDb().prepare('SELECT * FROM documents WHERE code = ? AND user_id = ?').get(params.code, user.id);
+    if (!row) return fail(res, 404, 'DOCUMENT_NOT_FOUND', 'Documento no encontrado.');
+    return ok(res, decorate(row));
   });
 }
 

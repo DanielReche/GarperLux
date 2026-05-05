@@ -30,17 +30,26 @@ function registerQuoteRoutes(router) {
       const payload = await readJson(req);
       requireFields(payload, ['title']);
       const items = Array.isArray(payload.items) ? payload.items : [];
-      const total = items.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1), 0);
+      const subtotalCalc = items.reduce((sum, item) => {
+        const lineTotal = Number(item.lineTotal);
+        if (Number.isFinite(lineTotal)) return sum + lineTotal;
+        const unit = Number(item.unitPrice ?? item.price ?? 0);
+        return sum + unit * Number(item.quantity || 1);
+      }, 0);
+      const subtotal = Number(payload.subtotal ?? subtotalCalc);
+      const tax = Number(payload.tax ?? subtotal * 0.21);
+      const total = Number(payload.total ?? subtotal + tax);
+      const status = ['draft','sent','accepted','rejected'].includes(payload.status) ? payload.status : 'draft';
       const code = quoteCode();
       getDb().prepare('INSERT INTO quotes (code, user_id, status, title, total, payload_json) VALUES (?, ?, ?, ?, ?, ?)').run(
         code,
         user.id,
-        'draft',
+        status,
         payload.title,
         total,
-        JSON.stringify(payload)
+        JSON.stringify({ ...payload, subtotal, tax, total, status })
       );
-      return created(res, { code, status: 'draft', total });
+      return created(res, { code, status, total });
     } catch (error) {
       if (!handleInputError(res, error)) throw error;
     }

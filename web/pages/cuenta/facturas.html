@@ -19,30 +19,34 @@
 
 <main>
   <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
-    <div><div class="eyebrow text-copper mb-2">Documentos fiscales</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Facturas.</h1><p class="text-graphite mt-2">38 facturas · 12 este trimestre</p></div>
-    <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Exportar trimestre (CSV)</button><button class="btn btn-sm btn-ink">Modelo 303 · Q1</button></div>
+    <div><div class="eyebrow text-copper mb-2">Documentos fiscales</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Facturas.</h1><p class="text-graphite mt-2" data-fac-summary>Cargando…</p></div>
+    <div class="flex gap-2"><button class="btn btn-sm btn-ghost" data-fac-export>Exportar CSV</button></div>
   </div>
 
-  <!-- Resumen trimestre -->
+  <!-- Filtros -->
+  <div class="grid sm:grid-cols-[1fr_auto_auto] gap-3 mb-6">
+    <div class="relative"><input type="search" placeholder="Buscar por nº, pedido o cliente…" class="w-full pl-10 pr-3 py-2.5 bg-white border border-line rounded-lg text-sm outline-none focus:border-ink" data-fac-search/><svg class="absolute left-3 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
+    <select class="bg-white border border-line rounded-lg text-sm py-2.5 px-3 outline-none focus:border-ink" data-fac-period><option value="">Todos los periodos</option></select>
+    <select class="bg-white border border-line rounded-lg text-sm py-2.5 px-3 outline-none focus:border-ink" data-fac-status><option value="">Todos los estados</option><option value="paid">Pagadas</option><option value="pending">Pendientes</option></select>
+  </div>
+
+  <!-- Resumen -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Base imponible Q2</div><div class="font-serif text-2xl font-medium">1.522 €</div></div>
-    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">IVA soportado Q2</div><div class="font-serif text-2xl font-medium text-electric">320 €</div></div>
-    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Total facturas Q2</div><div class="font-serif text-2xl font-medium">1.842 €</div></div>
-    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Pendientes pago</div><div class="font-serif text-2xl font-medium text-caution">2</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Base imponible total</div><div class="font-serif text-2xl font-medium" data-fac-stat-base>—</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">IVA soportado</div><div class="font-serif text-2xl font-medium text-electric" data-fac-stat-tax>—</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Total facturado</div><div class="font-serif text-2xl font-medium" data-fac-stat-total>—</div></div>
+    <div class="bg-white border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Pendientes pago</div><div class="font-serif text-2xl font-medium text-caution" data-fac-stat-pending>—</div></div>
   </div>
 
   <!-- Tabla -->
   <div class="bg-white border border-line rounded-2xl overflow-hidden">
-    <div class="px-5 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3"><span>Fecha</span><span>Factura</span><span>Concepto</span><span>Base</span><span>IVA 21%</span><span>Total</span><span></span></div>
-    <div class="divide-y divide-line">
-      <a href="/pages/cuenta/factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">26/04</div><div class="font-mono font-medium">FAC-2026-04-184</div><div><div class="font-medium">Pedido GLX-04-1184</div><div class="text-xs text-graphite">Stock taller · Aplazada 30d</div></div><div class="font-mono">180,50 €</div><div class="font-mono">37,90 €</div><div class="font-mono font-medium">218,40 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
-      <a href="/pages/cuenta/factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">25/04</div><div class="font-mono font-medium">FAC-2026-04-178</div><div><div class="font-medium">Pedido GLX-04-1178</div><div class="text-xs text-graphite">Pagada con tarjeta</div></div><div class="font-mono">78,18 €</div><div class="font-mono">16,42 €</div><div class="font-mono font-medium">94,60 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
-      <a href="/pages/cuenta/factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">22/04</div><div class="font-mono font-medium">FAC-2026-04-162</div><div><div class="font-medium">Obra C/ Bernabé Soriano</div><div class="text-xs text-graphite"><span class="pill pill-caution text-[9px]">Pendiente</span> Vence 22/05</div></div><div class="font-mono">402,73 €</div><div class="font-mono">84,57 €</div><div class="font-mono font-medium">487,30 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
-      <a href="/pages/cuenta/factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">19/04</div><div class="font-mono font-medium">FAC-2026-04-141</div><div><div class="font-medium">Pedido GLX-04-1141</div><div class="text-xs text-graphite">Pagada con tarjeta</div></div><div class="font-mono">154,46 €</div><div class="font-mono">32,44 €</div><div class="font-mono font-medium">186,90 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
-      <a href="/pages/cuenta/factura.html" class="px-5 py-3 grid grid-cols-[80px_140px_1fr_110px_110px_110px_60px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer"><div class="font-mono text-xs text-graphite">15/04</div><div class="font-mono font-medium">FAC-2026-04-098</div><div><div class="font-medium">Domótica Sr. Martínez</div><div class="text-xs text-graphite"><span class="pill pill-caution text-[9px]">Pendiente</span> Vence 15/05</div></div><div class="font-mono">258,18 €</div><div class="font-mono">54,22 €</div><div class="font-mono font-medium">312,40 €</div><div class="flex gap-1"><button class="text-graphite hover:text-ink p-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button></div></a>
-    </div>
-    <div class="px-5 py-3 bg-paper-2 border-t border-line text-xs font-mono text-graphite flex justify-between flex-wrap gap-2"><span>1-5 de 38 facturas · <strong class="text-ink">Total Q2: 1.842,40 €</strong></span><a href="/pages/cuenta/facturacion-electronica.html" class="text-copper hover:underline">Configurar facturación electrónica →</a></div>
+    <div class="px-5 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite grid grid-cols-[80px_150px_1fr_110px_110px_110px] gap-3"><span>Fecha</span><span>Factura</span><span>Concepto</span><span>Base</span><span>IVA 21%</span><span>Total</span></div>
+    <div class="divide-y divide-line" data-fac-list></div>
+    <div class="hidden p-10 text-center text-sm text-graphite" data-fac-empty>No hay facturas que coincidan con el filtro.</div>
+    <div class="px-5 py-3 bg-paper-2 border-t border-line text-xs font-mono text-graphite flex justify-between flex-wrap gap-2" data-fac-footer>—</div>
   </div>
+
+  <p class="text-xs text-graphite mt-3"><a href="/pages/cuenta/facturacion-electronica.html" class="text-copper hover:underline">Configurar facturación electrónica →</a></p>
 </main>
 </div></section>
   <div data-component="site-footer"></div>
@@ -53,4 +57,125 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+    const money = (v) => `${Number(v||0).toFixed(2).replace('.', ',')} €`;
+    const fmtDay = (iso) => { if (!iso) return ''; const d = new Date(iso.replace(' ','T')); return isNaN(d.getTime()) ? iso : d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }); };
+    const periodKey = (iso) => { if (!iso) return ''; const d = new Date(iso.replace(' ','T')); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; };
+    const periodLabel = (key) => { if (!key) return ''; const [y,m]=key.split('-'); return new Date(+y,+m-1,1).toLocaleDateString('es-ES',{month:'long',year:'numeric'}); };
+
+    const list = document.querySelector('[data-fac-list]');
+    const empty = document.querySelector('[data-fac-empty]');
+    const footer = document.querySelector('[data-fac-footer]');
+    const summary = document.querySelector('[data-fac-summary]');
+    const searchInput = document.querySelector('[data-fac-search]');
+    const periodSelect = document.querySelector('[data-fac-period]');
+    const statusSelect = document.querySelector('[data-fac-status]');
+
+    let all = [];
+    let filterText = '';
+    let filterPeriod = '';
+    let filterStatus = '';
+
+    const applyFilters = () => {
+      const q = filterText.trim().toLowerCase();
+      return all.filter((f) => {
+        const isPaid = !!f.payload?.paid;
+        if (filterPeriod && periodKey(f.issued_at) !== filterPeriod) return false;
+        if (filterStatus === 'paid' && !isPaid) return false;
+        if (filterStatus === 'pending' && isPaid) return false;
+        if (q) {
+          const hay = [f.code, f.related_order_code, f.payload?.customer, f.payload?.worksite].filter(Boolean).join(' ').toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    };
+
+    const statusBadge = (f) => {
+      if (f.payload?.paid) return '<span class="pill pill-stock text-[9px]">Pagada</span>';
+      if (f.payload?.dueAt) return `<span class="pill pill-caution text-[9px]">Pendiente · vence ${fmtDay(f.payload.dueAt)}</span>`;
+      return '<span class="pill pill-info text-[9px]">Pendiente</span>';
+    };
+
+    const renderRow = (f) => {
+      const concept = f.payload?.worksite || (f.related_order_code ? `Pedido ${f.related_order_code}` : 'Factura');
+      const detail = `${f.payload?.customer || ''} · ${statusBadge(f)}`;
+      const base = Number(f.payload?.subtotal || 0);
+      const tax = Number(f.payload?.tax || (base * 0.21));
+      return `<a href="/pages/cuenta/factura.html?code=${encodeURIComponent(f.code)}" class="px-5 py-3 grid grid-cols-[80px_150px_1fr_110px_110px_110px] gap-3 items-center text-sm hover:bg-paper-2/50 cursor-pointer">
+        <div class="font-mono text-xs text-graphite">${fmtDay(f.issued_at)}</div>
+        <div class="font-mono font-medium">${f.code}</div>
+        <div><div class="font-medium">${concept}</div><div class="text-xs text-graphite flex items-center gap-2 flex-wrap">${detail}</div></div>
+        <div class="font-mono">${money(base)}</div>
+        <div class="font-mono">${money(tax)}</div>
+        <div class="font-mono font-medium">${money(f.total)}</div>
+      </a>`;
+    };
+
+    const render = () => {
+      const filtered = applyFilters();
+      list.innerHTML = filtered.map(renderRow).join('');
+      empty.classList.toggle('hidden', filtered.length > 0);
+      const totalFiltered = filtered.reduce((s,f)=>s+Number(f.total||0),0);
+      footer.innerHTML = `<span>${filtered.length} de ${all.length} facturas · <strong class="text-ink">Total filtrado ${money(totalFiltered)}</strong></span>`;
+    };
+
+    const computeStats = () => {
+      if (!all.length) {
+        summary.textContent = 'Aún no tienes facturas.';
+        ['data-fac-stat-base','data-fac-stat-tax','data-fac-stat-total','data-fac-stat-pending'].forEach(k => document.querySelector(`[${k}]`).textContent = '—');
+        return;
+      }
+      const totalBase = all.reduce((s,f)=>s+Number(f.payload?.subtotal||0),0);
+      const totalTax = all.reduce((s,f)=>s+Number(f.payload?.tax||0),0);
+      const totalSum = all.reduce((s,f)=>s+Number(f.total||0),0);
+      const pending = all.filter((f)=>!f.payload?.paid);
+      const recent = periodKey(all[0].issued_at);
+      summary.textContent = `${all.length} factura${all.length===1?'':'s'} · ${all.filter(f=>periodKey(f.issued_at)===recent).length} en ${periodLabel(recent)}`;
+      document.querySelector('[data-fac-stat-base]').textContent = money(totalBase);
+      document.querySelector('[data-fac-stat-tax]').textContent = money(totalTax);
+      document.querySelector('[data-fac-stat-total]').textContent = money(totalSum);
+      document.querySelector('[data-fac-stat-pending]').textContent = pending.length;
+    };
+
+    const populateFilters = () => {
+      const periods = [...new Set(all.map((f) => periodKey(f.issued_at)).filter(Boolean))];
+      periodSelect.innerHTML = '<option value="">Todos los periodos</option>' + periods.map((k) => `<option value="${k}">${periodLabel(k).replace(/^./, c => c.toUpperCase())}</option>`).join('');
+    };
+
+    const reload = async () => {
+      try {
+        all = await api.documents('invoice');
+        populateFilters();
+        computeStats();
+        render();
+      } catch (e) { glxToast(e.message); }
+    };
+
+    searchInput.addEventListener('input', (ev) => { filterText = ev.target.value; render(); });
+    periodSelect.addEventListener('change', (ev) => { filterPeriod = ev.target.value; render(); });
+    statusSelect.addEventListener('change', (ev) => { filterStatus = ev.target.value; render(); });
+
+    document.querySelector('[data-fac-export]').addEventListener('click', () => {
+      const filtered = applyFilters();
+      if (!filtered.length) { glxToast('No hay facturas para exportar.'); return; }
+      const header = ['Fecha','Factura','Pedido','Cliente','Base','IVA','Total','Estado'];
+      const rows = filtered.map((f) => [f.issued_at?.slice(0,10), f.code, f.related_order_code||'', f.payload?.customer||'', f.payload?.subtotal||0, f.payload?.tax||0, f.total, f.payload?.paid?'pagada':'pendiente']);
+      const csv = [header, ...rows].map((r) => r.map((c) => `"${String(c ?? '').replace(/"/g,'""')}"`).join(';')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'facturas-garperlux.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(reload);
+      else reload();
+    });
+    if (api.getToken()) reload();
+  })();
+  </script>
 </body></html>

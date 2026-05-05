@@ -2,160 +2,24 @@
 <html lang="es"><head>
   <base href="/.">
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Factura FAC-2026-04-184 · Mi área · GarperLux</title>
+<title>Factura · Mi área · GarperLux</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
 <link rel="stylesheet" href="/assets/css/styles.css" />
-<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}.doc-grid{font-variant-numeric:tabular-nums}</style>
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}.doc-grid{font-variant-numeric:tabular-nums}@media print{.no-print{display:none !important}}</style>
 </head>
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
 
-<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/cuenta/area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><a href="/pages/cuenta/facturas.html" class="hover:text-ink">Facturas</a><span class="opacity-50">/</span><span class="text-ink">FAC-2026-04-184</span></nav></div>
+<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/cuenta/area-personal.html" class="hover:text-ink">Mi área</a><span class="opacity-50">/</span><a href="/pages/cuenta/facturas.html" class="hover:text-ink">Facturas</a><span class="opacity-50">/</span><span class="text-ink" data-fac-bread>—</span></nav></div>
 
 <section class="container-x py-6 pb-20"><div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-10">
-<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="facturas"></aside>
+<aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start no-print" data-active="facturas"></aside>
 
-<main class="space-y-6">
-
-  <!-- Encabezado -->
-  <div class="flex items-end justify-between flex-wrap gap-4">
-    <div>
-      <a href="/pages/cuenta/facturas.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2 mb-3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver a facturas</a>
-      <div class="flex items-center gap-3 mb-2 flex-wrap">
-        <span class="font-mono text-sm text-graphite">Factura</span>
-        <span class="font-mono font-medium text-ink">FAC-2026-04-184</span>
-        <span class="pill pill-caution text-[10px]">Pago aplazado · vence 26/05/2026</span>
-      </div>
-      <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(1.75rem, 4vw, 2.75rem);">Pedido GLX-04-1184.</h1>
-      <p class="text-graphite mt-2">Emitida 26/04/2026 · base imponible <strong class="text-ink font-mono">180,50 €</strong></p>
-    </div>
-    <div class="flex gap-2 flex-wrap">
-      <button class="btn btn-sm btn-ghost"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>PDF firmado</button>
-      <button class="btn btn-sm btn-ghost"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6 12 13 2 6"/></svg>Reenviar</button>
-      <button class="btn btn-sm btn-ink">Marcar como pagada</button>
-    </div>
-  </div>
-
-  <!-- Banner pago -->
-  <div class="bg-caution/5 border border-caution/30 rounded-2xl p-5 flex items-start gap-3">
-    <span class="w-10 h-10 rounded-full bg-caution text-paper grid place-items-center shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
-    <div class="flex-1">
-      <div class="font-medium">Pendiente de pago · vence en 30 días</div>
-      <p class="text-sm text-graphite mt-1">Adeudo SEPA programado para el 26/05/2026 desde la cuenta <span class="font-mono">ES12 •••• 3456</span>. Si necesitas cambiar la fecha o el método, contacta antes del 22/05.</p>
-    </div>
-  </div>
-
-  <!-- Doc -->
-  <div class="bg-white border border-line rounded-2xl p-8 md:p-10 doc-grid">
-
-    <div class="flex items-start justify-between flex-wrap gap-4 pb-6 border-b border-line">
-      <div>
-        <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Factura</div>
-        <div class="font-mono text-2xl font-medium">FAC-2026-04-184</div>
-      </div>
-      <img src="/assets/img/logo.svg" alt="GarperLux" class="h-9 w-auto"/>
-    </div>
-
-    <!-- Datos -->
-    <div class="grid md:grid-cols-2 gap-6 py-6 border-b border-line">
-      <div>
-        <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Emisor</div>
-        <div class="text-sm leading-relaxed">
-          <strong>GarperLux S.L.</strong><br/>
-          CIF: B-23456789<br/>
-          Campus Las Lagunillas s/n<br/>
-          23071 Jaén · España<br/>
-          <span class="font-mono">hola@garperlux.es</span>
-        </div>
-      </div>
-      <div>
-        <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Cliente</div>
-        <div class="text-sm leading-relaxed">
-          <strong>Jose Luis García - El Chispas Instalaciones</strong><br/>
-          CIF: B12345678<br/>
-          Polígono Los Olivares, nave 24<br/>
-          23009 Jaén · España
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 py-6 border-b border-line text-sm">
-      <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Fecha emisión</div><div class="font-mono">26/04/2026</div></div>
-      <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Vencimiento</div><div class="font-mono">26/05/2026</div></div>
-      <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Albarán</div><a href="/pages/cuenta/albaran.html" class="font-mono text-copper hover:underline">ALB-2026-1184</a></div>
-      <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Forma de pago</div><div>SEPA · 30 días</div></div>
-    </div>
-
-    <!-- Líneas -->
-    <div class="py-6">
-      <div class="grid grid-cols-[1fr_60px_90px_90px_100px] gap-3 pb-3 border-b border-line text-[10px] font-mono uppercase tracking-wider text-graphite">
-        <span>Concepto</span><span class="text-right">Cant.</span><span class="text-right">Unitario</span><span class="text-right">Dto.</span><span class="text-right">Importe</span>
-      </div>
-      <div class="divide-y divide-line">
-        <div class="grid grid-cols-[1fr_60px_90px_90px_100px] gap-3 py-3 text-sm items-baseline">
-          <div><div class="font-medium">Interruptor Simón 27 10A blanco</div><div class="text-xs text-graphite font-mono">SKU 27101-31</div></div>
-          <div class="text-right font-mono">8</div>
-          <div class="text-right font-mono">5,90 €</div>
-          <div class="text-right font-mono text-stock">−22%</div>
-          <div class="text-right font-mono font-medium">36,82 €</div>
-        </div>
-        <div class="grid grid-cols-[1fr_60px_90px_90px_100px] gap-3 py-3 text-sm items-baseline">
-          <div><div class="font-medium">Magnetotérmico Schneider iC60N 16A</div><div class="text-xs text-graphite font-mono">SKU A9F74216</div></div>
-          <div class="text-right font-mono">5</div>
-          <div class="text-right font-mono">21,40 €</div>
-          <div class="text-right font-mono text-stock">−22%</div>
-          <div class="text-right font-mono font-medium">83,46 €</div>
-        </div>
-        <div class="grid grid-cols-[1fr_60px_90px_90px_100px] gap-3 py-3 text-sm items-baseline">
-          <div><div class="font-medium">Cinta aislante 3M 10m blanca</div><div class="text-xs text-graphite font-mono">SKU 3M-CA-10W</div></div>
-          <div class="text-right font-mono">20</div>
-          <div class="text-right font-mono">1,68 €</div>
-          <div class="text-right font-mono text-stock">−22%</div>
-          <div class="text-right font-mono font-medium">26,21 €</div>
-        </div>
-        <div class="grid grid-cols-[1fr_60px_90px_90px_100px] gap-3 py-3 text-sm items-baseline">
-          <div><div class="font-medium">Cable manguera 3×1.5 mm² (corte 100m)</div><div class="text-xs text-graphite font-mono">SKU CM-315-100</div></div>
-          <div class="text-right font-mono">1</div>
-          <div class="text-right font-mono">52,00 €</div>
-          <div class="text-right font-mono text-stock">−22%</div>
-          <div class="text-right font-mono font-medium">40,56 €</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Totales -->
-    <div class="grid md:grid-cols-2 gap-5 pt-2">
-      <div class="text-sm text-graphite leading-relaxed">
-        <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Observaciones</div>
-        <p>Tarifa profesional aplicada por carnet BT vigente. Operación sujeta a IVA general (21 %). Recargo de equivalencia no aplica.</p>
-        <p class="mt-3 text-xs">Conforme al RD 1619/2012, esta factura cumple con los requisitos de facturación electrónica de la AEAT.</p>
-      </div>
-      <div class="bg-paper-2 rounded-xl p-5 space-y-2 text-sm">
-        <div class="flex justify-between"><span class="text-graphite">Subtotal</span><span class="font-mono">187,05 €</span></div>
-        <div class="flex justify-between"><span class="text-graphite">Descuento pro −22%</span><span class="font-mono text-stock">−6,55 €</span></div>
-        <div class="flex justify-between font-medium"><span>Base imponible</span><span class="font-mono">180,50 €</span></div>
-        <div class="flex justify-between"><span class="text-graphite">IVA 21%</span><span class="font-mono">37,90 €</span></div>
-        <div class="pt-3 border-t border-line/60 flex justify-between font-medium">
-          <span>Total factura</span>
-          <span class="font-serif text-2xl">218,40 €</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Historial -->
-  <div class="bg-white border border-line rounded-2xl p-6">
-    <h2 class="font-serif text-lg font-medium mb-4">Historial</h2>
-    <div class="space-y-3 text-sm">
-      <div class="flex items-start gap-3"><span class="w-2 h-2 rounded-full bg-stock mt-1.5 shrink-0"></span><div class="flex-1"><div class="font-medium">Factura emitida y enviada</div><div class="text-xs text-graphite font-mono">26/04/2026 · 14:32 · email a chispas@instaladoreseljaen.es</div></div></div>
-      <div class="flex items-start gap-3"><span class="w-2 h-2 rounded-full bg-stock mt-1.5 shrink-0"></span><div class="flex-1"><div class="font-medium">Albarán entregado y firmado</div><div class="text-xs text-graphite font-mono">26/04/2026 · 12:14</div></div></div>
-      <div class="flex items-start gap-3"><span class="w-2 h-2 rounded-full bg-caution mt-1.5 shrink-0 animate-pulse"></span><div class="flex-1"><div class="font-medium">Pendiente de pago</div><div class="text-xs text-graphite font-mono">Vence 26/05/2026 · adeudo SEPA programado</div></div></div>
-    </div>
-  </div>
-
+<main class="space-y-6" data-fac-main>
+  <div class="bg-white border border-line rounded-2xl p-8 text-center text-sm text-graphite">Cargando factura…</div>
 </main>
 </div></section>
   <div data-component="site-footer"></div>
@@ -166,4 +30,153 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+    const money = (v) => `${Number(v||0).toFixed(2).replace('.', ',')} €`;
+    const fmtDate = (iso) => { if (!iso) return '—'; const d = new Date(iso.replace(' ','T')); return isNaN(d.getTime()) ? iso : d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}); };
+
+    const main = document.querySelector('[data-fac-main]');
+    const bread = document.querySelector('[data-fac-bread]');
+
+    const render = (fac) => {
+      const p = fac.payload || {};
+      const items = p.items || [];
+      const subtotal = Number(p.subtotal || items.reduce((s,it)=>s+Number(it.proPrice ?? it.price ?? 0)*Number(it.quantity||0),0));
+      const tax = Number(p.tax || subtotal * 0.21);
+      const total = Number(fac.total || subtotal + tax);
+      bread.textContent = fac.code;
+      document.title = `Factura ${fac.code} · Mi área · GarperLux`;
+
+      const statusBadge = p.paid
+        ? '<span class="pill pill-stock text-[10px]">Pagada</span>'
+        : `<span class="pill pill-caution text-[10px]">Pendiente${p.dueAt ? ' · vence ' + fmtDate(p.dueAt) : ''}</span>`;
+
+      const banner = p.paid
+        ? `<div class="bg-stock/5 border border-stock/30 rounded-2xl p-5 flex items-start gap-3"><span class="w-10 h-10 rounded-full bg-stock text-paper grid place-items-center shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="font-medium">Factura pagada</div><p class="text-sm text-graphite mt-1">Operación cerrada. ${p.paymentMethod?.label ? `Pago realizado mediante <strong>${p.paymentMethod.label}</strong>.` : ''}</p></div></div>`
+        : `<div class="bg-caution/5 border border-caution/30 rounded-2xl p-5 flex items-start gap-3"><span class="w-10 h-10 rounded-full bg-caution text-paper grid place-items-center shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div class="flex-1"><div class="font-medium">Pendiente de pago${p.dueAt ? ` · vence el ${fmtDate(p.dueAt)}` : ''}</div><p class="text-sm text-graphite mt-1">${p.paymentMethod?.label ? `Forma prevista: <strong>${p.paymentMethod.label}</strong>.` : 'Forma de pago a definir.'}</p></div></div>`;
+
+      const itemsHtml = items.map((it) => {
+        const dto = it.proPrice && it.proPrice !== it.price ? '−' + Math.round((1 - it.proPrice/it.price)*100) + '%' : '—';
+        return `<div class="grid grid-cols-[1fr_60px_90px_90px_100px] gap-3 py-3 text-sm items-baseline">
+          <div><div class="font-medium">${it.name}</div><div class="text-xs text-graphite font-mono">SKU ${it.sku}</div></div>
+          <div class="text-right font-mono">${it.quantity}</div>
+          <div class="text-right font-mono">${money(it.price)}</div>
+          <div class="text-right font-mono text-stock">${dto}</div>
+          <div class="text-right font-mono font-medium">${money((it.proPrice ?? it.price) * it.quantity)}</div>
+        </div>`;
+      }).join('');
+
+      main.innerHTML = `
+        <div class="flex items-end justify-between flex-wrap gap-4">
+          <div>
+            <a href="/pages/cuenta/facturas.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2 mb-3 no-print"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver a facturas</a>
+            <div class="flex items-center gap-3 mb-2 flex-wrap">
+              <span class="font-mono text-sm text-graphite">Factura</span>
+              <span class="font-mono font-medium text-ink">${fac.code}</span>
+              ${statusBadge}
+            </div>
+            <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(1.75rem, 4vw, 2.75rem);">${p.worksite || (fac.related_order_code ? `Pedido ${fac.related_order_code}` : 'Factura')}.</h1>
+            <p class="text-graphite mt-2">Emitida ${fmtDate(fac.issued_at)} · base imponible <strong class="text-ink font-mono">${money(subtotal)}</strong></p>
+          </div>
+          <div class="flex gap-2 flex-wrap no-print">
+            <button class="btn btn-sm btn-ghost" data-fac-print><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>Imprimir</button>
+            ${fac.related_order_code ? `<a href="/pages/cuenta/mis-pedido.html?order=${encodeURIComponent(fac.related_order_code)}" class="btn btn-sm btn-ghost">Ver pedido</a>` : ''}
+          </div>
+        </div>
+
+        ${banner}
+
+        <div class="bg-white border border-line rounded-2xl p-8 md:p-10 doc-grid">
+          <div class="flex items-start justify-between flex-wrap gap-4 pb-6 border-b border-line">
+            <div>
+              <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Factura</div>
+              <div class="font-mono text-2xl font-medium">${fac.code}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Total</div>
+              <div class="font-serif text-3xl font-medium">${money(total)}</div>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-6 py-6 border-b border-line">
+            <div>
+              <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Emisor</div>
+              <div class="text-sm leading-relaxed">
+                <strong>GarperLux S.L.</strong><br/>
+                CIF: B-23456789<br/>
+                Campus Las Lagunillas s/n<br/>
+                23071 Jaén · España<br/>
+                <span class="font-mono">hola@garperlux.es</span>
+              </div>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Cliente</div>
+              <div class="text-sm leading-relaxed">
+                <strong>${p.customer || 'Cliente'}</strong><br/>
+                ${p.address || ''}
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-5 py-6 border-b border-line text-sm">
+            <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Fecha emisión</div><div class="font-mono">${fmtDate(fac.issued_at)}</div></div>
+            <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Vencimiento</div><div class="font-mono">${fmtDate(p.dueAt)}</div></div>
+            <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Albarán</div>${fac.related_order_code ? `<a href="/pages/cuenta/albaranes.html" class="font-mono text-copper hover:underline">${fac.related_order_code}</a>` : '<span class="font-mono text-graphite">—</span>'}</div>
+            <div><div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-1">Forma de pago</div><div>${p.paymentMethod?.label || '—'}</div></div>
+          </div>
+          <div class="py-6">
+            <div class="grid grid-cols-[1fr_60px_90px_90px_100px] gap-3 pb-3 border-b border-line text-[10px] font-mono uppercase tracking-wider text-graphite">
+              <span>Concepto</span><span class="text-right">Cant.</span><span class="text-right">Unitario</span><span class="text-right">Dto.</span><span class="text-right">Importe</span>
+            </div>
+            <div class="divide-y divide-line">${itemsHtml || '<p class="text-sm text-graphite py-4">Sin líneas.</p>'}</div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-5 pt-2">
+            <div class="text-sm text-graphite leading-relaxed">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Observaciones</div>
+              <p>Tarifa profesional aplicada por carnet BT vigente. Operación sujeta a IVA general (21 %). Recargo de equivalencia no aplica.</p>
+              <p class="mt-3 text-xs">Conforme al RD 1619/2012, esta factura cumple con los requisitos de facturación electrónica de la AEAT.</p>
+            </div>
+            <div class="bg-paper-2 rounded-xl p-5 space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-graphite">Base imponible</span><span class="font-mono">${money(subtotal)}</span></div>
+              <div class="flex justify-between"><span class="text-graphite">IVA 21%</span><span class="font-mono">${money(tax)}</span></div>
+              <div class="pt-3 border-t border-line/60 flex justify-between font-medium"><span>Total factura</span><span class="font-serif text-2xl">${money(total)}</span></div>
+            </div>
+          </div>
+        </div>`;
+
+      document.querySelector('[data-fac-print]')?.addEventListener('click', () => window.print());
+    };
+
+    const renderError = (msg) => {
+      main.innerHTML = `<div class="bg-white border border-line rounded-2xl p-10 text-center"><p class="font-serif text-xl mb-2">${msg}</p><a href="/pages/cuenta/facturas.html" class="link-underline">Volver a facturas</a></div>`;
+    };
+
+    const reload = async () => {
+      const params = new URLSearchParams(location.search);
+      const code = params.get('code');
+      const relatedAlb = params.get('related');
+      try {
+        if (code) { render(await api.document(code)); return; }
+        const list = await api.documents('invoice');
+        if (relatedAlb) {
+          // Buscar factura cuyo related_order_code coincida con el pedido del albarán dado
+          const albaran = await api.document(relatedAlb).catch(() => null);
+          const orderCode = albaran?.related_order_code;
+          const linked = list.find((f) => f.related_order_code === orderCode);
+          if (linked) { render(await api.document(linked.code)); return; }
+        }
+        if (!list.length) { renderError('Aún no tienes facturas.'); return; }
+        render(await api.document(list[0].code));
+      } catch (e) {
+        if (e.code === 'DOCUMENT_NOT_FOUND') renderError('Factura no encontrada.');
+        else { glxToast(e.message); renderError(e.message); }
+      }
+    };
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(reload);
+      else reload();
+    });
+    if (api.getToken()) reload();
+  })();
+  </script>
 </body></html>

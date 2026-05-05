@@ -21,57 +21,26 @@
   <div class="mb-8">
     <div class="eyebrow text-copper mb-2">Aprendizaje</div>
     <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Tutoriales guardados.</h1>
-    <p class="text-graphite mt-2">7 tutoriales · 2 sin terminar.</p>
+    <p class="text-graphite mt-2" data-tut-summary>Cargando…</p>
   </div>
 
   <!-- En curso -->
-  <h2 class="font-serif text-xl font-medium mb-4">Continúa donde lo dejaste</h2>
-  <div class="grid md:grid-cols-2 gap-5 mb-10">
-    <a href="/pages/aprender/tutorial.html" class="bg-white border border-line rounded-2xl overflow-hidden hover:border-ink transition-colors group">
-      <div class="aspect-[16/9] bg-ink relative"><img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=900&q=80" alt="" class="w-full h-full object-cover opacity-80" loading="lazy" onerror="this.style.display='none'"/>
-        <div class="absolute bottom-0 left-0 right-0 h-1 bg-paper-2"><div class="h-full bg-filament" style="width: 65%"></div></div>
-      </div>
-      <div class="p-5">
-        <div class="flex items-center gap-2 mb-2"><span class="pill pill-info text-[10px]">Mecanismos</span><span class="pill pill-caution text-[10px]">Media</span></div>
-        <h3 class="font-serif text-xl font-medium leading-snug mb-2">Cambiar un interruptor desgastado sin volverte loco</h3>
-        <p class="text-xs text-graphite font-mono">Paso 4 de 6 · 65% completado</p>
-      </div>
-    </a>
-    <a href="/pages/aprender/tutorial.html" class="bg-white border border-line rounded-2xl overflow-hidden hover:border-ink transition-colors group">
-      <div class="aspect-[16/9] bg-paper-2 relative grid place-items-center text-graphite/30"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
-        <div class="absolute bottom-0 left-0 right-0 h-1 bg-paper-2"><div class="h-full bg-filament" style="width: 22%"></div></div>
-      </div>
-      <div class="p-5">
-        <div class="flex items-center gap-2 mb-2"><span class="pill pill-info text-[10px]">Videoportero</span></div>
-        <h3 class="font-serif text-xl font-medium leading-snug mb-2">Instalar un videoportero con Wi-Fi</h3>
-        <p class="text-xs text-graphite font-mono">Paso 1 de 5 · 22% completado</p>
-      </div>
-    </a>
-  </div>
+  <section data-tut-progress-wrap hidden>
+    <h2 class="font-serif text-xl font-medium mb-4">Continúa donde lo dejaste</h2>
+    <div class="grid md:grid-cols-2 gap-5 mb-10" data-tut-progress></div>
+  </section>
 
   <!-- Completados -->
-  <h2 class="font-serif text-xl font-medium mb-4">Ya completados</h2>
-  <div class="grid md:grid-cols-3 gap-4">
-    <a href="/pages/aprender/tutorial.html" class="card-tut group">
-      <div class="cover aspect-[4/3]" style="background:#E4DCCA;"></div>
-      <div class="p-4"><div class="flex items-center gap-2 mb-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-stock"><path d="M20 6 9 17l-5-5"/></svg><span class="text-xs text-stock font-medium">Completado</span></div><h3 class="font-serif text-base font-medium leading-snug">Voltios, vatios y amperios en 5 minutos</h3></div>
-    </a>
-    <a href="/pages/aprender/tutorial.html" class="card-tut group">
-      <div class="cover aspect-[4/3]" style="background:#EFE9DE;"></div>
-      <div class="p-4"><div class="flex items-center gap-2 mb-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-stock"><path d="M20 6 9 17l-5-5"/></svg><span class="text-xs text-stock font-medium">Completado</span></div><h3 class="font-serif text-base font-medium leading-snug">Cómo cortar la luz del circuito correcto</h3></div>
-    </a>
-    <a href="/pages/aprender/tutorial.html" class="card-tut group">
-      <div class="cover aspect-[4/3]" style="background:linear-gradient(135deg,#1C1F26,#0B0D12);"></div>
-      <div class="p-4"><div class="flex items-center gap-2 mb-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-stock"><path d="M20 6 9 17l-5-5"/></svg><span class="text-xs text-stock font-medium">Completado</span></div><h3 class="font-serif text-base font-medium leading-snug">Qué es un polímetro y cómo usarlo sin miedo</h3></div>
-    </a>
-    <a href="/pages/aprender/tutorial.html" class="card-tut group">
-      <div class="cover aspect-[4/3]" style="background:#EFE9DE;"></div>
-      <div class="p-4"><div class="flex items-center gap-2 mb-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-stock"><path d="M20 6 9 17l-5-5"/></svg><span class="text-xs text-stock font-medium">Completado</span></div><h3 class="font-serif text-base font-medium leading-snug">Entender la temperatura de color</h3></div>
-    </a>
-    <a href="/pages/aprender/tutorial.html" class="card-tut group">
-      <div class="cover aspect-[4/3]" style="background:#E4DCCA;"></div>
-      <div class="p-4"><div class="flex items-center gap-2 mb-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-stock"><path d="M20 6 9 17l-5-5"/></svg><span class="text-xs text-stock font-medium">Completado</span></div><h3 class="font-serif text-base font-medium leading-snug">Cambiar un enchufe doble</h3></div>
-    </a>
+  <section data-tut-done-wrap hidden>
+    <h2 class="font-serif text-xl font-medium mb-4">Ya completados</h2>
+    <div class="grid md:grid-cols-3 gap-4" data-tut-done></div>
+  </section>
+
+  <!-- Estado vacío -->
+  <div data-tut-empty hidden class="text-center py-16 px-6 border border-dashed border-line rounded-2xl text-graphite">
+    <p class="font-serif text-2xl mb-2 text-ink">Aún no has guardado tutoriales.</p>
+    <p class="text-sm mb-6">Marca como "Guardar" cualquier tutorial de Hazlo Tú Mismo para retomarlo aquí.</p>
+    <a href="/pages/aprender/hazlo-tu-mismo.html" class="btn btn-primary">Explorar tutoriales</a>
   </div>
 </main>
 </div></section>
@@ -83,4 +52,125 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+
+    const summary = document.querySelector('[data-tut-summary]');
+    const progressWrap = document.querySelector('[data-tut-progress-wrap]');
+    const progressList = document.querySelector('[data-tut-progress]');
+    const doneWrap = document.querySelector('[data-tut-done-wrap]');
+    const doneList = document.querySelector('[data-tut-done]');
+    const emptyState = document.querySelector('[data-tut-empty]');
+
+    const PALETTE = ['#E4DCCA', '#EFE9DE', 'linear-gradient(135deg,#1C1F26,#0B0D12)', '#D8CFB8', '#F2EBDC'];
+    const coverFor = (slug) => {
+      let h = 0; for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+      return PALETTE[h % PALETTE.length];
+    };
+
+    const difficultyPill = (d) => {
+      const map = { basica: 'pill pill-stock', media: 'pill pill-caution', avanzada: 'pill pill-warn' };
+      const labels = { basica: 'Básica', media: 'Media', avanzada: 'Avanzada' };
+      return `<span class="${map[d] || 'pill pill-info'} text-[10px]">${labels[d] || d}</span>`;
+    };
+
+    const totalSteps = (t) => Math.max(3, Math.ceil((t.minutes || 30) / 8));
+
+    const cardInProgress = (t) => {
+      const steps = totalSteps(t);
+      const currentStep = Math.max(1, Math.round((t.progress / 100) * steps));
+      const cover = coverFor(t.slug);
+      const isGradient = String(cover).startsWith('linear');
+      return `
+        <article class="bg-white border border-line rounded-2xl overflow-hidden hover:border-ink transition-colors group relative" data-tut-card="${t.slug}">
+          <button class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-paper/95 grid place-items-center text-graphite hover:bg-warn hover:text-paper transition-colors" aria-label="Quitar de guardados" data-tut-remove="${t.slug}" title="Quitar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+          <a href="/pages/aprender/tutorial.html?slug=${encodeURIComponent(t.slug)}" class="block">
+            <div class="aspect-[16/9] relative grid place-items-center text-graphite/30" style="background:${cover};">
+              ${!isGradient ? '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>' : ''}
+              <div class="absolute bottom-0 left-0 right-0 h-1 bg-paper-2"><div class="h-full bg-filament" style="width: ${t.progress}%"></div></div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-center gap-2 mb-2">${difficultyPill(t.difficulty)}<span class="pill pill-info text-[10px]">${t.minutes} min</span></div>
+              <h3 class="font-serif text-xl font-medium leading-snug mb-2">${t.title}</h3>
+              <p class="text-xs text-graphite font-mono">Paso ${currentStep} de ${steps} · ${t.progress}% completado</p>
+              ${t.notes ? `<p class="text-xs text-graphite mt-2 italic">"${t.notes}"</p>` : ''}
+            </div>
+          </a>
+        </article>`;
+    };
+
+    const cardDone = (t) => {
+      const cover = coverFor(t.slug);
+      return `
+        <article class="card-tut group relative" data-tut-card="${t.slug}">
+          <button class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-paper/95 grid place-items-center text-graphite hover:bg-warn hover:text-paper transition-colors" aria-label="Quitar de guardados" data-tut-remove="${t.slug}" title="Quitar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+          <a href="/pages/aprender/tutorial.html?slug=${encodeURIComponent(t.slug)}" class="block">
+            <div class="cover aspect-[4/3]" style="background:${cover};"></div>
+            <div class="p-4">
+              <div class="flex items-center gap-2 mb-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-stock"><path d="M20 6 9 17l-5-5"/></svg><span class="text-xs text-stock font-medium">Completado</span></div>
+              <h3 class="font-serif text-base font-medium leading-snug">${t.title}</h3>
+            </div>
+          </a>
+        </article>`;
+    };
+
+    const removeTutorial = async (slug) => {
+      if (!confirm('¿Quitar este tutorial de tu lista de guardados?')) return;
+      try {
+        await api.request(`/account/saved-tutorials/${encodeURIComponent(slug)}`, { method: 'DELETE' });
+        glxToast('Tutorial quitado de tus guardados.');
+        await reload();
+      } catch (e) { glxToast(e.message); }
+    };
+
+    const reload = async () => {
+      try {
+        const list = await api.savedTutorials();
+        const inProgress = list.filter((t) => Number(t.progress) < 100);
+        const done = list.filter((t) => Number(t.progress) >= 100);
+        const total = list.length;
+        if (!total) {
+          summary.textContent = '—';
+          progressWrap.hidden = true;
+          doneWrap.hidden = true;
+          emptyState.hidden = false;
+          return;
+        }
+        emptyState.hidden = true;
+        summary.textContent = `${total} tutorial${total === 1 ? '' : 'es'} · ${inProgress.length} sin terminar.`;
+
+        if (inProgress.length) {
+          progressWrap.hidden = false;
+          progressList.innerHTML = inProgress.map(cardInProgress).join('');
+        } else {
+          progressWrap.hidden = true;
+        }
+        if (done.length) {
+          doneWrap.hidden = false;
+          doneList.innerHTML = done.map(cardDone).join('');
+        } else {
+          doneWrap.hidden = true;
+        }
+      } catch (e) {
+        glxToast(e.message || 'No se pudieron cargar tus tutoriales.');
+      }
+    };
+
+    document.querySelector('main').addEventListener('click', (ev) => {
+      const remove = ev.target.closest('[data-tut-remove]');
+      if (remove) { ev.preventDefault(); removeTutorial(remove.dataset.tutRemove); }
+    });
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(reload);
+      else reload();
+    });
+    if (api.getToken()) reload();
+  })();
+  </script>
 </body></html>

@@ -276,14 +276,32 @@ function registerAccountRoutes(router) {
   router.get('/api/account/favorites', (req, res) => {
     const user = requireAuth(req, res);
     if (!user) return;
+    const fullUser = getDb().prepare('SELECT pro_discount FROM users WHERE id = ?').get(user.id);
+    const proDiscount = Number(fullUser?.pro_discount || 0);
     const rows = getDb().prepare(`
-      SELECT products.id, products.sku, products.name, products.slug, products.price
+      SELECT products.id, products.sku, products.name, products.slug, products.price, products.stock,
+             categories.slug AS category_slug, categories.name AS category_name,
+             brands.slug AS brand_slug, brands.name AS brand_name,
+             favorites.created_at AS favorited_at
       FROM favorites
       JOIN products ON products.id = favorites.product_id
+      JOIN categories ON categories.id = products.category_id
+      JOIN brands ON brands.id = products.brand_id
       WHERE favorites.user_id = ?
       ORDER BY favorites.created_at DESC
     `).all(user.id);
-    return ok(res, rows);
+    return ok(res, rows.map((row) => ({
+      id: row.id,
+      sku: row.sku,
+      name: row.name,
+      slug: row.slug,
+      price: row.price,
+      proPrice: proDiscount > 0 ? Math.round(row.price * (1 - proDiscount / 100) * 100) / 100 : row.price,
+      stock: row.stock,
+      category: { slug: row.category_slug, name: row.category_name },
+      brand: { slug: row.brand_slug, name: row.brand_name },
+      favoritedAt: row.favorited_at,
+    })));
   });
 
   router.post('/api/account/favorites/:sku', (req, res, { params }) => {

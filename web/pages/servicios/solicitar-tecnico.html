@@ -421,7 +421,7 @@
 
         <!-- ===== NAVIGATION BUTTONS ===== -->
         <div class="mt-12 flex items-center justify-between gap-4">
-          <button id="btn-prev" class="btn btn-ghost" disabled>
+          <button id="btn-prev" class="btn btn-ghost">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Atrás
           </button>
@@ -500,6 +500,18 @@
     let currentStep = 1;
     const totalSteps = 6;
     const state = { tipo: null, area: null, descripcion: null, urgencia: null, contacto: null };
+    const fallbackBackUrl = '/pages/servicios/servicios.html';
+    const entryReferrer = (() => {
+      try {
+        if (!document.referrer) return '';
+        const referrer = new URL(document.referrer);
+        if (referrer.origin !== location.origin) return '';
+        if (referrer.pathname === location.pathname) return '';
+        return referrer.href;
+      } catch {
+        return '';
+      }
+    })();
 
     const labels = {
       tipo: { averia: 'Avería', instalacion: 'Instalación nueva', mantenimiento: 'Mantenimiento periódico', duda: 'Duda / asesoramiento' },
@@ -562,7 +574,6 @@
       });
       $('[data-current-step]').textContent = n;
       $('#mobile-progress').style.width = `${(n / totalSteps) * 100}%`;
-      $('#btn-prev').disabled = n === 1;
       $('#btn-next').classList.toggle('hidden', n === totalSteps);
       $('#btn-submit').classList.toggle('hidden', n !== totalSteps);
       if (n === totalSteps) populateSummary();
@@ -592,8 +603,20 @@
       if (!validateStep(currentStep)) return;
       if (currentStep < totalSteps) { currentStep++; showStep(currentStep); }
     });
+    function leaveWizard() {
+      if (entryReferrer) {
+        location.href = entryReferrer;
+        return;
+      }
+      if (history.length > 1) {
+        history.back();
+        return;
+      }
+      location.href = fallbackBackUrl;
+    }
     $('#btn-prev').addEventListener('click', () => {
-      if (currentStep > 1) { currentStep--; showStep(currentStep); }
+      if (currentStep > 1) { currentStep--; showStep(currentStep); return; }
+      leaveWizard();
     });
     $('#btn-submit').addEventListener('click', () => {
       // En un proyecto real iría aquí el POST al backend.

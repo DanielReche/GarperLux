@@ -1,7 +1,7 @@
 /* GarperLux API client provisional. */
 
 window.GarperLuxApi = (() => {
-  const API_BASE = window.GARPERLUX_API_BASE || 'http://localhost:3000/api';
+  const API_BASE = window.GARPERLUX_API_BASE || `${window.location.origin}/api`;
   const TOKEN_KEY = 'garperlux_api_token';
 
   function getToken() {
@@ -63,11 +63,17 @@ window.GarperLuxApi = (() => {
     serviceRequestDetail: (code) => request(`/service-requests/${encodeURIComponent(code)}`),
     updateServiceRequestStatus: (code, payload) => request(`/service-requests/${encodeURIComponent(code)}/status`, { method: 'PATCH', body: JSON.stringify(payload) }),
     cancelServiceRequest: (code) => request(`/service-requests/${encodeURIComponent(code)}/cancel`, { method: 'POST' }),
-    quote: (payload) => request('/quotes', { method: 'POST', body: JSON.stringify(payload) }),
+    // (legacy) — usar createQuote(payload). Mantengo el nombre por compatibilidad con backend-integration.js.
     orders: () => request('/orders'),
     quotes: () => request('/quotes'),
     serviceRequests: () => request('/service-requests'),
     documents: (type) => request(`/documents${type ? `?type=${encodeURIComponent(type)}` : ''}`),
+    document: (code) => request(`/documents/${encodeURIComponent(code)}`),
+    documentsSummary: () => request('/documents/summary'),
+    quote: (code) => request(`/quotes/${encodeURIComponent(code)}`),
+    createQuote: (payload) => request('/quotes', { method: 'POST', body: JSON.stringify(payload) }),
+    deleteRecurringOrder: (code) => request(`/recurring-orders/${encodeURIComponent(code)}`, { method: 'DELETE' }),
+    reorderSuggestions: () => request('/account/reorder-suggestions'),
     addresses: () => request('/account/addresses'),
     address: (id) => request(`/account/addresses/${encodeURIComponent(id)}`),
     addAddress: (payload) => request('/account/addresses', { method: 'POST', body: JSON.stringify(payload) }),

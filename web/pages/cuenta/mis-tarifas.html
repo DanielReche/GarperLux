@@ -26,13 +26,13 @@
     <div class="relative grid md:grid-cols-[1fr_auto] gap-5 items-center">
       <div>
         <div class="eyebrow text-filament mb-2">Descuento general aplicado</div>
-        <div class="font-serif text-7xl font-medium leading-none">−22<span class="text-4xl">%</span></div>
+        <div class="font-serif text-7xl font-medium leading-none">−<span data-discount-base>—</span><span class="text-4xl">%</span></div>
         <p class="text-paper/70 mt-3 max-w-md">Aplicado automáticamente sobre el PVP de cualquier producto del catálogo. Visible en cada ficha de producto y en el carrito.</p>
       </div>
       <div class="text-right">
-        <div class="font-mono text-xs text-paper/60 mb-1">Tu descuento medio real</div>
-        <div class="font-serif text-4xl font-medium">21,8%</div>
-        <div class="font-mono text-[10px] text-paper/50 mt-1">en últimos 6 meses</div>
+        <div class="font-mono text-xs text-paper/60 mb-1">Tu ahorro real (últimos pedidos)</div>
+        <div class="font-serif text-4xl font-medium" data-saved>—</div>
+        <div class="font-mono text-[10px] text-paper/50 mt-1" data-saved-period>—</div>
       </div>
     </div>
   </div>
@@ -40,33 +40,28 @@
   <!-- Escalado por volumen -->
   <div class="bg-white border border-line rounded-2xl p-6 mb-6">
     <h2 class="font-serif text-xl font-medium mb-2">Escalado por volumen</h2>
-    <p class="text-sm text-graphite mb-5">Encima del descuento general, sumas extra cuando compras más unidades del mismo SKU.</p>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div class="bg-paper-2 rounded-xl p-4"><div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">1+ uds</div><div class="font-serif text-2xl font-medium">−22%</div><div class="text-[10px] text-graphite font-mono">descuento base</div></div>
-      <div class="bg-paper-2 rounded-xl p-4"><div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">10+ uds</div><div class="font-serif text-2xl font-medium text-filament">−27%</div><div class="text-[10px] text-graphite font-mono">+5%</div></div>
-      <div class="bg-paper-2 rounded-xl p-4"><div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">25+ uds</div><div class="font-serif text-2xl font-medium text-filament">−31%</div><div class="text-[10px] text-graphite font-mono">+9%</div></div>
-      <div class="bg-paper-2 rounded-xl p-4"><div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">100+ uds</div><div class="font-serif text-2xl font-medium text-filament">−36%</div><div class="text-[10px] text-graphite font-mono">+14%</div></div>
-    </div>
+    <p class="text-sm text-graphite mb-5">Encima del descuento general, sumas extra cuando compras más unidades del mismo SKU en un mismo pedido.</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3" data-tier-grid></div>
   </div>
 
-  <!-- Categorías con tarifa especial -->
-  <div class="bg-white border border-line rounded-2xl overflow-hidden mb-6">
-    <div class="px-6 py-4 border-b border-line"><h2 class="font-serif text-xl font-medium">Tarifas especiales por categoría</h2><p class="text-sm text-graphite mt-1">Algunas categorías tienen condiciones particulares por acuerdo con el fabricante.</p></div>
-    <div class="divide-y divide-line">
-      <div class="p-5 grid grid-cols-[1fr_auto_auto] gap-4 items-center"><div><div class="font-medium">Schneider Electric · gama doméstica</div><div class="text-xs text-graphite">Magnetotérmicos, diferenciales, protectores</div></div><div class="text-xs font-mono text-graphite">PVP base</div><div class="font-mono font-medium text-filament">−25%</div></div>
-      <div class="p-5 grid grid-cols-[1fr_auto_auto] gap-4 items-center"><div><div class="font-medium">Simón · gama 27</div><div class="text-xs text-graphite">Mecanismos serie 27 completa</div></div><div class="text-xs font-mono text-graphite">PVP base</div><div class="font-mono font-medium text-filament">−24%</div></div>
-      <div class="p-5 grid grid-cols-[1fr_auto_auto] gap-4 items-center"><div><div class="font-medium">Cableado al corte (por metros)</div><div class="text-xs text-graphite">Manguera 3×1.5, 3×2.5, 5×4 H07V-K</div></div><div class="text-xs font-mono text-graphite">PVP base</div><div class="font-mono font-medium text-filament">−18%</div></div>
-      <div class="p-5 grid grid-cols-[1fr_auto_auto] gap-4 items-center"><div><div class="font-medium">Iluminación LED Philips Hue</div><div class="text-xs text-graphite">Restricción del fabricante</div></div><div class="text-xs font-mono text-graphite">PVP base</div><div class="font-mono font-medium text-graphite">−10%</div></div>
+  <!-- Resumen actividad pro -->
+  <div class="bg-white border border-line rounded-2xl p-6 mb-6">
+    <h2 class="font-serif text-xl font-medium mb-4">Resumen de tu actividad pro</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-paper-2 rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Pedidos pro</div><div class="font-serif text-2xl font-medium" data-stat-orders>—</div></div>
+      <div class="bg-paper-2 rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Importe total</div><div class="font-serif text-2xl font-medium" data-stat-total>—</div></div>
+      <div class="bg-paper-2 rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Pedido medio</div><div class="font-serif text-2xl font-medium" data-stat-avg>—</div></div>
+      <div class="bg-paper-2 rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Productos guardados</div><div class="font-serif text-2xl font-medium" data-stat-favs>—</div></div>
     </div>
   </div>
 
   <!-- Pago aplazado -->
   <div class="bg-paper-2 border border-line rounded-2xl p-6">
     <h2 class="font-serif text-xl font-medium mb-3">Pago aplazado a 30 días</h2>
-    <p class="text-graphite text-sm mb-4">Como cliente profesional validado, puedes pagar tus pedidos en transferencia a 30 días sin recargo. Límite mensual configurado: <strong class="text-ink font-mono">3.000 €</strong>.</p>
+    <p class="text-graphite text-sm mb-4">Como cliente profesional validado, puedes pagar tus pedidos en transferencia a 30 días sin recargo. Límite mensual configurado: <strong class="text-ink font-mono" data-credit-limit>3.000 €</strong>.</p>
     <div class="bg-white rounded-lg p-4 mb-4">
-      <div class="flex justify-between text-sm mb-2"><span class="text-graphite">Saldo usado este mes</span><span class="font-mono font-medium">1.842 € / 3.000 €</span></div>
-      <div class="h-2 bg-paper-2 rounded-full overflow-hidden"><div class="h-full bg-filament" style="width: 61%"></div></div>
+      <div class="flex justify-between text-sm mb-2"><span class="text-graphite">Pendiente facturar este trimestre</span><span class="font-mono font-medium" data-credit-used>—</span></div>
+      <div class="h-2 bg-paper-2 rounded-full overflow-hidden"><div class="h-full bg-filament" style="width: 0%" data-credit-bar></div></div>
     </div>
     <a href="/pages/empresa/contacto.html" class="link-underline text-sm">Solicitar ampliación de límite →</a>
   </div>
@@ -80,4 +75,72 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+    const money = (v) => `${Number(v||0).toFixed(2).replace('.', ',')} €`;
+    const CREDIT_LIMIT = 3000;
+
+    const reload = async () => {
+      try {
+        const [me, orders, favorites, summary] = await Promise.all([
+          api.me(),
+          api.orders(),
+          api.favorites().catch(() => []),
+          api.documentsSummary().catch(() => null),
+        ]);
+        const baseDiscount = Number(me.proDiscount || 0);
+        document.querySelector('[data-discount-base]').textContent = baseDiscount;
+
+        // Tiers escalados sobre el descuento base.
+        const tiers = [
+          { label: '1+ uds', extra: 0 },
+          { label: '10+ uds', extra: 5 },
+          { label: '25+ uds', extra: 9 },
+          { label: '100+ uds', extra: 14 },
+        ];
+        document.querySelector('[data-tier-grid]').innerHTML = tiers.map((t) => {
+          const total = baseDiscount + t.extra;
+          return `<div class="bg-paper-2 rounded-xl p-4">
+            <div class="text-xs font-mono text-graphite uppercase tracking-wider mb-1">${t.label}</div>
+            <div class="font-serif text-2xl font-medium ${t.extra ? 'text-filament' : ''}">−${total}%</div>
+            <div class="text-[10px] text-graphite font-mono">${t.extra ? '+' + t.extra + '% extra' : 'descuento base'}</div>
+          </div>`;
+        }).join('');
+
+        // Ahorro real basado en pedidos: PVP - precio pro
+        let totalSpent = 0, totalSavings = 0;
+        for (const o of orders) {
+          const items = o.payload?.cart?.items || (await api.order(o.code).then(d => d.payload?.cart?.items).catch(() => []));
+          totalSpent += Number(o.total || 0);
+          for (const it of (items || [])) {
+            const original = Number(it.price || 0) * Number(it.quantity || 0);
+            const paid = Number(it.proPrice ?? it.price ?? 0) * Number(it.quantity || 0);
+            totalSavings += Math.max(0, original - paid);
+          }
+        }
+        document.querySelector('[data-saved]').textContent = money(totalSavings);
+        document.querySelector('[data-saved-period]').textContent = orders.length ? `en ${orders.length} pedido${orders.length === 1 ? '' : 's'}` : 'sin pedidos aún';
+
+        document.querySelector('[data-stat-orders]').textContent = orders.length;
+        document.querySelector('[data-stat-total]').textContent = money(totalSpent);
+        document.querySelector('[data-stat-avg]').textContent = orders.length ? money(totalSpent / orders.length) : money(0);
+        document.querySelector('[data-stat-favs]').textContent = favorites.length;
+
+        const pending = Number(summary?.invoices?.pending?.sum || 0);
+        document.querySelector('[data-credit-limit]').textContent = money(CREDIT_LIMIT);
+        document.querySelector('[data-credit-used]').textContent = `${money(pending)} / ${money(CREDIT_LIMIT)}`;
+        document.querySelector('[data-credit-bar]').style.width = `${Math.min(100, (pending / CREDIT_LIMIT) * 100)}%`;
+      } catch (e) {
+        glxToast(e.message || 'No se pudieron cargar las tarifas.');
+      }
+    };
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(reload);
+      else reload();
+    });
+    if (api.getToken()) reload();
+  })();
+  </script>
 </body></html>

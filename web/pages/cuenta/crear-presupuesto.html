@@ -12,6 +12,9 @@
 .nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}
 .field{width:100%;padding:.7rem .85rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink)}
 .field:focus{outline:none;border-color:var(--ink)}
+.search-suggestion{position:absolute;top:100%;left:0;right:0;z-index:30;background:white;border:1px solid var(--line);border-radius:0 0 10px 10px;max-height:240px;overflow-y:auto;box-shadow:0 12px 24px -12px rgba(11,13,18,.18)}
+.search-suggestion button{display:block;width:100%;text-align:left;padding:.6rem .9rem;font-size:13px}
+.search-suggestion button:hover{background:var(--paper-2)}
 </style>
 </head>
 <body class="bg-paper text-ink">
@@ -23,36 +26,27 @@
 <aside id="glx-sidebar" class="lg:sticky lg:top-6 lg:self-start" data-active="mis-presupuestos"></aside>
 
 <main>
-
   <div class="mb-8">
     <a href="/pages/cuenta/mis-presupuestos.html" class="text-sm text-graphite hover:text-ink flex items-center gap-2 mb-3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver a presupuestos</a>
     <div class="eyebrow text-copper mb-2">Para tu cliente</div>
     <h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Nuevo presupuesto.</h1>
-    <p class="text-graphite mt-2">Borrador · se guardará automáticamente cada cambio</p>
+    <p class="text-graphite mt-2">Borrador · se guardará al enviar al cliente.</p>
   </div>
 
-  <div class="grid lg:grid-cols-[1fr_360px] gap-6">
-
-    <!-- ===== Form ===== -->
+  <form id="quote-form" class="grid lg:grid-cols-[1fr_360px] gap-6">
     <div class="space-y-5">
 
       <!-- Cliente -->
       <div class="bg-white border border-line rounded-2xl p-6">
         <h2 class="font-serif text-xl font-medium mb-1">1 · Cliente</h2>
         <p class="text-xs text-graphite mb-5">A quién va dirigido este presupuesto.</p>
-
-        <div class="flex gap-2 mb-4 flex-wrap">
-          <button class="px-3 py-1.5 rounded-full bg-ink text-paper text-sm">+ Nuevo</button>
-          <button class="px-3 py-1.5 rounded-full bg-paper-2 text-graphite hover:bg-paper-3 text-sm">Buscar en cartera (8)</button>
-        </div>
-
         <div class="grid sm:grid-cols-2 gap-4">
-          <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nombre o razón social</label><input type="text" class="field" placeholder="Familia López"/></div>
-          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Persona de contacto</label><input type="text" class="field" placeholder="María López Ruiz"/></div>
-          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">DNI / CIF</label><input type="text" class="field font-mono" placeholder="opcional"/></div>
-          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Email</label><input type="email" class="field" placeholder="cliente@correo.com"/></div>
-          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono</label><input type="tel" class="field font-mono" placeholder="600 000 000"/></div>
-          <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Dirección de la obra</label><input type="text" class="field" placeholder="Calle, número, localidad"/></div>
+          <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Nombre o razón social *</label><input type="text" class="field" name="customerName" required placeholder="Familia López"/></div>
+          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Persona de contacto</label><input type="text" class="field" name="customerContact" placeholder="María López Ruiz"/></div>
+          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">DNI / CIF</label><input type="text" class="field font-mono" name="customerTaxId" placeholder="opcional"/></div>
+          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Email</label><input type="email" class="field" name="customerEmail" placeholder="cliente@correo.com"/></div>
+          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono</label><input type="tel" class="field font-mono" name="customerPhone" placeholder="600 000 000"/></div>
+          <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Dirección de la obra</label><input type="text" class="field" name="customerAddress" placeholder="Calle, número, localidad"/></div>
         </div>
       </div>
 
@@ -60,57 +54,31 @@
       <div class="bg-white border border-line rounded-2xl p-6">
         <h2 class="font-serif text-xl font-medium mb-1">2 · Concepto del trabajo</h2>
         <p class="text-xs text-graphite mb-5">Lo que vas a hacer, en pocas frases.</p>
-        <input type="text" class="field mb-3" placeholder="Título corto · ej. Renovación cuadro vivienda"/>
-        <textarea class="field" rows="4" placeholder="Descripción detallada: qué se sustituye, qué se incluye, qué quedará al final..."></textarea>
+        <input type="text" class="field mb-3" name="title" required placeholder="Título corto · ej. Renovación cuadro vivienda"/>
+        <textarea class="field" name="description" rows="4" placeholder="Descripción detallada: qué se sustituye, qué se incluye, qué quedará al final..."></textarea>
       </div>
 
       <!-- Líneas -->
       <div class="bg-white border border-line rounded-2xl p-6">
         <div class="flex items-end justify-between mb-1 flex-wrap gap-2">
           <h2 class="font-serif text-xl font-medium">3 · Material y mano de obra</h2>
-          <div class="flex gap-2">
-            <button class="text-xs text-copper hover:underline">Importar de plantilla</button>
-            <button class="text-xs text-copper hover:underline">Desde último presupuesto</button>
-          </div>
         </div>
-        <p class="text-xs text-graphite mb-5">Añade líneas con tu tarifa pro aplicada (−22%) o introduce precios manualmente.</p>
+        <p class="text-xs text-graphite mb-5">Tu tarifa pro se aplica automáticamente al elegir productos del catálogo.</p>
 
-        <!-- Buscador SKU -->
+        <!-- Buscador productos -->
         <div class="relative mb-4">
-          <input type="search" placeholder="Buscar producto por SKU, nombre o EAN…" class="w-full pl-10 pr-3 py-2.5 bg-paper-2 border border-line rounded-lg text-sm outline-none focus:border-ink"/>
+          <input type="search" id="product-search" autocomplete="off" placeholder="Buscar producto del catálogo por SKU o nombre…" class="w-full pl-10 pr-3 py-2.5 bg-paper-2 border border-line rounded-lg text-sm outline-none focus:border-ink"/>
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <div id="product-suggestions" class="search-suggestion" hidden></div>
         </div>
 
-        <!-- Tabla líneas -->
         <div class="border border-line rounded-xl overflow-hidden">
           <div class="px-4 py-2 bg-paper-2 border-b border-line text-[10px] font-mono uppercase tracking-wider text-graphite grid grid-cols-[1fr_70px_90px_90px_30px] gap-2"><span>Concepto</span><span class="text-right">Cant.</span><span class="text-right">Precio</span><span class="text-right">Importe</span><span></span></div>
-          <div class="divide-y divide-line">
-            <div class="px-4 py-3 grid grid-cols-[1fr_70px_90px_90px_30px] gap-2 items-center text-sm">
-              <div><div class="font-medium">Magnetotérmico Schneider iC60N 16A</div><div class="text-xs text-graphite font-mono">SKU A9F74216</div></div>
-              <input type="number" value="8" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <input type="text" value="21,40" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <div class="text-right font-mono font-medium">171,20 €</div>
-              <button class="text-graphite hover:text-warn">×</button>
-            </div>
-            <div class="px-4 py-3 grid grid-cols-[1fr_70px_90px_90px_30px] gap-2 items-center text-sm">
-              <div><div class="font-medium">Cuadro Schneider Resi9 12 mód.</div><div class="text-xs text-graphite font-mono">SKU R9H13412</div></div>
-              <input type="number" value="1" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <input type="text" value="68,00" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <div class="text-right font-mono font-medium">68,00 €</div>
-              <button class="text-graphite hover:text-warn">×</button>
-            </div>
-            <div class="px-4 py-3 grid grid-cols-[1fr_70px_90px_90px_30px] gap-2 items-center text-sm">
-              <div><input type="text" placeholder="Concepto manual..." class="field !py-1.5 !px-2 italic"/><div class="text-xs text-graphite font-mono mt-1">Línea libre · ej. mano de obra</div></div>
-              <input type="number" value="8" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <input type="text" value="35,00" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <div class="text-right font-mono font-medium">280,00 €</div>
-              <button class="text-graphite hover:text-warn">×</button>
-            </div>
+          <div class="divide-y divide-line" id="quote-lines">
+            <div class="p-5 text-center text-sm text-graphite" data-empty-row>Añade líneas usando el buscador o el botón "+ Línea libre".</div>
           </div>
           <div class="px-4 py-2 border-t border-line bg-paper-2/50 flex gap-2">
-            <button class="text-xs text-copper hover:underline">+ Añadir línea de producto</button>
-            <span class="text-graphite/50">·</span>
-            <button class="text-xs text-copper hover:underline">+ Línea libre</button>
+            <button type="button" class="text-xs text-copper hover:underline" id="add-free-line">+ Línea libre (mano de obra, materiales propios…)</button>
           </div>
         </div>
       </div>
@@ -120,55 +88,47 @@
         <h2 class="font-serif text-xl font-medium mb-1">4 · Condiciones</h2>
         <p class="text-xs text-graphite mb-5">Validez, plazos y forma de pago.</p>
         <div class="grid sm:grid-cols-2 gap-4">
-          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Validez</label><select class="field"><option>10 días</option><option>15 días</option><option>30 días</option></select></div>
-          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Plazo de ejecución</label><input type="text" class="field" placeholder="Ej: 1 jornada laboral"/></div>
-          <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Forma de pago</label><input type="text" class="field" value="30% al aceptar · 70% al finalizar"/></div>
-          <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Notas / Excluido del presupuesto</label><textarea class="field" rows="2" placeholder="Ej: No incluye obra civil ni canalización nueva"></textarea></div>
+          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Validez (días)</label><select class="field" name="validityDays"><option value="10">10 días</option><option value="15">15 días</option><option value="30">30 días</option></select></div>
+          <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Plazo de ejecución</label><input type="text" class="field" name="executionTime" placeholder="Ej: 1 jornada laboral"/></div>
+          <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Forma de pago</label><input type="text" class="field" name="paymentTerms" value="30% al aceptar · 70% al finalizar"/></div>
+          <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Notas / Excluido del presupuesto</label><textarea class="field" name="notes" rows="2" placeholder="Ej: No incluye obra civil ni canalización nueva"></textarea></div>
         </div>
       </div>
 
       <!-- Acciones -->
       <div class="flex justify-between flex-wrap gap-3 pt-4">
-        <button class="btn btn-ghost btn-sm">Guardar borrador</button>
-        <div class="flex gap-2">
-          <button class="btn btn-ghost btn-sm">Vista previa PDF</button>
-          <button class="btn btn-primary">Enviar a la cliente<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
-        </div>
+        <button type="button" class="btn btn-ghost btn-sm" data-quote-save-draft>Guardar borrador</button>
+        <button type="submit" class="btn btn-primary">Enviar al cliente<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
       </div>
     </div>
 
-    <!-- ===== Aside live preview ===== -->
+    <!-- Aside live preview -->
     <aside>
       <div class="lg:sticky lg:top-6 space-y-4">
         <div class="bg-paper-2 border border-line rounded-2xl p-5">
           <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-3">Resumen en vivo</div>
           <div class="space-y-2 text-sm">
-            <div class="flex justify-between"><span class="text-graphite">Material</span><span class="font-mono">239,20 €</span></div>
-            <div class="flex justify-between"><span class="text-graphite">Mano de obra</span><span class="font-mono">280,00 €</span></div>
-            <div class="flex justify-between"><span class="text-graphite">Otros</span><span class="font-mono">0,00 €</span></div>
-            <div class="pt-2 border-t border-line/60 flex justify-between font-medium"><span>Base</span><span class="font-mono">519,20 €</span></div>
-            <div class="flex justify-between"><span class="text-graphite">IVA 21%</span><span class="font-mono">109,03 €</span></div>
-            <div class="pt-2 border-t border-line/60 flex justify-between items-baseline">
-              <span class="font-medium">Total</span>
-              <span class="font-serif text-2xl">628,23 €</span>
-            </div>
+            <div class="flex justify-between"><span class="text-graphite">Material</span><span class="font-mono" data-sum-material>0,00 €</span></div>
+            <div class="flex justify-between"><span class="text-graphite">Mano de obra y otros</span><span class="font-mono" data-sum-labor>0,00 €</span></div>
+            <div class="pt-2 border-t border-line/60 flex justify-between font-medium"><span>Base imponible</span><span class="font-mono" data-sum-base>0,00 €</span></div>
+            <div class="flex justify-between"><span class="text-graphite">IVA 21%</span><span class="font-mono" data-sum-tax>0,00 €</span></div>
+            <div class="pt-2 border-t border-line/60 flex justify-between items-baseline"><span class="font-medium">Total</span><span class="font-serif text-2xl" data-sum-total>0,00 €</span></div>
           </div>
         </div>
 
         <div class="bg-white border border-line rounded-2xl p-5">
           <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-3">Numeración</div>
-          <div class="font-mono font-medium text-sm">PRES-2026-0029</div>
-          <div class="text-xs text-graphite mt-1">Se asignará al enviar.</div>
+          <div class="font-mono font-medium text-sm">Pendiente</div>
+          <div class="text-xs text-graphite mt-1">Se asignará al guardar.</div>
         </div>
 
         <div class="bg-ink text-paper rounded-2xl p-5">
           <div class="eyebrow text-filament mb-2">Truco pro</div>
-          <p class="text-sm text-paper/70 leading-relaxed">Si conviertes el presupuesto en pedido directamente, el material te llega antes a la obra y la cliente solo paga la mano de obra al final.</p>
+          <p class="text-sm text-paper/70 leading-relaxed">Al añadir productos del catálogo, tu tarifa profesional (<span data-pro-discount>—</span>%) se aplica automáticamente sobre el PVP.</p>
         </div>
       </div>
     </aside>
-
-  </div>
+  </form>
 </main>
 </div></section>
   <div data-component="site-footer"></div>
@@ -179,4 +139,197 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+    const money = (v) => `${Number(v||0).toFixed(2).replace('.', ',')} €`;
+    const round2 = (n) => Math.round(Number(n) * 100) / 100;
+
+    const form = document.getElementById('quote-form');
+    const linesContainer = document.getElementById('quote-lines');
+    const searchInput = document.getElementById('product-search');
+    const suggestions = document.getElementById('product-suggestions');
+    const proDiscountEl = document.querySelector('[data-pro-discount]');
+
+    let proDiscount = 0;
+    let lines = []; // {kind, sku?, name?, concept?, note?, quantity, unitPrice}
+    let products = []; // catálogo cacheado para autocompletar
+
+    const recompute = () => {
+      const material = lines.filter(l => l.kind === 'product').reduce((s,l)=>s+l.unitPrice*l.quantity,0);
+      const labor = lines.filter(l => l.kind === 'free').reduce((s,l)=>s+l.unitPrice*l.quantity,0);
+      const base = round2(material + labor);
+      const tax = round2(base * 0.21);
+      const total = round2(base + tax);
+      document.querySelector('[data-sum-material]').textContent = money(material);
+      document.querySelector('[data-sum-labor]').textContent = money(labor);
+      document.querySelector('[data-sum-base]').textContent = money(base);
+      document.querySelector('[data-sum-tax]').textContent = money(tax);
+      document.querySelector('[data-sum-total]').textContent = money(total);
+    };
+
+    const renderLines = () => {
+      if (!lines.length) {
+        linesContainer.innerHTML = '<div class="p-5 text-center text-sm text-graphite" data-empty-row>Añade líneas usando el buscador o el botón "+ Línea libre".</div>';
+      } else {
+        linesContainer.innerHTML = lines.map((line, idx) => `
+          <div class="px-4 py-3 grid grid-cols-[1fr_70px_90px_90px_30px] gap-2 items-center text-sm">
+            <div>
+              ${line.kind === 'product'
+                ? `<div class="font-medium">${line.name}</div><div class="text-xs text-graphite font-mono">SKU ${line.sku}${line.originalPrice && line.originalPrice !== line.unitPrice ? ` · PVP ${money(line.originalPrice)}, pro -${proDiscount}%` : ''}</div>`
+                : `<input type="text" class="field !py-1.5 !px-2 italic" data-line-concept="${idx}" value="${line.concept || ''}" placeholder="Concepto manual"/><div class="text-xs text-graphite font-mono mt-1">${line.note || 'Línea libre'}</div>`}
+            </div>
+            <input type="number" min="1" class="field !py-1.5 !px-2 text-right font-mono" data-line-qty="${idx}" value="${line.quantity}"/>
+            <input type="number" step="0.01" min="0" class="field !py-1.5 !px-2 text-right font-mono" data-line-price="${idx}" value="${line.unitPrice}"/>
+            <div class="text-right font-mono font-medium">${money(line.unitPrice * line.quantity)}</div>
+            <button type="button" class="text-graphite hover:text-warn" data-line-remove="${idx}">×</button>
+          </div>
+        `).join('');
+      }
+      recompute();
+    };
+
+    const addProductLine = (product) => {
+      const unit = proDiscount > 0 ? round2(product.price * (1 - proDiscount / 100)) : product.price;
+      lines.push({ kind: 'product', sku: product.sku, name: product.name, quantity: 1, unitPrice: unit, originalPrice: product.price });
+      renderLines();
+    };
+
+    document.getElementById('add-free-line').addEventListener('click', () => {
+      lines.push({ kind: 'free', concept: '', note: '', quantity: 1, unitPrice: 35 });
+      renderLines();
+    });
+
+    linesContainer.addEventListener('input', (ev) => {
+      const t = ev.target;
+      if (t.dataset.lineQty != null) { lines[+t.dataset.lineQty].quantity = Math.max(1, Number(t.value)||1); recompute(); }
+      else if (t.dataset.linePrice != null) { lines[+t.dataset.linePrice].unitPrice = Math.max(0, Number(t.value)||0); recompute(); }
+      else if (t.dataset.lineConcept != null) { lines[+t.dataset.lineConcept].concept = t.value; }
+    });
+    linesContainer.addEventListener('click', (ev) => {
+      const rm = ev.target.closest('[data-line-remove]');
+      if (rm) { lines.splice(+rm.dataset.lineRemove, 1); renderLines(); }
+    });
+
+    // Autocomplete buscador
+    let lastQuery = '';
+    const search = async () => {
+      const q = searchInput.value.trim();
+      if (q.length < 2) { suggestions.hidden = true; return; }
+      if (q === lastQuery) return;
+      lastQuery = q;
+      try {
+        const matches = (products.length ? products : (products = await api.products({ q }))).filter((p) => {
+          const hay = `${p.sku} ${p.name}`.toLowerCase();
+          return hay.includes(q.toLowerCase());
+        }).slice(0, 8);
+        if (!matches.length) { suggestions.innerHTML = '<div class="px-3 py-2 text-xs text-graphite">Sin resultados.</div>'; }
+        else suggestions.innerHTML = matches.map((p) => `<button type="button" data-pick-sku="${p.sku}"><strong>${p.name}</strong> <span class="text-graphite font-mono">SKU ${p.sku} · ${money(p.price)}</span></button>`).join('');
+        suggestions.hidden = false;
+      } catch (e) { /* silent */ }
+    };
+    searchInput.addEventListener('input', search);
+    searchInput.addEventListener('focus', () => { if (suggestions.innerHTML) suggestions.hidden = false; });
+    document.addEventListener('click', (ev) => {
+      if (!ev.target.closest('#product-search') && !ev.target.closest('#product-suggestions')) suggestions.hidden = true;
+    });
+    suggestions.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('[data-pick-sku]');
+      if (!btn) return;
+      const product = products.find((p) => p.sku === btn.dataset.pickSku);
+      if (product) { addProductLine(product); searchInput.value = ''; suggestions.hidden = true; }
+    });
+
+    const buildPayload = (status) => {
+      const fd = new FormData(form);
+      const itemsPayload = lines.map((l) => l.kind === 'product'
+        ? { kind: 'product', sku: l.sku, name: l.name, quantity: l.quantity, unitPrice: l.unitPrice, originalPrice: l.originalPrice, lineTotal: round2(l.unitPrice * l.quantity), price: l.unitPrice }
+        : { kind: 'free', concept: l.concept, note: l.note, quantity: l.quantity, unitPrice: l.unitPrice, lineTotal: round2(l.unitPrice * l.quantity), price: l.unitPrice });
+      const subtotal = round2(itemsPayload.reduce((s,l)=>s+l.lineTotal,0));
+      const tax = round2(subtotal * 0.21);
+      return {
+        title: fd.get('title')?.toString().trim() || 'Presupuesto sin título',
+        description: fd.get('description')?.toString() || '',
+        validityDays: Number(fd.get('validityDays') || 10),
+        executionTime: fd.get('executionTime')?.toString() || '',
+        paymentTerms: fd.get('paymentTerms')?.toString() || '',
+        notes: fd.get('notes')?.toString() || '',
+        customer: {
+          name: fd.get('customerName')?.toString() || '',
+          contact: fd.get('customerContact')?.toString() || '',
+          taxId: fd.get('customerTaxId')?.toString() || '',
+          email: fd.get('customerEmail')?.toString() || '',
+          phone: fd.get('customerPhone')?.toString() || '',
+          address: fd.get('customerAddress')?.toString() || '',
+        },
+        items: itemsPayload,
+        subtotal, tax, total: round2(subtotal + tax),
+        status,
+        conditions: [
+          fd.get('paymentTerms') ? `Forma de pago: ${fd.get('paymentTerms')}` : null,
+          fd.get('executionTime') ? `Tiempo de ejecución: ${fd.get('executionTime')}` : null,
+          fd.get('notes') ? fd.get('notes').toString() : null,
+        ].filter(Boolean),
+      };
+    };
+
+    const submit = async (status) => {
+      const payload = buildPayload(status);
+      if (!payload.title) { glxToast('Falta el título del presupuesto.'); return; }
+      try {
+        const created = await api.createQuote(payload);
+        glxToast(status === 'sent' ? `Presupuesto ${created.code} enviado.` : `Borrador ${created.code} guardado.`);
+        location.href = `/pages/cuenta/presupuesto.html?code=${encodeURIComponent(created.code)}`;
+      } catch (e) { glxToast(e.message); }
+    };
+
+    form.addEventListener('submit', (ev) => { ev.preventDefault(); submit('sent'); });
+    document.querySelector('[data-quote-save-draft]').addEventListener('click', () => submit('draft'));
+
+    const init = async () => {
+      try {
+        const me = await api.me();
+        proDiscount = Number(me.proDiscount || 0);
+        proDiscountEl.textContent = proDiscount;
+      } catch {}
+      // Pre-cargamos catálogo para el autocompletar (si falla, búsqueda usará fetch on-demand).
+      try { products = await api.products({}); } catch { products = []; }
+
+      // Si viene ?duplicate=CODE, prerellenamos campos
+      const dup = new URLSearchParams(location.search).get('duplicate');
+      if (dup) {
+        try {
+          const existing = await api.quote(dup);
+          const p = existing.payload || {};
+          form.elements.title.value = `${existing.title} (copia)`;
+          if (p.description) form.elements.description.value = p.description;
+          if (p.validityDays) form.elements.validityDays.value = p.validityDays;
+          if (p.executionTime) form.elements.executionTime.value = p.executionTime;
+          if (p.paymentTerms) form.elements.paymentTerms.value = p.paymentTerms;
+          if (p.customer) {
+            form.elements.customerName.value = p.customer.name || '';
+            form.elements.customerContact.value = p.customer.contact || '';
+            form.elements.customerTaxId.value = p.customer.taxId || '';
+            form.elements.customerEmail.value = p.customer.email || '';
+            form.elements.customerPhone.value = p.customer.phone || '';
+            form.elements.customerAddress.value = p.customer.address || '';
+          }
+          lines = (p.items || []).map((it) => it.kind === 'product'
+            ? { kind: 'product', sku: it.sku, name: it.name, quantity: it.quantity, unitPrice: it.unitPrice, originalPrice: it.originalPrice }
+            : { kind: 'free', concept: it.concept, note: it.note, quantity: it.quantity, unitPrice: it.unitPrice });
+          renderLines();
+          glxToast(`Duplicado de ${dup}.`);
+        } catch (e) { glxToast(`No se pudo duplicar ${dup}: ${e.message}`); }
+      } else {
+        renderLines();
+      }
+    };
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(init);
+      else init();
+    });
+    if (api.getToken()) init();
+  })();
+  </script>
 </body></html>

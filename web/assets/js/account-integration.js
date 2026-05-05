@@ -9,14 +9,19 @@
       if (!api.getToken()) {
         if (typeof glxRequireAuth === 'function') {
           const ok = glxRequireAuth();
-          // If legacy session exists, ensure sidebar is rendered by legacy renderer
-          if (ok && typeof glxRenderSidebar === 'function') {
-            const sb = document.getElementById('glx-sidebar');
-            if (sb) sb.innerHTML = glxRenderSidebar(sb.dataset.active || 'dashboard');
+          if (ok && typeof window.glxEnsureApiSession === 'function') {
+            await window.glxEnsureApiSession();
           }
-          return;
+          if (!api.getToken()) {
+            // If legacy session exists, ensure sidebar is rendered by legacy renderer
+            if (ok && typeof glxRenderSidebar === 'function') {
+              const sb = document.getElementById('glx-sidebar');
+              if (sb) sb.innerHTML = glxRenderSidebar(sb.dataset.active || 'dashboard');
+            }
+            return;
+          }
         }
-        return;
+        if (!api.getToken()) return;
       }
 
       const user = await api.me().catch(() => null);
@@ -46,12 +51,25 @@
         api.quotes().catch(() => []),
       ]);
 
+      const activeServiceStatuses = new Set(['received', 'reviewing', 'scheduled', 'in_progress']);
+      const activeServiceRequests = serviceRequests.filter((request) => activeServiceStatuses.has(request.status));
+
       // Update stat cards (particular view)
-      const statVals = [orders.length || 0, serviceRequests.length || 0, favorites.length || 0, tutorials.length || 0];
+      const statVals = [orders.length || 0, activeServiceRequests.length || 0, favorites.length || 0, tutorials.length || 0];
       const statEls = document.querySelectorAll('.view-particular .stat-card');
       statEls.forEach((el, idx) => {
         const big = el.querySelector('.font-serif');
         if (big) big.textContent = String(statVals[idx] ?? '0');
+        const caption = el.querySelector('.mt-1');
+        if (caption) {
+          const captions = [
+            orders.length ? 'Desde la base de datos' : 'Sin pedidos activos',
+            activeServiceRequests.length ? 'En revisión' : 'Sin solicitudes abiertas',
+            `${favorites.length} guardados reales`,
+            tutorials.length ? `${tutorials.filter((t) => Number(t.progress) < 100).length} sin terminar` : 'Sin tutoriales guardados',
+          ];
+          caption.textContent = captions[idx] || caption.textContent;
+        }
       });
 
       // Update last order block
@@ -76,10 +94,11 @@
 
       // Update service request block
       const srBlock = Array.from(document.querySelectorAll('.view-particular .bg-paper-2.rounded-2xl')).find(el => /Solicitud|Solicit/.test(el.textContent));
-      if (serviceRequests.length && srBlock) {
-        const sr = serviceRequests[0];
+      if (activeServiceRequests.length && srBlock) {
+        const sr = activeServiceRequests[0];
+        const statusLabels = { received: 'Recibida', reviewing: 'En revisión', scheduled: 'Programada', in_progress: 'En curso' };
         const tag = srBlock.querySelector('.pill');
-        if (tag) tag.textContent = sr.status || 'En revisión';
+        if (tag) tag.textContent = statusLabels[sr.status] || sr.status || 'En revisión';
         const eyebrow = srBlock.querySelector('.font-mono.text-graphite.uppercase') || srBlock.querySelector('.eyebrow');
         if (eyebrow) eyebrow.textContent = `Solicitud ${sr.code || ''}`;
         const title = srBlock.querySelector('h3');
@@ -102,7 +121,7 @@
         }
         const map = {
           '/pages/cuenta/mis-pedidos.html': orders.length,
-          '/pages/cuenta/mis-solicitudes.html': serviceRequests.length,
+          '/pages/cuenta/mis-solicitudes.html': activeServiceRequests.length,
           '/pages/cuenta/mis-favoritos.html': favorites.length,
           '/pages/cuenta/tutoriales-guardados.html': tutorials.length,
           '/pages/cuenta/albaranes.html': albaranes.length,
@@ -121,6 +140,7 @@
         // Also update the dedicated order count span by ID (used when sidebar active item is mis-pedidos)
         const orderCountEl = document.getElementById('glx-nav-order-count');
         if (orderCountEl) orderCountEl.textContent = String(orders.length || 0);
+        await window.glxRefreshSidebarCounts?.();
       }
     } catch (err) {
       // avoid breaking page — log for debugging

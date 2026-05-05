@@ -8,7 +8,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
 <link rel="stylesheet" href="/assets/css/styles.css" />
-<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}</style>
+<style>.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:8px;font-size:14px;color:var(--graphite);transition:all .15s}.nav-item:hover{background:var(--paper-2);color:var(--ink)}.nav-item.is-active{background:var(--ink);color:var(--paper);font-weight:500}.tab-btn{padding:.75rem 1rem;border-bottom:2px solid transparent;font-size:14px;color:var(--graphite);white-space:nowrap;transition:all .15s}.tab-btn:hover{color:var(--ink)}.tab-btn.is-active{border-color:var(--filament);color:var(--ink);font-weight:500}</style>
 </head>
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
@@ -19,75 +19,33 @@
 
 <main>
   <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
-    <div><div class="eyebrow text-copper mb-2">Para tus clientes</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Mis presupuestos.</h1><p class="text-graphite mt-2">2 abiertos · 8 cerrados · 3 rechazados</p></div>
-    <a href="/pages/cuenta/presupuesto.html" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Crear presupuesto</a>
+    <div><div class="eyebrow text-copper mb-2">Para tus clientes</div><h1 class="font-serif font-medium leading-[0.96]" style="font-size: clamp(2rem, 4.5vw, 3rem);">Mis presupuestos.</h1><p class="text-graphite mt-2" data-quote-summary>Cargando…</p></div>
+    <a href="/pages/cuenta/crear-presupuesto.html" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Crear presupuesto</a>
   </div>
 
   <!-- Tabs estado -->
-  <div class="flex items-center gap-1 mb-6 border-b border-line overflow-x-auto">
-    <button class="px-4 py-3 border-b-2 border-filament font-medium text-sm whitespace-nowrap">Abiertos <span class="font-mono text-xs text-graphite ml-1">2</span></button>
-    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Aceptados <span class="font-mono text-xs">8</span></button>
-    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Rechazados <span class="font-mono text-xs">3</span></button>
-    <button class="px-4 py-3 border-b-2 border-transparent text-graphite hover:text-ink text-sm whitespace-nowrap">Borradores <span class="font-mono text-xs">1</span></button>
+  <div class="flex items-center gap-1 mb-6 border-b border-line overflow-x-auto" data-quote-tabs>
+    <button class="tab-btn is-active" data-tab="open">Abiertos <span class="font-mono text-xs text-graphite ml-1" data-count-open>0</span></button>
+    <button class="tab-btn" data-tab="accepted">Aceptados <span class="font-mono text-xs ml-1" data-count-accepted>0</span></button>
+    <button class="tab-btn" data-tab="rejected">Rechazados <span class="font-mono text-xs ml-1" data-count-rejected>0</span></button>
+    <button class="tab-btn" data-tab="draft">Borradores <span class="font-mono text-xs ml-1" data-count-draft>0</span></button>
+    <button class="tab-btn" data-tab="all">Todos <span class="font-mono text-xs ml-1" data-count-all>0</span></button>
   </div>
 
-  <!-- Lista presupuestos abiertos -->
-  <div class="space-y-4">
-    <a href="/pages/cuenta/presupuesto.html" class="block bg-white border border-line rounded-2xl overflow-hidden hover:border-ink transition-colors">
-      <div class="p-6">
-        <div class="flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="font-mono text-xs text-graphite">PRES-2026-0028</span><span class="pill pill-caution text-[10px]">Esperando respuesta</span><span class="font-mono text-xs text-graphite">Enviado hace 3 días</span></div>
-            <h3 class="font-serif text-2xl font-medium leading-tight mb-1">Renovación cuadro · Familia López</h3>
-            <p class="text-graphite text-sm">Calle Bernabé Soriano 12 · Jaén · 24 productos</p>
-          </div>
-          <div class="text-right">
-            <div class="font-serif text-3xl font-medium">486,30 €</div>
-            <div class="text-xs text-graphite font-mono">Vencimiento 03/05/2026</div>
-          </div>
-        </div>
-        <div class="mt-5 pt-5 border-t border-line flex flex-wrap gap-2 justify-between items-center">
-          <div class="flex gap-2">
-            <span class="pill bg-paper-2 text-graphite text-[10px]">Schneider · 12 ud</span>
-            <span class="pill bg-paper-2 text-graphite text-[10px]">Simón · 8 ud</span>
-            <span class="pill bg-paper-2 text-graphite text-[10px]">Cableado · 4 ítems</span>
-          </div>
-          <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Reenviar al cliente</button><button class="btn btn-sm btn-ghost">Editar</button><button class="btn btn-sm btn-ink">Convertir en pedido</button></div>
-        </div>
-      </div>
-    </a>
-
-    <a href="/pages/cuenta/presupuesto.html" class="block bg-white border border-line rounded-2xl overflow-hidden hover:border-ink transition-colors">
-      <div class="p-6">
-        <div class="flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="font-mono text-xs text-graphite">PRES-2026-0027</span><span class="pill pill-caution text-[10px]">Esperando respuesta</span><span class="font-mono text-xs text-graphite">Enviado hace 5 días</span></div>
-            <h3 class="font-serif text-2xl font-medium leading-tight mb-1">Domótica salón · Sr. Martínez</h3>
-            <p class="text-graphite text-sm">Avda. Andalucía 18 · Jaén · 9 productos</p>
-          </div>
-          <div class="text-right">
-            <div class="font-serif text-3xl font-medium">312,40 €</div>
-            <div class="text-xs text-graphite font-mono">Vencimiento 01/05/2026</div>
-          </div>
-        </div>
-        <div class="mt-5 pt-5 border-t border-line flex flex-wrap gap-2 justify-between items-center">
-          <div class="flex gap-2">
-            <span class="pill bg-paper-2 text-graphite text-[10px]">Shelly · 5 ud</span>
-            <span class="pill bg-paper-2 text-graphite text-[10px]">Mecanismos Simón · 3 ud</span>
-            <span class="pill bg-paper-2 text-graphite text-[10px]">Cableado</span>
-          </div>
-          <div class="flex gap-2"><button class="btn btn-sm btn-ghost">Reenviar</button><button class="btn btn-sm btn-ghost">Editar</button><button class="btn btn-sm btn-ink">Convertir en pedido</button></div>
-        </div>
-      </div>
-    </a>
+  <!-- Lista -->
+  <div class="space-y-4" data-quote-list></div>
+  <div class="hidden text-center py-16 px-6 border border-dashed border-line rounded-2xl text-graphite" data-quote-empty>
+    <p class="font-serif text-xl mb-2 text-ink">No hay presupuestos en este estado.</p>
+    <p class="text-sm mb-5">Cambia de pestaña o crea uno nuevo para tu próxima obra.</p>
+    <a href="/pages/cuenta/crear-presupuesto.html" class="btn btn-sm btn-primary">+ Crear presupuesto</a>
   </div>
 
   <!-- Cifras -->
   <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
-    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Tasa conversión</div><div class="font-serif text-2xl font-medium">73%</div><div class="text-xs text-stock mt-1">+8% vs trimestre anterior</div></div>
-    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Importe medio</div><div class="font-serif text-2xl font-medium">412 €</div></div>
-    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Tiempo medio respuesta</div><div class="font-serif text-2xl font-medium">2,4d</div></div>
-    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Total año</div><div class="font-serif text-2xl font-medium">11.428 €</div></div>
+    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Tasa conversión</div><div class="font-serif text-2xl font-medium" data-stat-conversion>—</div></div>
+    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Importe medio</div><div class="font-serif text-2xl font-medium" data-stat-avg>—</div></div>
+    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Total enviado</div><div class="font-serif text-2xl font-medium" data-stat-total>—</div></div>
+    <div class="bg-paper-2 border border-line rounded-xl p-4"><div class="text-[10px] font-mono text-graphite uppercase tracking-wider mb-1">Total aceptado</div><div class="font-serif text-2xl font-medium text-stock" data-stat-accepted>—</div></div>
   </div>
 </main>
 </div></section>
@@ -99,4 +57,136 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+  <script>
+  (function () {
+    const api = window.GarperLuxApi; if (!api) return;
+    const money = (v) => `${Number(v||0).toFixed(2).replace('.', ',')} €`;
+    const fmtDate = (iso) => { if (!iso) return ''; const d = new Date(iso.replace(' ','T')); return isNaN(d.getTime()) ? iso : d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}); };
+    const daysAgo = (iso) => { if (!iso) return null; const d = new Date(iso.replace(' ','T')); return Math.max(0, Math.round((Date.now() - d.getTime()) / 86400000)); };
+
+    const STATUS_PILL = {
+      sent: 'pill pill-caution',
+      accepted: 'pill pill-stock',
+      rejected: 'pill pill-warn',
+      draft: 'pill pill-info',
+    };
+    const STATUS_LABEL = {
+      sent: 'Esperando respuesta',
+      accepted: 'Aceptado',
+      rejected: 'Rechazado',
+      draft: 'Borrador',
+    };
+
+    const list = document.querySelector('[data-quote-list]');
+    const empty = document.querySelector('[data-quote-empty]');
+    const summary = document.querySelector('[data-quote-summary]');
+    const tabsBar = document.querySelector('[data-quote-tabs]');
+
+    let all = [];
+    let activeTab = 'open';
+
+    const matchesTab = (q) => {
+      if (activeTab === 'open') return q.status === 'sent';
+      if (activeTab === 'accepted') return q.status === 'accepted';
+      if (activeTab === 'rejected') return q.status === 'rejected';
+      if (activeTab === 'draft') return q.status === 'draft';
+      return true;
+    };
+
+    const renderCard = (q) => {
+      const pill = STATUS_PILL[q.status] || 'pill pill-info';
+      const label = STATUS_LABEL[q.status] || q.status;
+      const days = daysAgo(q.created_at);
+      const sentLabel = days != null ? `Enviado hace ${days} día${days === 1 ? '' : 's'}` : '';
+      const items = q.payload?.items || [];
+      const tags = items.slice(0, 3).map((it) => `<span class="pill bg-paper-2 text-graphite text-[10px]">${it.kind === 'product' ? `${it.name} · ${it.quantity} ud` : `${it.concept} · ${it.quantity}`}</span>`).join('');
+      const validity = q.payload?.validityDays || 10;
+      const dueDate = q.created_at ? new Date(new Date(q.created_at.replace(' ','T')).getTime() + validity * 86400000).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
+
+      return `<a href="/pages/cuenta/presupuesto.html?code=${encodeURIComponent(q.code)}" class="block bg-white border border-line rounded-2xl overflow-hidden hover:border-ink transition-colors">
+        <div class="p-6">
+          <div class="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-2 flex-wrap"><span class="font-mono text-xs text-graphite">${q.code}</span><span class="${pill} text-[10px]">${label}</span><span class="font-mono text-xs text-graphite">${sentLabel}</span></div>
+              <h3 class="font-serif text-2xl font-medium leading-tight mb-1">${q.title}</h3>
+              <p class="text-graphite text-sm">${q.payload?.customer?.address || q.payload?.description || ''}</p>
+            </div>
+            <div class="text-right">
+              <div class="font-serif text-3xl font-medium">${money(q.total)}</div>
+              <div class="text-xs text-graphite font-mono">Vence ${dueDate}</div>
+            </div>
+          </div>
+          <div class="mt-5 pt-5 border-t border-line flex flex-wrap gap-2 justify-between items-center">
+            <div class="flex flex-wrap gap-2">${tags || '<span class="text-xs text-graphite">Sin líneas todavía</span>'}</div>
+            <div class="flex gap-2"><span class="text-xs text-graphite">${items.length} líneas</span></div>
+          </div>
+        </div>
+      </a>`;
+    };
+
+    const render = () => {
+      const filtered = all.filter(matchesTab);
+      list.innerHTML = filtered.map(renderCard).join('');
+      empty.classList.toggle('hidden', filtered.length > 0);
+    };
+
+    const updateTabs = () => {
+      tabsBar.querySelectorAll('button').forEach((b) => b.classList.toggle('is-active', b.dataset.tab === activeTab));
+    };
+
+    const updateCounts = () => {
+      const counts = { open: 0, accepted: 0, rejected: 0, draft: 0, all: all.length };
+      all.forEach((q) => {
+        if (q.status === 'sent') counts.open++;
+        else if (q.status === 'accepted') counts.accepted++;
+        else if (q.status === 'rejected') counts.rejected++;
+        else if (q.status === 'draft') counts.draft++;
+      });
+      ['open','accepted','rejected','draft','all'].forEach((k) => { const el = document.querySelector(`[data-count-${k}]`); if (el) el.textContent = counts[k]; });
+      summary.textContent = `${counts.open} abierto${counts.open===1?'':'s'} · ${counts.accepted} aceptado${counts.accepted===1?'':'s'} · ${counts.rejected} rechazado${counts.rejected===1?'':'s'}`;
+    };
+
+    const updateStats = () => {
+      const closed = all.filter((q) => q.status === 'accepted' || q.status === 'rejected');
+      const accepted = all.filter((q) => q.status === 'accepted');
+      const sent = all.filter((q) => q.status !== 'draft');
+      const conversion = closed.length ? Math.round((accepted.length / closed.length) * 100) : 0;
+      const avg = sent.length ? sent.reduce((s,q)=>s+Number(q.total||0),0) / sent.length : 0;
+      const total = sent.reduce((s,q)=>s+Number(q.total||0),0);
+      const totalAccepted = accepted.reduce((s,q)=>s+Number(q.total||0),0);
+      document.querySelector('[data-stat-conversion]').textContent = closed.length ? `${conversion}%` : '—';
+      document.querySelector('[data-stat-avg]').textContent = sent.length ? money(avg) : '—';
+      document.querySelector('[data-stat-total]').textContent = money(total);
+      document.querySelector('[data-stat-accepted]').textContent = money(totalAccepted);
+    };
+
+    tabsBar.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('[data-tab]');
+      if (!btn) return;
+      activeTab = btn.dataset.tab;
+      updateTabs();
+      render();
+    });
+
+    const reload = async () => {
+      try {
+        const list = await api.quotes();
+        // Para cada uno, traemos detalle (payload con items) en paralelo.
+        all = await Promise.all(list.map(async (q) => {
+          try { const detail = await api.quote(q.code); return { ...q, payload: detail.payload }; }
+          catch { return q; }
+        }));
+        updateCounts();
+        updateStats();
+        render();
+      } catch (e) { glxToast(e.message); }
+    };
+
+    document.addEventListener('garperlux:components-ready', () => {
+      if (window.glxEnsureApiSession) window.glxEnsureApiSession().finally(reload);
+      else reload();
+    });
+    if (api.getToken()) reload();
+  })();
+  </script>
 </body></html>
