@@ -360,7 +360,17 @@
           const sku = qtyPlus.getAttribute('data-qty-plus');
           const input = document.querySelector(`[data-qty-input="${sku}"]`);
           if (input) {
-            input.value = Math.max(1, Number(input.value) + 1);
+            const desired = Math.max(1, Number(input.value) + 1);
+            // clamp to stock if available in the rendered row
+            const article = document.querySelector(`[data-sku="${sku}"]`);
+            const pill = article?.querySelector('.pill');
+            let stock = null;
+            if (pill) {
+              const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
+              if (m) stock = parseInt(m[1], 10);
+            }
+            const finalQty = (stock != null) ? Math.min(desired, stock) : desired;
+            input.value = finalQty;
             updateLocalCartQuantity(sku, Number(input.value));
           }
           return;
@@ -394,7 +404,17 @@
         const input = ev.target.closest('[data-qty-input]');
         if (!input) return;
         const sku = input.getAttribute('data-qty-input');
-        const qty = Math.max(1, Number(input.value));
+        let qty = Math.max(1, Number(input.value));
+        // clamp to stock if we have it in the rendered article
+        const article = document.querySelector(`[data-sku="${sku}"]`);
+        const pill = article?.querySelector('.pill');
+        if (pill) {
+          const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
+          if (m) {
+            const stock = parseInt(m[1], 10);
+            if (!isNaN(stock)) qty = Math.min(qty, stock);
+          }
+        }
         input.value = qty;
         updateLocalCartQuantity(sku, qty);
       });
@@ -403,6 +423,10 @@
         const carts = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
         const item = carts.find((i) => i.sku === sku);
         if (item) {
+          // clamp to stored stock if present
+          if (typeof item.stock === 'number') {
+            newQty = Math.min(newQty, item.stock);
+          }
           item.quantity = newQty;
           localStorage.setItem('garperlux_cart_items', JSON.stringify(carts));
           localStorage.setItem('garperlux_cart_count', String(carts.reduce((s, it) => s + (it.quantity||0), 0)));
@@ -512,7 +536,16 @@
           const sku = qtyPlus.getAttribute('data-qty-plus');
           const input = document.querySelector(`[data-qty-input="${sku}"]`);
           if (input) {
-            input.value = Math.max(1, Number(input.value) + 1);
+            const desired = Math.max(1, Number(input.value) + 1);
+            const article = document.querySelector(`[data-sku="${sku}"]`);
+            const pill = article?.querySelector('.pill');
+            let stock = null;
+            if (pill) {
+              const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
+              if (m) stock = parseInt(m[1], 10);
+            }
+            const finalQty = (stock != null) ? Math.min(desired, stock) : desired;
+            input.value = finalQty;
             updateServerCartQuantity(sku, Number(input.value));
           }
           return;
@@ -546,7 +579,17 @@
         const input = ev.target.closest('[data-qty-input]');
         if (!input) return;
         const sku = input.getAttribute('data-qty-input');
-        const qty = Math.max(1, Number(input.value));
+        let qty = Math.max(1, Number(input.value));
+        // clamp using displayed stock pill
+        const article = document.querySelector(`[data-sku="${sku}"]`);
+        const pill = article?.querySelector('.pill');
+        if (pill) {
+          const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
+          if (m) {
+            const stock = parseInt(m[1], 10);
+            if (!isNaN(stock)) qty = Math.min(qty, stock);
+          }
+        }
         input.value = qty;
         updateServerCartQuantity(sku, qty);
       });
@@ -556,15 +599,48 @@
           const currentCart = await api.cart();
           const item = currentCart.items.find((i) => i.sku === sku);
           if (!item) return;
-          
+          // clamp to item.stock if server provides it
+          if (typeof item.stock === 'number') {
+            newQty = Math.min(newQty, item.stock);
+          } else {
+            // fallback: try parse from rendered pill
+            const article = document.querySelector(`[data-sku="${sku}"]`);
+            const pill = article?.querySelector('.pill');
+            if (pill) {
+              const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
+              if (m) newQty = Math.min(newQty, parseInt(m[1], 10));
+            }
+          }
+
           const oldQty = item.quantity;
           const diffQty = newQty - oldQty;
-          
-          // Si es diferente, actualizar en el servidor
+
+          // If no change after clamping, ensure input shows clamped value and exit
+          if (diffQty === 0) {
+            const article = document.querySelector(`[data-sku="${sku}"]`);
+            if (article) {
+              const input = article.querySelector('[data-qty-input]');
+              if (input) input.value = String(oldQty);
+            }
+            if (newQty < oldQty) {
+              toast('Cantidad ajustada al stock disponible.');
+            }
+            return;
+          }
+
+          // Si es diferente, actualizar en el servidor usando set-quantity (delete + add)
           if (diffQty !== 0) {
-            await api.addToCart(sku, diffQty);
+            // Remove existing item then re-add with desired absolute quantity
+            try {
+              await api.deleteCartItem(sku);
+            } catch (e) {
+              // ignore delete errors
+            }
+            if (newQty > 0) {
+              await api.addToCart(sku, newQty);
+            }
             const updatedCart = await api.cart();
-            
+
             // Actualizar el precio visible
             const article = document.querySelector(`[data-sku="${sku}"]`);
             if (article) {
@@ -574,7 +650,7 @@
                 priceEl.textContent = money(updatedItem.price * updatedItem.quantity);
               }
             }
-            
+
             // Actualizar totales
             updateCartTotals(updatedCart.items);
             addCartBadge(updatedCart.items.reduce((s, it) => s + it.quantity, 0));

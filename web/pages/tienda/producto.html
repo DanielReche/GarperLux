@@ -278,7 +278,7 @@
           <div class="view-particular bg-paper-2 rounded-xl p-4 flex items-center gap-3">
             <span class="w-2.5 h-2.5 rounded-full bg-stock animate-pulse"></span>
             <div class="flex-1">
-              <div class="text-sm font-medium">En stock · 70 unidades</div>
+              <div class="text-sm font-medium" id="stock-qty">En stock · 70 unidades</div>
               <div class="text-xs text-graphite">Si pides antes de las 17:00, sale hoy mismo.</div>
             </div>
           </div>
@@ -764,20 +764,71 @@
     const btnMinus = document.getElementById('btn-minus');
     const btnPlus = document.getElementById('btn-plus');
     const qtyInput = document.getElementById('qty-input');
-    
+    const stockEl = document.getElementById('stock-qty');
+
     if (btnMinus && btnPlus && qtyInput) {
+      // helper to detect numeric stock from the stock label (robust against other numbers like '17:00')
+      const parseStock = () => {
+        if (!stockEl) return null;
+        const text = stockEl.textContent || '';
+        const m1 = text.match(/(\d+)\s*(?:unidades|uds)\b/i);
+        if (m1) return parseInt(m1[1], 10);
+        const m2 = text.match(/(\d+)/);
+        return m2 ? parseInt(m2[1], 10) : null;
+      };
+
+      const updateButtons = () => {
+        const val = parseInt(qtyInput.value, 10) || 1;
+        btnMinus.disabled = val <= 1;
+        if (maxStock != null) {
+          btnPlus.disabled = val >= maxStock;
+        } else {
+          btnPlus.disabled = false;
+        }
+      };
+
+      const applyMaxAttr = (ms) => {
+        if (ms != null) qtyInput.setAttribute('max', String(ms));
+        else qtyInput.removeAttribute('max');
+      };
+      // initial parse
+      let maxStock = parseStock();
+      applyMaxAttr(maxStock);
+
       btnMinus.addEventListener('click', () => {
         let val = parseInt(qtyInput.value, 10) || 1;
         if (val > 1) qtyInput.value = val - 1;
+        updateButtons();
       });
+
       btnPlus.addEventListener('click', () => {
+        // re-parse stock each interaction in case other scripts updated it
+        maxStock = parseStock();
+        applyMaxAttr(maxStock);
         let val = parseInt(qtyInput.value, 10) || 1;
-        qtyInput.value = val + 1;
+        if (maxStock == null || val < maxStock) {
+          qtyInput.value = val + 1;
+        } else {
+          qtyInput.value = maxStock;
+        }
+        updateButtons();
       });
+
       qtyInput.addEventListener('change', () => {
+        // re-parse stock on manual edit
+        maxStock = parseStock();
+        applyMaxAttr(maxStock);
         let val = parseInt(qtyInput.value, 10);
-        if (isNaN(val) || val < 1) qtyInput.value = 1;
+        if (isNaN(val) || val < 1) val = 1;
+        if (maxStock != null && val > maxStock) val = maxStock;
+        qtyInput.value = val;
+        updateButtons();
       });
+
+      // initialize
+      if (!qtyInput.value || parseInt(qtyInput.value, 10) < 1) qtyInput.value = 1;
+      if (maxStock != null && parseInt(qtyInput.value, 10) > maxStock) qtyInput.value = maxStock;
+      updateButtons();
     }
   </script>
 </body>
