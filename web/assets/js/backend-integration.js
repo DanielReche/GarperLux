@@ -1113,6 +1113,27 @@
     });
   }
 
+  function _dedupeVariants(products) {
+    const groupedKeep = new Set();
+    const grouped = new Map(); // gid → product to keep
+    for (const p of products) {
+      const gid = p?.specs?._variant_group;
+      if (!gid) continue;
+      const isDefault = p?.specs?._variant_is_default === '1' || p?.sku === p?.specs?._variant_default;
+      const current = grouped.get(gid);
+      // Preferimos el flag is_default explícito; en su defecto, el de menor precio.
+      if (!current || isDefault || (p.price || 0) < (current.price || 0)) {
+        grouped.set(gid, p);
+      }
+    }
+    grouped.forEach((p) => groupedKeep.add(p.sku));
+    return products.filter((p) => {
+      const gid = p?.specs?._variant_group;
+      if (!gid) return true;
+      return groupedKeep.has(p.sku);
+    });
+  }
+
   function _matchesFacets(product, filters) {
     for (const [facetKey, selected] of Object.entries(filters || {})) {
       if (!selected || !selected.length) continue;
@@ -1210,6 +1231,10 @@
     let products = [];
     try { products = await api.products(query); } catch { return; }
     if (!products || !products.length) return;
+    // Dedupe por grupo de variantes: si dos productos comparten _variant_group,
+    // dejamos solo el variant_default (el más barato del grupo). Las hermanas
+    // siguen accesibles vía el selector del detalle (specs._variants).
+    products = _dedupeVariants(products);
     // Indica a catalog-ui.js que somos los dueños del filtrado dinámico.
     window._GLX_DYNAMIC_CATALOG = true;
 
@@ -1915,6 +1940,55 @@
     }
   }
 
+  function _renderVariantSelector(product, ctx) {
+    const variants = product?.specs?._variants;
+    if (!Array.isArray(variants) || variants.length < 2) return;
+    const axis = product?.specs?._variant_axis || 'Variante';
+    // Anclamos el selector inmediatamente antes del bloque de facetas para
+    // dejarlo a la altura del precio en la columna derecha.
+    const anchor = ctx.querySelector('[data-glx-facets]');
+    if (!anchor) return;
+    let host = ctx.querySelector('[data-glx-variants]');
+    if (!host) {
+      host = document.createElement('div');
+      host.setAttribute('data-glx-variants', '');
+      host.className = 'space-y-2';
+      anchor.parentNode.insertBefore(host, anchor);
+    }
+    host.innerHTML = '';
+    const label = document.createElement('div');
+    label.className = 'font-mono text-[10px] uppercase tracking-wider text-graphite';
+    label.textContent = axis;
+    host.appendChild(label);
+    const grid = document.createElement('div');
+    grid.className = 'flex flex-wrap gap-2';
+    variants.forEach((v) => {
+      const isCurrent = String(v.sku) === String(product.sku);
+      const btn = document.createElement(isCurrent ? 'div' : 'a');
+      btn.className = [
+        'flex flex-col items-start gap-1 px-3 py-2 rounded-lg border text-left transition-colors min-w-[120px]',
+        isCurrent
+          ? 'border-ink bg-ink text-paper'
+          : 'border-line bg-white hover:border-ink',
+      ].join(' ');
+      if (!isCurrent) {
+        btn.setAttribute('href', `/pages/tienda/producto.html?sku=${encodeURIComponent(v.sku)}`);
+      } else {
+        btn.setAttribute('aria-current', 'true');
+      }
+      const lbl = document.createElement('span');
+      lbl.className = 'text-sm font-medium leading-tight';
+      lbl.textContent = v.label || v.sku;
+      const pr = document.createElement('span');
+      pr.className = `font-mono text-xs ${isCurrent ? 'text-paper/70' : 'text-graphite'}`;
+      pr.textContent = typeof v.price === 'number' ? money(v.price) : '';
+      btn.appendChild(lbl);
+      btn.appendChild(pr);
+      grid.appendChild(btn);
+    });
+    host.appendChild(grid);
+  }
+
   function _renderFacets(product, ctx) {
     const root = ctx.querySelector('[data-glx-facets]');
     if (!root) return;
@@ -2138,6 +2212,10 @@
       const cuota = +(product.price / 12).toFixed(2);
       fin.textContent = product.price > 30 ? `o desde ${money(cuota)} en 12 meses sin intereses` : '';
     }
+
+    // Selector de variantes (Especialidad, Acabado, etc.) — solo si el
+    // producto pertenece a un grupo y tiene siblings en specs._variants.
+    _renderVariantSelector(product, root);
 
     // Facetas relevantes para la categoría (casquillo, potencia, color, polos, etc.)
     _renderFacets(product, root);

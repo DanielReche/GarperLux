@@ -1,0 +1,155 @@
+{
+  "_doc": "Lista curada manualmente de URLs de productos Tegui a importar. Cada entrada tiene su URL y la taxonomía decidida por el usuario (familia, subcategoría, gama, especialidad, cableado). El scraper (scrape_urls.py) descarga cada URL y, según el hostname, extrae nombre, SKU, precio, descripción e imágenes; combina con la taxonomía y guarda el resultado en output/porteros-videoporteros.json para que import_to_db.py lo inserte con la misma lógica que el resto del catálogo.",
+  "category_slug": "porteros-videoporteros",
+  "category_name": "Porteros y Videoporteros",
+  "items": [
+    {
+      "url": "https://www.leroymerlin.es/productos/telefonillo-universal-5-hilos-tegui-t-71u-14774823.html",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Telefonillos y monitores",
+        "Gama": "Serie 7",
+        "Cableado": "4+N hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/telefonillo-2-hilos-serie-8?variant=52590196556115",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Telefonillos y monitores",
+        "Gama": "Serie 8",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/tegui-374494-monitor-serie-8-videoportero-2-hilos?variant=52590187446611",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Telefonillos y monitores",
+        "Gama": "Serie 8",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/kit-a1-con-placa-y-telefono-s7?variant=52590209368403",
+      "variant_group": "tegui-kit-audio-s7-4n",
+      "variant_axis": "Especialidad",
+      "variant_label": "1 Vivienda",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "Serie 7",
+        "Especialidad": "1 Vivienda",
+        "Cableado": "4+N hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/kit-a2-con-placa-y-telefono-s7?variant=52590210941267",
+      "variant_group": "tegui-kit-audio-s7-4n",
+      "variant_axis": "Especialidad",
+      "variant_label": "2 Viviendas",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "Serie 7",
+        "Especialidad": "2 Viviendas",
+        "Cableado": "4+N hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/kit-a3-con-placa-y-telefono-s7?variant=52590212546899",
+      "variant_group": "tegui-kit-audio-s7-4n",
+      "variant_axis": "Especialidad",
+      "variant_label": "3 Viviendas",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "Serie 7",
+        "Especialidad": "3 Viviendas",
+        "Cableado": "4+N hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/kit-a4-con-placa-y-telefono-s7?variant=52590215266643",
+      "variant_group": "tegui-kit-audio-s7-4n",
+      "variant_axis": "Especialidad",
+      "variant_label": "4 Viviendas",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "Serie 7",
+        "Especialidad": "4 Viviendas",
+        "Cableado": "4+N hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/kit-audio-2-hilos-serie-8-sfera-new?variant=52590499725651",
+      "variant_group": "tegui-kit-audio-s8-2h",
+      "variant_axis": "Especialidad",
+      "variant_label": "1 Vivienda",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "Serie 8",
+        "Especialidad": "1 Vivienda",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/kit-2-viviendas-audio-2-hilos-serie-8-2-telefonos-bticino-378152?variant=52590500577619",
+      "variant_group": "tegui-kit-audio-s8-2h",
+      "variant_axis": "Especialidad",
+      "variant_label": "2 Viviendas",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "Serie 8",
+        "Especialidad": "2 Viviendas",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/presupuesto-audio-portero-automatico-para-3-viviendas-2-hilos-sfera-new-tegui-audio3s?variant=52912406233427",
+      "variant_group": "tegui-kit-audio-s8-2h",
+      "variant_axis": "Especialidad",
+      "variant_label": "3 Viviendas",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "Serie 8",
+        "Especialidad": "3 Viviendas",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/tg-2h-kit-v1-serie-8sfera-hq-378511?variant=52590501888339",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Vídeo",
+        "Gama": "Serie 8",
+        "Especialidad": "1 Vivienda",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://tegui-distel.com/products/kit-videoportero-2-viviendas-2-hilos-tegui-hq-serie-8-378512?variant=52590502543699",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Vídeo",
+        "Gama": "Serie 8",
+        "Especialidad": "2 Viviendas",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://www.domoelectra.com/tiendaonline/88-kit-videoportero-color-2-hilos-serie-7-tegui-375046",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Vídeo",
+        "Gama": "Serie 7",
+        "Especialidad": "1 Vivienda",
+        "Cableado": "2 hilos"
+      }
+    }
+  ]
+}

@@ -107,7 +107,7 @@ File: web/index.html
   - pages/auth/login.html#registro-pro  ->  /pages/auth/login.html#registro-pro  (exists=True) note=ok
   - pages/auth/login.html#registro  ->  /pages/auth/login.html#registro  (exists=True) note=ok
   - pages/auth/login.html#registro-pro  ->  /pages/auth/login.html#registro-pro  (exists=True) note=ok
-  - assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - pages/aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - pages/tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - pages/servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -207,7 +207,7 @@ File: web/pages/aprender/hazlo-tu-mismo.html
   - descargas.html  ->  /pages/aprender/descargas.html  (exists=True) note=ok
   - tutorial.html  ->  /pages/aprender/tutorial.html  (exists=True) note=ok
   - ../servicios/solicitar-tecnico.html  ->  /pages/servicios/solicitar-tecnico.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - ../tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -253,7 +253,7 @@ File: web/pages/aprender/tutorial.html
   - tutorial.html  ->  /pages/aprender/tutorial.html  (exists=True) note=ok
   - tutorial.html  ->  /pages/aprender/tutorial.html  (exists=True) note=ok
   - tutorial.html  ->  /pages/aprender/tutorial.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - ../tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -292,9 +292,9 @@ File: web/pages/auth/login.html
   - ../../  ->  /.  (exists=True) note=ok
   - ../../assets/css/styles.css  ->  /assets/css/styles.css  (exists=True) note=ok
   - ../../index.html  ->  /index.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../../index.html  ->  /index.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - recuperar-password.html  ->  /pages/auth/recuperar-password.html  (exists=True) note=ok
   - ../legal/privacidad.html  ->  /pages/legal/privacidad.html  (exists=True) note=ok
   - ../legal/terminos.html  ->  /pages/legal/terminos.html  (exists=True) note=ok
@@ -309,7 +309,7 @@ File: web/pages/auth/recuperar-password.html
   - ../../  ->  /.  (exists=True) note=ok
   - ../../assets/css/styles.css  ->  /assets/css/styles.css  (exists=True) note=ok
   - ../../index.html  ->  /index.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - login.html  ->  /pages/auth/login.html  (exists=True) note=ok
   - ../empresa/contacto.html  ->  /pages/empresa/contacto.html  (exists=True) note=ok
   - login.html#registro  ->  /pages/auth/login.html#registro  (exists=True) note=ok
@@ -328,7 +328,7 @@ File: web/pages/cuenta/albaran.html
   - albaranes.html  ->  /pages/cuenta/albaranes.html  (exists=True) note=ok
   - albaranes.html  ->  /pages/cuenta/albaranes.html  (exists=True) note=ok
   - factura.html  ->  /pages/cuenta/factura.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - mis-pedido.html  ->  /pages/cuenta/mis-pedido.html  (exists=True) note=ok
   - ../tienda/carrito.html  ->  /pages/tienda/carrito.html  (exists=True) note=ok
   - ../empresa/contacto.html  ->  /pages/empresa/contacto.html  (exists=True) note=ok
@@ -493,7 +493,7 @@ File: web/pages/cuenta/factura.html
   - area-personal.html  ->  /pages/cuenta/area-personal.html  (exists=True) note=ok
   - facturas.html  ->  /pages/cuenta/facturas.html  (exists=True) note=ok
   - facturas.html  ->  /pages/cuenta/facturas.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - albaran.html  ->  /pages/cuenta/albaran.html  (exists=True) note=ok
   - ../../assets/js/main.js  ->  /assets/js/main.js  (exists=True) note=ok
   - ../../assets/js/auth.js  ->  /assets/js/auth.js  (exists=True) note=ok
@@ -745,7 +745,7 @@ File: web/pages/empresa/contacto.html
   - ../sistema/faqs.html  ->  /pages/sistema/faqs.html  (exists=True) note=ok
   - ../../index.html  ->  /index.html  (exists=True) note=ok
   - ../legal/privacidad.html  ->  /pages/legal/privacidad.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - ../tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -820,7 +820,7 @@ File: web/pages/empresa/quienes-somos.html
   - ../servicios/solicitar-tecnico.html  ->  /pages/servicios/solicitar-tecnico.html  (exists=True) note=ok
   - contacto.html  ->  /pages/empresa/contacto.html  (exists=True) note=ok
   - ../auth/login.html#registro-pro  ->  /pages/auth/login.html#registro-pro  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - ../tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -935,7 +935,7 @@ File: web/pages/servicios/servicio.html
   - servicio.html  ->  /pages/servicios/servicio.html  (exists=True) note=ok
   - servicio.html  ->  /pages/servicios/servicio.html  (exists=True) note=ok
   - servicio.html  ->  /pages/servicios/servicio.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - ../tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -974,7 +974,7 @@ File: web/pages/servicios/servicios.html
   - solicitar-tecnico.html  ->  /pages/servicios/solicitar-tecnico.html  (exists=True) note=ok
   - ../tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - solicitar-tecnico.html  ->  /pages/servicios/solicitar-tecnico.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - ../tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -1003,7 +1003,7 @@ File: web/pages/servicios/solicitar-tecnico.html
   - ../../  ->  /.  (exists=True) note=ok
   - ../../assets/css/styles.css  ->  /assets/css/styles.css  (exists=True) note=ok
   - ../../index.html  ->  /index.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../../index.html  ->  /index.html  (exists=True) note=ok
   - ../legal/privacidad.html  ->  /pages/legal/privacidad.html  (exists=True) note=ok
   - ../../assets/js/component-loader.js  ->  /assets/js/component-loader.js  (exists=True) note=ok
@@ -1073,7 +1073,7 @@ File: web/pages/sistema/faqs.html
   - ../auth/login.html  ->  /pages/auth/login.html  (exists=True) note=ok
   - ../servicios/seguir-solicitud.html  ->  /pages/servicios/seguir-solicitud.html  (exists=True) note=ok
   - ../empresa/contacto.html  ->  /pages/empresa/contacto.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - ../tienda/tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -1201,7 +1201,7 @@ File: web/pages/tienda/buscador.html
   - ../sistema/faqs.html  ->  /pages/sistema/faqs.html  (exists=True) note=ok
   - ../sistema/faqs.html  ->  /pages/sistema/faqs.html  (exists=True) note=ok
   - ../empresa/contacto.html  ->  /pages/empresa/contacto.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -1230,7 +1230,7 @@ File: web/pages/tienda/carrito.html
   - producto.html  ->  /pages/tienda/producto.html  (exists=True) note=ok
   - checkout.html  ->  /pages/tienda/checkout.html  (exists=True) note=ok
   - ../auth/login.html  ->  /pages/auth/login.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -1261,7 +1261,7 @@ File: web/pages/tienda/categoria.html
   - producto.html  ->  /pages/tienda/producto.html  (exists=True) note=ok
   - producto.html  ->  /pages/tienda/producto.html  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -1408,7 +1408,7 @@ File: web/pages/tienda/checkout.html
   - ../../  ->  /.  (exists=True) note=ok
   - ../../assets/css/styles.css  ->  /assets/css/styles.css  (exists=True) note=ok
   - ../../index.html  ->  /index.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - carrito.html  ->  /pages/tienda/carrito.html  (exists=True) note=ok
   - carrito.html  ->  /pages/tienda/carrito.html  (exists=True) note=ok
   - carrito.html  ->  /pages/tienda/carrito.html  (exists=True) note=ok
@@ -1453,7 +1453,7 @@ File: web/pages/tienda/pago.html
   - ../../  ->  /.  (exists=True) note=ok
   - ../../assets/css/styles.css  ->  /assets/css/styles.css  (exists=True) note=ok
   - ../../index.html  ->  /index.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - checkout.html  ->  /pages/tienda/checkout.html  (exists=True) note=ok
   - carrito.html  ->  /pages/tienda/carrito.html  (exists=True) note=ok
   - checkout.html  ->  /pages/tienda/checkout.html  (exists=True) note=ok
@@ -1505,7 +1505,7 @@ File: web/pages/tienda/producto.html
   - producto.html  ->  /pages/tienda/producto.html  (exists=True) note=ok
   - producto.html  ->  /pages/tienda/producto.html  (exists=True) note=ok
   - producto.html  ->  /pages/tienda/producto.html  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok
@@ -1544,7 +1544,7 @@ File: web/pages/tienda/tienda.html
   - categoria.html  ->  /pages/tienda/categoria.html  (exists=True) note=ok
   - ../auth/login.html  ->  /pages/auth/login.html  (exists=True) note=ok
   - ../auth/login.html#registro-pro  ->  /pages/auth/login.html#registro-pro  (exists=True) note=ok
-  - ../../assets/img/logo.svg  ->  /assets/img/logo.svg  (exists=True) note=ok
+  - ../../assets/img/logo.png  ->  /assets/img/logo.png  (exists=True) note=ok
   - ../aprender/hazlo-tu-mismo.html  ->  /pages/aprender/hazlo-tu-mismo.html  (exists=True) note=ok
   - tienda.html  ->  /pages/tienda/tienda.html  (exists=True) note=ok
   - ../servicios/servicios.html  ->  /pages/servicios/servicios.html  (exists=True) note=ok

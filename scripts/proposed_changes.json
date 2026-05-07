@@ -361,10 +361,10 @@
   },
   {
     "file": "web/index.html",
-    "original": "assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -1521,10 +1521,10 @@
   },
   {
     "file": "web/pages/aprender/hazlo-tu-mismo.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -1857,10 +1857,10 @@
   },
   {
     "file": "web/pages/aprender/tutorial.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -2137,10 +2137,10 @@
   },
   {
     "file": "web/pages/auth/login.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -2153,10 +2153,10 @@
   },
   {
     "file": "web/pages/auth/login.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -2257,10 +2257,10 @@
   },
   {
     "file": "web/pages/auth/recuperar-password.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -2393,10 +2393,10 @@
   },
   {
     "file": "web/pages/cuenta/albaran.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -3569,10 +3569,10 @@
   },
   {
     "file": "web/pages/cuenta/factura.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -5345,10 +5345,10 @@
   },
   {
     "file": "web/pages/empresa/contacto.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -5913,10 +5913,10 @@
   },
   {
     "file": "web/pages/empresa/quienes-somos.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -6705,10 +6705,10 @@
   },
   {
     "file": "web/pages/servicios/servicio.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -7001,10 +7001,10 @@
   },
   {
     "file": "web/pages/servicios/servicios.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -7201,10 +7201,10 @@
   },
   {
     "file": "web/pages/servicios/solicitar-tecnico.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -7697,10 +7697,10 @@
   },
   {
     "file": "web/pages/sistema/faqs.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -8689,10 +8689,10 @@
   },
   {
     "file": "web/pages/tienda/buscador.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -8905,10 +8905,10 @@
   },
   {
     "file": "web/pages/tienda/carrito.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -9137,10 +9137,10 @@
   },
   {
     "file": "web/pages/tienda/categoria.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -10281,10 +10281,10 @@
   },
   {
     "file": "web/pages/tienda/checkout.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -10593,10 +10593,10 @@
   },
   {
     "file": "web/pages/tienda/pago.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -10977,10 +10977,10 @@
   },
   {
     "file": "web/pages/tienda/producto.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {
@@ -11273,10 +11273,10 @@
   },
   {
     "file": "web/pages/tienda/tienda.html",
-    "original": "../../assets/img/logo.svg",
-    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.svg",
+    "original": "../../assets/img/logo.png",
+    "resolved": "c:\\GarperLux\\web\\assets\\img\\logo.png",
     "exists": true,
-    "replacement": "/assets/img/logo.svg",
+    "replacement": "/assets/img/logo.png",
     "note": "ok"
   },
   {

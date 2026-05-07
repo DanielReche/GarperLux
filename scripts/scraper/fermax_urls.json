@@ -1,0 +1,122 @@
+{
+  "_doc": "URLs de Fermax (porteros y videoporteros). Mismo formato que tegui_urls.json. Único grupo de variantes razonable: porteros Audio CityLine 4+N para 6 vs 8 viviendas (mismo gama, mismo cableado, solo cambia la capacidad). El resto son modelos distintos (telefonillo / monitor / monitor XS / kit Veo Duox / kit See-U) y se mantienen como productos independientes.",
+  "category_slug": "porteros-videoporteros",
+  "category_name": "Porteros y Videoporteros",
+  "items": [
+    {
+      "url": "https://www.leroymerlin.es/productos/telefonillo-fermax-veo-5-hilos-universal-82972998.html",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Telefonillos y monitores",
+        "Gama": "Veo",
+        "Cableado": "5 hilos"
+      }
+    },
+    {
+      "url": "https://www.leroymerlin.es/productos/monitor-veo-wifi-4-3-duox-fermax-9446-84913927.html",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Telefonillos y monitores",
+        "Gama": "Veo",
+        "Cableado": "5 hilos"
+      }
+    },
+    {
+      "url": "https://www.leroymerlin.es/productos/monitor-veo-xs-wifi-4-3-duox-fermax-9449-84913928.html",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Telefonillos y monitores",
+        "Gama": "Veo",
+        "Cableado": "5 hilos"
+      }
+    },
+    {
+      "url": "https://www.domoelectra.com/tiendaonline/89-kit-portero-automatico-fermax-1l-ag-citymax-fermax-fe6201",
+      "brand": "Fermax",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "CityMax",
+        "Especialidad": "1 Vivienda",
+        "Cableado": "4+N hilos"
+      }
+    },
+    {
+      "url": "https://www.domoelectra.com/tiendaonline/5-video-portero-fermax-city-color",
+      "brand": "Fermax",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Vídeo",
+        "Gama": "CityLine",
+        "Especialidad": "1 Vivienda",
+        "Cableado": "4+N hilos"
+      }
+    },
+    {
+      "url": "https://www.serviciotecnicofermax.com/94211-kit-video-veo-duox-color-1-linea/",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Vídeo",
+        "Gama": "CityLine",
+        "Especialidad": "1 Vivienda",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://www.serviciotecnicofermax.com/94521-kit-video-veo-duox-xs-color-2-lineas/",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Vídeo",
+        "Gama": "CityLine",
+        "Especialidad": "2 Viviendas",
+        "Cableado": "2 hilos"
+      }
+    },
+    {
+      "url": "https://www.serviciotecnicofermax.com/9422-kit-video-veo-duox-color-2-líneas/",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Vídeo",
+        "Gama": "CityLine",
+        "Especialidad": "2 Viviendas",
+        "Cableado": "WiFi"
+      }
+    },
+    {
+      "url": "https://www.leroymerlin.es/productos/kit-videoportero-fermax-7-wifi-see-u-89319420.html",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Vídeo",
+        "Gama": "CityLine",
+        "Especialidad": "1 Vivienda",
+        "Cableado": "WiFi"
+      }
+    },
+    {
+      "url": "https://www.leroymerlin.es/productos/portero-6-viviendas-fermax-cityline-81951639.html",
+      "variant_group": "fermax-cityline-audio-multi",
+      "variant_axis": "Especialidad",
+      "variant_label": "6 Viviendas",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "CityLine",
+        "Especialidad": "6 Viviendas",
+        "Cableado": "4+N hilos"
+      }
+    },
+    {
+      "url": "https://www.leroymerlin.es/productos/portero-8-viviendas-fermax-cityline-81951640.html",
+      "variant_group": "fermax-cityline-audio-multi",
+      "variant_axis": "Especialidad",
+      "variant_label": "8 Viviendas",
+      "taxonomy": {
+        "Familia": "Porteros y Videoporteros",
+        "Subcategoría": "Kits de Audio",
+        "Gama": "CityLine",
+        "Especialidad": "8 Viviendas",
+        "Cableado": "4+N hilos"
+      }
+    }
+  ]
+}
