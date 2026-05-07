@@ -441,9 +441,22 @@ function seed(db) {
 }
 
 function seedBrands(db) {
+  // UPSERT: si la marca ya existe (por scraper), actualiza la metadata oficial
+  // (logo, descripción, país, año, web, categorías) sin tocar la columna name
+  // que ya pueda tener un valor distinto en mayúsculas.
   const upsert = db.prepare(`
-    INSERT OR IGNORE INTO brands (slug, name, professional, is_official, logo, description, country, year_founded, website, categories_json)
+    INSERT INTO brands (slug, name, professional, is_official, logo, description, country, year_founded, website, categories_json)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(slug) DO UPDATE SET
+      name = excluded.name,
+      professional = excluded.professional,
+      is_official = excluded.is_official,
+      logo = excluded.logo,
+      description = excluded.description,
+      country = excluded.country,
+      year_founded = excluded.year_founded,
+      website = excluded.website,
+      categories_json = excluded.categories_json
   `);
 
   const brands = [

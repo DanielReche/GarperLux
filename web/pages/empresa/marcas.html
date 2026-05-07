@@ -229,8 +229,11 @@
       let allBrands = [];
 
       function renderBrandTile(brand) {
+        // No usamos loading="lazy" porque Firefox no carga las imágenes below-fold
+        // hasta que se scrollea, y con un grid corto de 21 marcas merece la pena
+        // que carguen todas a la vez (logos pequeños, ~5 KB cada uno).
         const logoHtml = brand.logo
-          ? `<img src="${brand.logo}" alt="${brand.name}" class="brand-logo" loading="lazy" onerror="this.style.display='none'"/>`
+          ? `<img src="${brand.logo}" alt="${brand.name}" class="brand-logo" onerror="this.style.display='none'"/>`
           : '';
 
         const meta = [];
