@@ -70,12 +70,11 @@
 
   <!-- BREADCRUMBS -->
   <div class="container-x pt-5 pb-2">
-    <nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap" data-glx-breadcrumb>
       <a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
       <a href="/pages/tienda/tienda.html" class="hover:text-ink">Tienda</a><span class="opacity-50">/</span>
-      <a href="/pages/tienda/categoria.html" class="hover:text-ink">Mecanismos</a><span class="opacity-50">/</span>
-      <a href="/pages/tienda/categoria.html" class="hover:text-ink">Interruptores</a><span class="opacity-50">/</span>
-      <span class="text-ink">Simón 27 10A blanco</span>
+      <a href="/pages/tienda/mecanismos.html" class="hover:text-ink" data-glx-bc-category>Mecanismos</a><span class="opacity-50">/</span>
+      <span class="text-ink" data-glx-bc-name>Producto</span>
     </nav>
   </div>
 
@@ -108,31 +107,14 @@
       <div class="lg:col-span-7">
         <div class="grid grid-cols-[80px_1fr] gap-4">
           <!-- Thumbnails -->
-          <div class="flex flex-col gap-2 order-2 md:order-1">
-            <button class="aspect-square rounded-lg border-2 border-ink overflow-hidden bg-paper-2 grid place-items-center">
-              <img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=200&q=80" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.parentNode.innerHTML='<svg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.5\' opacity=\'0.4\'><rect x=\'4\' y=\'4\' width=\'16\' height=\'16\' rx=\'2\'/></svg>'"/>
-            </button>
-            <button class="aspect-square rounded-lg border-2 border-line overflow-hidden bg-paper-2 grid place-items-center hover:border-graphite">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-graphite/40"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
-            </button>
-            <button class="aspect-square rounded-lg border-2 border-line overflow-hidden bg-paper-2 grid place-items-center hover:border-graphite">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-graphite/40"><circle cx="12" cy="12" r="6"/></svg>
-            </button>
-            <button class="aspect-square rounded-lg border-2 border-line overflow-hidden bg-ink grid place-items-center hover:border-filament">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-filament"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-            </button>
-            <button class="aspect-square rounded-lg border-2 border-line overflow-hidden bg-paper-2 grid place-items-center text-xs font-mono text-graphite hover:border-graphite">
-              +3
-            </button>
-          </div>
+          <div class="flex flex-col gap-2 order-2 md:order-1" data-glx-thumbs></div>
 
           <!-- Imagen principal -->
           <div class="order-1 md:order-2">
-            <div class="aspect-square rounded-2xl overflow-hidden bg-paper-2 relative">
-              <img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=1200&q=80" alt="Interruptor Simón 27 10A blanco" class="w-full h-full object-cover" loading="lazy" onerror="this.parentNode.innerHTML+='<div class=\'w-full h-full grid place-items-center text-graphite/30\'><svg width=\'180\' height=\'180\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'0.8\'><rect x=\'4\' y=\'4\' width=\'16\' height=\'16\' rx=\'2\'/><rect x=\'9\' y=\'9\' width=\'6\' height=\'6\' rx=\'0.5\'/></svg></div>'"/>
+            <div class="aspect-square rounded-2xl overflow-hidden bg-paper-2 relative" data-glx-main-image>
               <div class="absolute top-4 left-4 flex gap-2">
-                <span class="pill bg-white/95 text-ink">Simón</span>
-                <span class="pill pill-stock">En stock</span>
+                <span class="pill bg-white/95 text-ink" data-glx-brand-pill>—</span>
+                <span class="pill pill-stock" data-glx-stock-pill>En stock</span>
               </div>
               <div class="absolute bottom-4 right-4">
                 <button class="w-11 h-11 rounded-full bg-white/95 grid place-items-center hover:bg-paper transition-colors" aria-label="Zoom">
@@ -175,7 +157,7 @@
 
           <!-- Marca + valoración -->
           <div class="flex items-center justify-between text-sm">
-            <a href="/pages/empresa/marcas.html" class="link-underline font-medium">Simón</a>
+            <a href="/pages/empresa/marcas.html" class="link-underline font-medium" data-glx-brand-link>Simón</a>
             <div class="flex items-center gap-2 text-graphite">
               <div class="flex">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-filament"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -189,8 +171,8 @@
           </div>
 
           <!-- Título -->
-          <h1 class="font-serif font-medium leading-[1.05] tracking-[-0.01em]" style="font-size: clamp(1.75rem, 3.5vw, 2.5rem);">
-            Interruptor Simón 27<br/>10A blanco
+          <h1 class="font-serif font-medium leading-[1.05] tracking-[-0.01em]" style="font-size: clamp(1.75rem, 3.5vw, 2.5rem);" data-glx-name>
+            Producto
           </h1>
 
           <!-- SKU PRO ONLY -->
@@ -198,18 +180,18 @@
             <div class="bg-ink text-paper rounded-xl p-4 flex items-center justify-between">
               <div>
                 <div class="font-mono text-[10px] uppercase tracking-wider text-paper/60 mb-1">Referencia</div>
-                <div class="font-mono text-2xl font-medium tracking-tight">27101-31</div>
+                <div class="font-mono text-2xl font-medium tracking-tight" data-glx-sku>—</div>
               </div>
-              <div class="text-right">
+              <div class="text-right" data-glx-ean-block>
                 <div class="font-mono text-[10px] uppercase tracking-wider text-paper/60 mb-1">EAN</div>
-                <div class="font-mono text-sm">8410100271019</div>
+                <div class="font-mono text-sm" data-glx-ean>—</div>
               </div>
             </div>
           </div>
 
           <!-- DESCRIPCIÓN PARTICULAR ONLY -->
-          <p class="view-particular text-graphite text-lg leading-relaxed">
-            El interruptor de toda la vida, en su versión actualizada. Encaja en cualquier caja universal de 60 mm, marco de la gama 27 (vendido aparte) y se monta con destornillador plano en menos de cinco minutos.
+          <p class="view-particular text-graphite text-lg leading-relaxed" data-glx-description>
+            Producto en catálogo GarperLux.
           </p>
 
           <!-- PRECIO DUAL -->
@@ -217,26 +199,26 @@
             <!-- Precio particular -->
             <div class="view-particular">
               <div class="flex items-baseline gap-3 mb-1">
-                <span class="font-serif text-4xl md:text-5xl font-medium">5,90 €</span>
+                <span class="font-serif text-4xl md:text-5xl font-medium" data-glx-price>5,90 €</span>
                 <span class="text-sm text-graphite">IVA incluido</span>
               </div>
-              <div class="text-sm text-graphite">o desde 0,49 € en 12 meses sin intereses</div>
+              <div class="text-sm text-graphite" data-glx-price-financing>o desde 0,49 € en 12 meses sin intereses</div>
             </div>
             <!-- Precio profesional -->
             <div class="view-pro space-y-3">
               <div class="grid grid-cols-2 gap-3">
                 <div class="bg-paper-2 rounded-lg p-3">
                   <div class="font-mono text-[10px] uppercase tracking-wider text-graphite mb-1">PVP particular</div>
-                  <div class="font-serif text-2xl font-medium line-through text-graphite">5,90 €</div>
+                  <div class="font-serif text-2xl font-medium line-through text-graphite" data-glx-price-pvp>5,90 €</div>
                 </div>
                 <div class="rounded-lg p-3 pro-tag">
                   <div class="font-mono text-[10px] uppercase tracking-wider mb-1">Tarifa pro</div>
-                  <div class="font-serif text-2xl font-medium">4,60 €</div>
+                  <div class="font-serif text-2xl font-medium" data-glx-price-pro>4,60 €</div>
                 </div>
               </div>
               <div class="text-xs font-mono text-graphite flex items-center justify-between">
-                <span>Descuento profesional aplicado: <strong class="text-stock">−22%</strong></span>
-                <span>Base imp. 3,80 € · IVA 21%</span>
+                <span>Descuento profesional aplicado: <strong class="text-stock" data-glx-pro-discount>−22%</strong></span>
+                <span data-glx-price-base>Base imp. 3,80 € · IVA 21%</span>
               </div>
               <div class="bg-paper-2 rounded-lg p-3 text-xs text-graphite">
                 <div class="font-medium text-ink mb-1.5">Escalado por volumen</div>
@@ -249,36 +231,14 @@
             </div>
           </div>
 
-          <!-- VARIANTES (color/acabado) -->
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-sm font-medium">Acabado: <span class="text-graphite font-normal">Blanco</span></span>
-              <span class="text-xs font-mono text-graphite">3 disponibles</span>
-            </div>
-            <div class="flex gap-3">
-              <button class="var-sw is-active" style="background:#FFFFFF;" aria-label="Blanco"></button>
-              <button class="var-sw" style="background:#F0E8D8;" aria-label="Marfil"></button>
-              <button class="var-sw" style="background:linear-gradient(135deg,#C0C0C0,#808080);" aria-label="Aluminio"></button>
-            </div>
-          </div>
-
-          <!-- AMPERAJE -->
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-sm font-medium">Amperaje: <span class="text-graphite font-normal font-mono">10 A</span></span>
-            </div>
-            <div class="flex gap-2">
-              <button class="px-4 py-2 rounded-lg bg-ink text-paper text-sm font-mono font-medium">10 A</button>
-              <button class="px-4 py-2 rounded-lg bg-paper-2 hover:bg-paper-3 text-sm font-mono">16 A</button>
-              <button class="px-4 py-2 rounded-lg bg-paper-2 hover:bg-paper-3 text-sm font-mono">20 A</button>
-            </div>
-          </div>
+          <!-- FACETAS DEL PRODUCTO (casquillo, potencia, color...) generadas según la categoría -->
+          <div data-glx-facets class="space-y-4"></div>
 
           <!-- STOCK -->
-          <div class="view-particular bg-paper-2 rounded-xl p-4 flex items-center gap-3">
+          <div class="view-particular bg-paper-2 rounded-xl p-4 flex items-center gap-3" data-glx-stock-row>
             <span class="w-2.5 h-2.5 rounded-full bg-stock animate-pulse"></span>
             <div class="flex-1">
-              <div class="text-sm font-medium" id="stock-qty">En stock · 70 unidades</div>
+              <div class="text-sm font-medium" id="stock-qty" data-glx-stock-text>En stock · 0 unidades</div>
               <div class="text-xs text-graphite">Si pides antes de las 17:00, sale hoy mismo.</div>
             </div>
           </div>
@@ -343,35 +303,7 @@
           </div>
 
           <!-- COMPATIBILIDAD PARTICULAR -->
-          <div class="view-particular border-t border-line pt-5 space-y-3">
-            <div class="flex items-start gap-3">
-              <div class="w-9 h-9 rounded-full bg-stock/10 grid place-items-center text-stock shrink-0">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-              </div>
-              <div class="text-sm">
-                <strong class="text-ink">Encaja con caja universal estándar</strong>
-                <p class="text-graphite">Las que ya tienes en casa, da igual el año de instalación.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3">
-              <div class="w-9 h-9 rounded-full bg-stock/10 grid place-items-center text-stock shrink-0">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-              </div>
-              <div class="text-sm">
-                <strong class="text-ink">Marco de gama 27 vendido aparte</strong>
-                <p class="text-graphite">No incluye marco. <a href="/pages/tienda/categoria.html" class="link-underline">Ver marcos compatibles</a></p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3">
-              <div class="w-9 h-9 rounded-full bg-electric/10 grid place-items-center text-electric shrink-0">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              </div>
-              <div class="text-sm">
-                <strong class="text-ink">¿No estás seguro de si te vale?</strong>
-                <p class="text-graphite">Mira el <a href="/pages/aprender/tutorial.html" class="link-underline">tutorial de cambiar un interruptor</a> y verás si encaja con tu instalación.</p>
-              </div>
-            </div>
-          </div>
+          <div class="view-particular border-t border-line pt-5 space-y-3" data-glx-compatibility-block hidden></div>
 
           <!-- ENVÍO INFO -->
           <div class="border-t border-line pt-4 grid grid-cols-3 gap-3 text-xs">
@@ -394,7 +326,7 @@
   </section>
 
   <!-- ============ TUTORIAL VINCULADO (puente aprender→comprar, D-006) ============ -->
-  <section class="view-particular bg-ink text-paper">
+  <section class="view-particular bg-ink text-paper" data-glx-tutorial-section hidden>
     <div class="container-x py-14 md:py-16">
       <div class="grid lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-8">
@@ -434,118 +366,33 @@
 
       <!-- DESCRIPCIÓN -->
       <div class="tab-pane is-active lg:col-span-8 space-y-5 max-w-3xl" data-pane="desc">
-        <h3 class="font-serif text-2xl font-medium">Un mecanismo que se elige porque ya lo conoces.</h3>
-        <p class="text-graphite leading-relaxed text-lg">El interruptor unipolar de la <strong class="text-ink">gama Simón 27</strong> es probablemente el mecanismo más vendido en España. Lo encuentras en pisos, viviendas unifamiliares y reformas porque es robusto, fácil de instalar y mantiene una estética limpia que no se queda anticuada.</p>
-        <p class="text-graphite leading-relaxed">Su <strong class="text-ink">cuerpo de termoplástico libre de halógenos</strong> resiste bien el tiempo y los pequeños arcos eléctricos del uso diario. La conexión es por tornillo (no a presión), con un solo borne por terminal: introduces el cable pelado 8 mm, aprietas, y queda firme.</p>
-        <p class="text-graphite leading-relaxed">Compatible con <strong class="text-ink">cualquier caja universal de 60 mm</strong>, sistema de garras estándar, y se combina con marcos de la propia gama 27 (que se venden aparte para que puedas elegir el acabado que mejor vaya con tu vivienda: blanco alpino, marfil, aluminio, champagne, madera).</p>
-
-        <!-- Highlights -->
-        <div class="grid sm:grid-cols-2 gap-3 pt-4">
-          <div class="flex gap-3 p-4 rounded-lg bg-paper-2 border border-line">
-            <div class="w-10 h-10 rounded-lg bg-white grid place-items-center shrink-0 text-electric">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            </div>
-            <div class="text-sm">
-              <div class="font-semibold mb-0.5">Norma UNE-EN 60669-1</div>
-              <div class="text-graphite text-xs">Mecanismos para instalaciones eléctricas fijas en uso doméstico</div>
-            </div>
-          </div>
-          <div class="flex gap-3 p-4 rounded-lg bg-paper-2 border border-line">
-            <div class="w-10 h-10 rounded-lg bg-white grid place-items-center shrink-0 text-copper">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            </div>
-            <div class="text-sm">
-              <div class="font-semibold mb-0.5">Vida útil declarada 40.000 ciclos</div>
-              <div class="text-graphite text-xs">≈ 25 años de uso doméstico habitual</div>
-            </div>
-          </div>
-          <div class="flex gap-3 p-4 rounded-lg bg-paper-2 border border-line">
-            <div class="w-10 h-10 rounded-lg bg-white grid place-items-center shrink-0 text-stock">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.39 0 4.68.94 6.36 2.64"/></svg>
-            </div>
-            <div class="text-sm">
-              <div class="font-semibold mb-0.5">Fabricado en España</div>
-              <div class="text-graphite text-xs">Planta de Olot (Girona), Simón S.A.</div>
-            </div>
-          </div>
-          <div class="flex gap-3 p-4 rounded-lg bg-paper-2 border border-line">
-            <div class="w-10 h-10 rounded-lg bg-white grid place-items-center shrink-0 text-warn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-            </div>
-            <div class="text-sm">
-              <div class="font-semibold mb-0.5">Garantía 3 años</div>
-              <div class="text-graphite text-xs">Defectos de fabricación cubiertos por GarperLux</div>
-            </div>
-          </div>
+        <h3 class="font-serif text-2xl font-medium" data-glx-desc-title>Producto del catálogo GarperLux</h3>
+        <div data-glx-desc-body class="space-y-3">
+          <p class="text-graphite leading-relaxed text-lg">Producto disponible en GarperLux con stock real y envío 24-48 h.</p>
         </div>
+
+        <!-- Highlights generados dinámicamente desde specs -->
+        <div class="grid sm:grid-cols-2 gap-3 pt-4" data-glx-highlights></div>
       </div>
 
       <!-- ESPECIFICACIONES (siempre visibles a la derecha como aside) -->
       <aside class="lg:col-span-4">
         <div class="bg-white border border-line rounded-2xl p-6 sticky top-24">
           <div class="eyebrow text-copper mb-4">Especificaciones técnicas</div>
-          <div class="text-sm">
-            <div class="spec-row"><span>Marca</span><span class="dots"></span><span class="font-mono">Simón</span></div>
-            <div class="spec-row"><span>Gama</span><span class="dots"></span><span class="font-mono">Simón 27</span></div>
-            <div class="spec-row"><span>Tipo</span><span class="dots"></span><span class="font-mono">Interruptor unipolar</span></div>
-            <div class="spec-row"><span>Tensión nominal</span><span class="dots"></span><span class="font-mono">250 V CA</span></div>
-            <div class="spec-row"><span>Intensidad nominal</span><span class="dots"></span><span class="font-mono">10 AX</span></div>
-            <div class="spec-row"><span>Conexión</span><span class="dots"></span><span class="font-mono">Tornillo</span></div>
-            <div class="spec-row"><span>Bornes</span><span class="dots"></span><span class="font-mono">2</span></div>
-            <div class="spec-row"><span>Sección máx.</span><span class="dots"></span><span class="font-mono">2,5 mm²</span></div>
-            <div class="spec-row"><span>Acabado</span><span class="dots"></span><span class="font-mono">Blanco</span></div>
-            <div class="spec-row"><span>Material</span><span class="dots"></span><span class="font-mono">Termoplástico</span></div>
-            <div class="spec-row"><span>Grado IP</span><span class="dots"></span><span class="font-mono">IP20</span></div>
-            <div class="spec-row"><span>Norma</span><span class="dots"></span><span class="font-mono">UNE-EN 60669-1</span></div>
-            <div class="spec-row"><span>Dimensiones</span><span class="dots"></span><span class="font-mono">22×22×24mm</span></div>
-            <div class="spec-row !border-b-0"><span>Peso</span><span class="dots"></span><span class="font-mono">25 g</span></div>
+          <div class="text-sm" data-glx-specs-aside>
+            <div class="spec-row"><span>Marca</span><span class="dots"></span><span class="font-mono">—</span></div>
           </div>
-          <button class="btn btn-ghost btn-sm w-full justify-center mt-5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Descargar ficha (PDF)
-          </button>
+          <a href="#" data-glx-source-link target="_blank" rel="noopener" class="btn btn-ghost btn-sm w-full justify-center mt-5" hidden>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3h7v7M21 3l-9 9M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>
+            Ver fuente original
+          </a>
         </div>
       </aside>
 
       <!-- ESPECIFICACIONES tab pane -->
       <div class="tab-pane lg:col-span-12" data-pane="spec">
-        <div class="grid md:grid-cols-2 gap-x-12 gap-y-6">
-          <div>
-            <h3 class="eyebrow text-copper mb-4">Eléctricas</h3>
-            <div class="text-sm">
-              <div class="spec-row"><span>Tensión nominal</span><span class="dots"></span><span class="font-mono">250 V CA</span></div>
-              <div class="spec-row"><span>Intensidad nominal</span><span class="dots"></span><span class="font-mono">10 AX</span></div>
-              <div class="spec-row"><span>Frecuencia</span><span class="dots"></span><span class="font-mono">50/60 Hz</span></div>
-              <div class="spec-row"><span>Resistencia aislamiento</span><span class="dots"></span><span class="font-mono">≥ 5 MÎ©</span></div>
-            </div>
-          </div>
-          <div>
-            <h3 class="eyebrow text-copper mb-4">Mecánicas</h3>
-            <div class="text-sm">
-              <div class="spec-row"><span>Sistema fijación</span><span class="dots"></span><span class="font-mono">Garras + tornillo</span></div>
-              <div class="spec-row"><span>Caja compatible</span><span class="dots"></span><span class="font-mono">Universal 60mm</span></div>
-              <div class="spec-row"><span>Vida útil</span><span class="dots"></span><span class="font-mono">40.000 ciclos</span></div>
-              <div class="spec-row"><span>Temperatura uso</span><span class="dots"></span><span class="font-mono">-5 a +40 °C</span></div>
-            </div>
-          </div>
-          <div>
-            <h3 class="eyebrow text-copper mb-4">Conexión</h3>
-            <div class="text-sm">
-              <div class="spec-row"><span>Tipo borne</span><span class="dots"></span><span class="font-mono">Tornillo M3</span></div>
-              <div class="spec-row"><span>Sección hilo rígido</span><span class="dots"></span><span class="font-mono">1 a 2,5 mm²</span></div>
-              <div class="spec-row"><span>Sección hilo flex.</span><span class="dots"></span><span class="font-mono">0,75 a 1,5 mm²</span></div>
-              <div class="spec-row"><span>Par apriete</span><span class="dots"></span><span class="font-mono">0,5 N·m</span></div>
-            </div>
-          </div>
-          <div>
-            <h3 class="eyebrow text-copper mb-4">Certificaciones</h3>
-            <div class="text-sm">
-              <div class="spec-row"><span>Norma</span><span class="dots"></span><span class="font-mono">UNE-EN 60669-1</span></div>
-              <div class="spec-row"><span>Marcado CE</span><span class="dots"></span><span class="font-mono text-stock">✓</span></div>
-              <div class="spec-row"><span>RoHS</span><span class="dots"></span><span class="font-mono text-stock">✓</span></div>
-              <div class="spec-row"><span>Libre halógenos</span><span class="dots"></span><span class="font-mono text-stock">✓</span></div>
-            </div>
-          </div>
+        <div class="grid md:grid-cols-2 gap-x-12 gap-y-6" data-glx-specs-full>
+          <!-- Generado dinámicamente desde product.specs -->
         </div>
       </div>
 
@@ -655,7 +502,7 @@
           <div class="eyebrow text-copper mb-2">Habitualmente se compra con</div>
           <h2 class="font-serif text-3xl font-medium">Para no tener que pedirlo dos veces.</h2>
         </div>
-        <a href="/pages/tienda/categoria.html" class="link-underline text-sm">Ver toda la gama Simón 27</a>
+        <a href="/pages/tienda/mecanismos.html" class="link-underline text-sm">Ver toda la gama Simón 27</a>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -767,32 +614,30 @@
     const stockEl = document.getElementById('stock-qty');
 
     if (btnMinus && btnPlus && qtyInput) {
-      // helper to detect numeric stock from the stock label (robust against other numbers like '17:00')
+      // Helper: detecta el stock numérico desde la etiqueta. Si el stock aún
+      // no se ha cargado (texto inicial "0 unidades" antes de que la API
+      // responda), devuelve null para no bloquear los botones.
       const parseStock = () => {
         if (!stockEl) return null;
         const text = stockEl.textContent || '';
         const m1 = text.match(/(\d+)\s*(?:unidades|uds)\b/i);
-        if (m1) return parseInt(m1[1], 10);
-        const m2 = text.match(/(\d+)/);
-        return m2 ? parseInt(m2[1], 10) : null;
+        const n = m1 ? parseInt(m1[1], 10) : (text.match(/(\d+)/) ? parseInt(text.match(/(\d+)/)[1], 10) : null);
+        // Stock 0 al inicio = aún cargando; tratar como ilimitado hasta que la
+        // API actualice el texto.
+        if (n === 0 && !document.body.dataset.glxStockReady) return null;
+        return n;
       };
 
-      const updateButtons = () => {
-        const val = parseInt(qtyInput.value, 10) || 1;
-        btnMinus.disabled = val <= 1;
-        if (maxStock != null) {
-          btnPlus.disabled = val >= maxStock;
-        } else {
-          btnPlus.disabled = false;
-        }
-      };
-
+      let maxStock = parseStock();
       const applyMaxAttr = (ms) => {
         if (ms != null) qtyInput.setAttribute('max', String(ms));
         else qtyInput.removeAttribute('max');
       };
-      // initial parse
-      let maxStock = parseStock();
+      const updateButtons = () => {
+        const val = parseInt(qtyInput.value, 10) || 1;
+        btnMinus.disabled = val <= 1;
+        btnPlus.disabled = (maxStock != null && val >= maxStock);
+      };
       applyMaxAttr(maxStock);
 
       btnMinus.addEventListener('click', () => {
@@ -802,20 +647,15 @@
       });
 
       btnPlus.addEventListener('click', () => {
-        // re-parse stock each interaction in case other scripts updated it
         maxStock = parseStock();
         applyMaxAttr(maxStock);
         let val = parseInt(qtyInput.value, 10) || 1;
-        if (maxStock == null || val < maxStock) {
-          qtyInput.value = val + 1;
-        } else {
-          qtyInput.value = maxStock;
-        }
+        if (maxStock == null || val < maxStock) qtyInput.value = val + 1;
+        else qtyInput.value = maxStock;
         updateButtons();
       });
 
       qtyInput.addEventListener('change', () => {
-        // re-parse stock on manual edit
         maxStock = parseStock();
         applyMaxAttr(maxStock);
         let val = parseInt(qtyInput.value, 10);
@@ -825,9 +665,25 @@
         updateButtons();
       });
 
-      // initialize
+      // Re-evalúa cuando el texto del stock se actualice (lo hace
+      // backend-integration.js tras consultar la API). Marca un flag para
+      // distinguir "todavía cargando" (stock=0) de "stock real es 0".
+      if (stockEl) {
+        const obs = new MutationObserver(() => {
+          document.body.dataset.glxStockReady = '1';
+          maxStock = parseStock();
+          applyMaxAttr(maxStock);
+          let val = parseInt(qtyInput.value, 10) || 1;
+          if (val < 1) val = 1;
+          if (maxStock != null && val > maxStock) val = Math.max(1, maxStock);
+          qtyInput.value = val;
+          updateButtons();
+        });
+        obs.observe(stockEl, { childList: true, characterData: true, subtree: true });
+      }
+
+      // Inicializa
       if (!qtyInput.value || parseInt(qtyInput.value, 10) < 1) qtyInput.value = 1;
-      if (maxStock != null && parseInt(qtyInput.value, 10) > maxStock) qtyInput.value = maxStock;
       updateButtons();
     }
   </script>

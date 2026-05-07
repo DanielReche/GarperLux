@@ -122,6 +122,10 @@
   };
 
   const applyFilters = () => {
+    // Si backend-integration.js gestiona el catálogo dinámicamente,
+    // no peleamos con él — su sistema es completo (subcategorías, filtros,
+    // sort, paginación). Sólo gestiona pills y limpieza de filtros UI.
+    if (window._GLX_DYNAMIC_CATALOG) return;
     const items = getItemPool();
     if (!items.length) return;
     const groups = getActiveGroups();

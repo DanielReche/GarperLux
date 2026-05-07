@@ -20,6 +20,7 @@ function productDto(row) {
     proOnly: Boolean(row.pro_only),
     description: row.description,
     specs: parseJson(row.specs_json, {}),
+    image: row.image || null,
   };
 }
 
@@ -53,7 +54,19 @@ function registerCatalogRoutes(router) {
 
   router.get('/api/catalog/brands', (_req, res) => {
     const rows = getDb().prepare('SELECT * FROM brands ORDER BY name').all();
-    return ok(res, rows.map((brand) => ({ ...brand, professional: Boolean(brand.professional) })));
+    return ok(res, rows.map((brand) => ({
+      id: brand.id,
+      slug: brand.slug,
+      name: brand.name,
+      professional: Boolean(brand.professional),
+      isOfficial: Boolean(brand.is_official),
+      logo: brand.logo || null,
+      description: brand.description || null,
+      country: brand.country || null,
+      yearFounded: brand.year_founded || null,
+      website: brand.website || null,
+      categories: parseJson(brand.categories_json, []),
+    })));
   });
 
   router.get('/api/catalog/products', (req, res) => {

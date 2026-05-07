@@ -50,6 +50,7 @@ window.GarperLuxApi = (() => {
     },
     changePassword: (currentPassword, newPassword) => request('/auth/password/change', { method: 'POST', body: JSON.stringify({ currentPassword, newPassword }) }),
     me: () => request('/me'),
+    brands: () => request('/catalog/brands'),
     products: (params = {}) => request(`/catalog/products?${new URLSearchParams(params)}`),
     product: (slug) => request(`/catalog/products/${encodeURIComponent(slug)}`),
     cart: () => request('/cart'),

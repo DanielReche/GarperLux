@@ -230,3 +230,14 @@ img, svg { display: block; max-width: 100%; }
 /* --------- Breadcrumbs styling & separator --------- */
 nav.text-xs a { text-decoration: underline; text-underline-offset: 2px; }
 nav.text-xs .opacity-50 { margin: 0 .4rem; color: var(--graphite-2); }
+
+/* --------- Inputs numéricos: ocultar flechitas nativas del navegador.
+   Tenemos botones +/- propios en producto, carrito, formularios, etc.
+   Las flechas nativas chocan con el diseño y duplican controles. --------- */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
