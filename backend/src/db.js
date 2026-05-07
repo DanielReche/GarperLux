@@ -344,6 +344,8 @@ function migrate(db) {
   ensureColumn(db, 'payment_methods', 'allow_recurring', 'INTEGER NOT NULL DEFAULT 0');
   ensureColumn(db, 'addresses', 'is_billing', 'INTEGER NOT NULL DEFAULT 0');
   ensureColumn(db, 'documents', 'payload_json', "TEXT NOT NULL DEFAULT '{}'");
+  ensureColumn(db, 'products', 'image', 'TEXT');
+  ensureColumn(db, 'brands', 'logo', 'TEXT');
 }
 
 function ensureColumn(db, table, column, definition) {

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="/.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antenas y Telecomunicaciones · Tienda · GarperLux</title>
+  <meta name="description" content="Antenas TDT, parabólicas, amplificadores, cable coaxial y UTP, fibra óptica, routers Wi-Fi 6/7 y switches gigabit. Televés, Engel, TP-Link, Mikrotik. 812 referencias." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <style>
+    .filter-check { display: flex; align-items: center; gap: 10px; padding: 7px 0; cursor: pointer; font-size: 14px; color: var(--graphite); transition: color .15s; }
+    .filter-check:hover { color: var(--ink); }
+    .filter-check input { appearance: none; width: 16px; height: 16px; border: 1.5px solid var(--line); border-radius: 4px; cursor: pointer; transition: all .15s; flex-shrink: 0; }
+    .filter-check input:checked { background: var(--ink); border-color: var(--ink); }
+    .filter-check input:checked::after { content: '✓'; color: var(--paper); font-size: 11px; display: flex; align-items: center; justify-content: center; height: 100%; line-height: 1; }
+    .filter-check .count { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--graphite); opacity: 0.6; }
+
+    .swatch { width: 22px; height: 22px; border-radius: 999px; border: 1.5px solid var(--line); cursor: pointer; position: relative; transition: transform .15s; }
+    .swatch:hover { transform: scale(1.1); }
+    .swatch.is-active { border-color: var(--ink); border-width: 2px; }
+    .swatch.is-active::after { content: ''; position: absolute; inset: -4px; border: 1px solid var(--filament); border-radius: 999px; }
+  </style>
+</head>
+
+<body class="bg-paper text-ink">
+
+  <div class="bg-ink text-paper text-[12.5px]">
+    <div class="container-x flex items-center justify-between py-2">
+      <span class="opacity-90 hidden sm:inline">12.480 referencias · stock verificado</span>
+      <a href="/pages/auth/login.html" class="link-underline opacity-90">Tarifas profesionales</a>
+    </div>
+  </div>
+  <div data-component="site-header"></div>
+
+  <div class="container-x pt-5 pb-2">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2 flex-wrap">
+      <a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="/pages/tienda/tienda.html" class="hover:text-ink">Tienda</a><span class="opacity-50">/</span>
+      <span class="text-ink">Antenas y telecomunicaciones</span>
+    </nav>
+  </div>
+
+  <section class="container-x pt-8 pb-8">
+    <div class="grid lg:grid-cols-12 gap-8 items-end">
+      <div class="lg:col-span-7">
+        <h1 class="font-serif font-medium leading-[0.95] tracking-[-0.02em] mb-4" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
+          Antenas y<br/>telecomunicaciones.
+        </h1>
+        <p class="text-graphite text-lg max-w-xl leading-relaxed">
+          Antenas TDT y parabólicas, amplificadores y mezcladores, cable coaxial, UTP y fibra óptica, routers Wi-Fi 6/7 y switches gigabit. La señal que entra y la red que la reparte por la casa.
+        </p>
+      </div>
+      <div class="lg:col-span-5 flex items-end gap-4 flex-wrap">
+        <div class="flex-1 min-w-0">
+          <div class="font-mono text-xs text-graphite uppercase tracking-wider mb-1">Subcategorías</div>
+          <div class="flex flex-wrap gap-1.5">
+            <a href="#" class="px-3 py-1.5 rounded-full bg-ink text-paper text-xs font-medium">Todos · 812</a>
+            <a href="#" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Antenas TDT</a>
+            <a href="#" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Parabólicas</a>
+            <a href="#" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Amplificadores</a>
+            <a href="#" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Cable</a>
+            <a href="#" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Routers</a>
+            <a href="#" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Switches</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="filament-line mt-10"></div>
+  </section>
+
+  <section class="container-x pb-20">
+    <div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-12">
+
+      <aside class="lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto -mx-2 px-2">
+        <div class="space-y-6">
+
+          <div class="bg-white border border-line rounded-xl p-4">
+            <label class="font-mono text-[11px] text-graphite uppercase tracking-wider mb-2 block">Buscar por referencia / SKU</label>
+            <div class="relative">
+              <input type="search" placeholder="Ej: TLV-149401" class="w-full pl-9 pr-3 py-2.5 bg-paper border border-line rounded-lg text-sm font-mono placeholder:text-graphite/50 focus:border-ink outline-none" />
+              <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="eyebrow text-graphite">Filtros activos</span>
+              <button class="text-xs text-graphite hover:text-warn underline">Limpiar todos</button>
+            </div>
+            <div class="flex flex-wrap gap-1.5"><span class="text-xs text-graphite/60 italic">Aún no hay filtros aplicados</span></div>
+          </div>
+
+          <details open class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Marca</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> LEXMAN <span class="count">10</span></label>
+              <label class="filter-check"><input type="checkbox"/> TP-Link <span class="count">8</span></label>
+              <label class="filter-check"><input type="checkbox"/> GarperLux <span class="count">1</span></label>
+              <label class="filter-check"><input type="checkbox"/> MERCUSYS <span class="count">1</span></label>
+            
+            
+            
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Tipo de equipo</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> Antena TDT <span class="count">142</span></label>
+              <label class="filter-check"><input type="checkbox"/> Antena parabólica <span class="count">62</span></label>
+              <label class="filter-check"><input type="checkbox"/> Amplificador <span class="count">98</span></label>
+              <label class="filter-check"><input type="checkbox"/> Mezclador / derivador <span class="count">68</span></label>
+              <label class="filter-check"><input type="checkbox"/> Cable (coaxial / UTP / fibra) <span class="count">186</span></label>
+              <label class="filter-check"><input type="checkbox"/> Router Wi-Fi <span class="count">94</span></label>
+              <label class="filter-check"><input type="checkbox"/> Switch / patch panel <span class="count">72</span></label>
+              <label class="filter-check"><input type="checkbox"/> Repetidor / Mesh <span class="count">52</span></label>
+              <label class="filter-check"><input type="checkbox"/> Conectores y accesorios <span class="count">38</span></label>
+            </div>
+          </details>
+
+          <details class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Banda / aplicación</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="flex flex-wrap gap-1.5">
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">UHF</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">VHF</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">Ku</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">Ka</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">2.4 GHz</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">5 GHz</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">6 GHz</button>
+            </div>
+          </details>
+
+          <details class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Tipo de cable</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> Coaxial RG6 <span class="count">42</span></label>
+              <label class="filter-check"><input type="checkbox"/> Coaxial T100 / T200 (FTTH) <span class="count">28</span></label>
+              <label class="filter-check"><input type="checkbox"/> UTP cat 5e <span class="count">22</span></label>
+              <label class="filter-check"><input type="checkbox"/> UTP cat 6 <span class="count">38</span></label>
+              <label class="filter-check"><input type="checkbox"/> UTP cat 6a / cat 7 <span class="count">26</span></label>
+              <label class="filter-check"><input type="checkbox"/> Fibra óptica monomodo <span class="count">18</span></label>
+              <label class="filter-check"><input type="checkbox"/> Fibra óptica multimodo <span class="count">12</span></label>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Estándar Wi-Fi</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="flex flex-wrap gap-1.5">
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">Wi-Fi 5</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">Wi-Fi 6</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">Wi-Fi 6E</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">Wi-Fi 7</button>
+            </div>
+          </details>
+
+          <details class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Velocidad red (Ethernet)</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="flex flex-wrap gap-1.5">
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">100 Mbps</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">1 Gbps</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">2.5 Gbps</button>
+              <button class="px-2.5 py-1 rounded-md text-xs bg-paper-2 hover:bg-paper-3 font-mono">10 Gbps</button>
+            </div>
+          </details>
+
+          <details class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Ganancia (dB)</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <input type="number" placeholder="0" value="20" class="w-full px-2.5 py-1.5 bg-paper border border-line rounded-md text-sm font-mono"/>
+                <span class="text-graphite text-xs">a</span>
+                <input type="number" placeholder="50" value="40" class="w-full px-2.5 py-1.5 bg-paper border border-line rounded-md text-sm font-mono"/>
+                <span class="text-graphite text-sm">dB</span>
+              </div>
+              <div class="relative h-1.5 bg-paper-2 rounded-full">
+                <div class="absolute h-full bg-ink rounded-full" style="left: 30%; right: 20%;"></div>
+                <div class="absolute -top-1.5 w-4 h-4 rounded-full bg-ink border-2 border-paper" style="left: calc(30% - 8px);"></div>
+                <div class="absolute -top-1.5 w-4 h-4 rounded-full bg-ink border-2 border-paper" style="right: calc(20% - 8px);"></div>
+              </div>
+              <div class="flex justify-between mt-2 text-[11px] font-mono text-graphite"><span>0&nbsp;dB</span><span>50&nbsp;dB</span></div>
+            </div>
+          </details>
+
+          <details open class="group border-t border-line pt-5">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Precio</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <input type="number" placeholder="0" value="5" class="w-full px-2.5 py-1.5 bg-paper border border-line rounded-md text-sm font-mono"/>
+                <span class="text-graphite text-xs">a</span>
+                <input type="number" placeholder="800" value="280" class="w-full px-2.5 py-1.5 bg-paper border border-line rounded-md text-sm font-mono"/>
+                <span class="text-graphite text-sm">€</span>
+              </div>
+              <div class="relative h-1.5 bg-paper-2 rounded-full">
+                <div class="absolute h-full bg-ink rounded-full" style="left: 5%; right: 35%;"></div>
+                <div class="absolute -top-1.5 w-4 h-4 rounded-full bg-ink border-2 border-paper" style="left: calc(5% - 8px);"></div>
+                <div class="absolute -top-1.5 w-4 h-4 rounded-full bg-ink border-2 border-paper" style="right: calc(35% - 8px);"></div>
+              </div>
+              <div class="flex justify-between mt-2 text-[11px] font-mono text-graphite"><span>0&nbsp;€</span><span>800&nbsp;€</span></div>
+            </div>
+          </details>
+
+          <details class="group border-t border-line pt-5 pb-2">
+            <summary class="flex items-center justify-between cursor-pointer list-none mb-3">
+              <span class="font-medium text-sm">Disponibilidad</span>
+              <svg class="text-graphite group-open:rotate-180 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div>
+              <label class="filter-check"><input type="checkbox"/> Solo en stock <span class="count">714</span></label>
+              <label class="filter-check"><input type="checkbox"/> Envío en 24 h <span class="count">498</span></label>
+              <label class="filter-check"><input type="checkbox"/> Recogida en almacén <span class="count">812</span></label>
+            </div>
+          </details>
+        </div>
+      </aside>
+
+      <div>
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-6 pb-4 border-b border-line">
+          <div class="font-mono text-sm text-graphite">
+            Mostrando <span class="text-ink font-medium">1–12</span> de <span class="text-ink font-medium">218</span> resultados
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs text-graphite">Ordenar:</label>
+            <select class="bg-paper border border-line rounded-lg text-sm py-1.5 px-3 outline-none focus:border-ink">
+              <option>Más vendidos</option>
+              <option>Precio: menor a mayor</option>
+              <option>Precio: mayor a menor</option>
+              <option>Mayor ganancia</option>
+              <option>Novedades</option>
+            </select>
+            <div class="flex border border-line rounded-lg overflow-hidden">
+              <button class="p-2 bg-ink text-paper" aria-label="Vista grid"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+              <button class="p-2 bg-paper hover:bg-paper-2" aria-label="Vista lista"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 14h16M4 17h16M4 11h16M4 8h16M12 8v14"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">42 uds</span>
+              <span class="absolute top-2 right-2 pill bg-ink text-paper text-[10px]">UHF</span>
+              <button class="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-paper/90 grid place-items-center hover:bg-filament transition-colors" aria-label="Favorito"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Televés · DAT BOSS</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Antena TDT DAT BOSS LR 47-790 MHz 49 dB</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU TLV-149401</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">98,40 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 12a9 9 0 0 1 18 0M12 12v9"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">14 uds</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Televés · ISD80</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Parabólica 80 cm Ku-band con LNB universal</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU TLV-790101</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">86,90 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 12h2M12 12h2M17 12h2"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">28 uds</span>
+              <span class="absolute top-2 right-2 pill bg-warn text-paper text-[10px]">-12%</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Televés · 5523</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Amplificador vivienda 1S MATV 30 dB</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU TLV-552340</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div>
+                <div class="font-serif text-xl font-medium">62,40 €</div>
+                <div class="text-[11px] text-graphite line-through">71,00 €</div>
+              </div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative" style="background: linear-gradient(135deg, #1C1F26, #0B0D12);">
+              <div class="w-full h-full grid place-items-center text-paper/40">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 18v-5M16 18v-5"/></svg>
+              </div>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">22 uds</span>
+              <span class="absolute top-2 right-2 pill bg-filament text-ink text-[10px]">Wi-Fi 6</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">TP-Link · Archer</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Router AX73 Wi-Fi 6 AX5400 1G + USB 3</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU TPL-AX73</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">128,90 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/><path d="M3 12c4-3 14-3 18 0M3 12c4 3 14 3 18 0"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">320 m</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Televés · CXT</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Coaxial RG6 CCS clase A blanco</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU TLV-CXT-1</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">0,80 €<span class="text-xs font-mono font-normal text-graphite">/m</span></div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="9" width="18" height="6" rx="1"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">280 m</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">D-Link</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">UTP cat 6 LSZH azul 305 m bobina</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU NCB-6ALSGRR-305</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">0,90 €<span class="text-xs font-mono font-normal text-graphite">/m</span></div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="6" width="18" height="12" rx="1"/><path d="M7 12h2M11 12h2M15 12h2"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">12 uds</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Mikrotik · CRS</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Switch CRS112-8P-4S 8 PoE+ 4 SFP</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU CRS112-8P-4S</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">198,90 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="9"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">38 uds</span>
+              <span class="absolute top-2 right-2 pill bg-ink text-paper text-[10px]">Mesh</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">TP-Link · Deco</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Mesh Deco X50 AX3000 pack 3 unidades</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU TPL-DECOX50</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">198,00 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="2"/><path d="M5 12h-2M21 12h-2M12 5v-2M12 21v-2"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">62 uds</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Televés · 542120</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Mezclador UHF + VHF 2 entradas pasivo</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU TLV-542120</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">12,90 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8l8 8M16 8l-8 8"/></svg>
+              <span class="absolute top-2 left-2 pill pill-caution text-[10px]">3 uds</span>
+              <span class="absolute top-2 right-2 pill bg-ink text-paper text-[10px]">Wi-Fi 7</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Ubiquiti · UniFi</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">UniFi U7 Pro Wi-Fi 7 PoE++ AP</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU U7-PRO</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">218,90 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="6"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">86 uds</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">Engel · Conectores</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Conector F a compresión RG6 (bolsa 25 ud)</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU ENG-CONN-F</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">8,40 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+          <a href="/pages/tienda/producto.html" class="card-prod group">
+            <div class="img relative grid place-items-center text-graphite/30">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="9" width="18" height="6" rx="1"/><circle cx="6" cy="12" r="0.8"/><circle cx="9" cy="12" r="0.8"/><circle cx="12" cy="12" r="0.8"/><circle cx="15" cy="12" r="0.8"/><circle cx="18" cy="12" r="0.8"/></svg>
+              <span class="absolute top-2 left-2 pill pill-stock text-[10px]">24 uds</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">D-Link · Patch</div>
+              <h3 class="text-[14px] font-medium leading-snug mb-1">Patch panel 24 puertos cat 6 1U rack</h3>
+              <div class="font-mono text-[11px] text-graphite/70">SKU NPP-C61BLK241</div>
+            </div>
+            <div class="flex items-end justify-between mt-1">
+              <div class="font-serif text-xl font-medium">62,90 €</div>
+              <button class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center group-hover:bg-filament group-hover:text-ink transition-colors"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </a>
+
+        </div>
+
+        <div class="mt-12 flex items-center justify-between flex-wrap gap-4 pt-6 border-t border-line">
+          <div class="text-sm text-graphite font-mono">Página <span class="text-ink font-medium">1</span> de 19</div>
+          <div class="flex items-center gap-1">
+            <button disabled class="w-10 h-10 rounded-lg border border-line text-graphite opacity-50 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <button class="w-10 h-10 rounded-lg bg-ink text-paper font-mono text-sm">1</button>
+            <button class="w-10 h-10 rounded-lg hover:bg-paper-2 font-mono text-sm">2</button>
+            <button class="w-10 h-10 rounded-lg hover:bg-paper-2 font-mono text-sm">3</button>
+            <span class="px-2 text-graphite">…</span>
+            <button class="w-10 h-10 rounded-lg hover:bg-paper-2 font-mono text-sm">19</button>
+            <button class="w-10 h-10 rounded-lg border border-line hover:bg-paper-2 grid place-items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+          <select class="bg-paper border border-line rounded-lg text-sm py-1.5 px-3 outline-none focus:border-ink">
+            <option>12 por página</option>
+            <option>24 por página</option>
+            <option>48 por página</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper-2 border-t border-line">
+    <div class="container-x py-16">
+      <div class="grid lg:grid-cols-12 gap-10">
+        <div class="lg:col-span-4">
+          <div class="eyebrow text-copper mb-3">Sobre la categoría</div>
+          <h2 class="font-serif text-3xl font-medium leading-tight">La señal y la red,<br/><em class="italic">ambas estables</em>.</h2>
+        </div>
+        <div class="lg:col-span-8 prose-content text-graphite leading-relaxed space-y-4 max-w-3xl">
+          <p>En <strong class="text-ink">señal de TV</strong>, Televés e Ikusi son los referentes españoles para reposiciones y obra: antenas LR, amplificadores MATV, mezcladores y mezcladores de canal a canal. Si vas a poner antena nueva, mira la cobertura UHF de tu zona y usa una DAT BOSS LR si estás en zona difícil; en interior reforzado con amplificador, casi siempre basta con una básica.</p>
+          <p>En <strong class="text-ink">red doméstica</strong>, la regla de oro: cable mejor que Wi-Fi siempre que puedas. UTP cat 6 LSZH es el estándar actual para vivienda: pasacable barato, llega a 10 Gbps en distancias razonables, ya está homologado para fuego de baja emisión humo. Para distancias largas o entre edificios, fibra óptica monomodo.</p>
+          <p>Para Wi-Fi, salta directamente a <strong class="text-ink">Wi-Fi 6</strong> (mínimo) o Wi-Fi 7 si el dispositivo lo permite y tienes muchos clientes. En vivienda grande, Mesh real (TP-Link Deco, Ubiquiti UniFi) en lugar de repetidores. <a href="/pages/aprender/hazlo-tu-mismo.html" class="link-underline text-ink">Cómo crimpar un RJ45 a la primera</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-component="site-footer"></div>
+
+  <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="/assets/img/logo.svg" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <nav class="px-5 py-6">
+      <a href="/pages/aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a>
+      <a href="/pages/tienda/tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif text-filament">Tienda</a>
+      <a href="/pages/servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a>
+      <a href="/pages/servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a>
+      <a href="/pages/empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a>
+    </nav>
+  </div>
+
+  <div data-search-overlay class="fixed inset-0 z-50 bg-ink/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="container-x pt-24"><button data-search-close class="absolute top-6 right-6 text-paper p-3 hover:bg-white/10 rounded-full"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="max-w-3xl mx-auto"><input type="search" placeholder="¿Qué necesitas?" class="w-full bg-transparent text-paper text-2xl md:text-4xl font-serif pb-5 border-b-2 border-white/20 focus:border-filament outline-none placeholder:text-paper/30"/></div>
+    </div>
+  </div>
+
+  <script src="/assets/js/component-loader.js"></script>
+  <script src="/data/api.js"></script>
+  <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/catalog-ui.js"></script>
+</body>
+</html>

@@ -20,6 +20,7 @@ function productDto(row) {
     proOnly: Boolean(row.pro_only),
     description: row.description,
     specs: parseJson(row.specs_json, {}),
+    image: row.image || null,
   };
 }
 

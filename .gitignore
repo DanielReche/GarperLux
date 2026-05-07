@@ -3,3 +3,11 @@ backend/database/*.sqlite-shm
 backend/database/*.sqlite-wal
 node_modules/
 .playwright-mcp/
+
+# Scraper temporales (logs, JSONs intermedios, capturas de testing, cachés)
+scripts/scraper/__pycache__/
+scripts/scraper/output/
+scripts/scraper/*.log
+scripts/scraper/*.png
+scripts/scraper/config.full.json
+scripts/scraper/config.smoke.json
