@@ -63,7 +63,8 @@ function migrate(db) {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       slug TEXT NOT NULL UNIQUE,
       name TEXT NOT NULL,
-      professional INTEGER NOT NULL DEFAULT 0
+      professional INTEGER NOT NULL DEFAULT 0,
+      is_official INTEGER NOT NULL DEFAULT 0
     );
 
     CREATE TABLE IF NOT EXISTS products (
@@ -346,6 +347,12 @@ function migrate(db) {
   ensureColumn(db, 'documents', 'payload_json', "TEXT NOT NULL DEFAULT '{}'");
   ensureColumn(db, 'products', 'image', 'TEXT');
   ensureColumn(db, 'brands', 'logo', 'TEXT');
+  ensureColumn(db, 'brands', 'description', 'TEXT');
+  ensureColumn(db, 'brands', 'country', 'TEXT');
+  ensureColumn(db, 'brands', 'year_founded', 'TEXT');
+  ensureColumn(db, 'brands', 'website', 'TEXT');
+  ensureColumn(db, 'brands', 'categories_json', "TEXT NOT NULL DEFAULT '[]'");
+  ensureColumn(db, 'brands', 'is_official', 'INTEGER NOT NULL DEFAULT 0');
 }
 
 function ensureColumn(db, table, column, definition) {
@@ -357,6 +364,7 @@ function seed(db) {
   const users = Number(db.prepare('SELECT COUNT(*) AS total FROM users').get().total);
   if (users > 0) {
     ensureAdminUser(db);
+    seedBrands(db);
     seedProductVariants(db);
     seedDemoAccountData(db);
     return;
@@ -381,6 +389,8 @@ function seed(db) {
   insertBrand.run('ledvance', 'Ledvance', 1);
   insertBrand.run('schneider', 'Schneider Electric', 1);
   insertBrand.run('garperlux', 'GarperLux', 0);
+
+  seedBrands(db);
 
   const categoryBySlug = (slug) => db.prepare('SELECT id FROM categories WHERE slug = ?').get(slug).id;
   const brandBySlug = (slug) => db.prepare('SELECT id FROM brands WHERE slug = ?').get(slug).id;
@@ -428,6 +438,83 @@ function seed(db) {
 
   seedProductVariants(db);
   seedDemoAccountData(db);
+}
+
+function seedBrands(db) {
+  const upsert = db.prepare(`
+    INSERT OR IGNORE INTO brands (slug, name, professional, is_official, logo, description, country, year_founded, website, categories_json)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  const brands = [
+    ['simon', 'Simon', 1, 1, '/assets/img/marcas/simon.jpg',
+      'Fabricante español de mecanismos eléctricos. Series 27, 75, 82 y 100. La gama 27 sigue siendo la más vendida desde 1986.',
+      'España', '1916', 'https://www.simonelectric.com', ['Mecanismos']],
+    ['schneider', 'Schneider Electric', 1, 1, '/assets/img/marcas/schneider.jpg',
+      'Multinacional francesa especializada en gestión energética and automatización. Protecciones Acti9 and Resi9, domótica Wiser.',
+      'Francia', '1836', 'https://www.se.com/es', ['Mecanismos', 'Protecciones eléctricas']],
+    ['niessen', 'Niessen', 1, 0, '/assets/img/marcas/niessen.jpg',
+      'Mecanismos premium con acabados de diseño. Series Sky, Zenit and Tacto. Marca histórica de Oiartzun, ahora parte de ABB.',
+      'España', '1929', 'https://new.abb.com/niessen', ['Mecanismos']],
+    ['legrand', 'Legrand', 1, 1, '/assets/img/marcas/legrand.jpg',
+      'Grupo francés de infraestructura eléctrica. Cuadros modulares, protecciones, mecanismos Valena and Niloé, gestión de cables.',
+      'Francia', '1865', 'https://www.legrand.es', ['Protecciones eléctricas']],
+    ['televes', 'Televes', 1, 0, '/assets/img/marcas/televes.jpg',
+      'Empresa gallega líder en telecomunicaciones. Antenas de TV, distribución de señal, fibra óptica and equipamiento de cabecera.',
+      'España', '1958', 'https://www.televes.com', ['Antenas y telecomunicaciones']],
+    ['shelly', 'Shelly', 1, 1, '/assets/img/marcas/shelly.png',
+      'Domótica Wi-Fi sin nube obligatoria. Relés, módulos de control and sensores. El estándar de facto para automatización en vivienda existente.',
+      'Bulgaria', '2017', 'https://www.shelly.com', ['Domótica']],
+    ['chint', 'Chint', 1, 0, '/assets/img/marcas/chint.jpg',
+      'Multinacional especializada en material eléctrico industrial. Magnetotérmicos, diferenciales, contactores and protecciones de baja tensión.',
+      'China', '1984', 'https://www.chint.com', ['Protecciones eléctricas']],
+    ['hager', 'Hager', 1, 1, '/assets/img/marcas/hager.jpg',
+      'Cuadros modulares de gama profesional, telerruptores, magnetotérmicos and diferenciales tipo F. Referente en distribución de energía.',
+      'Alemania', '1955', 'https://www.hager.es', ['Mecanismos', 'Protecciones eléctricas']],
+    ['tegui', 'Tegui', 1, 0, '/assets/img/marcas/tegui.jpg',
+      'Marca española especializada en porteros and videoporteros para comunidades and viviendas unifamiliares. Ahora parte de Legrand.',
+      'España', null, 'https://www.legrand.es', ['Porteros y videoporteros']],
+    ['fermax', 'Fermax', 1, 1, '/assets/img/marcas/fermax.jpg',
+      'Fabricante valenciano de videoporteros, porteros automáticos and control de accesos. Referencia en el sector residencial.',
+      'España', '1949', 'https://www.fermax.com', ['Porteros y videoporteros']],
+    ['erreka', 'Erreka', 1, 0, '/assets/img/marcas/erreka.jpg',
+      'Empresa vasca especializada en automatismos para puertas and accesos. Motores de puertas correderas, batientes and garaje.',
+      'España', null, 'https://www.erreka.com', ['Automatismos']],
+    ['nice', 'Nice', 1, 0, '/assets/img/marcas/nice.png',
+      'Multinacional italiana de automatización de puertas, persianas and control de accesos. Motores para garaje, correderas and batientes.',
+      'Italia', '1993', 'https://www.niceforyou.com', ['Automatismos']],
+    ['pujol-muntala', 'Pujol Muntalá', 1, 0, '/assets/img/marcas/pujol.jpg',
+      'Fabricante español de automatismos para puertas and persianas. Motores tubulares, centrales de maniobra and accesorios.',
+      'España', null, 'https://www.pujol.com', ['Automatismos']],
+    ['clemsa', 'Clemsa', 1, 0, '/assets/img/marcas/clemsa.png',
+      'Empresa española especializada en automatismos para puertas de garaje, mandos a distancia and control de accesos.',
+      'España', '1961', 'https://www.clemsa.es', ['Automatismos']],
+    ['hikvision', 'Hikvision', 1, 0, '/assets/img/marcas/hikvision.jpg',
+      'Líder mundial en videovigilancia. Cámaras IP, grabadores NVR/DVR and sistemas de seguridad profesional.',
+      'China', '2001', 'https://www.hikvision.com', ['Seguridad']],
+    ['dahua', 'Dahua', 1, 0, '/assets/img/marcas/dahua.jpg',
+      'Soluciones de videovigilancia and seguridad. Cámaras IP, grabadores, intercomunicadores and control de accesos.',
+      'China', '2001', 'https://www.dahuasecurity.com', ['Seguridad']],
+    ['tapo', 'Tapo', 1, 0, '/assets/img/marcas/tapo.png',
+      'Marca de TP-Link enfocada en seguridad doméstica and domótica asequible. Cámaras Wi-Fi, enchufes inteligentes and bombillas smart.',
+      'China', null, 'https://www.tapo.com', ['Seguridad']],
+    ['philips', 'Philips', 1, 0, '/assets/img/marcas/philips.jpg',
+      'División de iluminación (ahora Signify). Bombillas LED, luminarias profesionales and sistema domótico Philips Hue.',
+      'Países Bajos', '1891', 'https://www.signify.com', ['Iluminación', 'Domótica']],
+    ['matel', 'Matel', 1, 0, '/assets/img/marcas/matel.jpg',
+      'Fabricante español de iluminación LED and material eléctrico. Bombillas, downlights, plafones and proyectores LED con amplio catálogo.',
+      'España', null, 'https://www.matelelectro.com', ['Iluminación']],
+    ['lighted', 'LightEd', 1, 0, '/assets/img/marcas/lighted.webp',
+      'Marca española de iluminación LED profesional. Bombillas, tubos, paneles and proyectores con relación calidad-precio orientada al instalador.',
+      'España', null, 'https://www.lighted.es', ['Iluminación']],
+    ['osram', 'Osram', 1, 0, '/assets/img/marcas/osram.jpg',
+      'Multinacional alemana de iluminación. Bombillas LED, tubos fluorescentes, drivers and soluciones de iluminación profesional e industrial.',
+      'Alemania', '1919', 'https://www.osram.com', ['Iluminación']],
+  ];
+
+  brands.forEach(([slug, name, professional, isOfficial, logo, description, country, yearFounded, website, categories]) => {
+    upsert.run(slug, name, professional, isOfficial, logo, description, country, yearFounded, website, JSON.stringify(categories));
+  });
 }
 
 function seedTutorialsCatalog(db) {
