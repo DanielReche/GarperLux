@@ -386,7 +386,7 @@ function seed(db) {
 
   const insertBrand = db.prepare('INSERT INTO brands (slug, name, professional) VALUES (?, ?, ?)');
   insertBrand.run('simon', 'Simón', 1);
-  insertBrand.run('ledvance', 'Ledvance', 1);
+  insertBrand.run('lexman', 'Lexman', 1);
   insertBrand.run('schneider', 'Schneider Electric', 1);
   insertBrand.run('garperlux', 'GarperLux', 0);
 
@@ -399,7 +399,7 @@ function seed(db) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
   insertProduct.run('SIM-75201-39', 'Interruptor conmutador Simon 75 grafito', 'interruptor-conmutador-simon-75-grafito', categoryBySlug('mecanismos'), brandBySlug('simon'), 12.95, 38, 'basic', 0, 'Mecanismo compatible con marcos Simon 75.', JSON.stringify({ voltage: '250V', amps: '10AX', finish: 'Grafito' }));
-  insertProduct.run('LED-A60-9W-2700K', 'Bombilla LED A60 9W cálida', 'bombilla-led-a60-9w-calida', categoryBySlug('iluminacion'), brandBySlug('ledvance'), 4.5, 120, 'basic', 0, 'Bombilla LED de luz cálida para uso doméstico.', JSON.stringify({ lumens: 806, kelvin: 2700, socket: 'E27' }));
+  insertProduct.run('LED-A60-9W-2700K', 'Bombilla LED A60 9W cálida', 'bombilla-led-a60-9w-calida', categoryBySlug('iluminacion'), brandBySlug('lexman'), 4.5, 120, 'basic', 0, 'Bombilla LED de luz cálida para uso doméstico.', JSON.stringify({ lumens: 806, kelvin: 2700, socket: 'E27' }));
   insertProduct.run('SCH-A9R60240', 'Diferencial Schneider 40A 30mA', 'diferencial-schneider-40a-30ma', categoryBySlug('proteccion'), brandBySlug('schneider'), 49.9, 14, 'pro', 1, 'Diferencial para cuadro eléctrico. Instalación por profesional autorizado.', JSON.stringify({ poles: 2, amps: '40A', sensitivity: '30mA' }));
   [
     ['27101-31', 'Interruptor unipolar Simón 27 blanco', 'interruptor-unipolar-simon-27-blanco', 'mecanismos', 'simon', 5.42, 86, 'basic', 0],
@@ -407,7 +407,7 @@ function seed(db) {
     ['27431-31', 'Base enchufe schuko Simón 27 blanco', 'base-enchufe-schuko-simon-27-blanco', 'mecanismos', 'simon', 7.9, 62, 'basic', 0],
     ['75101-39', 'Marco Simón 75 grafito 1 elemento', 'marco-simon-75-grafito-1-elemento', 'mecanismos', 'simon', 3.85, 140, 'basic', 0],
     ['27502-31', 'Doble interruptor Simón 27 blanco', 'doble-interruptor-simon-27-blanco', 'mecanismos', 'simon', 9.4, 33, 'basic', 0],
-    ['8718699-04', 'Bombilla LED Philips E27 cálida', 'bombilla-led-philips-e27-calida', 'iluminacion', 'ledvance', 4.2, 95, 'basic', 0],
+    ['8718699-04', 'Bombilla LED Lexman E27 cálida', 'bombilla-led-lexman-e27-calida', 'iluminacion', 'lexman', 4.2, 95, 'basic', 0],
     ['A9F74225', 'Magnetotérmico Schneider iC60N 25A', 'magnetotermico-schneider-ic60n-25a', 'proteccion', 'schneider', 18.6, 41, 'pro', 1],
     ['SHL-1M-G3', 'Relé domótico Shelly 1 Mini Gen3', 'rele-domotico-shelly-1-mini-gen3', 'domotica', 'garperlux', 16.9, 57, 'medium', 0],
     ['WH-DA-3', 'Detector de agua WiFi', 'detector-agua-wifi', 'domotica', 'garperlux', 19.95, 24, 'basic', 0],
@@ -441,6 +441,19 @@ function seed(db) {
 }
 
 function seedBrands(db) {
+  // Migración: Ledvance → Lexman. Reasigna productos al nuevo slug y elimina el viejo.
+  const oldBrand = db.prepare("SELECT id FROM brands WHERE slug = 'ledvance'").get();
+  if (oldBrand) {
+    db.prepare(`
+      INSERT INTO brands (slug, name, professional, is_official)
+      VALUES ('lexman', 'Lexman', 1, 0)
+      ON CONFLICT(slug) DO NOTHING
+    `).run();
+    const newBrandId = db.prepare("SELECT id FROM brands WHERE slug = 'lexman'").get().id;
+    db.prepare('UPDATE products SET brand_id = ? WHERE brand_id = ?').run(newBrandId, oldBrand.id);
+    db.prepare("DELETE FROM brands WHERE slug = 'ledvance'").run();
+  }
+
   // UPSERT: si la marca ya existe (por scraper), actualiza la metadata oficial
   // (logo, descripción, país, año, web, categorías) sin tocar la columna name
   // que ya pueda tener un valor distinto en mayúsculas.
@@ -523,6 +536,9 @@ function seedBrands(db) {
     ['osram', 'Osram', 1, 0, '/assets/img/marcas/osram.jpg',
       'Multinacional alemana de iluminación. Bombillas LED, tubos fluorescentes, drivers and soluciones de iluminación profesional e industrial.',
       'Alemania', '1919', 'https://www.osram.com', ['Iluminación']],
+    ['lexman', 'Lexman', 1, 0, '/assets/img/marcas/lexman.jpg',
+      'Marca de iluminación LED de gama media-alta distribuida en grandes superficies. Bombillas, plafones, tiras LED and proyectores con buena relación calidad-precio.',
+      'Francia', '2003', 'https://www.leroymerlin.es/marcas/lexman', ['Iluminación']],
   ];
 
   brands.forEach(([slug, name, professional, isOfficial, logo, description, country, yearFounded, website, categories]) => {
