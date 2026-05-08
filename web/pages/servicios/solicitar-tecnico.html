@@ -5,6 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Solicitar técnico · GarperLux</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png?v=2" />
   <meta name="description" content="Pide un instalador autorizado en 5 pasos guiados. Respuesta en menos de 4 horas, presupuesto sin compromiso." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -66,13 +69,21 @@
 
 <body class="bg-paper text-ink">
 
+  <!-- TOP BAR + HEADER -->
+  <div class="bg-ink text-paper text-[12.5px]">
+    <div class="container-x flex items-center justify-between py-2">
+      <span class="opacity-90 hidden sm:inline-flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Respuesta en menos de 4 horas hábiles
+      </span>
+      <a href="/pages/servicios/solicitar-tecnico.html" class="link-underline opacity-90">Pedir presupuesto</a>
+    </div>
+  </div>
+  <div data-component="site-header"></div>
+
   <!-- HEADER MINIMAL -->
   <header class="border-b border-line bg-paper sticky top-0 z-30">
     <div class="container-x flex items-center justify-between py-4">
-      <a href="/index.html" class="flex items-center gap-3">
-        <img src="/assets/img/logo.png" alt="GarperLux" class="h-8 w-auto"/>
-      </a>
-
       <!-- Progress segmentada -->
       <div class="hidden md:flex items-center gap-2 w-[420px] mx-8">
         <span class="font-mono text-xs text-graphite shrink-0">Paso <span data-current-step>1</span> / 6</span>

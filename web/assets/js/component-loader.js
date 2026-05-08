@@ -39,11 +39,29 @@
   };
 
   const markActiveNav = (root) => {
+    // Obtener el nombre del archivo
     const page = currentPath.split('/').pop().replace('.html', '');
+    
+    // Obtener la sección principal
+    const pathSegments = currentPath.split('/').filter(s => s && s !== 'pages');
+    const mainSection = pathSegments[0] || '';
+    
     root.querySelectorAll('[data-nav-match]').forEach((link) => {
-      const matches = link.dataset.navMatch.split(',');
-      if (matches.some((match) => page.startsWith(match))) {
-        link.classList.add('text-copper');
+      const matches = link.dataset.navMatch.split(',').map(m => m.trim());
+      
+      let isMatched = false;
+      
+      // Estrategia 1: Buscar coincidencia exacta o muy específica con el nombre del archivo
+      isMatched = matches.some(match => page === match || page.startsWith(match + '-') || page.startsWith(match + '.'));
+      
+      // Estrategia 2: Si no hay coincidencia exacta con el archivo, comprobar sección principal
+      // PERO solo si la sección NO es "servicios" (para evitar conflicto entre Servicios y Solicitar técnico)
+      if (!isMatched && mainSection !== 'servicios') {
+        isMatched = matches.some(match => mainSection === match || mainSection.startsWith(match));
+      }
+      
+      if (isMatched) {
+        link.classList.add('is-active');
         link.setAttribute('aria-current', 'page');
       }
     });

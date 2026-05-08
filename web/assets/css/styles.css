@@ -113,6 +113,13 @@ img, svg { display: block; max-width: 100%; }
 }
 .link-underline:hover::after { transform: scaleX(1.08); }
 
+/* --------- Menú activo --------- */
+.link-underline.is-active { color: var(--filament); font-weight: 600; }
+.link-underline.is-active::after { transform: scaleX(1.08); opacity: 1; }
+
+/* Menú móvil activo */
+[data-nav-panel] a.is-active { color: var(--filament-glow); }
+
 /* --------- Filament glow (decoración) --------- */
 .filament-glow {
   background: radial-gradient(ellipse at center, rgba(255,200,120,.45) 0%, rgba(232,165,69,.15) 30%, transparent 65%);
