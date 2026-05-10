@@ -60,6 +60,10 @@
         isMatched = matches.some(match => mainSection === match || mainSection.startsWith(match));
       }
       
+      if (link.dataset.navIgnore && link.dataset.navIgnore.split(',').map(m=>m.trim()).includes(page)) {
+        isMatched = false;
+      }
+      
       if (isMatched) {
         link.classList.add('is-active');
         link.setAttribute('aria-current', 'page');

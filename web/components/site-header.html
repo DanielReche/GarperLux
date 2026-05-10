@@ -6,7 +6,7 @@
 
     <nav aria-label="Principal" class="hidden lg:flex items-center gap-8 text-[15px]">
       <a href="/pages/aprender/hazlo-tu-mismo.html" class="link-underline" data-nav-match="hazlo-tu-mismo,tutorial,consejos,fundamentos,descargas,proyectos,videos">Hazlo Tú Mismo</a>
-      <a href="/pages/tienda/tienda.html" class="link-underline" data-nav-match="tienda,categoria,categorias,producto,buscador,marcas">Tienda</a>
+      <a href="/pages/tienda/tienda.html" class="link-underline" data-nav-match="tienda,categoria,categorias,producto,buscador,marcas" data-nav-ignore="carrito">Tienda</a>
       <a href="/pages/servicios/servicios.html" class="link-underline" data-nav-match="servicios,servicio">Servicios</a>
       <a href="/pages/servicios/solicitar-tecnico.html" class="link-underline" data-nav-match="solicitar-tecnico,solicitud-confirmacion,seguir-solicitud">Solicitar técnico</a>
       <a href="/pages/empresa/quienes-somos.html" class="link-underline" data-nav-match="quienes-somos,contacto,trabaja-con-nosotros,alfonso-torres">Quiénes somos</a>
@@ -16,10 +16,10 @@
       <button data-search-open class="p-2.5 rounded-full hover:bg-paper-2 transition" aria-label="Buscar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       </button>
-      <a href="/pages/cuenta/area-personal.html" class="p-2.5 rounded-full hover:bg-paper-2 transition" aria-label="Mi cuenta">
+      <a href="/pages/cuenta/area-personal.html" class="p-2.5 rounded-full hover:bg-paper-2 transition [&.is-active]:bg-filament/20 [&.is-active]:text-copper" aria-label="Mi cuenta" data-nav-match="cuenta">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </a>
-      <a href="/pages/tienda/carrito.html" class="relative p-2.5 rounded-full hover:bg-paper-2 transition" aria-label="Carrito">
+      <a href="/pages/tienda/carrito.html" class="relative p-2.5 rounded-full hover:bg-paper-2 transition [&.is-active]:bg-filament/20 [&.is-active]:text-copper" aria-label="Carrito" data-nav-match="carrito">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <span data-cart-count class="absolute -top-0.5 -right-0.5 bg-filament text-ink text-[10px] font-semibold rounded-full w-[18px] h-[18px] flex items-center justify-center">0</span>
       </a>
@@ -39,7 +39,7 @@
   </div>
   <nav class="px-5 py-6">
     <a href="/pages/aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif" data-nav-match="hazlo-tu-mismo,tutorial,consejos,fundamentos,descargas,proyectos,videos">Hazlo Tú Mismo</a>
-    <a href="/pages/tienda/tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif" data-nav-match="tienda,categoria,categorias,producto,buscador,marcas">Tienda</a>
+    <a href="/pages/tienda/tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif" data-nav-match="tienda,categoria,categorias,producto,buscador,marcas" data-nav-ignore="carrito">Tienda</a>
     <a href="/pages/servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif" data-nav-match="servicios,servicio">Servicios</a>
     <a href="/pages/servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif" data-nav-match="solicitar-tecnico,solicitud-confirmacion,seguir-solicitud">Solicitar técnico</a>
     <a href="/pages/empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif" data-nav-match="quienes-somos,contacto,trabaja-con-nosotros,alfonso-torres">Quiénes somos</a>
