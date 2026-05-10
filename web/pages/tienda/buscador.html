@@ -66,7 +66,7 @@
         autocomplete="off"
         autofocus
         placeholder='Busca lo que necesites: "interruptor simón", "bombilla rosca gorda", "27101-31"…'
-        class="w-full pl-14 pr-32 py-5 bg-white border border-line rounded-2xl text-lg md:text-xl font-serif placeholder:text-graphite/55 focus:border-ink outline-none shadow-sm"/>
+        class="w-full pl-12 sm:pl-14 pr-24 sm:pr-32 py-4 sm:py-5 bg-white border border-line rounded-2xl text-base sm:text-lg md:text-xl font-serif placeholder:text-graphite/55 focus:border-ink outline-none shadow-sm"/>
       <svg class="absolute left-5 top-1/2 -translate-y-1/2 text-graphite" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 btn btn-sm btn-ink">Buscar</button>
     </form>
@@ -170,6 +170,10 @@
       const moneyFmt = (v) => `${Number(v || 0).toFixed(2).replace('.', ',')} €`;
 
       let lastResults = null;
+      // Si el usuario llega desde Hazlo Tú Mismo, prio=tutorial NO cambia el tab
+      // activo (sigue siendo "Todos" para que vea también productos relacionados),
+      // pero reordena el panel "Todos" para que tutoriales aparezca primero.
+      const initialPrio = new URLSearchParams(location.search).get('prio') || '';
       let activeTab = 'all';
 
       function setTab(name) {
@@ -342,8 +346,12 @@
       };
 
       function renderAllPane(out) {
-        // Agrupa por type y renderiza por orden de relevancia.
-        const ORDER = ['product', 'tutorial', 'brand', 'category', 'service', 'faq', 'page'];
+        // Agrupa por type y renderiza por orden de relevancia. Si el usuario llegó con
+        // ?prio=tutorial (típicamente desde Hazlo Tú Mismo), los tutoriales encabezan
+        // la lista, seguidos del resto.
+        const ORDER = initialPrio === 'tutorial'
+          ? ['tutorial', 'product', 'brand', 'category', 'service', 'faq', 'page']
+          : ['product', 'tutorial', 'brand', 'category', 'service', 'faq', 'page'];
         const groups = {};
         for (const r of out.results) {
           (groups[r.type] = groups[r.type] || []).push(r);

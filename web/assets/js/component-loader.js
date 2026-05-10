@@ -133,6 +133,12 @@
     });
 
     document.querySelectorAll('input[type="search"]').forEach((input) => {
+      // Inputs con `data-search-scope` definen su propio destino (p.ej. FAQs)
+      // y NO deben caer al buscador global de la tienda. Si el formulario que
+      // los envuelve tiene un `action`, también respetamos esa ruta dejando
+      // al navegador hacer el submit por defecto.
+      if (input.dataset.searchScope) return;
+      if (input.closest('form[action]')) return;
       input.addEventListener('keydown', (event) => {
         if (event.key !== 'Enter') return;
         const query = input.value.trim();

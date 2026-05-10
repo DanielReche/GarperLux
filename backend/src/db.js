@@ -246,6 +246,17 @@ function migrate(db) {
       PRIMARY KEY(user_id, tutorial_id)
     );
 
+    CREATE TABLE IF NOT EXISTS tips (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      number INTEGER NOT NULL UNIQUE,
+      category TEXT NOT NULL,
+      body TEXT NOT NULL,
+      author TEXT NOT NULL,
+      author_initials TEXT NOT NULL,
+      published_at TEXT NOT NULL,
+      dark INTEGER NOT NULL DEFAULT 0
+    );
+
     CREATE TABLE IF NOT EXISTS reviews (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
@@ -325,6 +336,28 @@ function migrate(db) {
       payload_json TEXT NOT NULL DEFAULT '{}',
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS help_categories (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT NOT NULL UNIQUE,
+      name TEXT NOT NULL,
+      short_label TEXT NOT NULL,
+      description TEXT,
+      icon_svg TEXT,
+      accent TEXT NOT NULL DEFAULT 'default',
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS help_articles (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      category_id INTEGER NOT NULL REFERENCES help_categories(id) ON DELETE CASCADE,
+      slug TEXT NOT NULL UNIQUE,
+      question TEXT NOT NULL,
+      answer_html TEXT NOT NULL,
+      keywords TEXT NOT NULL DEFAULT '',
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      featured INTEGER NOT NULL DEFAULT 0
+    );
   `);
 
 
@@ -353,6 +386,18 @@ function migrate(db) {
   ensureColumn(db, 'brands', 'website', 'TEXT');
   ensureColumn(db, 'brands', 'categories_json', "TEXT NOT NULL DEFAULT '[]'");
   ensureColumn(db, 'brands', 'is_official', 'INTEGER NOT NULL DEFAULT 0');
+  // Tutoriales: contenido enriquecido para el catálogo de Hazlo Tú Mismo (18+ guías).
+  // La columna `content_json` lleva toda la estructura editorial (intro, secciones, pasos,
+  // FAQs) — se serializa así para evitar tablas hijas que multiplicarían joins.
+  ensureColumn(db, 'tutorials', 'excerpt', 'TEXT');
+  ensureColumn(db, 'tutorials', 'category', 'TEXT');
+  ensureColumn(db, 'tutorials', 'location', "TEXT NOT NULL DEFAULT 'interior'");
+  ensureColumn(db, 'tutorials', 'has_video', 'INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'tutorials', 'cover_photo_id', 'TEXT');
+  ensureColumn(db, 'tutorials', 'cover_gradient', 'TEXT');
+  ensureColumn(db, 'tutorials', 'content_json', "TEXT NOT NULL DEFAULT '{}'");
+  ensureColumn(db, 'tutorials', 'published_at', 'TEXT');
+  ensureColumn(db, 'tutorials', 'views', 'INTEGER NOT NULL DEFAULT 0');
 }
 
 function ensureColumn(db, table, column, definition) {
@@ -435,6 +480,7 @@ function seed(db) {
   `).run(2, 'Jose Luis García - El Chispas Instalaciones', 'B12345678', 'Autónomo', 'General', '4321 — Instalaciones eléctricas', 'BT-123456-AND', '2031-04', 'Andalucía', 'Polígono Los Olivares, nave 24', '23009', 'Jaén', 'Jaén', 'España', 'ES1200491234567890123456');
 
   seedTutorialsCatalog(db);
+  seedTipsCatalog(db);
 
   seedProductVariants(db);
   seedDemoAccountData(db);
@@ -547,27 +593,182 @@ function seedBrands(db) {
 }
 
 function seedTutorialsCatalog(db) {
+  // El catálogo vive en seeds/tutorials-catalog.json para que el contenido editorial
+  // (intro, pasos, FAQs por tutorial) sea editable sin tocar lógica de DB.
+  const catalogPath = require('node:path').join(__dirname, '..', 'seeds', 'tutorials-catalog.json');
+  let catalog;
+  try {
+    catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+  } catch (err) {
+    console.warn(`[seedTutorialsCatalog] catálogo no encontrado en ${catalogPath}: ${err.message}`);
+    return;
+  }
+
   const insertTutorial = db.prepare(`
-    INSERT OR IGNORE INTO tutorials (slug, title, difficulty, safety_level, minutes, reviewer, related_product_skus)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT OR IGNORE INTO tutorials (
+      slug, title, difficulty, safety_level, minutes, reviewer,
+      related_product_skus, excerpt, category, location, has_video,
+      cover_photo_id, cover_gradient, content_json, published_at
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  const tutorials = [
-    ['cambiar-interruptor-sin-riesgos', 'Cambiar un interruptor sin riesgos', 'media', 'basic', 35, 'Alfonso Torres', ['SIM-75201-39']],
-    ['cambiar-interruptor-desgastado', 'Cambiar un interruptor desgastado sin volverte loco', 'media', 'basic', 25, 'Alfonso Torres', ['27101-31']],
-    ['instalar-videoportero-wifi', 'Instalar un videoportero con Wi-Fi', 'avanzada', 'medium', 50, 'Pedro Ramírez', ['SHL-1M-G3']],
-    ['voltios-vatios-amperios-en-5-min', 'Voltios, vatios y amperios en 5 minutos', 'basica', 'basic', 8, 'Equipo GarperLux', []],
-    ['cortar-luz-circuito-correcto', 'Cómo cortar la luz del circuito correcto', 'basica', 'basic', 12, 'Alfonso Torres', ['A9F74225']],
-    ['polimetro-sin-miedo', 'Qué es un polímetro y cómo usarlo sin miedo', 'media', 'basic', 18, 'Equipo GarperLux', ['UNI-T-A03']],
-    ['temperatura-de-color', 'Entender la temperatura de color', 'basica', 'basic', 10, 'Equipo GarperLux', ['LED-A60-9W-2700K']],
-    ['cambiar-enchufe-doble', 'Cambiar un enchufe doble', 'media', 'basic', 22, 'Alfonso Torres', ['27431-31']],
-  ];
-  tutorials.forEach((row) => insertTutorial.run(row[0], row[1], row[2], row[3], row[4], row[5], JSON.stringify(row[6])));
+
+  // Si la fila ya existe (DB con seed antiguo), refresca los campos ricos
+  // para que el reseed siempre traiga el contenido canónico. No tocamos `views`
+  // (contador dinámico).
+  const updateRich = db.prepare(`
+    UPDATE tutorials SET
+      title = ?, difficulty = ?, safety_level = ?, minutes = ?, reviewer = ?,
+      related_product_skus = ?, excerpt = ?, category = ?, location = ?,
+      has_video = ?, cover_photo_id = ?, cover_gradient = ?, content_json = ?,
+      published_at = COALESCE(published_at, ?)
+    WHERE slug = ?
+  `);
+
+  // Limpia slugs del seed antiguo que ya no están en el catálogo nuevo. ON DELETE
+  // CASCADE quita también las entradas de saved_tutorials que apuntaban a ellos.
+  const obsoleteSlugs = ['cambiar-interruptor-sin-riesgos', 'instalar-videoportero-wifi', 'cortar-luz-circuito-correcto', 'polimetro-sin-miedo', 'temperatura-de-color', 'cambiar-enchufe-doble'];
+  const placeholders = obsoleteSlugs.map(() => '?').join(',');
+  db.prepare(`DELETE FROM tutorials WHERE slug IN (${placeholders})`).run(...obsoleteSlugs);
+
+  const publishedAt = new Date().toISOString().split('T')[0];
+
+  for (const t of catalog) {
+    const skus = JSON.stringify(t.related_product_skus || []);
+    const content = JSON.stringify(t.content || {});
+    const hasVideo = t.has_video ? 1 : 0;
+    insertTutorial.run(
+      t.slug, t.title, t.difficulty, t.safety_level, t.minutes, t.reviewer,
+      skus, t.excerpt || null, t.category || null, t.location || 'interior', hasVideo,
+      t.cover_photo_id || null, t.cover_gradient || null, content, publishedAt,
+    );
+    updateRich.run(
+      t.title, t.difficulty, t.safety_level, t.minutes, t.reviewer,
+      skus, t.excerpt || null, t.category || null, t.location || 'interior',
+      hasVideo, t.cover_photo_id || null, t.cover_gradient || null, content,
+      publishedAt, t.slug,
+    );
+  }
+}
+
+function seedTipsCatalog(db) {
+  // El catálogo de consejos (47 tips firmados por Alfonso Torres y otros) vive en
+  // seeds/consejos-catalog.json. UPSERT por `number` para que reseed actualice
+  // textos sin perder identidad.
+  const catalogPath = require('node:path').join(__dirname, '..', 'seeds', 'consejos-catalog.json');
+  let catalog;
+  try {
+    catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+  } catch (err) {
+    console.warn(`[seedTipsCatalog] catálogo no encontrado en ${catalogPath}: ${err.message}`);
+    return;
+  }
+
+  const upsert = db.prepare(`
+    INSERT INTO tips (number, category, body, author, author_initials, published_at, dark)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(number) DO UPDATE SET
+      category = excluded.category,
+      body = excluded.body,
+      author = excluded.author,
+      author_initials = excluded.author_initials,
+      published_at = excluded.published_at,
+      dark = excluded.dark
+  `);
+
+  for (const tip of catalog) {
+    upsert.run(
+      tip.number,
+      tip.category,
+      tip.body,
+      tip.author || 'Equipo GarperLux',
+      tip.author_initials || (tip.author ? tip.author.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase() : 'EG'),
+      tip.published_at,
+      tip.dark ? 1 : 0,
+    );
+  }
+}
+
+function seedHelpCenter(db) {
+  // El catálogo del centro de ayuda vive en seeds/help-center.json para que
+  // el contenido editorial (categorías + preguntas/respuestas) sea editable
+  // sin tocar lógica de DB. Cada vez que arranca se hace upsert idempotente:
+  // - mantiene IDs si las categorías/artículos ya existen
+  // - actualiza textos y orden si han cambiado en el JSON
+  // - elimina categorías/artículos cuyos slugs ya no aparecen en el JSON
+  const catalogPath = require('node:path').join(__dirname, '..', 'seeds', 'help-center.json');
+  let catalog;
+  try {
+    catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+  } catch (err) {
+    console.warn(`[seedHelpCenter] catálogo no encontrado en ${catalogPath}: ${err.message}`);
+    return;
+  }
+  const categories = catalog.categories || [];
+
+  const insertCategory = db.prepare(`
+    INSERT INTO help_categories (slug, name, short_label, description, icon_svg, accent, sort_order)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(slug) DO UPDATE SET
+      name = excluded.name,
+      short_label = excluded.short_label,
+      description = excluded.description,
+      icon_svg = excluded.icon_svg,
+      accent = excluded.accent,
+      sort_order = excluded.sort_order
+  `);
+  const insertArticle = db.prepare(`
+    INSERT INTO help_articles (category_id, slug, question, answer_html, keywords, sort_order, featured)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(slug) DO UPDATE SET
+      category_id = excluded.category_id,
+      question = excluded.question,
+      answer_html = excluded.answer_html,
+      keywords = excluded.keywords,
+      sort_order = excluded.sort_order,
+      featured = excluded.featured
+  `);
+  const getCategoryId = db.prepare('SELECT id FROM help_categories WHERE slug = ?');
+
+  const keepCategorySlugs = [];
+  const keepArticleSlugs = [];
+  let articleOrder = 0;
+  for (const cat of categories) {
+    insertCategory.run(
+      cat.slug, cat.name, cat.short_label, cat.description || null,
+      cat.icon_svg || null, cat.accent || 'default', cat.sort_order || 0,
+    );
+    keepCategorySlugs.push(cat.slug);
+    const categoryId = getCategoryId.get(cat.slug).id;
+    for (const article of cat.articles || []) {
+      insertArticle.run(
+        categoryId, article.slug, article.question, article.answer_html,
+        article.keywords || '', article.sort_order ?? articleOrder++,
+        article.featured ? 1 : 0,
+      );
+      keepArticleSlugs.push(article.slug);
+    }
+  }
+
+  // Limpia artículos/categorías que ya no están en el JSON. Hacemos artículos
+  // primero por si una categoría desaparece pero sus artículos no — quedarían
+  // huérfanos sin la FK on-delete-cascade, y queremos forzar consistencia con el JSON.
+  if (keepArticleSlugs.length) {
+    const ph = keepArticleSlugs.map(() => '?').join(',');
+    db.prepare(`DELETE FROM help_articles WHERE slug NOT IN (${ph})`).run(...keepArticleSlugs);
+  }
+  if (keepCategorySlugs.length) {
+    const ph = keepCategorySlugs.map(() => '?').join(',');
+    db.prepare(`DELETE FROM help_categories WHERE slug NOT IN (${ph})`).run(...keepCategorySlugs);
+  }
 }
 
 function seedDemoAccountData(db) {
   // Idempotent: solo insertar si el usuario aún no tiene datos demo.
   // Asegura tutoriales catálogo (puede faltar en DBs preexistentes con un único tutorial).
   seedTutorialsCatalog(db);
+  seedTipsCatalog(db);
+  seedHelpCenter(db);
 
   const antonio = db.prepare('SELECT id FROM users WHERE email = ?').get('antonio.garcia@correo.com');
   const chispas = db.prepare('SELECT id FROM users WHERE email = ?').get('chispas@instaladoreseljaen.es');
@@ -603,12 +804,12 @@ function seedDemoAccountData(db) {
     if (!hasSaved) {
       [
         ['cambiar-interruptor-desgastado', 65, 'Pendiente paso 5: probar conmutación.'],
-        ['instalar-videoportero-wifi', 22, null],
+        ['domotizar-interruptor-shelly-1mini', 22, null],
         ['voltios-vatios-amperios-en-5-min', 100, null],
-        ['cortar-luz-circuito-correcto', 100, null],
-        ['polimetro-sin-miedo', 100, null],
-        ['temperatura-de-color', 100, null],
-        ['cambiar-enchufe-doble', 100, null],
+        ['cortar-luz-del-circuito-correcto', 100, null],
+        ['usar-polimetro-sin-miedo', 100, null],
+        ['entender-temperatura-de-color', 100, null],
+        ['cambiar-enchufe-schuko-suelto', 100, null],
       ].forEach(([slug, progress, notes]) => {
         const id = tutorialBySlug(slug);
         if (id) insertSaved.run(antonio.id, id, progress, notes);
@@ -695,9 +896,9 @@ function seedDemoAccountData(db) {
     const hasSaved = db.prepare('SELECT COUNT(*) AS n FROM saved_tutorials WHERE user_id = ?').get(chispas.id).n;
     if (!hasSaved) {
       [
-        ['cambiar-interruptor-sin-riesgos', 100, null],
-        ['polimetro-sin-miedo', 100, null],
-        ['cortar-luz-circuito-correcto', 100, null],
+        ['cambiar-interruptor-desgastado', 100, null],
+        ['usar-polimetro-sin-miedo', 100, null],
+        ['cortar-luz-del-circuito-correcto', 100, null],
       ].forEach(([slug, progress, notes]) => {
         const id = tutorialBySlug(slug);
         if (id) insertSaved.run(chispas.id, id, progress, notes);

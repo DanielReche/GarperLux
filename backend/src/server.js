@@ -46,7 +46,14 @@ function serveStatic(req, res) {
   const requested = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname);
   const filePath = path.normalize(path.join(webDir, requested));
   if (!filePath.startsWith(webDir)) return fail(res, 403, 'FORBIDDEN', 'Ruta no permitida.');
-  if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) return fail(res, 404, 'NOT_FOUND', 'Página no encontrada.');
+  if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+    const notFoundPath = path.join(webDir, '404.html');
+    if (fs.existsSync(notFoundPath)) {
+      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+      return fs.createReadStream(notFoundPath).pipe(res);
+    }
+    return fail(res, 404, 'NOT_FOUND', 'Página no encontrada.');
+  }
   res.writeHead(200, { 'Content-Type': mimeTypes[path.extname(filePath)] || 'application/octet-stream' });
   fs.createReadStream(filePath).pipe(res);
 }

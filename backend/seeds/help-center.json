@@ -1,0 +1,142 @@
+{
+  "categories": [
+    {
+      "slug": "pedidos",
+      "name": "Pedidos",
+      "short_label": "Pedidos",
+      "description": "Estado, modificación, cancelación.",
+      "accent": "default",
+      "sort_order": 1,
+      "icon_svg": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"/><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\"/></svg>",
+      "articles": [
+        { "slug": "estado-pedido", "question": "¿Cómo veo el estado de mi pedido?", "answer_html": "Desde tu <a href=\"/pages/cuenta/area-personal.html\" class=\"link-underline\">área personal</a>, en la sección \"Mis pedidos\". Verás el tracking en tiempo real (recibido, pagado, en preparación, enviado, entregado) y el albarán/factura disponibles para descarga cuando proceda.", "keywords": "tracking seguimiento estado pedido albaran factura area personal mis pedidos" },
+        { "slug": "modificar-pedido", "question": "¿Puedo modificar un pedido ya hecho?", "answer_html": "Sí, mientras esté en estado \"En preparación\". Llámanos al 953 00 00 00 con tu número de pedido. Si ya está enviado, tendrás que hacer una devolución una vez recibido.", "keywords": "modificar cambiar pedido preparacion telefono" },
+        { "slug": "corte-pedido-diario", "question": "¿Hasta qué hora puedo pedir para que salga hoy?", "answer_html": "Hasta las 17:00 (lunes a viernes) sale en el mismo día. Después, sale al día hábil siguiente.", "keywords": "horario corte pedido envio mismo dia 17:00" },
+        { "slug": "cancelar-pedido", "question": "¿Cómo cancelo un pedido?", "answer_html": "Si está en \"Recibido\" o \"En preparación\", desde tu área personal hay un botón \"Cancelar pedido\". Si ya se envió, tendrás que rechazarlo cuando llegue o iniciar una devolución.", "keywords": "cancelar pedido rechazar devolucion area personal boton" },
+        { "slug": "pedido-no-llega", "question": "Mi pedido aparece \"entregado\" pero no lo he recibido.", "answer_html": "Comprueba primero con vecinos, conserjería o el buzón. Si pasados 2 días no aparece, contáctanos con tu número de pedido — abrimos incidencia con el transportista y, si se confirma extravío, te reenviamos o reembolsamos según prefieras.", "keywords": "extravio pedido no recibido entregado incidencia transportista vecino" },
+        { "slug": "regalo-pedido", "question": "¿Puedo enviar un pedido como regalo (sin precio)?", "answer_html": "En el checkout marca \"Es un regalo\" en el paso de envío. Adjuntamos albarán sin importes ni precios. La factura te llega por email a ti como pagador.", "keywords": "regalo albaran sin precio checkout envio destinatario" },
+        { "slug": "varios-envios-pedido", "question": "Mi pedido viene en varios paquetes, ¿por qué?", "answer_html": "Los productos con peso o volumen elevado (cuadros eléctricos, rollos de cable, focos exteriores) suelen viajar en paquete separado para optimizar la entrega. En el tracking verás todos los bultos asociados al mismo número de pedido.", "keywords": "varios paquetes bultos separados tracking pedido envio multiple" },
+        { "slug": "pedido-recurrente", "question": "¿Puedo programar pedidos recurrentes?", "answer_html": "Sí, los clientes profesionales pueden configurar pedidos recurrentes (semanal, quincenal o mensual) desde su área pro. El sistema te avisa 48 h antes para que añadas o quites productos.", "keywords": "recurrente programar pedidos repetir frecuencia mensual semanal pro profesional" }
+      ]
+    },
+    {
+      "slug": "envios",
+      "name": "Envíos y entrega",
+      "short_label": "Envíos",
+      "description": "Plazos, costes, recogida en tienda.",
+      "accent": "default",
+      "sort_order": 2,
+      "icon_svg": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><rect x=\"1\" y=\"3\" width=\"15\" height=\"13\"/><path d=\"M16 8h4l3 3v5h-7\"/><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"/><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"/></svg>",
+      "articles": [
+        { "slug": "plazos-entrega", "question": "¿Cuánto tarda en llegar mi pedido?", "answer_html": "24-48 h en península, en horario laboral. Para Baleares, 3-5 días. Canarias, Ceuta y Melilla, 5-7 días con trámite aduanero. Domingos no se hacen entregas.", "keywords": "plazos entrega peninsula baleares canarias ceuta melilla horario tiempo" },
+        { "slug": "coste-envio", "question": "¿Cuánto cuesta el envío?", "answer_html": "Estándar península: 4,90 € · gratis desde 75 €. Express 24h: 9,90 €. Recogida en almacén Jaén: gratis. Para Baleares y Canarias se calcula en checkout según peso y volumen.", "keywords": "coste precio envio gratis 75 express 24h jaen almacen recogida" },
+        { "slug": "recogida-almacen", "question": "¿Puedo recoger en almacén?", "answer_html": "Sí, en nuestro almacén del Campus Las Lagunillas (Jaén). L-V de 8:00 a 18:30. Sábados de 9:00 a 13:00. Te avisamos cuando esté listo. Es gratis.", "keywords": "recoger almacen jaen campus lagunillas horario sabado tienda gratis click collect" },
+        { "slug": "ausente-entrega", "question": "¿Y si no estoy en casa cuando llegue?", "answer_html": "El transportista deja aviso e intenta una segunda entrega al día siguiente. Si tampoco estás, puedes contactarles para reprogramar o recogerlo en su oficina más cercana.", "keywords": "ausente segunda entrega transportista aviso reprogramar oficina recoger" },
+        { "slug": "horario-entrega", "question": "¿Puedo fijar una franja horaria de entrega?", "answer_html": "Sí, en checkout selecciona franja de mañana (9-14h) o tarde (15-19h). Tiene un sobrecoste de 1,50 €. Para entregas en sábado, marca la casilla correspondiente — disponible solo en Jaén capital con recargo de 4,90 €.", "keywords": "franja horaria entrega manana tarde sabado checkout sobrecoste" },
+        { "slug": "envio-internacional", "question": "¿Hacéis envíos fuera de España?", "answer_html": "Por ahora servimos a Portugal y Andorra desde el checkout estándar (3-5 días, tarifa según peso). Para el resto de la UE, escríbenos por contacto con tu lista de materiales y te pasamos presupuesto cerrado.", "keywords": "internacional portugal andorra ue europa envio fuera espana presupuesto" }
+      ]
+    },
+    {
+      "slug": "devoluciones",
+      "name": "Devoluciones",
+      "short_label": "Devoluciones",
+      "description": "Cómo devolver, plazos, reembolso.",
+      "accent": "default",
+      "sort_order": 3,
+      "icon_svg": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M3 12a9 9 0 1 0 9-9M3 12V3M3 12h9\"/></svg>",
+      "articles": [
+        { "slug": "plazo-devolucion", "question": "¿Cuál es el plazo de devolución?", "answer_html": "30 días naturales desde la recepción del pedido. El producto debe estar sin usar, en su embalaje original y con todos sus accesorios.", "keywords": "plazo 30 dias devolucion embalaje original accesorios sin usar" },
+        { "slug": "coste-devolucion", "question": "¿La devolución tiene coste?", "answer_html": "No. Generamos la etiqueta de devolución gratis y la enviamos por email. Solo tienes que pegarla y entregarla al transportista.", "keywords": "gratis etiqueta devolucion email transportista coste" },
+        { "slug": "reembolso", "question": "¿Cuándo recibo el reembolso?", "answer_html": "Una vez recibimos el producto y verificamos su estado (1-3 días), procesamos el reembolso al método de pago original. Suele tardar 3-5 días hábiles más en aparecer en tu cuenta.", "keywords": "reembolso devolver dinero metodo pago original dias habiles plazo" },
+        { "slug": "devolucion-bombilla", "question": "Compré una bombilla equivocada de temperatura. ¿La devuelvo?", "answer_html": "Sí, sin problema. Es la devolución más común. Asegúrate de que la bombilla sigue en el blíster original o caja sin manipular. Aprovecha y mira nuestra <a href=\"/pages/aprender/tutorial.html\" class=\"link-underline\">guía de temperatura de color</a> para no fallar la próxima.", "keywords": "bombilla temperatura color equivocada calida fria devolucion blister" },
+        { "slug": "producto-defectuoso", "question": "El producto me ha llegado defectuoso. ¿Qué hago?", "answer_html": "Llámanos al 953 00 00 00 o usa el formulario de contacto en las primeras 48 h. Adjunta fotos del producto y del embalaje. Hacemos cambio por uno nuevo sin coste — o reembolso si prefieres.", "keywords": "defectuoso roto golpeado averia incidencia foto cambio garantia llegada" },
+        { "slug": "devolucion-cable-cortado", "question": "Compré 50 m de cable cortados a medida. ¿Puedo devolverlos?", "answer_html": "No. Los cortes a medida y los productos personalizados (mecanismos rotulados, cuadros configurados) no admiten devolución salvo defecto de fabricación. Es la única excepción a la política general.", "keywords": "cable cortes medida personalizado no devolucion excepcion rotulado configurado" }
+      ]
+    },
+    {
+      "slug": "pagos",
+      "name": "Pagos y facturas",
+      "short_label": "Pagos y facturas",
+      "description": "Métodos, factura, problemas.",
+      "accent": "default",
+      "sort_order": 4,
+      "icon_svg": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><rect x=\"2\" y=\"5\" width=\"20\" height=\"14\" rx=\"2\"/><path d=\"M2 10h20\"/></svg>",
+      "articles": [
+        { "slug": "metodos-pago", "question": "¿Qué métodos de pago aceptáis?", "answer_html": "Visa, Mastercard, American Express, Bizum, PayPal y transferencia bancaria. Para clientes profesionales validados, también aplazamiento a 30 días.", "keywords": "visa mastercard amex bizum paypal transferencia metodos pago tarjetas" },
+        { "slug": "cuando-factura", "question": "¿Cuándo recibo la factura?", "answer_html": "La factura se genera automáticamente al cerrar el pedido y queda disponible en tu área personal en formato PDF. También te llega por email.", "keywords": "factura pdf area personal email automatica cuando recibir" },
+        { "slug": "factura-autonomo", "question": "Soy autónomo, ¿puedo pedir factura con mi NIF?", "answer_html": "Sí. En el checkout indica tu NIF/CIF y razón social. Si es la primera vez, también puedes <a href=\"/pages/auth/login.html#registro-pro\" class=\"link-underline\">registrarte como cliente profesional</a> para tener todas las facturas centralizadas.", "keywords": "autonomo nif cif razon social factura profesional checkout fiscal" },
+        { "slug": "pago-no-procesa", "question": "El pago no se procesa. ¿Qué hago?", "answer_html": "Suele ser autenticación 3DS de tu banco. Revisa el SMS o app del banco. Si persiste, prueba con otro método o llámanos al 953 00 00 00.", "keywords": "pago error 3ds autenticacion banco no funciona tarjeta rechazada" },
+        { "slug": "aplazamiento-pro", "question": "¿Puedo aplazar el pago si soy instalador?", "answer_html": "Sí. Una vez validado el carnet de instalador autorizado, activamos por defecto el aplazamiento a 30 días desde la fecha de factura. También puedes solicitar 60 días sujeto a límite de crédito.", "keywords": "aplazamiento pago 30 60 dias instalador profesional credito carnet bt" },
+        { "slug": "factura-empresa-modificar", "question": "Me he equivocado al introducir los datos fiscales. ¿Puedo corregirlos?", "answer_html": "Antes de que se emita la factura, sí — contacta con nosotros con tu número de pedido. Una vez emitida, podemos hacer una rectificativa siempre dentro del mismo trimestre fiscal.", "keywords": "datos fiscales corregir rectificativa factura error empresa nif" }
+      ]
+    },
+    {
+      "slug": "cuenta",
+      "name": "Mi cuenta",
+      "short_label": "Mi cuenta",
+      "description": "Acceso, datos, registro pro.",
+      "accent": "default",
+      "sort_order": 5,
+      "icon_svg": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><circle cx=\"12\" cy=\"7\" r=\"4\"/><path d=\"M5.5 21a6.5 6.5 0 0 1 13 0\"/></svg>",
+      "articles": [
+        { "slug": "necesito-cuenta", "question": "¿Necesito cuenta para comprar?", "answer_html": "No. Puedes comprar como invitado. Pero si creas cuenta gratis, podrás guardar favoritos, ver el historial de pedidos, descargar facturas y, sobre todo, repetir compra en un clic.", "keywords": "cuenta invitado registro gratis favoritos historial repetir compra" },
+        { "slug": "registro-pro", "question": "¿Cómo me registro como instalador profesional?", "answer_html": "Desde <a href=\"/pages/auth/login.html#registro-pro\" class=\"link-underline\">esta página</a>. Te pediremos DNI, nº de carnet de baja tensión vigente, comunidad de emisión, copia del carnet y datos fiscales. Validamos en 24-48 h y entonces se activa la tarifa pro automáticamente.", "keywords": "registro pro instalador profesional carnet bt baja tension validacion tarifa" },
+        { "slug": "olvidar-password", "question": "Olvidé la contraseña.", "answer_html": "En la <a href=\"/pages/auth/login.html\" class=\"link-underline\">página de login</a> hay un enlace \"¿La olvidaste?\". Te enviamos un email con un enlace para crear una nueva contraseña.", "keywords": "contrasena olvidada reset password login email recuperar" },
+        { "slug": "borrar-cuenta", "question": "¿Cómo borro mi cuenta?", "answer_html": "En \"Datos personales\" del área personal hay un botón \"Borrar cuenta\". Tendremos que conservar tus facturas durante 5 años por obligación fiscal, pero el resto de datos se eliminan en 30 días.", "keywords": "borrar eliminar cuenta gdpr datos personales conservar facturas 5 anos" },
+        { "slug": "cambiar-email", "question": "¿Cómo cambio el email de mi cuenta?", "answer_html": "En \"Datos personales\" puedes actualizar el email. Te enviamos un código de verificación al nuevo email — sin verificar no se aplica el cambio. Los pedidos antiguos siguen vinculados al historial.", "keywords": "cambiar email correo electronico verificacion codigo" },
+        { "slug": "doble-factor", "question": "¿Hay verificación en dos pasos (2FA)?", "answer_html": "Sí, opcional, en \"Seguridad\" del área personal. Funciona con apps como Google Authenticator o Authy. Para clientes pro con aplazamiento de pago, lo recomendamos encarecidamente.", "keywords": "2fa doble factor autenticacion seguridad google authenticator authy" }
+      ]
+    },
+    {
+      "slug": "productos",
+      "name": "Material y compatibilidad",
+      "short_label": "Material",
+      "description": "Dudas técnicas, fichas, compatibilidad.",
+      "accent": "default",
+      "sort_order": 6,
+      "icon_svg": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\"/></svg>",
+      "articles": [
+        { "slug": "compatibilidad-simon-niessen", "question": "¿Vale un mecanismo Simón 27 con un marco de Niessen?", "answer_html": "Aunque el mecanismo encaja en cualquier caja universal de 60 mm, los marcos no son intercambiables entre fabricantes. Sí puedes mezclar dentro de Simón (27, 75, 82), pero no Simón con Niessen u otra marca.", "keywords": "simon niessen 27 75 82 compatible mecanismo marco intercambiable caja universal" },
+        { "slug": "identificar-gama", "question": "¿Cómo identifico la gama de mi interruptor actual?", "answer_html": "Mira la cara interna del marco al retirarlo (corta luz antes). La gama suele estar grabada en el plástico (Simón 27, 75, 82, 100, Niessen Zenit, etc.). Si te quedas en duda, mándanos una foto por WhatsApp y te lo identificamos.", "keywords": "identificar gama interruptor marco simon 27 75 82 100 niessen zenit reposicion" },
+        { "slug": "bombilla-equivalente", "question": "¿Qué bombilla LED equivale a una halógena de 60W?", "answer_html": "Aproximadamente una LED de 9W con 810 lm. La regla general es <strong>fíjate en los lúmenes</strong> (cantidad de luz), no en los vatios. Halógena 40W ≈ LED 5W (470 lm) · Halógena 60W ≈ LED 9W (810 lm) · Halógena 100W ≈ LED 14W (1521 lm).", "keywords": "bombilla led halogena equivalente vatios lumenes 60w 9w 100w 14w 40w" },
+        { "slug": "temperatura-color", "question": "¿Qué significan 2700K, 4000K, 6500K?", "answer_html": "Es la temperatura de color: <strong>2700K cálida</strong> (amarillenta, salón/dormitorio), <strong>4000K neutra</strong> (cocina/baño), <strong>6500K fría</strong> (taller/garaje). Mantén la misma temperatura dentro de una habitación o el efecto queda raro.", "keywords": "temperatura color kelvin 2700k 4000k 6500k calida neutra fria amarillenta" },
+        { "slug": "fichas-tecnicas", "question": "¿Dónde descargo la ficha técnica de un producto?", "answer_html": "En la ficha de producto, debajo de las imágenes, hay un botón \"Descargar PDF\". Incluye dimensiones, normativa, certificado CE y datos eléctricos. Si no aparece, escríbenos: lo pedimos al fabricante y lo subimos.", "keywords": "ficha tecnica pdf descargar producto dimensiones certificado ce dossier" },
+        { "slug": "stock-rapido", "question": "El producto pone \"en stock\". ¿Sale hoy?", "answer_html": "Sí, si pides antes de las 17:00 (L-V), todos los productos marcados \"en stock\" salen el mismo día. Los marcados \"bajo pedido\" tardan 3-5 días en llegar desde fábrica antes de su envío al cliente.", "keywords": "stock disponible bajo pedido tiempo entrega rapido mismo dia" }
+      ]
+    },
+    {
+      "slug": "tecnico",
+      "name": "Servicios técnicos",
+      "short_label": "Servicios técnicos",
+      "description": "Solicitar técnico, presupuestos, garantía.",
+      "accent": "default",
+      "sort_order": 7,
+      "icon_svg": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z\"/></svg>",
+      "articles": [
+        { "slug": "visita-gratuita", "question": "¿La visita técnica es gratuita?", "answer_html": "Sí en instalaciones nuevas y mantenimiento. En averías cobramos 30 € de visita si finalmente no contratas el trabajo, descontable del presupuesto si decides seguir.", "keywords": "visita gratuita averia presupuesto 30 instalacion mantenimiento descontable" },
+        { "slug": "garantia-trabajos", "question": "¿Qué garantía dais en los trabajos?", "answer_html": "Tres años en mano de obra. Materiales con garantía propia del fabricante (2 años en mecanismos, 5 en protecciones). Si algo falla dentro de esos plazos, volvemos sin coste.", "keywords": "garantia 3 anos mano obra 2 mecanismos 5 protecciones trabajo" },
+        { "slug": "horario-tecnico", "question": "¿Atendéis fuera de horario?", "answer_html": "Urgencias 24/7 en Jaén capital y zona metropolitana. Resto de provincia, hasta las 22:00. Andalucía, en horario laboral. Recargo del 50 % en festivos y noches.", "keywords": "horario urgencia 24/7 jaen capital metropolitana andalucia festivo nocturno recargo" },
+        { "slug": "seguir-solicitud", "question": "¿Cómo sigo el estado de mi solicitud técnica?", "answer_html": "Con el código GLX-XXXX-XX-XXXX que recibes al enviar la solicitud, en tu área personal o introduciéndolo en la <a href=\"/pages/servicios/seguir-solicitud.html\" class=\"link-underline\">página de seguimiento anónimo</a>.", "keywords": "codigo glx seguimiento solicitud estado area personal anonimo seguir" },
+        { "slug": "boletin-bt", "question": "¿Hacéis boletín BT para nueva instalación?", "answer_html": "Sí. Nuestros instaladores son autorizados con carnet vigente en Andalucía. Tramitamos el boletín ante Industria y te lo entregamos para dar de alta el suministro con la comercializadora.", "keywords": "boletin bt baja tension industria autorizado alta suministro comercializadora" },
+        { "slug": "presupuesto-cerrado", "question": "¿El presupuesto es cerrado o estimativo?", "answer_html": "Cerrado salvo imprevisto estructural (problemas de obra civil, falta de canalización, etc.) que se documenta con fotos antes de continuar. Sin sorpresas en factura final.", "keywords": "presupuesto cerrado estimativo imprevistos obra civil canalizacion factura final" }
+      ]
+    },
+    {
+      "slug": "pro",
+      "name": "Área profesional",
+      "short_label": "Área pro",
+      "description": "Tarifas pro, albaranes, validación carnet.",
+      "accent": "dark",
+      "sort_order": 8,
+      "icon_svg": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4\"/></svg>",
+      "articles": [
+        { "slug": "tarifa-pro", "question": "¿Qué descuento tengo siendo cliente pro?", "answer_html": "Una vez validado tu carnet, el descuento medio es del 18-22 % sobre el PVP, calculado producto a producto. Verás el precio pro en cada ficha y en el carrito. Algunas líneas estratégicas (Simón, Schneider, Shelly) llegan al 28 %.", "keywords": "tarifa descuento pro precios profesional pvp simon schneider shelly 18 22 28" },
+        { "slug": "validacion-carnet", "question": "¿Cuánto tarda la validación del carnet?", "answer_html": "Validamos manualmente para evitar fraudes. 24-48 h hábiles desde que subes los documentos. Recibes email cuando se activa la tarifa pro y ya puedes empezar a comprar con descuento.", "keywords": "validacion carnet manual horas hubiles 24 48 documentos fraude verificacion" },
+        { "slug": "albaran-trazabilidad", "question": "¿Genero albarán para mi cliente final?", "answer_html": "Sí. Desde el carrito, marca \"Generar albarán al destinatario\" y rellena los datos del cliente final. Te llega el PDF junto con tu factura. El albarán no muestra el precio que tú pagaste a nosotros.", "keywords": "albaran cliente final destinatario pdf trazabilidad documento pro" },
+        { "slug": "pedido-recurrente-pro", "question": "¿Cómo programo pedidos recurrentes?", "answer_html": "En el área pro hay una sección \"Listas recurrentes\". Crea una lista (ej: \"reposicion taller\"), añade productos con cantidad y elige frecuencia (semanal, quincenal, mensual). Te avisamos 48 h antes para que ajustes.", "keywords": "recurrente lista taller reposicion automatizado frecuencia semanal mensual" },
+        { "slug": "credito-pro", "question": "¿Cómo se aprueba el crédito a 30 días?", "answer_html": "Tras 2-3 pedidos pagados sin incidencias y un volumen acumulado de unos 600 €, te ofrecemos crédito a 30 días con un límite que se ajusta a tu volumen mensual. Revisamos el límite cada trimestre.", "keywords": "credito 30 dias pro limite aprobacion volumen pedidos historial" },
+        { "slug": "delegado-comercial", "question": "¿Tengo un comercial asignado?", "answer_html": "Sí, para volúmenes superiores a 2.000 €/mes te asignamos delegado comercial fijo: tu interlocutor único para pedidos grandes, presupuestos, devoluciones y reclamaciones. Sin call center.", "keywords": "delegado comercial asignado volumen reclamaciones interlocutor unico contacto" }
+      ]
+    }
+  ]
+}

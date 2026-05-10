@@ -451,12 +451,29 @@
       }
     }
 
-    // Tutoriales
+    // Tutoriales — desde 2026-05-10 el corpus trae excerpt, category, content y
+    // relatedProductSkus parseado. Indexamos también la categoría y el cuerpo de
+    // intro para que "rosca gorda" (vía sinónimo a casquillo e27) encuentre los
+    // tutoriales de iluminación, no solo los productos.
     if (!typesEnabled || typesEnabled.includes('tutorial')) {
       for (const t of corpus.tutorials) {
+        const skuList = Array.isArray(t.relatedProductSkus) ? t.relatedProductSkus.join(' ')
+                      : Array.isArray(t.related_product_skus) ? t.related_product_skus.join(' ')
+                      : (typeof t.related_product_skus === 'string' ? t.related_product_skus : '');
+        const introBody = t.content?.intro_paragraphs?.join(' ') || '';
+        const heroSub = t.content?.hero_subtitle || '';
+        // Incluye títulos y cuerpos de los pasos para que palabras técnicas como
+        // "E27", "Schuko", "Wago", "halógena" que solo aparecen en el procedimiento
+        // sean encontrables. Los pesos son menores (campo `spec`) para no
+        // ahogar el ranking de matches por título.
+        const stepText = (t.content?.steps || []).map(s => `${s.title || ''} ${s.body || ''}`).join(' ');
+        const whyText = `${t.content?.why_section?.title || ''} ${t.content?.why_section?.body || ''} ${(t.content?.why_section?.bullets || []).join(' ')}`;
         const fields = {
           name: t.title || '',
-          keywords: `${t.difficulty || ''} ${t.reviewer || ''} ${t.related_product_skus || ''}`,
+          category: t.category || '',
+          keywords: `${t.difficulty || ''} ${t.reviewer || ''} ${t.location || ''} ${skuList}`,
+          description: t.excerpt || '',
+          spec: `${heroSub} ${introBody} ${whyText} ${stepText}`.trim(),
         };
         const sc = scoreItem({ tokens, normalizedQuery: expanded, fields });
         if (sc <= 0) continue;
