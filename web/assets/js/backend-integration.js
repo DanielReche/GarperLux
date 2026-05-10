@@ -1188,6 +1188,7 @@
         body.innerHTML = '';
         return;
       }
+      det._glxDef = def;
       // Orden
       let entries = [...valueCounts.entries()];
       if (def.order) {
@@ -1287,6 +1288,76 @@
     _setupPriceFilter(products, state, applyCallback);
     _setupAvailabilityFilter(products, state, applyCallback);
     _setupClearActiveFilters(state, applyCallback);
+  }
+
+  function _updateSidebarCounts(products, state) {
+    const sidebar = document.querySelector('main aside, aside');
+    if (!sidebar) return;
+    const detailsBlocks = [...sidebar.querySelectorAll('details')];
+    detailsBlocks.forEach((det) => {
+      const def = det._glxDef;
+      if (!def) return;
+      
+      const summary = det.querySelector('summary span');
+      if (!summary) return;
+      const name = summary.textContent.trim();
+      const facetKey = _normTxt(name);
+      
+      let facetProducts = products.slice();
+      if (state.subcategory) facetProducts = facetProducts.filter((p) => _matchesSubcategory(p, state.subcategory));
+      if (state.search) facetProducts = facetProducts.filter((p) => _matchesSearchTerm(p, state.search));
+      if (state.priceMin != null) facetProducts = facetProducts.filter((p) => Number(p.price || 0) >= state.priceMin);
+      if (state.priceMax != null) facetProducts = facetProducts.filter((p) => Number(p.price || 0) <= state.priceMax);
+      if (state.onlyInStock) facetProducts = facetProducts.filter((p) => Number(p.stock || 0) > 0);
+      
+      const otherFilters = { ...state.filters };
+      delete otherFilters[facetKey];
+      facetProducts = facetProducts.filter((p) => _matchesFacets(p, otherFilters));
+      
+      const valueCounts = new Map();
+      facetProducts.forEach((p) => {
+        const vals = (def.extract(p) || []).filter(Boolean);
+        vals.forEach((v) => valueCounts.set(v, (valueCounts.get(v) || 0) + 1));
+      });
+      
+      if (def.type === 'checkbox') {
+        det.querySelectorAll('label.filter-check').forEach(lbl => {
+          const input = lbl.querySelector('input');
+          if (!input) return;
+          const val = input.dataset.facetVal;
+          const count = valueCounts.get(val) || 0;
+          const countSpan = lbl.querySelector('.count');
+          if (countSpan) countSpan.textContent = count;
+          
+          const isSelected = state.filters[facetKey]?.includes(val);
+          if (count === 0 && !isSelected) {
+            lbl.style.display = 'none';
+          } else {
+            lbl.style.display = 'flex';
+            lbl.style.opacity = count === 0 ? '0.5' : '1';
+          }
+        });
+      } else if (def.type === 'chip' || def.type === 'swatch') {
+        const selector = def.type === 'chip' ? 'button[data-facet-val]:not(.swatch)' : 'button.swatch';
+        det.querySelectorAll(selector).forEach(btn => {
+          const val = btn.dataset.facetVal;
+          const count = valueCounts.get(val) || 0;
+          if (def.type === 'chip') {
+            btn.title = `${count} producto${count !== 1 ? 's' : ''}`;
+          } else {
+            btn.title = `${val} · ${count}`;
+          }
+          
+          const isSelected = state.filters[facetKey]?.includes(val);
+          if (count === 0 && !isSelected) {
+            btn.style.display = 'none';
+          } else {
+            btn.style.display = '';
+            btn.style.opacity = count === 0 ? '0.5' : '1';
+          }
+        });
+      }
+    });
   }
 
   function _renderActiveFilterPills(state, applyCallback) {
@@ -1799,7 +1870,8 @@
     // Dedupe por grupo de variantes: si dos productos comparten _variant_group,
     // dejamos solo el variant_default (el más barato del grupo). Las hermanas
     // siguen accesibles vía el selector del detalle (specs._variants).
-    products = _dedupeVariants(products);
+    // products = _dedupeVariants(products); // Desactivado para mostrar todas las variantes en la parrilla
+
     // Indica a catalog-ui.js que somos los dueños del filtrado dinámico.
     window._GLX_DYNAMIC_CATALOG = true;
 
@@ -1974,8 +2046,11 @@
       // un filtro al pulsarlas. Lo localizamos como el div que contiene el
       // texto "Filtros activos" en el sidebar.
       _renderActiveFilterPills(state, applyAndRender);
+      
+      // 8. Update sidebar dynamic counts
+      _updateSidebarCounts(products, state);
 
-      // 8. notify catalog-ui (que reaplique filtros sidebar sobre las nuevas cards)
+      // 9. notify catalog-ui (que reaplique filtros sidebar sobre las nuevas cards)
       document.dispatchEvent(new CustomEvent('glxCatalogRendered', { detail: { products: pageItems } }));
     }
 

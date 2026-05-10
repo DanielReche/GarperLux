@@ -190,6 +190,7 @@
     document.addEventListener('click', (event) => {
       const swatch = event.target.closest('.swatch');
       if (swatch && !swatch.matches('.var-sw')) {
+        if (window._GLX_DYNAMIC_CATALOG) return;
         event.preventDefault();
         swatch.parentElement?.querySelectorAll('.swatch').forEach((item) => item.classList.remove('is-active'));
         swatch.classList.add('is-active');
@@ -199,12 +200,14 @@
 
       const clear = event.target.closest('button');
       if (clear && normalise(clear.textContent).includes('limpiar')) {
+        if (window._GLX_DYNAMIC_CATALOG) return;
         event.preventDefault();
         clearFilters();
         return;
       }
 
       if (event.target.matches('[data-clear-filter]')) {
+        if (window._GLX_DYNAMIC_CATALOG) return;
         event.preventDefault();
         clearFilters();
         return;
@@ -214,6 +217,7 @@
       if (!chip || chip.matches('.swatch, .var-sw, [data-view], [data-tab], [data-nav-toggle], [data-search-close]')) return;
       const text = normalise(chip.textContent);
       if (!/\d+\s*a/.test(text) && !['mas vendidos', 'novedades', 'en oferta', 'por nombre', 'por referencia', 'por codigo de barras'].includes(text)) return;
+      if (window._GLX_DYNAMIC_CATALOG) return;
       event.preventDefault();
       chip.parentElement?.querySelectorAll('button').forEach((button) => {
         button.classList.remove('bg-ink', 'text-paper', 'btn-ink');
@@ -286,7 +290,7 @@
 
     // Fallback: update stock on any pre-rendered static pills
     if (document.querySelector('.card-prod .pill')) {
-      api.products().then(products => applyStockToCards(products)).catch(() => {});
+      api.products().then(products => applyStockToCards(products)).catch(() => { });
     }
   }
 
@@ -318,7 +322,7 @@
     document.querySelectorAll('button').forEach((button) => {
       if (/añadir|carrito/i.test(button.textContent)) button.dataset.sku = sku;
     });
-    
+
     const stockToDisplay = matchedVariant ? matchedVariant.stock : productState.baseStock;
     document.querySelectorAll('*').forEach((node) => {
       if (!node.children.length && /en stock|unidades|uds/i.test(node.textContent || '')) {
