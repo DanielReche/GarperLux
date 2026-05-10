@@ -129,30 +129,10 @@
               </div>
             </div>
 
-            <!-- Strip vista profesional -->
-            <div class="view-pro mt-4 grid grid-cols-3 gap-2">
-              <button class="bg-white border border-line rounded-lg p-3 hover:border-ink transition-colors flex items-center gap-3">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-warn"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <div class="text-left text-xs">
-                  <div class="font-medium">Ficha técnica</div>
-                  <div class="font-mono text-[10px] text-graphite">PDF · 380 KB</div>
-                </div>
-              </button>
-              <button class="bg-white border border-line rounded-lg p-3 hover:border-ink transition-colors flex items-center gap-3">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-electric"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.39 0 4.68.94 6.36 2.64"/></svg>
-                <div class="text-left text-xs">
-                  <div class="font-medium">Declaración CE</div>
-                  <div class="font-mono text-[10px] text-graphite">PDF · 120 KB</div>
-                </div>
-              </button>
-              <button class="bg-white border border-line rounded-lg p-3 hover:border-ink transition-colors flex items-center gap-3">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-graphite"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM16 13H8M16 17H8M10 9H8"/></svg>
-                <div class="text-left text-xs">
-                  <div class="font-medium">Manual instalación</div>
-                  <div class="font-mono text-[10px] text-graphite">PDF · 180 KB</div>
-                </div>
-              </button>
-            </div>
+            <!-- Strip vista profesional: documentos disponibles (dinámico). Renderizado por
+                 _renderProductDocs en backend-integration.js. Si el producto no tiene
+                 documentos asociados, el bloque se oculta entero. -->
+            <div class="view-pro mt-4" data-glx-docs hidden></div>
           </div>
         </div>
       </div>
@@ -215,25 +195,19 @@
               <div class="grid grid-cols-2 gap-3">
                 <div class="bg-paper-2 rounded-lg p-3">
                   <div class="font-mono text-[10px] uppercase tracking-wider text-graphite mb-1">PVP particular</div>
-                  <div class="font-serif text-2xl font-medium line-through text-graphite" data-glx-price-pvp>5,90 €</div>
+                  <div class="font-serif text-2xl font-medium line-through text-graphite" data-glx-price-pvp>—</div>
                 </div>
                 <div class="rounded-lg p-3 pro-tag">
                   <div class="font-mono text-[10px] uppercase tracking-wider mb-1">Tarifa pro</div>
-                  <div class="font-serif text-2xl font-medium" data-glx-price-pro>4,60 €</div>
+                  <div class="font-serif text-2xl font-medium" data-glx-price-pro>—</div>
                 </div>
               </div>
               <div class="text-xs font-mono text-graphite flex items-center justify-between">
-                <span>Descuento profesional aplicado: <strong class="text-stock" data-glx-pro-discount>−22%</strong></span>
-                <span data-glx-price-base>Base imp. 3,80 € · IVA 21%</span>
+                <span>Descuento profesional aplicado: <strong class="text-stock" data-glx-pro-discount>—</strong></span>
+                <span data-glx-price-base>Base imp. — · IVA 21%</span>
               </div>
-              <div class="bg-paper-2 rounded-lg p-3 text-xs text-graphite">
-                <div class="font-medium text-ink mb-1.5">Escalado por volumen</div>
-                <div class="grid grid-cols-3 gap-2 font-mono">
-                  <div><span class="text-graphite">10+ uds</span><br/><strong class="text-ink">4,30 €</strong></div>
-                  <div><span class="text-graphite">25+ uds</span><br/><strong class="text-ink">4,05 €</strong></div>
-                  <div><span class="text-graphite">100+ uds</span><br/><strong class="text-ink">3,80 €</strong></div>
-                </div>
-              </div>
+              <!-- Escalado por volumen: dinámico, calculado a partir del precio del producto. -->
+              <div class="bg-paper-2 rounded-lg p-3 text-xs text-graphite" data-glx-volume-tiers hidden></div>
             </div>
           </div>
 
@@ -249,33 +223,8 @@
             </div>
           </div>
 
-          <!-- STOCK PRO POR ALMACÉN -->
-          <div class="view-pro bg-white border border-line rounded-xl overflow-hidden">
-            <div class="px-4 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite flex items-center justify-between">
-              <span>Stock por almacén</span>
-              <span class="text-stock">● Total: 70 uds</span>
-            </div>
-            <div class="divide-y divide-line">
-              <div class="flex items-center justify-between px-4 py-3 text-sm">
-                <div>
-                  <div class="font-medium">Jaén · Las Lagunillas</div>
-                  <div class="text-xs text-graphite font-mono">Sede central</div>
-                </div>
-                <div class="font-mono"><span class="text-stock font-medium">47 uds</span></div>
-              </div>
-              <div class="flex items-center justify-between px-4 py-3 text-sm">
-                <div>
-                  <div class="font-medium">Madrid · Coslada</div>
-                  <div class="text-xs text-graphite font-mono">Almacén norte</div>
-                </div>
-                <div class="font-mono"><span class="text-stock font-medium">23 uds</span></div>
-              </div>
-              <div class="flex items-center justify-between px-4 py-3 text-sm bg-paper/50">
-                <div class="text-xs text-graphite">Próxima reposición prevista</div>
-                <div class="font-mono text-xs">+200 uds · 28-04-2026</div>
-              </div>
-            </div>
-          </div>
+          <!-- STOCK PRO POR ALMACÉN: dinámico (split del stock total entre 2-3 almacenes). -->
+          <div class="view-pro bg-white border border-line rounded-xl overflow-hidden" data-glx-warehouses hidden></div>
 
           <!-- CANTIDAD + CTAs -->
           <div class="flex gap-3 items-stretch">
@@ -363,8 +312,8 @@
     <div class="flex gap-8 border-b border-line mb-10 overflow-x-auto" role="tablist">
       <button class="tab-btn is-active whitespace-nowrap" data-tab="desc">Descripción</button>
       <button class="tab-btn whitespace-nowrap" data-tab="spec">Especificaciones técnicas</button>
-      <button class="tab-btn whitespace-nowrap" data-tab="rev">Reseñas <span class="font-mono text-xs text-graphite">(142)</span></button>
-      <button class="tab-btn whitespace-nowrap" data-tab="qa">Preguntas y respuestas <span class="font-mono text-xs text-graphite">(8)</span></button>
+      <button class="tab-btn whitespace-nowrap" data-tab="rev">Reseñas <span class="font-mono text-xs text-graphite" data-glx-rev-count>(0)</span></button>
+      <button class="tab-btn whitespace-nowrap" data-tab="qa">Preguntas y respuestas <span class="font-mono text-xs text-graphite" data-glx-qa-count>(0)</span></button>
     </div>
 
     <!-- Tab panes -->
@@ -472,30 +421,8 @@
         </div>
       </div>
 
-      <!-- PREGUNTAS Y RESPUESTAS -->
-      <div class="tab-pane lg:col-span-12 space-y-3 max-w-3xl" data-pane="qa">
-        <details class="bg-paper-2 border border-line rounded-xl p-5 group open:border-ink">
-          <summary class="flex items-start justify-between gap-4 cursor-pointer list-none">
-            <h4 class="font-medium">¿Incluye el marco?</h4>
-            <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
-          </summary>
-          <p class="text-graphite text-sm mt-3">No, este producto es solo el mecanismo del interruptor. El marco se vende aparte para que puedas elegir el acabado (blanco alpino, marfil, aluminio, etc.) que mejor encaje con tu vivienda.</p>
-        </details>
-        <details class="bg-paper-2 border border-line rounded-xl p-5 group open:border-ink">
-          <summary class="flex items-start justify-between gap-4 cursor-pointer list-none">
-            <h4 class="font-medium">¿Vale para sustituir un mecanismo de Niessen u otra marca?</h4>
-            <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
-          </summary>
-          <p class="text-graphite text-sm mt-3">El mecanismo encaja en cualquier caja universal estándar de 60 mm. Pero el marco que tengas ahora (de Niessen, BJC u otra marca) NO es compatible con este interruptor: tendrás que cambiar también el marco a uno de la gama Simón 27.</p>
-        </details>
-        <details class="bg-paper-2 border border-line rounded-xl p-5 group open:border-ink">
-          <summary class="flex items-start justify-between gap-4 cursor-pointer list-none">
-            <h4 class="font-medium">¿Sirve para zonas húmedas como un baño?</h4>
-            <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
-          </summary>
-          <p class="text-graphite text-sm mt-3">Tiene IP20, así que vale para baño SIEMPRE QUE estés fuera del volumen de protección de la ducha o bañera. Para zonas con agua directa necesitas un mecanismo estanco IP44 o IP55.</p>
-        </details>
-      </div>
+      <!-- PREGUNTAS Y RESPUESTAS: generadas dinámicamente según categoría y specs del producto. -->
+      <div class="tab-pane lg:col-span-12 space-y-3 max-w-3xl" data-pane="qa" data-glx-qa></div>
 
     </div>
   </section>
@@ -511,51 +438,9 @@
         <a href="/pages/tienda/mecanismos.html" class="link-underline text-sm">Ver toda la gama Simón 27</a>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <a href="/pages/tienda/producto.html" class="card-prod group">
-          <div class="img grid place-items-center text-graphite/30">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-          </div>
-          <div>
-            <div class="text-[11px] font-mono text-graphite">Simón · gama 27</div>
-            <h3 class="text-[14px] font-medium leading-snug">Marco 1 elemento blanco</h3>
-            <div class="font-mono text-[11px] text-graphite/70">SKU 27610-31</div>
-          </div>
-          <div class="font-serif text-lg font-medium">2,40 €</div>
-        </a>
-        <a href="/pages/tienda/producto.html" class="card-prod group">
-          <div class="img grid place-items-center text-graphite/30">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="6" y="3" width="12" height="18" rx="1"/></svg>
-          </div>
-          <div>
-            <div class="text-[11px] font-mono text-graphite">Solera</div>
-            <h3 class="text-[14px] font-medium leading-snug">Caja universal empotrar 60mm</h3>
-            <div class="font-mono text-[11px] text-graphite/70">SKU SOL-CU60</div>
-          </div>
-          <div class="font-serif text-lg font-medium">0,90 €</div>
-        </a>
-        <a href="/pages/tienda/producto.html" class="card-prod group">
-          <div class="img grid place-items-center text-graphite/30">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L8 6v6l4 4 4-4V6z"/></svg>
-          </div>
-          <div>
-            <div class="text-[11px] font-mono text-graphite">Wiha</div>
-            <h3 class="text-[14px] font-medium leading-snug">Destornillador aislado 1000V 3mm</h3>
-            <div class="font-mono text-[11px] text-graphite/70">SKU WH-DA-3</div>
-          </div>
-          <div class="font-serif text-lg font-medium">8,40 €</div>
-        </a>
-        <a href="/pages/tienda/producto.html" class="card-prod group">
-          <div class="img grid place-items-center text-graphite/30">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-          </div>
-          <div>
-            <div class="text-[11px] font-mono text-graphite">Uni-T</div>
-            <h3 class="text-[14px] font-medium leading-snug">Polímetro digital A03 básico</h3>
-            <div class="font-mono text-[11px] text-graphite/70">SKU UNI-T-A03</div>
-          </div>
-          <div class="font-serif text-lg font-medium">14,90 €</div>
-        </a>
+      <!-- Productos relacionados (misma categoría/marca): renderizado dinámicamente. -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" data-glx-related>
+        <div class="col-span-full text-sm text-graphite text-center py-6">Cargando productos relacionados…</div>
       </div>
     </div>
   </section>
@@ -590,17 +475,32 @@
     // ===== DUAL VIEW TOGGLE =====
     const viewBtns = document.querySelectorAll('[data-view]');
     const viewLabel = document.querySelector('[data-view-label]');
-    viewBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const view = btn.dataset.view;
-        document.body.dataset.activeView = view;
-        viewBtns.forEach(b => b.classList.toggle('is-active', b.dataset.view === view));
-        if (viewLabel) viewLabel.textContent = view === 'pro'
-          ? 'vista profesional (técnica, con SKU y descargas)'
-          : 'vista para particular (no técnica)';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    function setActiveView(view, { scroll = true, updateUrl = false } = {}) {
+      const target = view === 'pro' ? 'pro' : 'particular';
+      document.body.dataset.activeView = target;
+      viewBtns.forEach(b => {
+        const match = b.dataset.view === target;
+        b.classList.toggle('is-active', match);
+        b.setAttribute('aria-selected', match ? 'true' : 'false');
       });
+      if (viewLabel) viewLabel.textContent = target === 'pro'
+        ? 'vista profesional (técnica, con SKU y descargas)'
+        : 'vista para particular (no técnica)';
+      if (updateUrl) {
+        const url = new URL(location.href);
+        if (target === 'pro') url.searchParams.set('view', 'pro');
+        else url.searchParams.delete('view');
+        history.replaceState(null, '', url);
+      }
+      if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', () => setActiveView(btn.dataset.view, { updateUrl: true }));
     });
+    // Si llegamos con ?view=pro (por ejemplo, desde la ficha técnica), abrimos
+    // ya en vista profesional sin necesidad de pulsar el toggle.
+    const initialView = new URLSearchParams(location.search).get('view');
+    if (initialView === 'pro') setActiveView('pro', { scroll: false });
 
     // ===== TABS =====
     const tabBtns = document.querySelectorAll('.tab-btn');

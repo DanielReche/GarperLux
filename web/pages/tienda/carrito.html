@@ -25,7 +25,7 @@
 
 <body class="bg-paper text-ink">
 
-  <div class="bg-ink text-paper text-[12.5px]"><div class="container-x flex items-center justify-between py-2"><span class="opacity-90 hidden sm:inline">Envíos gratis desde 75 € · Devoluciones 30 días</span><a href="/pages/auth/login.html" class="link-underline opacity-90">¿Eres instalador Accede para tarifa pro</a>?</div></div>
+  <div class="bg-ink text-paper text-[12.5px]"><div class="container-x flex items-center justify-between py-2"><span class="opacity-90 hidden sm:inline">Envíos gratis desde 75 € · Devoluciones 30 días</span><a href="/pages/auth/login.html" class="link-underline opacity-90">¿Eres instalador? Accede para tarifa pro</a></div></div>
   <div data-component="site-header"></div>
 
   <!-- BREADCRUMBS -->
@@ -108,66 +108,14 @@
           </div>
         </div>
 
-        <!-- Productos relacionados -->
-        <div class="mt-12">
+        <!-- Productos relacionados — recomendaciones reales del catálogo
+             según TODOS los productos de la cesta (motor en cart-recos.js). -->
+        <div class="mt-12" data-glx-cart-recos hidden>
           <div class="flex items-end justify-between mb-5">
             <h2 class="font-serif text-2xl font-medium">Te puede interesar</h2>
             <a href="/pages/tienda/tienda.html" class="text-sm text-copper hover:underline">Ver más →</a>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-              </div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Simón · 27</div>
-                <h3 class="text-[14px] font-medium leading-snug">Marco 1 elemento blanco</h3>
-              </div>
-              <div class="flex items-center justify-between mt-1">
-                <div class="font-serif text-lg font-medium">2,40 €</div>
-                <button class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
-              </div>
-            </a>
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="6" y="3" width="12" height="18" rx="1"/></svg>
-              </div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Solera</div>
-                <h3 class="text-[14px] font-medium leading-snug">Caja universal 60mm</h3>
-              </div>
-              <div class="flex items-center justify-between mt-1">
-                <div class="font-serif text-lg font-medium">0,90 €</div>
-                <button class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
-              </div>
-            </a>
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/><path d="M2 12h20"/></svg>
-              </div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">3M</div>
-                <h3 class="text-[14px] font-medium leading-snug">Cinta aislante 10m</h3>
-              </div>
-              <div class="flex items-center justify-between mt-1">
-                <div class="font-serif text-lg font-medium">2,15 €</div>
-                <button class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
-              </div>
-            </a>
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 21l1.5-7L20 4l-7 16-2.5-7L3 11"/></svg>
-              </div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Wago</div>
-                <h3 class="text-[14px] font-medium leading-snug">Clema 222 3 hilos (50 uds)</h3>
-              </div>
-              <div class="flex items-center justify-between mt-1">
-                <div class="font-serif text-lg font-medium">12,40 €</div>
-                <button class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
-              </div>
-            </a>
-          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4" data-glx-cart-recos-grid></div>
         </div>
       </div>
 

@@ -5,6 +5,47 @@ function parseJson(value, fallback) {
   try { return JSON.parse(value); } catch { return fallback; }
 }
 
+// Normaliza el nombre de marca a Title Case ("Inspire", "Schneider Electric").
+// Hay marcas con una grafía registrada que conservamos tal cual ("TP-Link",
+// "GarperLux", "EZVIZ"...). El scraper guarda los nombres en mayúsculas o
+// minúsculas según la fuente; aquí se unifican antes de salir al cliente.
+const BRAND_DISPLAY_OVERRIDES = {
+  'tp-link': 'TP-Link',
+  'garperlux': 'GarperLux',
+  'bticino': 'BTicino',
+  'ezviz': 'EZVIZ',
+  'imou': 'IMOU',
+  'eufy': 'eufy',
+  'abb': 'ABB',
+  'bjc': 'BJC',
+  'dio': 'DIO',
+  'ksix': 'Ksix',
+  'sonoff': 'Sonoff',
+  'siemens': 'Siemens',
+  'mercusys': 'Mercusys',
+  'philips': 'Philips',
+  'tegui': 'Tegui',
+  'nice': 'Nice',
+  'erreka': 'Erreka',
+  'pujol muntala': 'Pujol Muntalá',
+  'pujol muntalá': 'Pujol Muntalá',
+};
+function titleCaseBrand(name) {
+  if (!name) return name;
+  const trimmed = String(name).trim();
+  const key = trimmed.toLowerCase();
+  if (BRAND_DISPLAY_OVERRIDES[key]) return BRAND_DISPLAY_OVERRIDES[key];
+  // Capitaliza palabra a palabra preservando guiones (TP-Link → TP-Link).
+  return trimmed
+    .toLowerCase()
+    .split(/(\s+|-)/)
+    .map((part) => {
+      if (!part || /^\s+$/.test(part) || part === '-') return part;
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    })
+    .join('');
+}
+
 function productDto(row) {
   return {
     id: row.id,
@@ -12,7 +53,14 @@ function productDto(row) {
     name: row.name,
     slug: row.slug,
     category: { id: row.category_id, slug: row.category_slug, name: row.category_name },
-    brand: { id: row.brand_id, slug: row.brand_slug, name: row.brand_name },
+    brand: {
+      id: row.brand_id,
+      slug: row.brand_slug,
+      name: titleCaseBrand(row.brand_name),
+      // Lo exponemos al cliente porque la ficha del producto lo usa para decidir
+      // si añade la tarjeta "Declaración CE" en la vista pro.
+      isOfficial: Boolean(row.brand_is_official),
+    },
     price: row.price,
     taxRate: row.tax_rate,
     stock: row.stock,
@@ -39,7 +87,8 @@ function variantDto(row) {
 function productSelect() {
   return `
     SELECT products.*, categories.slug AS category_slug, categories.name AS category_name,
-           brands.slug AS brand_slug, brands.name AS brand_name
+           brands.slug AS brand_slug, brands.name AS brand_name,
+           brands.is_official AS brand_is_official
     FROM products
     JOIN categories ON categories.id = products.category_id
     JOIN brands ON brands.id = products.brand_id
@@ -57,7 +106,7 @@ function registerCatalogRoutes(router) {
     return ok(res, rows.map((brand) => ({
       id: brand.id,
       slug: brand.slug,
-      name: brand.name,
+      name: titleCaseBrand(brand.name),
       professional: Boolean(brand.professional),
       isOfficial: Boolean(brand.is_official),
       logo: brand.logo || null,

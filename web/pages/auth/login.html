@@ -59,6 +59,28 @@
 
     /* Filamento orgánico decorativo */
     .organic-glow { background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,200,120,0.6) 0%, rgba(232,165,69,0.2) 30%, transparent 70%); filter: blur(40px); }
+
+    /* Aside izquierdo: capa rica de gradientes + textura sutil de puntos para
+       que no se confunda con el bloque uniforme del footer ni con el modal del
+       formulario. */
+    .auth-aside-bg {
+      background:
+        radial-gradient(ellipse 80% 60% at 100% 0%, rgba(232,165,69,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 90% 70% at 0% 100%, rgba(184,117,58,0.12) 0%, transparent 60%),
+        linear-gradient(160deg, #0B0D12 0%, #1C1F26 100%);
+    }
+    .auth-aside-grain {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(247,243,236,0.05) 1px, transparent 0),
+        radial-gradient(circle at 12px 12px, rgba(232,165,69,0.04) 1px, transparent 0);
+      background-size: 24px 24px, 24px 24px;
+      opacity: 0.55;
+    }
+    .auth-aside-line {
+      position: absolute; left: 2.5rem; right: 2.5rem; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(232,165,69,0.45) 30%, rgba(232,165,69,0.45) 70%, transparent 100%);
+    }
   </style>
 </head>
 
@@ -68,88 +90,103 @@
     <div class="grid lg:grid-cols-2 flex-1">
 
     <!-- ============ PANEL IZQUIERDO: BRANDING ============ -->
-    <aside class="hidden lg:flex relative bg-ink text-paper overflow-hidden flex-col">
-      <!-- Glow decorativo -->
+    <aside class="hidden lg:flex relative auth-aside-bg text-paper overflow-hidden flex-col">
+      <!-- Capa de textura sutil para que el negro no parezca un bloque plano -->
+      <div class="auth-aside-grain"></div>
+      <!-- Glow decorativo (orgánico, simulando el filamento de una bombilla) -->
       <div class="absolute -top-40 -left-40 w-[600px] h-[600px] organic-glow opacity-70"></div>
       <div class="absolute bottom-1/4 -right-40 w-[500px] h-[500px] organic-glow opacity-40"></div>
 
-      <!-- Top: logo -->
-      <div class="relative p-10">
-        <a href="/index.html" class="inline-flex items-center text-sm text-paper/70 hover:text-paper gap-2 mb-12">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Volver al inicio
+      <!-- Top: botón "Volver atrás" llamativo + logo -->
+      <div class="relative p-8 flex items-center justify-between">
+        <a href="/index.html" data-glx-back class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-filament text-ink text-sm font-medium hover:bg-filament-glow transition-colors shadow-[0_4px_14px_-4px_rgba(232,165,69,0.5)]">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Volver atrás
         </a>
-        <img src="/assets/img/logo.png" alt="GarperLux" class="h-10 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
+        <img src="/assets/img/logo.png" alt="GarperLux" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
       </div>
 
-      <!-- Frase y manifiesto -->
-      <div class="relative px-10 flex-1 flex flex-col justify-center">
-        <div class="eyebrow text-filament mb-5 flex items-center gap-3">
-          <span class="w-8 h-px bg-filament"></span>
+      <!-- Frase y manifiesto (más compacto: cabe sin scroll en 800px de alto) -->
+      <div class="relative px-8 flex-1 flex flex-col justify-center">
+        <div class="eyebrow text-filament mb-3 flex items-center gap-3">
+          <span class="w-6 h-px bg-filament"></span>
           Tu área personal
         </div>
-        <h1 class="font-serif font-medium leading-[0.96] tracking-[-0.02em] mb-7" style="font-size: clamp(2.5rem, 5vw, 4.25rem);">
+        <h1 class="font-serif font-medium leading-[0.96] tracking-[-0.02em] mb-4" style="font-size: clamp(2rem, 4.2vw, 3.4rem);">
           Aprende, compra<br/>
           y <em class="italic text-filament">repite pedido</em><br/>
           en dos clics.
         </h1>
-        <p class="text-paper/70 leading-relaxed max-w-md mb-10">
-          Una cuenta para guardar tutoriales, ver el estado de tus pedidos y solicitudes, y, si eres instalador autorizado, acceder a tarifas profesionales y a la descarga de albaranes y facturas.
+        <p class="text-paper/70 leading-relaxed max-w-md mb-6 text-[14px]">
+          Una cuenta para guardar tutoriales, ver el estado de tus pedidos y, si eres instalador autorizado, acceder a tarifas profesionales y descarga de albaranes.
         </p>
 
-        <!-- Mini-features -->
-        <div class="space-y-3.5">
-          <div class="flex items-center gap-3 text-sm">
-            <span class="w-7 h-7 rounded-full bg-white/5 grid place-items-center text-filament">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        <!-- Mini-features — más densas y sin tarjetas para reducir altura -->
+        <ul class="space-y-2 max-w-md text-[13.5px]">
+          <li class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-filament/20 grid place-items-center text-filament shrink-0">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
             </span>
             Guarda tutoriales y proyectos para luego
-          </div>
-          <div class="flex items-center gap-3 text-sm">
-            <span class="w-7 h-7 rounded-full bg-white/5 grid place-items-center text-filament">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-filament/20 grid place-items-center text-filament shrink-0">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
             </span>
             Sigue el estado de tus pedidos y solicitudes
-          </div>
-          <div class="flex items-center gap-3 text-sm">
-            <span class="w-7 h-7 rounded-full bg-white/5 grid place-items-center text-filament">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-filament/20 grid place-items-center text-filament shrink-0">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
             </span>
             Repite compra de tus favoritos en un solo clic
-          </div>
-          <div class="flex items-center gap-3 text-sm">
-            <span class="w-7 h-7 rounded-full bg-white/5 grid place-items-center text-filament">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-filament/20 grid place-items-center text-filament shrink-0">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
             </span>
             <span>Si eres instalador: <strong class="text-paper">tarifa pro y albaranes descargables</strong></span>
-          </div>
-        </div>
+          </li>
+        </ul>
       </div>
 
-      <!-- Testimonio -->
-      <div class="relative p-10 border-t border-white/10">
-        <blockquote class="font-serif italic text-xl leading-snug mb-3">
+      <!-- Testimonio compacto al pie -->
+      <div class="relative px-8 py-6">
+        <div class="auth-aside-line" style="top: 0;"></div>
+        <blockquote class="font-serif italic text-[15px] leading-snug max-w-md text-paper/85">
           "Por fin una web que no me cambia los albaranes de sitio cada mes."
         </blockquote>
+        <div class="mt-2 flex items-center gap-3 text-[11px] font-mono text-paper/55">
+          <span class="w-6 h-px bg-paper/30"></span>
+          José Luis · 23 años de instalador en Jaén
+        </div>
       </div>
     </aside>
 
     <!-- ============ PANEL DERECHO: FORMS ============ -->
-    <main class="flex flex-col">
+    <!-- Cada panel scrollea por dentro en desktop: si el form de "Crear
+         cuenta" es más alto que el viewport (caso típico con todos los
+         campos visibles), el aside izquierdo se queda fijo y solo se mueve
+         este panel. Sin esto, el documento entero crecía y la cabecera del
+         aside dejaba de verse. -->
+    <main class="flex flex-col lg:h-screen lg:overflow-y-auto">
       <!-- Top mobile bar -->
       <div class="lg:hidden bg-ink text-paper p-5 flex items-center justify-between">
-        <a href="/index.html" class="inline-flex items-center text-sm gap-2">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Volver
+        <a href="/index.html" data-glx-back class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-filament text-ink text-sm font-medium">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Volver atrás
         </a>
         <img src="/assets/img/logo.png" alt="GarperLux" class="h-7 w-auto" style="filter: invert(1) hue-rotate(180deg);"/>
       </div>
 
-      <div class="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-14">
+      <!-- items-center solo cuando el form cabe; si crece, items-start
+           para que no se corte la cabecera. La barra de tabs queda
+           pegada al inicio del scroll (sticky) para que no se pierda. -->
+      <div class="flex-1 flex items-start lg:items-center justify-center px-6 sm:px-8 lg:px-10 py-6 lg:py-8">
         <div class="w-full max-w-md">
 
           <!-- Tabs principales -->
-          <div class="flex border-b border-line mb-8">
+          <div class="flex border-b border-line mb-6">
             <button class="auth-tab is-active" data-tab="login">Iniciar sesión</button>
             <button class="auth-tab" data-tab="register">Crear cuenta</button>
           </div>
@@ -394,13 +431,26 @@
       </div>
     </main>
     </div>
-
-    <div data-component="site-footer"></div>
+    <!-- En las páginas de auth NO renderizamos el footer global: el aside
+         oscuro de la izquierda ya cumple ese papel visualmente y un footer
+         negro inmediatamente debajo se fundía con él. -->
   </div>
 
   <script src="/assets/js/auth.js"></script>
   <script src="/data/api.js"></script>
   <script>
+    // Botón "Volver atrás": vuelve a la página anterior si la hay; si no
+    // (entrada directa al login), cae al href estático de respaldo.
+    document.querySelectorAll('[data-glx-back]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        if (document.referrer && document.referrer.startsWith(location.origin)) {
+          e.preventDefault();
+          history.back();
+        }
+        // si no hay referrer interno, deja que siga al href (/index.html)
+      });
+    });
+
     // Tabs login/register
     const tabs = document.querySelectorAll('.auth-tab');
     const panes = document.querySelectorAll('.auth-pane');

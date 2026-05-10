@@ -34,7 +34,7 @@
     /* Color swatches */
     .swatch { width: 22px; height: 22px; border-radius: 999px; border: 1.5px solid var(--line); cursor: pointer; position: relative; transition: transform .15s; }
     .swatch:hover { transform: scale(1.1); }
-    .swatch.is-active { border-color: var(--ink); border-width: 2px; }
+    .swatch.is-active { border-color: var(--ink); border-width: 2px; box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--filament); transform: scale(1.1); }
     .swatch.is-active::after { content: ''; position: absolute; inset: -4px; border: 1px solid var(--filament); border-radius: 999px; }
   </style>
 </head>
@@ -44,7 +44,7 @@
   <!-- TOP BAR + HEADER (compacto) -->
   <div class="bg-ink text-paper text-[12.5px]">
     <div class="container-x flex items-center justify-between py-2">
-      <span class="opacity-90 hidden sm:inline">12.480 referencias · stock verificado</span>
+      <span class="opacity-90 hidden sm:inline"><span data-glx-stat-references-inline>—</span> referencias · stock verificado</span>
       <a href="/pages/auth/login.html" class="link-underline opacity-90">Tarifas profesionales</a>
     </div>
   </div>
@@ -97,9 +97,9 @@
 
           <!-- Buscador por referencia -->
           <div class="bg-white border border-line rounded-xl p-4">
-            <label class="font-mono text-[11px] text-graphite uppercase tracking-wider mb-2 block">Buscar por referencia / SKU</label>
+            <label class="font-mono text-[11px] text-graphite uppercase tracking-wider mb-2 block">Buscar en esta categoría</label>
             <div class="relative">
-              <input type="search" placeholder="Ej: 27101-31" class="w-full pl-9 pr-3 py-2.5 bg-paper border border-line rounded-lg text-sm font-mono placeholder:text-graphite/50 focus:border-ink outline-none" />
+              <input type="search" placeholder="Nombre, marca, SKU o &quot;rosca gorda&quot;…" class="w-full pl-9 pr-3 py-2.5 bg-paper border border-line rounded-lg text-sm font-mono placeholder:text-graphite/50 focus:border-ink outline-none" />
               <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
             </div>
           </div>
@@ -549,6 +549,7 @@
 
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
+  <script src="/assets/js/search-engine.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>

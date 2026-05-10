@@ -343,24 +343,30 @@
   function addProductToLocalCart(button) {
     const quantity = Math.max(1, Number(document.querySelector('input[type="number"]')?.value || 1));
     const sku = button.dataset.sku || '27101-31-10';
-    const carts = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
-    const existing = carts.find((item) => item.sku === sku);
-    if (existing) existing.quantity += quantity;
-    else {
-      const title = document.querySelector('h1')?.textContent?.trim() || 'Producto GarperLux';
-      carts.push({
-        sku,
-        title,
-        quantity,
+    const title = document.querySelector('h1')?.textContent?.trim() || 'Producto GarperLux';
+    const priceMatch = (document.querySelector('[data-glx-price]')?.textContent || document.querySelector('.font-serif')?.textContent || '').match(/(\d+[.,]\d+)\s*€/);
+    const price = priceMatch ? Number(priceMatch[1].replace(',', '.')) : 0;
+    const image = document.querySelector('[data-glx-main-image] img')?.src;
+    const brand = document.querySelector('[data-glx-brand-link]')?.textContent?.trim();
+
+    // Único punto de escritura: el módulo `GarperLuxCart` ya replica al
+    // servidor si hay sesión y dispara los eventos para refrescar todas
+    // las vistas (drawer, header badge, carrito.html...).
+    if (window.GarperLuxCart) {
+      window.GarperLuxCart.addItem({
+        sku, title, price, image, brand,
         options: { acabado: productState.acabado, amperaje: productState.amperaje },
-        addedAt: new Date().toISOString(),
-      });
+      }, quantity);
     }
-    localStorage.setItem('garperlux_cart_items', JSON.stringify(carts));
-    const total = carts.reduce((sum, item) => sum + item.quantity, 0);
-    localStorage.setItem('garperlux_cart_count', String(total));
-    document.querySelectorAll('[data-cart-count]').forEach((node) => { node.textContent = total; });
-    toast(`${quantity} ud. añadida al carrito: ${productState.acabado}, ${productState.amperaje}.`);
+
+    if (window.GarperLuxCartDrawer && window.GarperLuxApi) {
+      window.GarperLuxApi.product(sku).then((product) => {
+        const info = product || { sku, name: title, price, image, brand: { name: brand || '—' } };
+        window.GarperLuxCartDrawer.open(info, quantity);
+      }).catch(() => window.GarperLuxCartDrawer.open({ sku, name: title, price, image, brand: { name: brand } }, quantity));
+    } else {
+      toast(`${quantity} ud. añadida al carrito.`);
+    }
   }
 
   function bindProductOptions() {

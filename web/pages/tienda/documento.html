@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="/.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ficha técnica · GarperLux</title>
+
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png?v=2" />
+  <meta name="description" content="Ficha técnica del producto generada por GarperLux a partir de la información del catálogo." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+
+  <style>
+    body { background: #E4DCCA; font-family: 'Inter', sans-serif; padding-bottom: 64px; }
+
+    /* Toolbar superior fija — coherente con la cabecera del sitio */
+    .doc-toolbar {
+      position: sticky; top: 0; z-index: 10;
+      background: #0B0D12; color: #F7F3EC;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .doc-toolbar-inner {
+      max-width: 880px; margin: 0 auto;
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 24px;
+    }
+    .doc-toolbar .doc-crumb {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      color: rgba(247,243,236,0.6); letter-spacing: 0.04em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .doc-toolbar .toolbar-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 18px; border-radius: 999px; font-size: 13px; font-weight: 500;
+      transition: background .2s, color .2s, transform .12s;
+      cursor: pointer; user-select: none;
+    }
+    .doc-toolbar .toolbar-btn.btn-ghost { color: #F7F3EC; background: rgba(247,243,236,0.08); }
+    .doc-toolbar .toolbar-btn.btn-ghost:hover { background: rgba(247,243,236,0.14); }
+    .doc-toolbar .toolbar-btn.btn-primary { color: #0B0D12; background: #E8A545; }
+    .doc-toolbar .toolbar-btn.btn-primary:hover { background: #FFC878; transform: translateY(-1px); }
+
+    /* Documento — hoja A4 simulada */
+    .doc-page {
+      background: #FFFFFF;
+      max-width: 880px;
+      margin: 32px auto 0;
+      box-shadow: 0 30px 60px -28px rgba(11,13,18,0.32),
+                  0 12px 24px -10px rgba(11,13,18,0.18);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .doc-page::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+      background: linear-gradient(180deg, #E8A545 0%, #B8753A 100%);
+    }
+    .doc-content { padding: 56px 64px 56px 72px; }
+
+    .doc-eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      color: #B8753A; letter-spacing: 0.18em; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .doc-h1 {
+      font-family: 'Fraunces', serif; font-weight: 500;
+      font-size: clamp(26px, 3.2vw, 36px); line-height: 1.1;
+      letter-spacing: -0.01em; color: #0B0D12;
+    }
+    .doc-lead {
+      color: #40454F; font-size: 15px; line-height: 1.55; margin-top: 14px;
+      max-width: 580px;
+    }
+    .doc-h2 {
+      font-family: 'Fraunces', serif; font-weight: 500; font-size: 19px;
+      color: #0B0D12;
+      margin-top: 32px; margin-bottom: 14px; padding-bottom: 8px;
+      border-bottom: 2px solid #E5DED0;
+    }
+    .doc-table { width: 100%; font-size: 13.5px; border-collapse: collapse; }
+    .doc-table tr td {
+      padding: 9px 0; border-bottom: 1px dotted #E5DED0; vertical-align: top;
+    }
+    .doc-table tr:last-child td { border-bottom: none; }
+    .doc-table tr td:first-child { width: 44%; color: #40454F; padding-right: 16px; }
+    .doc-table tr td:last-child {
+      font-family: 'JetBrains Mono', monospace; color: #0B0D12; font-weight: 500;
+    }
+
+    .id-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px;
+      margin-top: 8px;
+    }
+    .id-item {
+      display: flex; flex-direction: column; gap: 4px;
+      padding: 14px 16px; background: #F7F3EC; border-radius: 8px;
+      border-left: 3px solid #E8A545;
+    }
+    .id-item .lbl {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.12em; text-transform: uppercase; color: #40454F;
+    }
+    .id-item .val {
+      font-size: 15px; font-weight: 500; color: #0B0D12;
+      word-break: break-word;
+    }
+
+    .doc-header {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 32px; align-items: start;
+      padding-bottom: 28px; margin-bottom: 8px;
+      border-bottom: 2px solid #E5DED0;
+    }
+    .doc-issuer {
+      text-align: right; min-width: 180px;
+    }
+    .doc-issuer img { display: inline-block; height: 36px; width: auto; }
+    .doc-issuer-meta {
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      color: #40454F; line-height: 1.55; margin-top: 6px;
+    }
+
+    .doc-footer {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 32px; align-items: end;
+      margin-top: 56px; padding-top: 22px; border-top: 1px solid #E5DED0;
+    }
+    .doc-footer-text { color: #40454F; font-size: 12.5px; line-height: 1.55; max-width: 480px; }
+    .doc-footer-text strong { color: #0B0D12; display: block; margin-bottom: 3px; }
+    .doc-footer-meta { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #40454F; }
+    .doc-footer-meta .ref { color: #0B0D12; font-size: 13px; }
+
+    @media (max-width: 720px) {
+      .doc-toolbar-inner { padding: 12px 16px; gap: 10px; }
+      .doc-toolbar .doc-crumb { display: none; }
+      .doc-content { padding: 32px 24px 32px 28px; }
+      .id-grid { grid-template-columns: 1fr; gap: 12px; }
+      .doc-header { grid-template-columns: 1fr; }
+      .doc-issuer { text-align: left; }
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .doc-toolbar { display: none !important; }
+      .doc-page { box-shadow: none; margin: 0; max-width: 100%; border-radius: 0; }
+      .doc-page::before { display: none; }
+      .doc-content { padding: 24px; }
+      .id-item { background: #FAFAFA; }
+    }
+  </style>
+</head>
+<body class="text-ink">
+
+  <!-- Toolbar única: vuelve al producto y permite imprimir/guardar como PDF -->
+  <div class="doc-toolbar">
+    <div class="doc-toolbar-inner">
+      <a class="toolbar-btn btn-primary" href="#" data-doc-product-link aria-label="Volver al producto">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver al producto
+      </a>
+      <span class="doc-crumb" data-doc-breadcrumb>—</span>
+      <button type="button" class="toolbar-btn btn-ghost ml-auto" onclick="window.print()" aria-label="Imprimir o guardar como PDF">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Imprimir / Guardar PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- Documento -->
+  <article class="doc-page">
+    <div class="doc-content" data-doc-root>
+      <header class="doc-header">
+        <div>
+          <div class="doc-eyebrow" data-doc-type-label>FICHA TÉCNICA · DATASHEET</div>
+          <h1 class="doc-h1" data-doc-title>—</h1>
+          <p class="doc-lead" data-doc-subtitle>—</p>
+        </div>
+        <div class="doc-issuer">
+          <img src="/assets/img/logo.png" alt="GarperLux"/>
+          <div class="doc-issuer-meta">
+            GarperLux Material Eléctrico, S.L.<br/>
+            Polígono Los Olivares · Jaén<br/>
+            B-12345678 · garperlux.es
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <h2 class="doc-h2">Identificación del producto</h2>
+        <div class="id-grid" data-doc-id-grid></div>
+      </section>
+
+      <section>
+        <h2 class="doc-h2">Especificaciones técnicas</h2>
+        <table class="doc-table">
+          <tbody data-doc-spec-rows></tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2 class="doc-h2">Información comercial</h2>
+        <table class="doc-table" data-doc-commercial></table>
+      </section>
+
+      <section data-doc-notes></section>
+
+      <footer class="doc-footer">
+        <div class="doc-footer-text">
+          <strong>Validez del documento</strong>
+          Documento informativo generado por GarperLux a partir de los datos del proveedor.
+          Las características técnicas reflejan los valores publicados por el fabricante y
+          pueden estar sujetas a actualización por su parte. Para descargas oficiales,
+          consulta los enlaces a documentos del fabricante en la ficha del producto.
+        </div>
+        <div class="doc-footer-meta">
+          <div>Documento</div>
+          <div class="ref" data-doc-ref>—</div>
+          <div data-doc-date>—</div>
+        </div>
+      </footer>
+    </div>
+  </article>
+
+  <script src="/data/api.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      const params = new URLSearchParams(location.search);
+      const sku = params.get('sku') || '';
+
+      function escapeHtml(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+      function findSpec(specs, ...keys) {
+        if (!specs) return null;
+        const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+        for (const k of keys) {
+          const w = norm(k);
+          for (const [key, val] of Object.entries(specs)) {
+            const nk = norm(key);
+            if (nk === w || nk.includes(w)) return val;
+          }
+        }
+        return null;
+      }
+      function formatDate(d) {
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        return `${dd}/${mm}/${d.getFullYear()}`;
+      }
+      function money(value) {
+        return `${Number(value || 0).toFixed(2).replace('.', ',')} €`;
+      }
+      function specRow(label, value) {
+        return `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value)}</td></tr>`;
+      }
+
+      function fail(msg) {
+        document.querySelector('[data-doc-root]').innerHTML = `
+          <div class="text-center py-24">
+            <h1 class="doc-h1 mb-3">Documento no disponible</h1>
+            <p class="text-graphite">${escapeHtml(msg)}</p>
+            <a href="/pages/tienda/tienda.html" class="btn btn-primary mt-6 inline-flex">Volver a la tienda</a>
+          </div>
+        `;
+      }
+
+      if (!sku) { fail('Falta la referencia (SKU) del producto.'); return; }
+
+      const api = window.GarperLuxApi;
+      api.product(sku).then((product) => {
+        if (!product) { fail(`No se ha encontrado el producto ${sku}.`); return; }
+
+        document.title = `Ficha técnica · ${product.name} · GarperLux`;
+
+        // Volver al producto SIEMPRE en vista profesional, porque la ficha
+        // técnica solo es accesible desde el strip de documentos pro.
+        const productUrl = `/pages/tienda/producto.html?sku=${encodeURIComponent(product.sku)}&view=pro`;
+        document.querySelector('[data-doc-product-link]').setAttribute('href', productUrl);
+
+        // Cabecera
+        document.querySelector('[data-doc-title]').textContent = product.name;
+        document.querySelector('[data-doc-subtitle]').textContent = `Resumen técnico del producto a partir de la información declarada por el fabricante y verificada en el almacén GarperLux. Para el manual original del producto, consulta el documento del fabricante en la ficha de la tienda.`;
+        document.querySelector('[data-doc-ref]').textContent = `FT-${(product.sku || '').toUpperCase()}`;
+        document.querySelector('[data-doc-date]').textContent = `Emitido ${formatDate(new Date())}`;
+        const bcEl = document.querySelector('[data-doc-breadcrumb]');
+        if (bcEl) bcEl.textContent = `${product.brand?.name || '—'} · ${product.name}`;
+
+        // Identificación: tarjetas en grid, mucho más legibles que filas.
+        const idGrid = document.querySelector('[data-doc-id-grid]');
+        const idItems = [
+          ['Nombre comercial', product.name],
+          ['Referencia (SKU)', product.sku],
+          ['Marca', product.brand?.name || '—'],
+          ['Categoría', product.category?.name || '—'],
+        ];
+        const ean = findSpec(product.specs, 'ean', 'codigo barras', 'código barras');
+        if (ean) idItems.push(['EAN', String(ean)]);
+        const gama = findSpec(product.specs, 'gama', 'modelo comercial');
+        if (gama) idItems.push(['Gama / Modelo', String(gama)]);
+        idGrid.innerHTML = idItems.map(([k, v]) => `
+          <div class="id-item">
+            <span class="lbl">${escapeHtml(k)}</span>
+            <span class="val">${escapeHtml(v)}</span>
+          </div>
+        `).join('');
+
+        // Especificaciones técnicas
+        const specRows = document.querySelector('[data-doc-spec-rows]');
+        const SKIP = /^_|^marca( del producto)?$|^familia$|^subcategor[ií]a$|^ean$|^codigo barras$|^c[oó]digo de barras$|^gama$|^modelo comercial$/i;
+        const specEntries = Object.entries(product.specs || {}).filter(([k, v]) => {
+          if (SKIP.test(k.trim())) return false;
+          if (v == null) return false;
+          const s = String(v).trim();
+          return s && s !== '—' && s !== '-';
+        });
+        if (specEntries.length) {
+          specRows.innerHTML = specEntries.map(([k, v]) => specRow(k, String(v))).join('');
+        } else {
+          specRows.innerHTML = `<tr><td colspan="2" class="text-graphite text-sm py-3">Sin especificaciones detalladas disponibles en el catálogo.</td></tr>`;
+        }
+
+        // Información comercial
+        const commercial = document.querySelector('[data-doc-commercial]');
+        const stock = Number(product.stock || 0);
+        const stockTxt = stock > 0
+          ? `${stock} uds en almacén`
+          : 'Sin stock disponible';
+        commercial.innerHTML = `
+          ${specRow('PVP recomendado (con IVA)', money(product.price))}
+          ${specRow('Base imponible (sin IVA)', money(+(Number(product.price || 0) / 1.21).toFixed(2)))}
+          ${specRow('Disponibilidad', stockTxt)}
+          ${specRow('Plazo de envío estándar', '24–48 h laborables (Península)')}
+          ${specRow('Envío gratuito desde', '75,00 €')}
+          ${specRow('Devolución', '30 días desde la recepción del pedido')}
+        `;
+
+        // Notas (si hay descripción larga)
+        const notes = document.querySelector('[data-doc-notes]');
+        const desc = (product.description || '').trim();
+        if (desc) {
+          notes.innerHTML = `
+            <h2 class="doc-h2">Descripción</h2>
+            <p class="text-graphite text-sm leading-relaxed" style="white-space: pre-line">${escapeHtml(desc)}</p>
+          `;
+        }
+      }).catch((err) => {
+        fail(err.message || 'Error al cargar el producto.');
+      });
+    })();
+  </script>
+</body>
+</html>

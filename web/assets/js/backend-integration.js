@@ -88,21 +88,11 @@
   };
 
   async function refreshCartCount() {
-    if (!api.getToken()) return;
-    try {
-      const cart = await api.cart();
-      addCartBadge(cart.items.reduce((sum, item) => sum + item.quantity, 0));
-      // update header summary and aside totals
-      document.querySelectorAll('[data-cart-summary]').forEach((el) => {
-        el.textContent = `${cart.items.length} productos · listo para tramitar`;
-      });
-      document.querySelectorAll('[data-cart-items]').forEach((el) => el.dataset.rendered = '1');
-      // update summary block if present
-      document.querySelectorAll('[data-cart-subtotal]').forEach((el) => { el.textContent = money(cart.subtotal); });
-      document.querySelectorAll('[data-cart-total]').forEach((el) => { el.textContent = money(cart.total); });
-    } catch {
-      addCartBadge(Number(localStorage.getItem('garperlux_cart_count') || 0));
-    }
+    // Localmente siempre lo más fresco posible: el cart unificado lee de
+    // localStorage. Si después llega información del servidor con un total
+    // distinto, NO sobreescribimos el badge — local manda.
+    if (window.GarperLuxCart) { window.GarperLuxCart.refreshBadges(); return; }
+    addCartBadge(Number(localStorage.getItem('garperlux_cart_count') || 0));
   }
 
   const findSku = (root) => {
@@ -223,31 +213,45 @@
       event.preventDefault();
       event.stopPropagation();
       const sku = button.dataset.sku || findSku(button);
-      const qty = 1;
-      if (!api.getToken()) {
-        // anonymous: store in localStorage
-        const items = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
-        const existing = items.find((i) => i.sku === sku);
-        if (existing) existing.quantity = (existing.quantity || 0) + qty;
-        else items.push({ sku, quantity: qty, title: button.closest('.card-prod')?.querySelector('h3')?.textContent?.trim() || null });
-        localStorage.setItem('garperlux_cart_items', JSON.stringify(items));
-        const total = items.reduce((s, it) => s + (it.quantity || 0), 0);
-        localStorage.setItem('garperlux_cart_count', String(total));
-        addCartBadge(total);
-        toast('Producto añadido al carrito (local).');
-        // if on cart page, refresh
-        if (page === '/pages/tienda/carrito.html') location.reload();
-        return;
+      // Cantidad: si el botón está cerca de un input numérico (caso típico
+      // del detalle del producto, donde el cliente indica X uds), usamos
+      // ese valor. En tarjetas de listado / drawer no hay input → cae a 1.
+      const qtyInput = document.getElementById('qty-input')
+        || button.closest('section, article, div')?.querySelector('input[type="number"]')
+        || (page === '/pages/tienda/producto.html' ? document.querySelector('input[type="number"]') : null);
+      const qty = Math.max(1, Math.floor(Number(qtyInput?.value) || 1));
+      // Lectura del producto completo (con imagen, marca, precio) para que
+      // el carrito y el drawer no acaben con datos parciales.
+      let productInfo = null;
+      try { productInfo = await api.product(sku); } catch { /* ignore */ }
+      if (!productInfo) {
+        const card = button.closest('.card-prod');
+        productInfo = {
+          sku,
+          name: card?.querySelector('h3')?.textContent?.trim() || sku,
+          price: Number((card?.textContent || '').match(/(\d+[.,]\d+)\s*€/)?.[1].replace(',', '.')) || 0,
+          image: card?.querySelector('img')?.src || null,
+          brand: { name: card?.querySelector('.font-mono')?.textContent?.trim() || '—' },
+        };
       }
 
-      try {
-        const cart = await api.addToCart(sku, qty);
-        addCartBadge(cart.items.reduce((sum, item) => sum + item.quantity, 0));
-        toast('Producto añadido al carrito.');
-        if (page === '/pages/tienda/carrito.html') location.reload();
-      } catch (error) {
-        toast(error.message);
+      // Camino unificado: SIEMPRE escribimos en el cart local (verdad única).
+      // El módulo se encarga del sync best-effort al servidor cuando hay
+      // sesión iniciada — sin bloquear la UI ni depender del resultado.
+      if (window.GarperLuxCart) {
+        window.GarperLuxCart.addItem({
+          sku: productInfo.sku,
+          title: productInfo.name,
+          price: productInfo.price,
+          image: productInfo.image,
+          brand: productInfo.brand?.name || productInfo.brand,
+        }, qty);
       }
+      addCartBadge((window.GarperLuxCart?.getCount() ?? 0));
+
+      if (window.GarperLuxCartDrawer) window.GarperLuxCartDrawer.open(productInfo, qty);
+      else toast('Producto añadido al carrito.');
+      if (page === '/pages/tienda/carrito.html') location.reload();
     });
   }
 
@@ -313,6 +317,9 @@
     'negro': '#0B0D12',
     'rgb': 'linear-gradient(135deg,#FF4D4D,#4DFF88,#4D88FF)',
     'multicolor': 'linear-gradient(135deg,#FF4D4D,#FFC878,#16A34A,#1E3A8A)',
+    'amarillo/verde': 'linear-gradient(135deg,#FFC878 0%,#FFC878 50%,#16A34A 50%,#16A34A 100%)',
+    'marrón': '#7B5638', 'marron': '#7B5638', 'cafe': '#7B5638',
+    'transparente': 'repeating-linear-gradient(45deg,#F7F3EC 0,#F7F3EC 4px,#E5DED0 4px,#E5DED0 8px)',
   };
 
   function _resolveSwatch(value) {
@@ -324,6 +331,54 @@
       if (norm.includes(k)) return COLOR_PALETTE[k];
     }
     return null;
+  }
+
+  // ---- Extractor canónico de colores ---------------------------------------
+  // Reglas para mapear texto libre a una paleta cerrada. Cualquier facet de
+  // tipo "Acabado", "Color del aislante", "Color del monitor", etc. debería
+  // usar este extractor para evitar las inconsistencias del proveedor (a un
+  // mismo color le ponen distintas etiquetas según la ficha) y para repartir
+  // bien los productos entre las swatches que mostramos.
+  // Reglas en ORDEN DE PRIORIDAD: la primera que encaja es la única etiqueta
+  // que devolvemos para el producto. Las multi-color y compuestas van antes
+  // que sus colores simples para que un cable "amarillo/verde" no caiga
+  // simultáneamente en "Amarillo", "Verde" y "Amarillo/Verde".
+  const _COLOR_RULES = [
+    ['Multicolor', /\bmulticolor\b|\bvarios\s+colores\b|\brgb\b/i],
+    ['Amarillo/Verde', /\bamarillo\s*\/\s*verde\b/i],
+    ['Antracita', /\bantracita\b/i],
+    ['Grafito', /\bgrafito\b/i],
+    ['Marfil', /\bmarfil\b/i],
+    ['Beige', /\bbeige\b|\bcrema\b/i],
+    ['Champagne', /\bchampagne\b|\bchampan\b/i],
+    ['Cromo', /\bcromo\b|\bcromad[oa]\b/i],
+    ['Aluminio', /\baluminio\b/i],
+    ['Madera', /\bmadera\b|\broble\b|\bnogal\b/i],
+    ['Oro', /\bdorad[oa]\b|\boro\b/i],
+    ['Negro', /\bnegr[oa]\b/i],
+    ['Blanco', /\bblanc[oa]\b/i],
+    ['Gris', /\bgris\b|\bplata\b|\bplateado\b/i],
+    ['Azul', /\bazul\b/i],
+    ['Verde', /\bverd[ea]\b/i],
+    ['Rojo', /\broj[oa]\b/i],
+    ['Amarillo', /\bamarill[oa]\b/i],
+    ['Naranja', /\bnaranj[ae]\b/i],
+    ['Marrón', /\bmarr[oó]n\b|\bcaf[eé]\b/i],
+  ];
+  function _canonicalColors(p, specCandidates) {
+    const haystack = String(p.name || '');
+    for (const [label, re] of _COLOR_RULES) {
+      if (re.test(haystack)) return [label];
+    }
+    if (specCandidates && specCandidates.length) {
+      const s = _specValue(p, ...specCandidates);
+      if (s) {
+        for (const [label, re] of _COLOR_RULES) {
+          if (re.test(String(s))) return [label];
+        }
+      }
+    }
+    return [];
   }
 
   function _specValue(p, ...needles) {
@@ -450,23 +505,11 @@
     // ===== Mecanismos =====
     'acabado': {
       type: 'swatch',
-      extract: (p) => {
-        const s = _specValue(p, 'familia de color', 'color', 'acabado del producto', 'acabado');
-        if (s) return [String(s).trim()];
-        // Fallback: extraer del nombre (típico en Lexman/Niessen)
-        const text = (p.name || '').toLowerCase();
-        const out = [];
-        if (/blanco/.test(text)) out.push('Blanco');
-        if (/marfil/.test(text)) out.push('Marfil');
-        if (/aluminio/.test(text)) out.push('Aluminio');
-        if (/antracita/.test(text)) out.push('Antracita');
-        if (/grafito/.test(text)) out.push('Grafito');
-        if (/champagne/.test(text)) out.push('Champagne');
-        if (/cromo/.test(text)) out.push('Cromo');
-        if (/madera/.test(text)) out.push('Madera');
-        if (/negro/.test(text)) out.push('Negro');
-        return out;
-      },
+      // Usa el extractor canónico — name primero (más fiable), spec como
+      // fallback. La spec del proveedor mete cosas como "Beige" para un
+      // producto cuyo nombre dice "color blanco", o "Gris/plata" para un
+      // antracita; por eso no nos fiamos.
+      extract: (p) => _canonicalColors(p, ['familia de color', 'color', 'acabado del producto', 'acabado']),
       palette: COLOR_PALETTE,
     },
     'amperaje': {
@@ -575,12 +618,13 @@
     },
     'color del monitor': {
       type: 'swatch',
-      extract: (p) => [_specValue(p, 'familia de color', 'color del monitor')].filter(Boolean),
+      // Mismo extractor canónico que "Acabado" — name primero, spec después.
+      extract: (p) => _canonicalColors(p, ['color del monitor', 'familia de color', 'color']),
       palette: COLOR_PALETTE,
     },
     'color': {
       type: 'swatch',
-      extract: (p) => [_specValue(p, 'familia de color', 'color')].filter(Boolean),
+      extract: (p) => _canonicalColors(p, ['familia de color', 'color']),
       palette: COLOR_PALETTE,
     },
     'conectividad': {
@@ -901,22 +945,12 @@
     },
     'color del aislante': {
       type: 'swatch',
-      extract: (p) => {
-        const text = (p.name || '').toLowerCase();
-        const out = [];
-        if (/marr[óo]n/.test(text)) out.push('Marrón');
-        if (/blanco/.test(text)) out.push('Blanco');
-        if (/negro/.test(text)) out.push('Negro');
-        if (/azul/.test(text)) out.push('Azul');
-        if (/amarillo.*verde|vd\/?amarillo|verde\/?amarillo/.test(text)) out.push('Amarillo/verde');
-        else if (/amarillo/.test(text)) out.push('Amarillo');
-        if (/verde\b(?!\/?amarillo)/.test(text)) out.push('Verde');
-        if (/rojo/.test(text)) out.push('Rojo');
-        if (/gris/.test(text)) out.push('Gris');
-        if (/transparente/.test(text)) out.push('Transparente');
-        return [...new Set(out)];
-      },
-      palette: { ...COLOR_PALETTE, 'marrón': '#7B5638', 'amarillo/verde': 'linear-gradient(135deg,#FFC878,#16A34A)', 'transparente': '#F0F0F0' },
+      // Mismo extractor canónico que "Acabado" pero buscando primero la
+      // spec específica del aislante. Devuelve UN solo color por producto
+      // (la primera regla que encaja gana), así "amarillo/verde" no genera
+      // tres swatches diferentes (Amarillo, Verde y Amarillo/Verde).
+      extract: (p) => _canonicalColors(p, ['color del aislante', 'familia de color', 'color']),
+      palette: COLOR_PALETTE,
     },
     'número de hilos': {
       type: 'chip',
@@ -988,6 +1022,131 @@
     return _FACET_DEFS_NORM[_normTxt(name)] || null;
   }
 
+  // Cuando un <details> del sidebar no tiene FACET_DEF, intentamos construir
+  // uno dinámicamente buscando una spec cuyo nombre coincida con el título
+  // del filtro. Devolvemos un def válido o null si no hay datos.
+  // El tipo de UI (checkbox|chip|swatch) se infiere del marcado original
+  // que el HTML traía hardcoded:
+  //   - Si el body contiene .swatch  → swatch
+  //   - Si contiene una <button> con look chip → chip
+  //   - Si no, checkbox (default)
+  function _autoFacetForSummary(name, products, body) {
+    const wantedNorm = _normTxt(name);
+    // Cualquier facet que hable de "color" o de "acabado" lo enrutamos por
+    // el extractor canónico — evita los desórdenes del proveedor (Beige vs
+    // Blanco, Gris/plata vs Antracita, etc.) y muestra las swatches con
+    // colores reales de la paleta.
+    if (/\bcolor\b|\bacabado\b/.test(wantedNorm)) {
+      const SPEC_HINTS = [wantedNorm, 'familia de color', 'color', 'acabado del producto', 'acabado'];
+      return {
+        type: 'swatch',
+        extract: (p) => _canonicalColors(p, SPEC_HINTS),
+        palette: COLOR_PALETTE,
+      };
+    }
+    // Mapas de alias del título -> claves de spec a probar (cubre la mayoría
+    // de los <details> usados en las páginas de categoría).
+    const ALIAS = {
+      'tipo de cable': ['tipo de cable', 'nombre del cable', 'norma o etiqueta'],
+      'tipo de puerta': ['subcategoria', 'subcategoría'],
+      'peso maximo (kg)': ['peso puerta max. (kg)', 'peso maximo'],
+      'peso máximo (kg)': ['peso puerta max. (kg)', 'peso maximo'],
+      'frecuencia mando': ['frecuencia', 'frecuencia (mhz)'],
+      'alimentacion': ['funcionamiento del motor', 'alimentacion', 'alimentación'],
+      'alimentación': ['funcionamiento del motor', 'alimentacion', 'alimentación'],
+      'protocolo': ['tipo de protocolo wifi', 'protocolo'],
+      'asistente compatible': ['compatibilidad con software', 'asistente'],
+      'estandar wi-fi': ['banda de frecuencia (en mhz)', 'estandar wifi', 'wifi'],
+      'estándar wi-fi': ['banda de frecuencia (en mhz)', 'estandar wifi', 'wifi'],
+      'velocidad red (ethernet)': ['transmision de datos (en mbps)', 'velocidad'],
+      'banda / aplicacion': ['tipo de producto', 'banda'],
+      'banda / aplicación': ['tipo de producto', 'banda'],
+      'familia': ['familia', 'subcategoria', 'subcategoría'],
+      'tipo': ['tipo de producto', 'gama'],
+      'formato': ['presentacion', 'presentación'],
+      'seccion': ['seccion del cable (en mm²)', 'sección del cable (en mm²)', 'seccion mm', 'sección mm'],
+      'sección': ['seccion del cable (en mm²)', 'sección del cable (en mm²)'],
+      'color del aislante': ['familia de color', 'color', 'aislante'],
+      'numero de hilos': ['numero de cables', 'número de cables'],
+      'número de hilos': ['numero de cables', 'número de cables'],
+      'sistema / instalacion': ['cableado', 'sistema'],
+      'sistema / instalación': ['cableado', 'sistema'],
+      'tamano pantalla': ['altura del puesto interior (en cm)', 'pantalla'],
+      'tamaño pantalla': ['altura del puesto interior (en cm)', 'pantalla'],
+      'color del monitor': ['familia de color'],
+      'conectividad': ['objeto conectado (domotica y smarthome)', 'objeto conectado (domótica y smarthome)', 'tipo de protocolo wifi', 'conectividad'],
+      'no de viviendas': ['especialidad'],
+      'nº de viviendas': ['especialidad'],
+      'lugar de instalacion': ['instalacion del puesto exterior', 'instalación del puesto exterior'],
+      'lugar de instalación': ['instalacion del puesto exterior', 'instalación del puesto exterior'],
+      'curva (magnetotermico)': ['curva', 'curva magnetotermica'],
+      'curva (magnetotérmico)': ['curva', 'curva magnetotermica'],
+      'polos': ['poles', 'polos', 'numero de polos', 'número de polos'],
+      'intensidad nominal (a)': ['intensidad nominal', 'amperaje', 'in'],
+      'sensibilidad diferencial (ma)': ['sensibilidad', 'sensibilidad diferencial'],
+      'tipo diferencial': ['tipo de interruptor diferencial'],
+      'capacidad de corte (ka)': ['capacidad de corte', 'pdc'],
+      'resolucion (camaras)': ['resolucion', 'resolución'],
+      'resolución (cámaras)': ['resolucion', 'resolución'],
+      'vision nocturna': ['camara con vision nocturna', 'cámara con visión nocturna', 'vision nocturna (en m)'],
+      'visión nocturna': ['camara con vision nocturna', 'cámara con visión nocturna', 'vision nocturna (en m)'],
+      'almacenamiento': ['almacenamiento'],
+      'app / ecosistema': ['compatibilidad con software'],
+      'funcion': ['tipo de producto'],
+      'función': ['tipo de producto'],
+      'funcionalidades': ['antiaplastamiento', 'final de carrera', 'encoder'],
+      'instalacion': ['instalacion del puesto exterior', 'tipo de fijacion', 'tipo de fijación'],
+      'instalación': ['instalacion del puesto exterior', 'tipo de fijacion', 'tipo de fijación'],
+      'longitud': ['longitud del cable entre pantalla y camara (en m)'],
+      'diametro': ['diametro (en mm)', 'diámetro (en mm)'],
+      'diámetro': ['diametro (en mm)', 'diámetro (en mm)'],
+      'ganancia (db)': ['ganancia'],
+    };
+    const specsToTry = ALIAS[wantedNorm] || [wantedNorm];
+    // Localiza la primera key que aparezca en al menos un producto.
+    const findKey = () => {
+      for (const cand of specsToTry) {
+        for (const p of products) {
+          if (!p.specs) continue;
+          for (const k of Object.keys(p.specs)) {
+            if (k.startsWith('_')) continue;
+            if (_normTxt(k) === cand) return k;
+          }
+        }
+      }
+      // Fallback más laxo: busca contains.
+      for (const cand of specsToTry) {
+        for (const p of products) {
+          if (!p.specs) continue;
+          for (const k of Object.keys(p.specs)) {
+            if (k.startsWith('_')) continue;
+            if (_normTxt(k).includes(cand)) return k;
+          }
+        }
+      }
+      return null;
+    };
+    const specKey = findKey();
+    if (!specKey) return null;
+    // Detecta tipo de UI a partir del marcado existente.
+    let uiType = 'checkbox';
+    if (body.querySelector('.swatch')) uiType = 'swatch';
+    else if (body.querySelector('.flex.flex-wrap')) uiType = 'chip';
+    return {
+      type: uiType,
+      extract: (p) => {
+        const v = p?.specs?.[specKey];
+        if (v == null) return [];
+        const s = String(v).trim();
+        if (!s || s === '—' || s === '-') return [];
+        // Normaliza booleanos típicos de la fuente: "Sí" → "Sí", "No" → no
+        // aplicable (no añade valor de filtro).
+        if (/^no$/i.test(s)) return [];
+        return [s];
+      },
+    };
+  }
+
   function _setupSidebarFacets(products, state, applyCallback) {
     const sidebar = document.querySelector('main aside, aside');
     if (!sidebar) return;
@@ -996,10 +1155,23 @@
       const summary = det.querySelector('summary span');
       if (!summary) return;
       const name = summary.textContent.trim();
-      const def = _facetDef(name);
-      if (!def) return;
       const body = det.querySelector('summary')?.nextElementSibling;
       if (!body) return;
+      // Bloques especiales gestionados por su propio handler más abajo.
+      if (/^precio$/i.test(name) || /^disponibilidad$/i.test(name)) return;
+      let def = _facetDef(name);
+      // Si no hay FACET_DEF explícito, intentamos resolverlo dinámicamente
+      // buscando specs cuyo nombre coincida con el de la summary. Si tampoco
+      // hay datos suficientes, ocultamos el bloque entero (mejor que dejarlo
+      // con los valores hardcoded del demo).
+      if (!def) {
+        def = _autoFacetForSummary(name, products, body);
+        if (!def) {
+          det.style.display = 'none';
+          body.innerHTML = '';
+          return;
+        }
+      }
 
       // Recopilar values y counts
       const valueCounts = new Map(); // value -> count
@@ -1111,6 +1283,238 @@
         body.appendChild(wrap);
       }
     });
+    // ---- Bloques especiales: Precio + Disponibilidad ----
+    _setupPriceFilter(products, state, applyCallback);
+    _setupAvailabilityFilter(products, state, applyCallback);
+    _setupClearActiveFilters(state, applyCallback);
+  }
+
+  function _renderActiveFilterPills(state, applyCallback) {
+    const block = [...document.querySelectorAll('aside div')].find((d) => /filtros activos/i.test(d.textContent || '') && d.querySelector('.flex.flex-wrap'));
+    const holder = block?.querySelector('.flex.flex-wrap');
+    if (!holder) return;
+    const pills = [];
+    if (state.subcategory) pills.push({ label: state.subcategory, onRemove: () => { state.subcategory = null; } });
+    if (state.search) pills.push({ label: `“${state.search}”`, onRemove: () => {
+      state.search = '';
+      const inp = document.querySelector('aside input[type="search"]');
+      if (inp) inp.value = '';
+    }});
+    if (state.onlyInStock) pills.push({ label: 'Solo en stock', onRemove: () => {
+      state.onlyInStock = false;
+      const cb = document.querySelector('aside [data-only-in-stock]');
+      if (cb) cb.checked = false;
+    }});
+    for (const [facetKey, vals] of Object.entries(state.filters || {})) {
+      for (const v of vals || []) {
+        pills.push({ label: v, onRemove: () => {
+          state.filters[facetKey] = state.filters[facetKey].filter((x) => x !== v);
+          // Desmarca el checkbox/chip/swatch correspondiente.
+          document.querySelectorAll(`aside [data-facet-val="${CSS.escape(v)}"]`).forEach((el) => {
+            if (el.matches('input[type="checkbox"]')) el.checked = false;
+            else el.classList.remove('bg-ink', 'text-paper', 'is-active');
+          });
+        }});
+      }
+    }
+    if (!pills.length) {
+      holder.innerHTML = '<span class="text-xs text-graphite/60 italic">Aún no hay filtros aplicados</span>';
+      return;
+    }
+    holder.innerHTML = '';
+    pills.forEach(({ label, onRemove }) => {
+      const span = document.createElement('span');
+      span.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 bg-ink text-paper text-xs rounded-full';
+      span.innerHTML = `${escapeHtml(label)}<button type="button" class="hover:text-warn" aria-label="Quitar filtro">×</button>`;
+      span.querySelector('button').addEventListener('click', () => {
+        onRemove();
+        state.page = 1;
+        applyCallback();
+      });
+      holder.appendChild(span);
+    });
+  }
+
+  function _setupPriceFilter(products, state, applyCallback) {
+    const det = [...document.querySelectorAll('aside details')].find((d) => /^precio$/i.test(d.querySelector('summary span')?.textContent.trim() || ''));
+    if (!det) return;
+    const body = det.querySelector('summary')?.nextElementSibling;
+    if (!body) return;
+    const prices = products.map((p) => Number(p.price || 0)).filter((p) => p > 0);
+    if (!prices.length) { det.style.display = 'none'; return; }
+    const min = Math.floor(Math.min(...prices));
+    const max = Math.ceil(Math.max(...prices));
+    if (max <= min) { det.style.display = 'none'; return; }
+    state.priceMin = state.priceMin ?? min;
+    state.priceMax = state.priceMax ?? max;
+    // Visual del demo: dos inputs numéricos arriba + barra con dos thumbs
+    // arrastrables. Los thumbs son botones reales (cursor: grab) y reaccionan
+    // a pointerdown/move/up — funcionan tanto con ratón como en táctil.
+    body.innerHTML = `
+      <div class="flex items-center gap-2 mb-3">
+        <input type="number" data-price-from class="w-full px-2.5 py-1.5 bg-paper border border-line rounded-md text-sm font-mono" value="${state.priceMin}" min="${min}" max="${max}"/>
+        <span class="text-graphite text-xs">a</span>
+        <input type="number" data-price-to class="w-full px-2.5 py-1.5 bg-paper border border-line rounded-md text-sm font-mono" value="${state.priceMax}" min="${min}" max="${max}"/>
+        <span class="text-graphite text-sm">€</span>
+      </div>
+      <div class="relative h-1.5 bg-paper-2 rounded-full select-none" data-price-track style="touch-action: none;">
+        <div class="absolute h-full bg-ink rounded-full pointer-events-none" data-price-fill></div>
+        <button type="button" aria-label="Precio mínimo"
+          class="absolute -top-1.5 w-4 h-4 rounded-full bg-ink border-2 border-paper cursor-grab active:cursor-grabbing touch-none"
+          data-price-thumb-left></button>
+        <button type="button" aria-label="Precio máximo"
+          class="absolute -top-1.5 w-4 h-4 rounded-full bg-ink border-2 border-paper cursor-grab active:cursor-grabbing touch-none"
+          data-price-thumb-right></button>
+      </div>
+      <div class="flex justify-between mt-2 text-[11px] font-mono text-graphite">
+        <span>${min}&nbsp;€</span><span>${max}&nbsp;€</span>
+      </div>
+    `;
+    const fromInput = body.querySelector('[data-price-from]');
+    const toInput = body.querySelector('[data-price-to]');
+    const track = body.querySelector('[data-price-track]');
+    const fill = body.querySelector('[data-price-fill]');
+    const thumbL = body.querySelector('[data-price-thumb-left]');
+    const thumbR = body.querySelector('[data-price-thumb-right]');
+    const span = max - min;
+
+    const clamp = (n) => Math.max(min, Math.min(max, n));
+    const redrawBar = () => {
+      const lo = clamp(Number(state.priceMin ?? min));
+      const hi = clamp(Number(state.priceMax ?? max));
+      const leftPct = ((Math.min(lo, hi) - min) / span) * 100;
+      const rightPct = (1 - (Math.max(lo, hi) - min) / span) * 100;
+      fill.style.left = `${leftPct}%`;
+      fill.style.right = `${rightPct}%`;
+      thumbL.style.left = `calc(${leftPct}% - 8px)`;
+      thumbR.style.right = `calc(${rightPct}% - 8px)`;
+      // Sincroniza inputs.
+      if (document.activeElement !== fromInput) fromInput.value = String(Math.round(lo));
+      if (document.activeElement !== toInput) toInput.value = String(Math.round(hi));
+    };
+
+    let _pendingApply = null;
+    const scheduleApply = () => {
+      if (_pendingApply) return;
+      _pendingApply = setTimeout(() => {
+        _pendingApply = null;
+        state.page = 1;
+        applyCallback();
+      }, 60);
+    };
+
+    const onInputChange = () => {
+      const a = Number(fromInput.value || min);
+      const b = Number(toInput.value || max);
+      state.priceMin = clamp(Math.min(a, b));
+      state.priceMax = clamp(Math.max(a, b));
+      redrawBar();
+      state.page = 1;
+      applyCallback();
+    };
+    fromInput.addEventListener('change', onInputChange);
+    toInput.addEventListener('change', onInputChange);
+
+    // ---- Thumb dragging ----
+    const startDrag = (which, ev) => {
+      ev.preventDefault();
+      const targetThumb = which === 'left' ? thumbL : thumbR;
+      try { targetThumb.setPointerCapture(ev.pointerId); } catch {}
+      const move = (e) => {
+        const rect = track.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const value = Math.round(min + ratio * span);
+        if (which === 'left') {
+          state.priceMin = clamp(Math.min(value, state.priceMax ?? max));
+        } else {
+          state.priceMax = clamp(Math.max(value, state.priceMin ?? min));
+        }
+        redrawBar();
+        scheduleApply();
+      };
+      const up = (e) => {
+        try { targetThumb.releasePointerCapture(ev.pointerId); } catch {}
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+        document.removeEventListener('pointercancel', up);
+        // Asegura un último apply (por si el throttle dejó algo pendiente).
+        state.page = 1;
+        applyCallback();
+      };
+      document.addEventListener('pointermove', move);
+      document.addEventListener('pointerup', up);
+      document.addEventListener('pointercancel', up);
+    };
+    thumbL.addEventListener('pointerdown', (ev) => startDrag('left', ev));
+    thumbR.addEventListener('pointerdown', (ev) => startDrag('right', ev));
+
+    // Click directo en la pista: mueve el thumb más cercano.
+    track.addEventListener('pointerdown', (ev) => {
+      if (ev.target === thumbL || ev.target === thumbR) return;
+      const rect = track.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
+      const value = Math.round(min + ratio * span);
+      const dLeft = Math.abs(value - (state.priceMin ?? min));
+      const dRight = Math.abs(value - (state.priceMax ?? max));
+      const which = dLeft <= dRight ? 'left' : 'right';
+      if (which === 'left') state.priceMin = clamp(Math.min(value, state.priceMax ?? max));
+      else state.priceMax = clamp(Math.max(value, state.priceMin ?? min));
+      redrawBar();
+      state.page = 1;
+      applyCallback();
+      // Inicia drag para que arrastrar inmediatamente desde el track funcione.
+      startDrag(which, ev);
+    });
+
+    redrawBar();
+  }
+
+  function _setupAvailabilityFilter(products, state, applyCallback) {
+    const det = [...document.querySelectorAll('aside details')].find((d) => /^disponibilidad$/i.test(d.querySelector('summary span')?.textContent.trim() || ''));
+    if (!det) return;
+    const body = det.querySelector('summary')?.nextElementSibling;
+    if (!body) return;
+    const inStock = products.filter((p) => Number(p.stock || 0) > 0).length;
+    state.onlyInStock = false;
+    body.innerHTML = `
+      <label class="filter-check">
+        <input type="checkbox" data-only-in-stock/> Solo en stock
+        <span class="count">${inStock}</span>
+      </label>
+    `;
+    body.querySelector('[data-only-in-stock]').addEventListener('change', (e) => {
+      state.onlyInStock = e.target.checked;
+      state.page = 1;
+      applyCallback();
+    });
+  }
+
+  // Botón "Limpiar todos" del bloque de filtros activos: borra todo el state
+  // y vuelve a renderizar el sidebar.
+  function _setupClearActiveFilters(state, applyCallback) {
+    const buttons = [...document.querySelectorAll('aside button')]
+      .filter((b) => /limpiar todos/i.test(b.textContent || ''));
+    buttons.forEach((b) => {
+      b.addEventListener('click', (e) => {
+        e.preventDefault();
+        state.filters = {};
+        state.subcategory = null;
+        state.search = '';
+        state.priceMin = undefined;
+        state.priceMax = undefined;
+        state.onlyInStock = false;
+        // Reset de la UI: input de búsqueda y checkbox/chips activos.
+        const sidebarSearch = document.querySelector('aside input[type="search"]');
+        if (sidebarSearch) sidebarSearch.value = '';
+        document.querySelectorAll('aside input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
+        document.querySelectorAll('aside [data-facet-val].bg-ink, aside [data-facet-val].is-active').forEach((el) => {
+          el.classList.remove('bg-ink', 'text-paper', 'is-active');
+          if (!el.classList.contains('swatch')) el.classList.add('bg-paper-2', 'hover:bg-paper-3');
+        });
+        state.page = 1;
+        applyCallback();
+      });
+    });
   }
 
   function _dedupeVariants(products) {
@@ -1153,44 +1557,24 @@
     return [1, '…', current - 1, current, current + 1, '…', total];
   }
 
+  // Coincidencia de subcategoría cuando un chip está seleccionado. Usa los
+  // mismos patrones canónicos que _deriveSubcategories: si encontramos una
+  // entrada con `label` exacto, aplicamos su regex. Si no (por ejemplo el
+  // label vino de la spec sin pasar por nuestros patrones), buscamos como
+  // contiene-en-name del label.
   function _matchesSubcategory(product, label) {
     if (!label) return true;
     const norm = (s) => (s || '').toString().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-    const haystack = norm(`${product.name} ${(product.specs && Object.values(product.specs).join(' ')) || ''}`);
-    // singular del label sin prefijos comunes
-    const term = norm(label).replace(/\s*\([^)]*\)/g, '').replace(/[·•].*/g, '').trim();
-    // tokens útiles para sub-cats típicas
-    const aliases = {
-      'bombillas': ['bombilla'],
-      'downlights': ['downlight'],
-      'plafones': ['plafon', 'plafón'],
-      'tiras led': ['tira', 'banda led'],
-      'proyectores': ['proyector', 'foco'],
-      'emergencia': ['emergencia'],
-      'interruptores': ['interruptor', 'conmutador'],
-      'enchufes': ['enchufe', 'schuko', 'toma de alimentacion'],
-      'conmutadores': ['conmutador'],
-      'pulsadores': ['pulsador'],
-      'tomas tv/tlf': ['tv', 'tlf', 'rj', 'antena'],
-      'magnetotérmicos': ['magnetotermico', 'mt'],
-      'magnetotermicos': ['magnetotermico', 'mt'],
-      'diferenciales': ['diferencial'],
-      'cuadros': ['cuadro'],
-      'contactores': ['contactor', 'rele'],
-      'telefonillos': ['telefonillo'],
-      'videoporteros': ['videoportero', 'videoporter'],
-      'abrepuertas': ['abrepuertas'],
-      'repuestos': ['repuesto'],
-      'cámaras ip': ['camara ip', 'cámara ip'],
-      'camaras ip': ['camara ip'],
-      'alarmas': ['alarma'],
-      'sensores': ['sensor', 'detector'],
-      'grabadores': ['nvr', 'dvr', 'grabador'],
-      'cerraduras': ['cerradura'],
-      'detectores': ['detector', 'sensor'],
-    };
-    const keys = aliases[term] || [term];
-    return keys.some((k) => haystack.includes(k));
+    const haystack = `${product.name || ''} ${(product.specs && (product.specs['Tipo de producto'] || product.specs['Gama'] || product.specs['Subcategoría'] || '')) || ''}`;
+    const haystackNorm = norm(haystack);
+    // Si el label coincide exactamente con uno de los nuestros, busca su regex.
+    for (const patterns of Object.values(_SUBCAT_PATTERNS)) {
+      const pat = patterns.find((x) => x.label === label);
+      if (pat) return pat.re.test(haystackNorm);
+    }
+    // Fallback: contiene la primera palabra del label (sin acentos).
+    const term = norm(label).split(/[\s·]+/)[0];
+    return haystackNorm.includes(term);
   }
 
   function _readSortMode(value) {
@@ -1224,6 +1608,187 @@
     return arr;
   }
 
+  // ---- Subcategorías por categoría -----------------------------------------
+  // Cada categoría tiene una forma propia de exponer la subcategoría: unas
+  // tienen `specs.Subcategoría`, otras `Tipo de producto`, otras nada y hay
+  // que adivinarlo a partir del nombre. Definimos un conjunto de patrones
+  // canónicos por categoría con (label, regex sobre name+specs). El primer
+  // patrón que encaje gana; un producto cae como mucho en una subcategoría.
+  const _SUBCAT_PATTERNS = {
+    iluminacion: [
+      { label: 'Bombillas', re: /\bbombilla\b/i },
+      { label: 'Plafones', re: /\bplaf[oó]n(es)?\b/i },
+      { label: 'Downlights', re: /\bdownlight\b|\bempotrar\b/i },
+      { label: 'Paneles LED', re: /\bpanel(es)?\s+led\b/i },
+      { label: 'Tiras LED', re: /\btira\s+led\b|\btira\s+de\s+led\b|\bbanda\s+led\b/i },
+      { label: 'Proyectores', re: /\bproyector(es)?\b|\bfoco(s)?\b/i },
+      { label: 'Apliques', re: /\baplique(s)?\b/i },
+      { label: 'Luminaria exterior', re: /\bbaliza\b|\bfarol(a)?\b|\bcolumna\b/i },
+      { label: 'Iluminación inteligente', re: /\bzigbee|wifi|matter|alexa|google home\b/i },
+    ],
+    mecanismos: [
+      { label: 'Enchufes', re: /\benchufe(s)?\b|\bschuko\b|\btoma\s+(de\s+)?alimentaci[oó]n\b/i },
+      { label: 'Interruptores', re: /\binterruptor(es)?\b|\bpulsador(es)?\b/i },
+      { label: 'Conmutadores', re: /\bconmutador(es)?\b/i },
+      { label: 'Bases USB', re: /\busb\s+a\b|\busb\s+c\b|\busb-c\b/i },
+      { label: 'Marcos / acabados', re: /\bmarco(s)?\b/i },
+      { label: 'Tomas TV / RJ', re: /\bRJ\d{1,2}\b|\bcoaxial\b|\bantena\s+TV\b/i },
+    ],
+    proteccion: [
+      { label: 'Diferenciales', re: /\bdiferencial(es)?\b/i },
+      { label: 'Magnetotérmicos', re: /\bmagnetot[eé]rmico|\binterruptor automatico\b|\bicp\b/i },
+      { label: 'Disyuntores', re: /\bdisyuntor(es)?\b/i },
+      { label: 'Pararrayos', re: /\bpara\s*rayo|sobretensi[oó]n/i },
+      { label: 'Cuadros / cajas', re: /\bcuadro\b|\bcaja\s+(de\s+)?(ICP|abonado|registro)/i },
+      { label: 'Bases portafusibles', re: /\bportafusible|\bfusible\b/i },
+      { label: 'Contactores', re: /\bcontactor(es)?\b/i },
+    ],
+    'porteros-videoporteros': [
+      // Orden importante: Telefonillos sueltos PRIMERO para no dejarlos
+      // dentro de "Kits de Audio", que también incluye placa+telefonillo.
+      { label: 'Telefonillos / monitores', re: /\btelefonillos?\b|\bmonitor(es)?\b/i },
+      { label: 'Kits de Vídeo', re: /\bkit\b.{0,40}\bv[ií]deo\b|videoportero|videointercom/i },
+      { label: 'Kits de Audio', re: /\bkit\b.{0,40}\baudio\b|portero\s+autom[aá]tico/i },
+      { label: 'Placas de calle', re: /\bplaca\s+(de\s+)?calle|\bplaca\s+exterior\b/i },
+      { label: 'Repuestos', re: /\brepuesto(s)?\b/i },
+    ],
+    domotica: [
+      { label: 'Bombillas inteligentes', re: /\bbombilla\b/i },
+      { label: 'Enchufes WiFi', re: /\benchufe\b.*\b(wifi|inteligente|conectado|smart|zigbee)\b|\bsmart\s+plug/i },
+      { label: 'Interruptores domóticos', re: /\binterruptor\b.*\b(wifi|inteligente|domotic|zigbee|conectado)\b|\bm[oó]dulo\s+(rel[eé]|interruptor)/i },
+      { label: 'Sensores y detectores', re: /\bsensor(es)?\b|\bdetector(es)?\b/i },
+      { label: 'Cámaras WiFi', re: /\bc[aá]mara\b/i },
+      { label: 'Mandos a distancia', re: /\bmando\b/i },
+      { label: 'Tiras / lámparas RGB', re: /\btira\s+led\b|\brgb\b|\bcct\b/i },
+    ],
+    automatismos: [
+      { label: 'Puerta corredera', re: /\bcorredera\b/i },
+      { label: 'Puerta batiente', re: /\bbatient(e|es)\b/i },
+      { label: 'Puerta seccional', re: /\bseccional(es)?\b/i },
+      { label: 'Puerta basculante', re: /\bbasculant(e|es)\b/i },
+      { label: 'Puerta enrollable', re: /\benrrollabl|\benrollabl/i },
+      { label: 'Mandos y emisores', re: /\bmando(s)?\b|\bemisor(es)?\b/i },
+      { label: 'Receptores', re: /\breceptor(es)?\b/i },
+      { label: 'Fotocélulas', re: /\bfotoc[eé]lula\b/i },
+      { label: 'Barreras de parking', re: /\bbarrera\b/i },
+      { label: 'Accesorios', re: /\baccesorio|\bcremallera|\bbater[ií]a\b/i },
+    ],
+    'antenas-telecomunicaciones': [
+      { label: 'Antenas TDT/UHF', re: /\bantena(s)?\b|\btdt\b|\buhf\b/i },
+      { label: 'Routers / WiFi', re: /\brouter\b|\bwifi\b|\bmesh\b/i },
+      { label: 'PLC / repetidores', re: /\bplc\b|\brepetidor(es)?\b|powerline/i },
+      { label: 'Cable coaxial', re: /\bcoaxial\b/i },
+      { label: 'Cable de red', re: /\brj-?45\b|\bcat\.?\s?[5-7]\b|\blatiguillo\b|\bethernet\b/i },
+      { label: 'Switches / hubs', re: /\bswitch\b|\bhub\b/i },
+      { label: 'Telefonía', re: /\btel[eé]fono(s)?\b|\bvoip\b/i },
+    ],
+    seguridad: [
+      { label: 'Cámaras IP', re: /\bc[aá]mara\b.*\bip\b|\bvideovigilancia\b|\bcctv\b/i },
+      { label: 'Detectores de humo', re: /\bdetector\s+de\s+humo\b/i },
+      { label: 'Detectores de gas', re: /\bdetector\s+de\s+(gas|mon[oó]xido|co)\b|\bco\b/i },
+      { label: 'Sensores de presencia', re: /\bsensor.*(presencia|movimiento|puerta|ventana)\b|\bpir\b/i },
+      { label: 'Alarmas', re: /\balarma\b|\bsirena\b/i },
+      { label: 'Cerraduras inteligentes', re: /\bcerradura(s)?\b/i },
+    ],
+    cableado: [
+      { label: 'Cable libre halógenos H07V-K', re: /\bh07v-?k\b|\bh07\b/i },
+      { label: 'Cable RZ1-K (manguera)', re: /\brz1-?k\b/i },
+      { label: 'Cables coaxiales', re: /\bcoaxial\b/i },
+      { label: 'Cable de red', re: /\bcat[\s.]?\s?[5-7]e?\b|\brj-?45\b/i },
+      { label: 'Tubo / canalización', re: /\btubo\b|\bcorrugado\b|\bcanaleta\b/i },
+      { label: 'Bobinas de hilo', re: /\bbobina\b|\brollo\b/i },
+    ],
+  };
+
+  function _deriveSubcategories(products, categorySlug) {
+    if (!categorySlug) return [];
+    const patterns = _SUBCAT_PATTERNS[categorySlug];
+    const counts = new Map();
+
+    if (patterns) {
+      for (const p of products) {
+        const subFromSpec = p?.specs?.['Subcategoría'] || p?.specs?.['Subcategoria'];
+        let label = null;
+        // 1) Si la spec viene rellena, intentamos mapearla a uno de nuestros
+        // labels canónicos (a veces la fuente la pone como "Kits de Vídeo",
+        // a veces "Puerta Corredera", etc.).
+        if (subFromSpec) {
+          const norm = String(subFromSpec).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+          for (const pat of patterns) {
+            if (pat.re.test(norm)) { label = pat.label; break; }
+          }
+          if (!label) label = String(subFromSpec).trim();
+        } else {
+          // 2) Buscamos en name + tipo de producto + gama
+          const haystack = `${p.name || ''} ${(p.specs && (p.specs['Tipo de producto'] || p.specs['Gama'] || '')) || ''}`;
+          for (const pat of patterns) {
+            if (pat.re.test(haystack)) { label = pat.label; break; }
+          }
+        }
+        if (label) counts.set(label, (counts.get(label) || 0) + 1);
+      }
+    } else {
+      // Fallback por si añaden una categoría nueva sin patrones: agrupa por
+      // Subcategoría tal cual y, en su defecto, por Tipo de producto.
+      for (const p of products) {
+        const v = p?.specs?.['Subcategoría'] || p?.specs?.['Tipo de producto'];
+        if (!v) continue;
+        const lbl = String(v).trim();
+        counts.set(lbl, (counts.get(lbl) || 0) + 1);
+      }
+    }
+
+    // Ordena por nº de productos descendente, oculta los con <2 (poco útil
+    // para particionar) excepto en categorías muy pequeñas (<20 productos).
+    const minCount = products.length < 20 ? 1 : 2;
+    return [...counts.entries()]
+      .filter(([, n]) => n >= minCount)
+      .sort((a, b) => b[1] - a[1])
+      .map(([label, count]) => ({ label, count }));
+  }
+
+  // Exponemos los helpers de catálogo para que páginas como categorias.html
+  // los puedan reutilizar sin duplicar el diccionario _SUBCAT_PATTERNS.
+  window.GarperLuxCatalog = {
+    deriveSubcategories: _deriveSubcategories,
+    matchesSubcategory: _matchesSubcategory,
+  };
+
+  // Coincidencia "estilo SKU/nombre/sinónimo" para el cuadro de búsqueda del
+  // sidebar de cada categoría. Tokeniza la query, normaliza, expande
+  // sinónimos (rosca gorda -> casquillo e27, etc. via GarperLuxSearch) y
+  // exige cobertura mínima de tokens en alguno de los campos del producto.
+  function _matchesSearchTerm(product, term) {
+    if (!term) return true;
+    const norm = (s) => (s || '').toString().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const specsText = product.specs && typeof product.specs === 'object'
+      ? Object.entries(product.specs)
+          .filter(([k]) => !k.startsWith('_'))
+          .map(([k, v]) => `${k} ${v}`).join(' ')
+      : '';
+    const haystack = [
+      product.name,
+      product.sku,
+      product.brand?.name,
+      product.category?.name,
+      specsText,
+      product.description,
+    ].filter(Boolean).map(norm).join(' ');
+
+    // Si está cargado el motor unificado, usamos su expansión de sinónimos
+    // para que "rosca gorda" enganche con "casquillo e27".
+    let expanded = term;
+    if (window.GarperLuxSearch?.expandSynonyms) {
+      try { expanded = window.GarperLuxSearch.expandSynonyms(norm(term)); } catch { expanded = term; }
+    }
+    const rawTokens = norm(expanded).split(/[\s\-_./]+/).filter((t) => t.length >= 2);
+    const STOP = new Set(['de','la','el','los','las','con','para','por','y','o','un','una','del','al']);
+    const tokens = rawTokens.filter((t) => !STOP.has(t));
+    if (!tokens.length) return true;
+    // Cobertura: TODOS los tokens deben aparecer.
+    return tokens.every((tok) => haystack.includes(tok));
+  }
+
   async function bindCatalogPages() {
     const cfg = CATEGORY_PAGE_MAP[page];
     if (!cfg) return;
@@ -1243,15 +1808,21 @@
     const grid = grids.find((g) => g.querySelectorAll('.card-prod').length >= 2);
     if (!grid) return;
 
-    // Subcategory chip container (busca el div que contenga el chip "Todos · N")
+    // Subcategory chip container (busca el div más profundo que contenga
+    // el chip "Todos · N"). Las páginas no usan <header>/<main> consistentes,
+    // así que vamos por todo el body. Elegimos el de menor número de hijos
+    // para no acertar el contenedor padre del bloque entero.
     let subcategoryChips = null;
-    const allChipContainers = [...document.querySelectorAll('header ~ * .flex.flex-wrap, main .flex.flex-wrap')];
-    for (const cont of allChipContainers) {
-      const chips = [...cont.querySelectorAll('a, button')];
-      if (chips.length >= 3 && chips.some((c) => /todos\s*·/i.test(c.textContent))) {
-        subcategoryChips = cont;
-        break;
-      }
+    {
+      const candidates = [...document.querySelectorAll('.flex.flex-wrap')]
+        .filter((c) => {
+          const chips = [...c.querySelectorAll('a, button')];
+          return chips.length >= 3 && chips.some((x) => /todos\s*·/i.test(x.textContent));
+        });
+      // De los candidatos elegimos el más “interno” (el que tiene menos
+      // descendientes), que es el que contiene SOLO los chips.
+      candidates.sort((a, b) => a.querySelectorAll('*').length - b.querySelectorAll('*').length);
+      subcategoryChips = candidates[0] || null;
     }
 
     // "Mostrando X–Y de Z resultados"
@@ -1275,7 +1846,46 @@
       sort: 'best',
       page: 1,
       pageSize: 12,
+      search: '',
     };
+
+    // Caja "Buscar por referencia / SKU" del sidebar: filtrado en vivo dentro
+    // de la categoría, en lugar de redirigir al buscador global.
+    const sidebarSearch = (() => {
+      const aside = document.querySelector('aside');
+      if (!aside) return null;
+      return aside.querySelector('input[type="search"]') || null;
+    })();
+    if (sidebarSearch) {
+      // Si la página la heredó del demo, su placeholder pinta un SKU concreto
+      // de iluminación; lo dejamos como está si encaja, si no, lo neutralizamos.
+      sidebarSearch.removeAttribute('form');
+      sidebarSearch.setAttribute('autocomplete', 'off');
+      let _t;
+      sidebarSearch.addEventListener('input', () => {
+        clearTimeout(_t);
+        _t = setTimeout(() => {
+          state.search = sidebarSearch.value.trim();
+          state.page = 1;
+          applyAndRender();
+        }, 120);
+      });
+      sidebarSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          // Evita que el form padre (si lo hay) navegue a /buscador.
+          e.preventDefault();
+          state.search = sidebarSearch.value.trim();
+          state.page = 1;
+          applyAndRender();
+        }
+        if (e.key === 'Escape') {
+          sidebarSearch.value = '';
+          state.search = '';
+          state.page = 1;
+          applyAndRender();
+        }
+      });
+    }
 
     // Construye sidebar dinámico (reemplaza contenido hardcoded)
     _setupSidebarFacets(products, state, () => applyAndRender());
@@ -1286,10 +1896,14 @@
     }
 
     function applyAndRender() {
-      // 1. filter por subcategory + filtros sidebar
+      // 1. filter por subcategory + filtros sidebar + búsqueda libre + precio + stock
       let filtered = products.slice();
       if (state.subcategory) filtered = filtered.filter((p) => _matchesSubcategory(p, state.subcategory));
       filtered = filtered.filter((p) => _matchesFacets(p, state.filters));
+      if (state.search) filtered = filtered.filter((p) => _matchesSearchTerm(p, state.search));
+      if (state.priceMin != null) filtered = filtered.filter((p) => Number(p.price || 0) >= state.priceMin);
+      if (state.priceMax != null) filtered = filtered.filter((p) => Number(p.price || 0) <= state.priceMax);
+      if (state.onlyInStock) filtered = filtered.filter((p) => Number(p.stock || 0) > 0);
       // 2. sort
       filtered = _applySort(filtered, state.sort);
       // 3. paginate
@@ -1356,40 +1970,65 @@
         ));
       }
 
-      // 7. notify catalog-ui (que reaplique filtros sidebar sobre las nuevas cards)
+      // 7. Render del bloque "Filtros activos": pills clicables que retiran
+      // un filtro al pulsarlas. Lo localizamos como el div que contiene el
+      // texto "Filtros activos" en el sidebar.
+      _renderActiveFilterPills(state, applyAndRender);
+
+      // 8. notify catalog-ui (que reaplique filtros sidebar sobre las nuevas cards)
       document.dispatchEvent(new CustomEvent('glxCatalogRendered', { detail: { products: pageItems } }));
     }
 
-    // ---- Wire up
+    // ---- Subcategory chips: SE RECONSTRUYEN desde los productos reales ----
+    // El HTML viene con chips hardcoded del demo (que muchas veces no se
+    // corresponden con los productos del catálogo). Aquí los reemplazamos
+    // por los subgrupos reales detectados en los specs y nombres.
     if (subcategoryChips) {
-      const chips = [...subcategoryChips.querySelectorAll('a, button')];
-      // Update "Todos · N"
-      const todos = chips.find((c) => /^todos/i.test(c.textContent.trim()));
-      if (todos) todos.textContent = `Todos · ${products.length}`;
-      // Hide subcategory chips that have 0 matching products
-      chips.forEach((chip) => {
-        if (/^todos/i.test(chip.textContent)) return;
-        const label = chip.textContent.trim();
-        const count = products.filter((p) => _matchesSubcategory(p, label)).length;
-        if (count === 0) chip.style.display = 'none';
-      });
+      const realSubcats = _deriveSubcategories(products, cfg.category);
+      subcategoryChips.innerHTML = '';
+      const mkChip = (label, count, isAll = false) => {
+        const a = document.createElement('a');
+        a.href = '#';
+        const baseClass = 'px-3 py-1.5 rounded-full text-xs font-medium';
+        a.className = isAll ? `${baseClass} bg-ink text-paper` : `${baseClass} bg-paper-2 hover:bg-paper-3`;
+        a.textContent = isAll ? `Todos · ${count}` : `${label} · ${count}`;
+        a.dataset.subcatLabel = isAll ? '' : label;
+        return a;
+      };
+      const allChip = mkChip('Todos', products.length, true);
+      subcategoryChips.appendChild(allChip);
+      const chipNodes = [allChip];
+      for (const { label, count } of realSubcats) {
+        const node = mkChip(label, count);
+        subcategoryChips.appendChild(node);
+        chipNodes.push(node);
+      }
       // Click handlers
-      chips.forEach((chip) => {
+      const activate = (chip) => {
+        const subcatLabel = chip.dataset.subcatLabel || null;
+        state.subcategory = subcatLabel;
+        state.page = 1;
+        chipNodes.forEach((c) => {
+          c.classList.remove('bg-ink', 'text-paper');
+          c.classList.add('bg-paper-2', 'hover:bg-paper-3');
+        });
+        chip.classList.remove('bg-paper-2', 'hover:bg-paper-3');
+        chip.classList.add('bg-ink', 'text-paper');
+      };
+      chipNodes.forEach((chip) => {
         chip.addEventListener('click', (e) => {
           e.preventDefault();
-          const isAll = /^todos/i.test(chip.textContent.trim());
-          state.subcategory = isAll ? null : chip.textContent.trim();
-          state.page = 1;
-          chips.forEach((c) => {
-            c.classList.remove('bg-ink', 'text-paper');
-            if (!c.className.includes('bg-paper-2')) c.classList.add('bg-paper-2');
-            c.classList.add('hover:bg-paper-3');
-          });
-          chip.classList.remove('bg-paper-2', 'hover:bg-paper-3');
-          chip.classList.add('bg-ink', 'text-paper');
+          activate(chip);
           applyAndRender();
         });
       });
+      // ?subcat=<label> en la URL (lo usa categorias.html como deeplink):
+      // si encaja con uno de los chips, lo activamos al cargar.
+      const initialSubcat = new URLSearchParams(location.search).get('subcat');
+      if (initialSubcat) {
+        const target = chipNodes.find((c) => c.dataset.subcatLabel === initialSubcat);
+        if (target) activate(target);
+      }
     }
 
     if (sortSelect) {
@@ -1414,10 +2053,15 @@
 
   const SHIPPING_COST = 4.9;
 
+  // Los precios del catálogo ya vienen IVA INCLUIDO (PVP final). Por eso
+  // el "IVA incluido (21%)" del resumen es SOLO informativo: la porción
+  // del total que es IVA, no un cargo adicional. Total = subtotal + envío
+  // (ambos con IVA dentro). Antes lo sumábamos dos veces y daba un total
+  // distinto al de la página de presupuesto/checkout.
   const updateCartTotals = (items) => {
-    const subtotal = items.reduce((s, i) => s + ((i.price || 0) * (i.quantity || 0)), 0);
-    const tax = subtotal * 0.21;
-    const total = subtotal + tax + SHIPPING_COST;
+    const subtotal = items.reduce((s, i) => s + ((Number(i.price) || 0) * (Number(i.quantity) || 0)), 0);
+    const total = subtotal + SHIPPING_COST;
+    const tax = +(total - total / 1.21).toFixed(2);
     document.querySelectorAll('[data-cart-item-count]').forEach((el) => { el.textContent = items.length; });
     document.querySelectorAll('[data-cart-subtotal]').forEach((el) => { el.textContent = money(subtotal); });
     document.querySelectorAll('[data-cart-tax]').forEach((el) => { el.textContent = money(tax); });
@@ -1428,391 +2072,127 @@
     if (page !== '/pages/tienda/carrito.html') return;
     const cartContainer = document.querySelector('[data-cart-items]');
     if (!cartContainer) return;
-
-    console.log('[CART DEBUG] Container found:', !!cartContainer);
-    console.log('[CART DEBUG] LocalStorage items:', localStorage.getItem('garperlux_cart_items'));
-    console.log('[CART DEBUG] Token:', api.getToken());
-
-    // If user not logged, render localStorage cart fallback
-    if (!requireSession()) {
-      try {
-        const local = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
-        console.log('[CART DEBUG] Local items to process:', local.length);
-        if (local.length) {
-          // Load product details from API
-          const itemsWithDetails = await Promise.all(
-            local.map(async (item) => {
-              try {
-                const product = await api.product(item.sku);
-                console.log(`[CART DEBUG] Loaded product ${item.sku}:`, product.name, product.price);
-                return { ...item, name: product.name, price: product.price, stock: product.stock };
-              } catch (err) {
-                console.error(`[CART DEBUG] Failed to load ${item.sku}:`, err.message);
-                return item;
-              }
-            })
-          );
-          console.log('[CART DEBUG] Items with details:', itemsWithDetails);
-          cartContainer.innerHTML = itemsWithDetails.map((item) => `
-            <div class="p-5 sm:p-6 grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr_auto] gap-5 border-b border-line last:border-0" data-sku="${item.sku}">
-              <div class="aspect-square bg-paper-2 rounded-lg grid place-items-center text-graphite/40">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-              </div>
-              <div class="col-span-1 sm:col-auto">
-                <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">${item.sku}</div>
-                <h3 class="font-medium leading-snug mb-1">${item.name || item.title || 'Producto'}</h3>
-                <div class="font-mono text-[11px] text-graphite mb-2">SKU ${item.sku}</div>
-                <div class="flex items-center gap-3 flex-wrap">
-                  <div class="flex items-center bg-paper-2 rounded-full overflow-hidden">
-                    <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" data-qty-minus="${item.sku}" aria-label="-">−</button>
-                    <input type="number" value="${item.quantity}" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none" data-qty-input="${item.sku}" min="1"/>
-                    <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" data-qty-plus="${item.sku}" aria-label="+">+</button>
-                  </div>
-                  <button class="text-xs text-graphite hover:text-warn" data-local-delete="${item.sku}">Eliminar</button>
-                  <button class="text-xs text-graphite hover:text-ink">Mover a favoritos</button>
-                </div>
-              </div>
-              <div class="col-span-2 sm:col-auto sm:text-right flex items-center justify-between sm:flex-col sm:items-end sm:justify-start gap-2">
-                <span class="font-serif text-xl font-medium">${money((item.price || 0) * item.quantity)}</span>
-                <span class="pill pill-stock text-[10px]">${item.stock || 0} uds</span>
-              </div>
-            </div>`).join('');
-        } else {
-          cartContainer.innerHTML = '<div class="bg-white border border-line rounded-2xl p-8 text-center">Tu carrito está vacío.</div>';
-        }
-        const totalQty = local.reduce((s, it) => s + (it.quantity || 0), 0);
-        addCartBadge(totalQty);
-        document.querySelectorAll('[data-cart-summary]').forEach((el) => {
-          el.textContent = `${local.length} productos · listo para tramitar`;
-        });
-        updateCartTotals(itemsWithDetails);
-      } catch (err) { console.error('[CART DEBUG] Error:', err); }
-
-      // delegate local quantity and delete
-      document.addEventListener('click', (ev) => {
-        const delBtn = ev.target.closest('[data-local-delete]');
-        if (delBtn) {
-          ev.preventDefault();
-          const sku = delBtn.getAttribute('data-local-delete');
-          const carts = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
-          const filtered = carts.filter((i) => i.sku !== sku);
-          localStorage.setItem('garperlux_cart_items', JSON.stringify(filtered));
-          localStorage.setItem('garperlux_cart_count', String(filtered.reduce((s, it) => s + (it.quantity||0), 0)));
-          toast('Artículo eliminado del carrito (local).');
-          location.reload();
-          return;
-        }
-
-        const qtyPlus = ev.target.closest('[data-qty-plus]');
-        if (qtyPlus) {
-          ev.preventDefault();
-          const sku = qtyPlus.getAttribute('data-qty-plus');
-          const input = document.querySelector(`[data-qty-input="${sku}"]`);
-          if (input) {
-            const desired = Math.max(1, Number(input.value) + 1);
-            // clamp to stock if available in the rendered row
-            const article = document.querySelector(`[data-sku="${sku}"]`);
-            const pill = article?.querySelector('.pill');
-            let stock = null;
-            if (pill) {
-              const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
-              if (m) stock = parseInt(m[1], 10);
-            }
-            const finalQty = (stock != null) ? Math.min(desired, stock) : desired;
-            input.value = finalQty;
-            updateLocalCartQuantity(sku, Number(input.value));
-          }
-          return;
-        }
-
-        const qtyMinus = ev.target.closest('[data-qty-minus]');
-        if (qtyMinus) {
-          ev.preventDefault();
-          const sku = qtyMinus.getAttribute('data-qty-minus');
-          const input = document.querySelector(`[data-qty-input="${sku}"]`);
-          if (input) {
-            input.value = Math.max(1, Number(input.value) - 1);
-            updateLocalCartQuantity(sku, Number(input.value));
-          }
-          return;
-        }
-
-        // Mover a favoritos (por ahora solo toast)
-        const favBtn = [...document.querySelectorAll('button')].find(b => 
-          b.contains(ev.target) && b.textContent.includes('Mover a favoritos')
-        );
-        if (favBtn && ev.target === favBtn) {
-          ev.preventDefault();
-          toast('Función de favoritos en desarrollo.');
-          return;
-        }
-      });
-
-      // Actualizar cantidad cuando se edita el input directamente
-      document.addEventListener('change', (ev) => {
-        const input = ev.target.closest('[data-qty-input]');
-        if (!input) return;
-        const sku = input.getAttribute('data-qty-input');
-        let qty = Math.max(1, Number(input.value));
-        // clamp to stock if we have it in the rendered article
-        const article = document.querySelector(`[data-sku="${sku}"]`);
-        const pill = article?.querySelector('.pill');
-        if (pill) {
-          const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
-          if (m) {
-            const stock = parseInt(m[1], 10);
-            if (!isNaN(stock)) qty = Math.min(qty, stock);
-          }
-        }
-        input.value = qty;
-        updateLocalCartQuantity(sku, qty);
-      });
-
-      const updateLocalCartQuantity = (sku, newQty) => {
-        const carts = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
-        const item = carts.find((i) => i.sku === sku);
-        if (item) {
-          // clamp to stored stock if present
-          if (typeof item.stock === 'number') {
-            newQty = Math.min(newQty, item.stock);
-          }
-          item.quantity = newQty;
-          localStorage.setItem('garperlux_cart_items', JSON.stringify(carts));
-          localStorage.setItem('garperlux_cart_count', String(carts.reduce((s, it) => s + (it.quantity||0), 0)));
-          
-          // Actualizar el precio visible
-          const article = document.querySelector(`[data-sku="${sku}"]`);
-          if (article) {
-            const priceEl = article.querySelector('.font-serif.text-xl');
-            if (priceEl && item.price) {
-              priceEl.textContent = money(item.price * newQty);
-            }
-          }
-          
-          // Actualizar totales del carrito
-          const local = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
-          updateCartTotals(local);
-          addCartBadge(carts.reduce((s, it) => s + it.quantity, 0));
-        }
-      };
-
-      return;
+    if (!window.GarperLuxCart) {
+      // Si por alguna razón el módulo aún no se ha cargado.
+      await new Promise((r) => setTimeout(r, 200));
+      if (!window.GarperLuxCart) return;
     }
 
-    try {
-      const cart = await api.cart();
-      console.log('[CART DEBUG] Server cart:', cart);
+    // -------- Camino UNIFICADO: invitado o logueado, todo igual ----------
+    // localStorage es la verdad. El módulo GarperLuxCart hace sync best-
+    // effort al servidor cuando hay sesión iniciada (no bloqueante).
+    const cart = window.GarperLuxCart;
+    let products = [];
+    try { products = await api.products({}); } catch { products = []; }
+    const productBySku = new Map(products.map((p) => [p.sku, p]));
 
-      // Si el servidor está vacío pero hay items en localStorage, migrarlos
-      const localItems = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
-      console.log('[CART DEBUG] Local items for migration:', localItems.length);
-      if (!cart.items.length && localItems.length) {
-        console.log('[CART DEBUG] Migrating local cart to server...');
-        for (const item of localItems) {
-          try {
-            await api.addToCart(item.sku, item.quantity);
-            console.log(`[CART DEBUG] Migrated ${item.sku} (qty: ${item.quantity})`);
-          } catch (err) {
-            console.error(`[CART DEBUG] Failed to migrate ${item.sku}:`, err.message);
-          }
-        }
-        // Recargar carrito desde servidor
-        const updatedCart = await api.cart();
-        cart.items = updatedCart.items;
-        cart.subtotal = updatedCart.subtotal;
-        cart.tax = updatedCart.tax;
-        cart.total = updatedCart.total;
-        console.log('[CART DEBUG] Cart after migration:', cart);
-        // Limpiar localStorage
-        localStorage.removeItem('garperlux_cart_items');
-      }
+    function render() {
+      const items = cart.getItems();
+      // Hidrata cada item con datos del catálogo.
+      const rich = items.map((it) => {
+        const p = productBySku.get(it.sku);
+        return {
+          ...it,
+          name: it.title || p?.name || it.sku,
+          price: it.price || p?.price || 0,
+          image: it.image || p?.image || null,
+          brand: (typeof it.brand === 'string' ? it.brand : (it.brand?.name || null)) || p?.brand?.name || '—',
+          stock: p?.stock ?? null,
+        };
+      });
 
-      if (cart.items.length) {
-        cartContainer.innerHTML = cart.items.map((item) => `
+      if (!rich.length) {
+        cartContainer.innerHTML = `
+          <div class="bg-white border border-line rounded-2xl p-12 text-center">
+            <svg class="mx-auto mb-3 text-graphite/60" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <h2 class="font-serif text-2xl font-medium mb-1">Tu cesta esta vacia</h2>
+            <p class="text-graphite text-sm mb-6">Cuando anadas productos los veras aqui.</p>
+            <a href="/pages/tienda/tienda.html" class="btn btn-primary">Explorar la tienda</a>
+          </div>`;
+      } else {
+        cartContainer.innerHTML = rich.map((item) => `
           <div class="p-5 sm:p-6 grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr_auto] gap-5 border-b border-line last:border-0" data-sku="${item.sku}">
-            <div class="aspect-square bg-paper-2 rounded-lg grid place-items-center text-graphite/40">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            <div class="aspect-square bg-paper-2 rounded-lg grid place-items-center text-graphite/40 overflow-hidden">
+              ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-full object-contain p-2" loading="lazy"/>` : '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>'}
             </div>
             <div class="col-span-1 sm:col-auto">
-              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">${item.sku}</div>
-              <h3 class="font-medium leading-snug mb-1">${item.name}</h3>
+              <div class="text-[11px] font-mono text-graphite uppercase tracking-wider mb-1">${item.brand}</div>
+              <h3 class="font-medium leading-snug mb-1"><a href="/pages/tienda/producto.html?sku=${encodeURIComponent(item.sku)}" class="hover:underline">${item.name}</a></h3>
               <div class="font-mono text-[11px] text-graphite mb-2">SKU ${item.sku}</div>
               <div class="flex items-center gap-3 flex-wrap">
                 <div class="flex items-center bg-paper-2 rounded-full overflow-hidden">
-                  <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" data-qty-minus="${item.sku}" aria-label="-">−</button>
-                  <input type="number" value="${item.quantity}" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none" data-qty-input="${item.sku}" min="1"/>
-                  <button class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" data-qty-plus="${item.sku}" aria-label="+">+</button>
+                  <button type="button" class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" data-cart-minus="${item.sku}" aria-label="-">-</button>
+                  <input type="number" value="${item.quantity}" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none" data-cart-qty-input="${item.sku}" min="1"/>
+                  <button type="button" class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" data-cart-plus="${item.sku}" aria-label="+">+</button>
                 </div>
-                <button class="text-xs text-graphite hover:text-warn" data-delete-sku="${item.sku}">Eliminar</button>
-                <button class="text-xs text-graphite hover:text-ink">Mover a favoritos</button>
+                <button type="button" class="text-xs text-graphite hover:text-warn" data-cart-delete="${item.sku}">Eliminar</button>
               </div>
             </div>
             <div class="col-span-2 sm:col-auto sm:text-right flex items-center justify-between sm:flex-col sm:items-end sm:justify-start gap-2">
-              <span class="font-serif text-xl font-medium">${money(item.price * item.quantity)}</span>
-              <span class="pill pill-stock text-[10px]">${item.stock || 0} uds</span>
+              <span class="font-serif text-xl font-medium">${money((item.price || 0) * (item.quantity || 0))}</span>
+              ${item.stock != null ? `<span class="pill pill-stock text-[10px]">${item.stock} uds</span>` : ''}
             </div>
           </div>`).join('');
-      } else {
-        cartContainer.innerHTML = '<div class="bg-white border border-line rounded-2xl p-8 text-center">Tu carrito está vacío.</div>';
       }
-      addCartBadge(cart.items.reduce((sum, item) => sum + item.quantity, 0));
+      addCartBadge(cart.getCount());
       document.querySelectorAll('[data-cart-summary]').forEach((el) => {
-        el.textContent = `${cart.items.length} productos · listo para tramitar`;
+        const n = rich.length;
+        el.textContent = n === 0 ? 'Tu cesta esta vacia' : `${n} producto${n === 1 ? '' : 's'} listo para tramitar`;
       });
-      updateCartTotals(cart.items);
-
-      // delegate quantity, delete, and favorites for logged users
-      document.addEventListener('click', async (ev) => {
-        const delBtn = ev.target.closest('[data-delete-sku]');
-        if (delBtn) {
-          ev.preventDefault();
-          const sku = delBtn.getAttribute('data-delete-sku');
-          try {
-            await api.deleteCartItem(sku);
-            toast('Artículo eliminado del carrito.');
-            const cart2 = await api.cart();
-            addCartBadge(cart2.items.reduce((s, it) => s + it.quantity, 0));
-            location.reload();
-          } catch (err) {
-            toast(err.message || 'No se pudo eliminar el artículo.');
-          }
-          return;
-        }
-
-        const qtyPlus = ev.target.closest('[data-qty-plus]');
-        if (qtyPlus) {
-          ev.preventDefault();
-          const sku = qtyPlus.getAttribute('data-qty-plus');
-          const input = document.querySelector(`[data-qty-input="${sku}"]`);
-          if (input) {
-            const desired = Math.max(1, Number(input.value) + 1);
-            const article = document.querySelector(`[data-sku="${sku}"]`);
-            const pill = article?.querySelector('.pill');
-            let stock = null;
-            if (pill) {
-              const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
-              if (m) stock = parseInt(m[1], 10);
-            }
-            const finalQty = (stock != null) ? Math.min(desired, stock) : desired;
-            input.value = finalQty;
-            updateServerCartQuantity(sku, Number(input.value));
-          }
-          return;
-        }
-
-        const qtyMinus = ev.target.closest('[data-qty-minus]');
-        if (qtyMinus) {
-          ev.preventDefault();
-          const sku = qtyMinus.getAttribute('data-qty-minus');
-          const input = document.querySelector(`[data-qty-input="${sku}"]`);
-          if (input) {
-            input.value = Math.max(1, Number(input.value) - 1);
-            updateServerCartQuantity(sku, Number(input.value));
-          }
-          return;
-        }
-
-        // Mover a favoritos (por ahora solo toast)
-        const favBtn = [...document.querySelectorAll('button')].find(b => 
-          b.contains(ev.target) && b.textContent.includes('Mover a favoritos')
-        );
-        if (favBtn && ev.target === favBtn) {
-          ev.preventDefault();
-          toast('Función de favoritos en desarrollo.');
-          return;
-        }
-      });
-
-      // Actualizar cantidad cuando se edita el input directamente
-      document.addEventListener('change', (ev) => {
-        const input = ev.target.closest('[data-qty-input]');
-        if (!input) return;
-        const sku = input.getAttribute('data-qty-input');
-        let qty = Math.max(1, Number(input.value));
-        // clamp using displayed stock pill
-        const article = document.querySelector(`[data-sku="${sku}"]`);
-        const pill = article?.querySelector('.pill');
-        if (pill) {
-          const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
-          if (m) {
-            const stock = parseInt(m[1], 10);
-            if (!isNaN(stock)) qty = Math.min(qty, stock);
-          }
-        }
-        input.value = qty;
-        updateServerCartQuantity(sku, qty);
-      });
-
-      const updateServerCartQuantity = async (sku, newQty) => {
-        try {
-          const currentCart = await api.cart();
-          const item = currentCart.items.find((i) => i.sku === sku);
-          if (!item) return;
-          // clamp to item.stock if server provides it
-          if (typeof item.stock === 'number') {
-            newQty = Math.min(newQty, item.stock);
-          } else {
-            // fallback: try parse from rendered pill
-            const article = document.querySelector(`[data-sku="${sku}"]`);
-            const pill = article?.querySelector('.pill');
-            if (pill) {
-              const m = pill.textContent.match(/(\d+)\s*(?:uds|unidades)\b/i);
-              if (m) newQty = Math.min(newQty, parseInt(m[1], 10));
-            }
-          }
-
-          const oldQty = item.quantity;
-          const diffQty = newQty - oldQty;
-
-          // If no change after clamping, ensure input shows clamped value and exit
-          if (diffQty === 0) {
-            const article = document.querySelector(`[data-sku="${sku}"]`);
-            if (article) {
-              const input = article.querySelector('[data-qty-input]');
-              if (input) input.value = String(oldQty);
-            }
-            if (newQty < oldQty) {
-              toast('Cantidad ajustada al stock disponible.');
-            }
-            return;
-          }
-
-          // Si es diferente, actualizar en el servidor usando set-quantity (delete + add)
-          if (diffQty !== 0) {
-            // Remove existing item then re-add with desired absolute quantity
-            try {
-              await api.deleteCartItem(sku);
-            } catch (e) {
-              // ignore delete errors
-            }
-            if (newQty > 0) {
-              await api.addToCart(sku, newQty);
-            }
-            const updatedCart = await api.cart();
-
-            // Actualizar el precio visible
-            const article = document.querySelector(`[data-sku="${sku}"]`);
-            if (article) {
-              const priceEl = article.querySelector('.font-serif.text-xl');
-              const updatedItem = updatedCart.items.find((i) => i.sku === sku);
-              if (priceEl && updatedItem) {
-                priceEl.textContent = money(updatedItem.price * updatedItem.quantity);
-              }
-            }
-
-            // Actualizar totales
-            updateCartTotals(updatedCart.items);
-            addCartBadge(updatedCart.items.reduce((s, it) => s + it.quantity, 0));
-          }
-        } catch (err) {
-          console.error('[CART DEBUG] Error updating quantity:', err.message);
-          toast('Error al actualizar cantidad: ' + err.message);
-        }
-      };
-    } catch (error) {
-      toast(error.message);
+      updateCartTotals(rich.map((it) => ({ price: it.price, quantity: it.quantity })));
     }
+
+    render();
+    // Cualquier cambio (drawer, +/-, eliminar) refresca la pagina del
+    // carrito sin recargar.
+    window.addEventListener('garperlux:cart-changed', render);
+
+    // Banner: si NO hay sesion, promovemos el login pero NUNCA bloqueamos
+    // la pagina. La compra como invitado es 100% valida.
+    if (!api.getToken()) {
+      const banner = document.createElement('div');
+      banner.className = 'mb-5 rounded-xl border border-copper/30 bg-paper-2 px-5 py-4 flex items-center justify-between flex-wrap gap-3';
+      banner.innerHTML = `
+        <div class="text-sm">
+          <strong class="text-ink">Estas como invitado.</strong>
+          <span class="text-graphite"> Puedes terminar la compra sin registrarte. Si entras con tu cuenta, guardamos tu cesta y tus pedidos.</span>
+        </div>
+        <a href="/pages/auth/login.html?redirect=carrito.html" class="btn btn-sm btn-ghost">Iniciar sesion</a>`;
+      cartContainer.parentElement.insertBefore(banner, cartContainer);
+    }
+
+    // Delegacion de eventos (+, -, eliminar) usando el modulo central.
+    document.addEventListener('click', (ev) => {
+      const del = ev.target.closest('[data-cart-delete]');
+      if (del) { ev.preventDefault(); cart.removeItem(del.dataset.cartDelete); return; }
+      const plus = ev.target.closest('[data-cart-plus]');
+      if (plus) {
+        ev.preventDefault();
+        const sku = plus.dataset.cartPlus;
+        const items = cart.getItems();
+        const it = items.find((i) => i.sku === sku);
+        if (it) cart.setQty(sku, (it.quantity || 0) + 1);
+        return;
+      }
+      const minus = ev.target.closest('[data-cart-minus]');
+      if (minus) {
+        ev.preventDefault();
+        const sku = minus.dataset.cartMinus;
+        const items = cart.getItems();
+        const it = items.find((i) => i.sku === sku);
+        if (it && it.quantity > 1) cart.setQty(sku, it.quantity - 1);
+        return;
+      }
+    });
+    document.addEventListener('change', (ev) => {
+      const inp = ev.target.closest('[data-cart-qty-input]');
+      if (!inp) return;
+      const sku = inp.dataset.cartQtyInput;
+      const q = Math.max(1, Number(inp.value) || 1);
+      cart.setQty(sku, q);
+    });
   }
+
 
   // Mapeo categoría DB -> URL de página de categoría (para el breadcrumb).
   const CATEGORY_PAGE_BY_SLUG = {
@@ -2284,6 +2664,17 @@
     // Galería
     _renderImageGallery(product, root);
 
+    // Vista pro: bloques antes hardcodeados ahora dinámicos.
+    _renderProductDocs(product, root);
+    _renderProductWarehouses(product, root);
+    _renderProductVolumeTiers(product, root);
+    _renderProductDiscount(product, root);
+
+    // Pestañas inferiores: relacionados, Q&A, contadores.
+    _renderRelatedProducts(product, root);
+    _renderProductQA(product, root);
+    _renderReviewMeta(product, root);
+
     // Bind add-to-cart buttons
     root.querySelectorAll('button').forEach((button) => {
       if (/añadir|carrito/i.test(button.textContent) || button.getAttribute('aria-label') === 'Añadir') {
@@ -2291,6 +2682,329 @@
         button.dataset.sku = product.sku;
       }
     });
+  }
+
+  // ============== HELPERS DE VISTA PRO Y RELACIONADOS ==============
+
+  // Hash determinista 0-2^32 a partir de un string. Lo usamos para repartir
+  // stock entre almacenes y elegir Q&A/relacionados sin aleatoriedad.
+  function _hash(s) {
+    let h = 2166136261;
+    const str = String(s || '');
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+
+  // Devuelve los documentos disponibles para el producto.
+  //   - Ficha técnica: SIEMPRE que el producto tenga specs útiles. Es un
+  //     resumen propio (no inventado) generado a partir de la información
+  //     real del catálogo: nombre, marca, SKU, EAN, especificaciones.
+  //   - Documentos oficiales: TODOS los enlaces a PDFs reales scrapeados
+  //     del proveedor original (specs._documents lo pobla
+  //     scripts/scraper/import_documents.py).
+  // No se inventan manuales ni declaraciones CE — sólo se enseña lo que
+  // realmente existe en el catálogo o en la web original del producto.
+  function _resolveProductDocuments(product) {
+    if (!product) return [];
+    const docs = [];
+    const specs = product.specs || {};
+    const usefulSpecs = Object.entries(specs).filter(([k, v]) => !k.startsWith('_') && v != null && String(v).trim() && !/^no$/i.test(String(v).trim()));
+
+    // Tamaño aproximado de la ficha técnica generada (determinista por SKU).
+    const h = _hash(product.sku || product.slug || product.name || '');
+    const fmtKb = (min, max) => `${min + (h % (max - min + 1))} KB`;
+
+    if (usefulSpecs.length >= 2) {
+      docs.push({
+        type: 'ficha',
+        label: 'Ficha técnica',
+        size: fmtKb(220, 460),
+        color: 'warn',
+        icon: 'doc',
+      });
+    }
+
+    // Documentos oficiales scrapeados (specs._documents).
+    const official = Array.isArray(specs._documents) ? specs._documents : [];
+    const ICON_BY_TYPE = { manual: 'list', datasheet: 'doc', ce: 'check', catalog: 'doc', official: 'doc' };
+    const COLOR_BY_TYPE = { manual: 'graphite', datasheet: 'warn', ce: 'electric', catalog: 'copper', official: 'copper' };
+    for (const doc of official) {
+      if (!doc || !doc.url) continue;
+      const docType = (doc.type || 'official').toLowerCase();
+      // Etiqueta más legible: si la del scraper viene en mayúsculas,
+      // suavizamos la presentación.
+      const rawLabel = (doc.label || 'Documento del fabricante').trim();
+      const label = rawLabel.length > 38 ? `${rawLabel.slice(0, 36)}…` : rawLabel;
+      docs.push({
+        type: `official-${docType}`,
+        label,
+        size: doc.size || 'PDF',
+        color: COLOR_BY_TYPE[docType] || 'copper',
+        icon: ICON_BY_TYPE[docType] || 'doc',
+        href: doc.url,
+        host: doc.source_host || (() => { try { return new URL(doc.url).hostname; } catch { return ''; } })(),
+        isOfficial: true,
+      });
+    }
+
+    return docs;
+  }
+
+  function _renderProductDocs(product, ctx) {
+    const host = ctx.querySelector('[data-glx-docs]');
+    if (!host) return;
+    const docs = _resolveProductDocuments(product);
+    if (!docs.length) {
+      host.hidden = true;
+      host.innerHTML = '';
+      return;
+    }
+    host.hidden = false;
+    // Layout responsive: 1 botón → ancho completo; 2 → grid de 2;
+    // 3 o más → grid de 3 (las filas siguientes envuelven automáticamente).
+    host.className = `view-pro mt-4 grid gap-2 ${docs.length === 1 ? 'grid-cols-1' : docs.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`;
+
+    const ICONS = {
+      doc: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+      check: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.39 0 4.68.94 6.36 2.64"/></svg>',
+      list: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM16 13H8M16 17H8M10 9H8"/></svg>',
+    };
+
+    host.innerHTML = docs.map((d) => {
+      const isOfficial = !!d.isOfficial;
+      const href = isOfficial
+        ? d.href
+        : `/pages/tienda/documento.html?sku=${encodeURIComponent(product.sku)}&type=${encodeURIComponent(d.type)}`;
+      // Para los oficiales mostramos un badge "OFICIAL · {host}" y el icono de
+      // enlace externo, para que el usuario vea que abre la web del fabricante.
+      const externalIcon = isOfficial
+        ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-70 ml-1"><path d="M14 3h7v7M21 3l-9 9M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>'
+        : '';
+      const badge = isOfficial
+        ? `<span class="block font-mono text-[9px] text-copper uppercase tracking-wider mt-0.5">Oficial · ${escapeHtml((d.host || '').replace(/^www\./, ''))}</span>`
+        : '';
+      const sizeLabel = isOfficial ? (d.size || 'PDF') : `PDF · ${d.size}`;
+      const wrapClass = isOfficial
+        ? 'bg-paper-2 border border-copper/40 hover:border-copper'
+        : 'bg-white border border-line hover:border-ink';
+      return `
+      <a href="${escapeHtml(href)}"
+         target="_blank" rel="noopener${isOfficial ? ' nofollow external' : ''}"
+         class="${wrapClass} rounded-lg p-3 transition-colors flex items-center gap-3 no-underline"
+         data-doc-button="${escapeHtml(d.type)}"
+         ${isOfficial ? 'data-doc-official="true"' : ''}
+         aria-label="${isOfficial ? 'Abrir documento oficial' : 'Abrir'} ${escapeHtml(d.label)}">
+        <span class="text-${escapeHtml(d.color)} shrink-0">${ICONS[d.icon] || ICONS.doc}</span>
+        <span class="text-left text-xs min-w-0 flex-1">
+          <span class="block font-medium text-ink truncate" title="${escapeHtml(d.label)}">${escapeHtml(d.label)}${externalIcon}</span>
+          <span class="block font-mono text-[10px] text-graphite">${escapeHtml(sizeLabel)}</span>
+          ${badge}
+        </span>
+      </a>`;
+    }).join('');
+  }
+
+  // Disponibilidad del producto en la vista pro: un único almacén (sede
+  // central de Jaén). Antes había una tabla de 2-3 almacenes ficticios, pero
+  // GarperLux solo tiene un almacén físico, así que mostramos solo el total
+  // y la fecha aproximada de próxima reposición.
+  function _renderProductWarehouses(product, ctx) {
+    const host = ctx.querySelector('[data-glx-warehouses]');
+    if (!host) return;
+    const total = Number(product.stock || 0);
+    if (total <= 0) {
+      host.hidden = false;
+      host.className = 'view-pro bg-white border border-line rounded-xl overflow-hidden';
+      host.innerHTML = `
+        <div class="px-4 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite">
+          Disponibilidad
+        </div>
+        <div class="px-4 py-4 flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-warn shrink-0"></span>
+          <div class="flex-1">
+            <div class="text-sm font-medium">Sin stock disponible</div>
+            <div class="text-xs text-graphite">Consulta plazo de reposición desde tu cuenta o por teléfono.</div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+    host.hidden = false;
+    const h = _hash(product.sku || product.slug || product.name || '');
+    const reposDate = new Date();
+    reposDate.setDate(reposDate.getDate() + 14 + (h % 17));
+    const dd = String(reposDate.getDate()).padStart(2, '0');
+    const mm = String(reposDate.getMonth() + 1).padStart(2, '0');
+    const yyyy = reposDate.getFullYear();
+    const reposUnits = 80 + (h % 220);
+
+    host.className = 'view-pro bg-white border border-line rounded-xl overflow-hidden';
+    host.innerHTML = `
+      <div class="px-4 py-3 bg-paper-2 border-b border-line text-xs font-mono uppercase tracking-wider text-graphite flex items-center justify-between">
+        <span>Disponibilidad</span>
+        <span class="text-stock">● ${total} uds en almacén</span>
+      </div>
+      <div class="px-4 py-4 flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-stock animate-pulse shrink-0"></span>
+        <div class="flex-1">
+          <div class="text-sm font-medium">Jaén · Las Lagunillas</div>
+          <div class="text-xs text-graphite">Sede central · Pedidos antes de las 17:00 salen el mismo día.</div>
+        </div>
+        <div class="font-mono text-xs text-graphite text-right shrink-0">
+          <div>Próxima reposición</div>
+          <div class="text-ink">+${reposUnits} uds · ${dd}-${mm}-${yyyy}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Escalado por volumen: 3 tramos calculados sobre el precio pro.
+  function _renderProductVolumeTiers(product, ctx) {
+    const host = ctx.querySelector('[data-glx-volume-tiers]');
+    if (!host) return;
+    const price = Number(product.price || 0);
+    if (price <= 0) { host.hidden = true; host.innerHTML = ''; return; }
+    const proPrice = +(price * 0.78).toFixed(2);
+    const tier10 = +(proPrice * 0.94).toFixed(2);
+    const tier25 = +(proPrice * 0.88).toFixed(2);
+    const tier100 = +(proPrice * 0.82).toFixed(2);
+    host.hidden = false;
+    host.innerHTML = `
+      <div class="font-medium text-ink mb-1.5">Escalado por volumen</div>
+      <div class="grid grid-cols-3 gap-2 font-mono">
+        <div><span class="text-graphite">10+ uds</span><br/><strong class="text-ink">${money(tier10)}</strong></div>
+        <div><span class="text-graphite">25+ uds</span><br/><strong class="text-ink">${money(tier25)}</strong></div>
+        <div><span class="text-graphite">100+ uds</span><br/><strong class="text-ink">${money(tier100)}</strong></div>
+      </div>
+    `;
+  }
+
+  // Descuento profesional: 22% sobre el PVP. Lo dejamos centralizado por si
+  // en el futuro quisiéramos variarlo por categoría/marca.
+  function _renderProductDiscount(product, ctx) {
+    const el = ctx.querySelector('[data-glx-pro-discount]');
+    if (!el) return;
+    el.textContent = '−22%';
+  }
+
+  // Productos relacionados: misma categoría (excluyendo la variante actual),
+  // hasta 4 elementos elegidos de forma determinista por hash.
+  async function _renderRelatedProducts(product, ctx) {
+    const host = ctx.querySelector('[data-glx-related]');
+    if (!host) return;
+    if (!product.category?.slug) { host.innerHTML = ''; return; }
+    let pool;
+    try {
+      pool = await api.products({ category: product.category.slug });
+    } catch {
+      host.innerHTML = '';
+      return;
+    }
+    const candidates = (pool || []).filter((p) => p.sku !== product.sku);
+    if (!candidates.length) { host.innerHTML = '<div class="col-span-full text-sm text-graphite text-center py-6">No hay productos relacionados.</div>'; return; }
+    const h = _hash(product.sku);
+    const start = candidates.length > 4 ? h % (candidates.length - 4) : 0;
+    const picks = candidates.slice(start, start + 4);
+
+    host.innerHTML = picks.map((p) => `
+      <a href="/pages/tienda/producto.html?sku=${encodeURIComponent(p.sku)}" class="card-prod group" data-sku="${escapeHtml(p.sku)}">
+        <div class="img grid place-items-center text-graphite/30 ${p.image ? 'relative overflow-hidden' : ''}">
+          ${p.image
+            ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" class="absolute inset-0 w-full h-full object-contain p-3"/>`
+            : '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>'}
+        </div>
+        <div>
+          <div class="text-[11px] font-mono text-graphite">${escapeHtml(p.brand?.name || '—')}</div>
+          <h3 class="text-[14px] font-medium leading-snug">${escapeHtml(p.name)}</h3>
+          <div class="font-mono text-[11px] text-graphite/70">SKU ${escapeHtml(p.sku)}</div>
+        </div>
+        <div class="font-serif text-lg font-medium">${money(p.price)}</div>
+      </a>
+    `).join('');
+  }
+
+  // Q&A genera 2-3 preguntas/respuestas según categoría + algunas comunes.
+  function _renderProductQA(product, ctx) {
+    const host = ctx.querySelector('[data-glx-qa]');
+    if (!host) return;
+    const cat = (product.category && product.category.slug) || '';
+    const brand = product.brand?.name || 'el fabricante';
+    const QA_BY_CAT = {
+      'mecanismos': [
+        { q: '¿Incluye el marco?', a: `No, este producto es solo el mecanismo. El marco se vende aparte para que puedas elegir el acabado y serie compatible (${brand} u otra de la misma gama).` },
+        { q: '¿Vale para sustituir un mecanismo de otra marca?', a: 'El mecanismo encaja en una caja universal estándar, pero el marco antiguo no será compatible: tendrás que cambiarlo también por uno de la misma serie.' },
+        { q: '¿Sirve para zonas húmedas como un baño?', a: 'En interior con IP20 vale para baño SIEMPRE QUE estés fuera del volumen de protección de la ducha o bañera. Para zonas con agua directa necesitas un mecanismo estanco IP44/IP55.' },
+      ],
+      'iluminacion': [
+        { q: '¿Es regulable con un dimmer estándar?', a: 'Solo si el producto está marcado como regulable. Verifica que el dimmer sea compatible con LED para evitar parpadeos o ruidos.' },
+        { q: '¿Cuánta vida útil real tiene?', a: 'La vida declarada es L70 (la luminaria pierde un 30% de flujo a esa hora). En uso doméstico 3 h/día equivale a unos 20 años aproximadamente.' },
+        { q: '¿Tira un calor que pueda fundir el plafón?', a: 'No, los LED apenas calientan el plafón. Sí calienta ligeramente el disipador interior, pero está dimensionado para no superar la temperatura admisible del material.' },
+      ],
+      'proteccion': [
+        { q: '¿Puedo cambiarlo yo en el cuadro?', a: 'Solo si tienes formación eléctrica básica y trabajas con tensión cortada y verificada. En instalaciones bajo BT solo está autorizado el titular o un instalador autorizado para añadir circuitos.' },
+        { q: '¿Cuántos módulos ocupa en el cuadro?', a: 'Verifica los módulos en la ficha técnica. Magnetotérmicos 1P+N suelen ocupar 1 módulo; diferenciales 2P, 2 módulos; magnetotérmicos 4P, 4 módulos.' },
+        { q: '¿Cómo se prueba el diferencial?', a: 'Pulsando el botón TEST cada mes. Debe disparar inmediatamente. Si no salta, sustitúyelo: la persona pasa a estar desprotegida.' },
+      ],
+      'automatismos': [
+        { q: '¿Es compatible con mi puerta?', a: `Verifica peso, longitud y altura de la hoja. Cada modelo tiene un máximo declarado por ${brand}; no superes ese límite o el motor sufrirá.` },
+        { q: '¿Necesito una línea eléctrica nueva?', a: 'Sí: el motor debe ir a una línea independiente con magnetotérmico propio en el cuadro y, si va al exterior, con diferencial dedicado.' },
+        { q: '¿Cuántos mandos puedo memorizar?', a: 'La centralita admite el número indicado en la ficha técnica (típicamente 30-450 emisores). Puedes borrar mandos perdidos sin afectar al resto.' },
+        { q: '¿Funciona en caso de corte de luz?', a: 'No automáticamente. Para mantener el servicio en cortes, instala una batería de emergencia compatible con tu modelo.' },
+      ],
+      'porteros-videoporteros': [
+        { q: '¿Es compatible con instalaciones antiguas de 4+N hilos?', a: 'Solo si el modelo está específicamente marcado como compatible con esa cableación. Modelos modernos suelen usar 2 hilos no polarizados (sistema digital).' },
+        { q: '¿Puedo desviar la llamada al móvil?', a: 'Sí en los modelos WiFi. Tendrás que emparejar el monitor con la app del fabricante y tener la vivienda con buena cobertura WiFi 2.4 GHz.' },
+        { q: '¿Funciona si se va la luz?', a: 'No, requiere alimentación. Si la instalación es crítica, valora añadir un SAI o un alimentador con respaldo de batería.' },
+      ],
+      'domotica': [
+        { q: '¿Necesita un hub o cubo central?', a: 'Depende del protocolo. Wi-Fi y Matter funcionan directos al router. Zigbee/Z-Wave necesitan un hub compatible. Revisa la sección de conectividad de la ficha técnica.' },
+        { q: '¿Funciona sin internet?', a: 'Las funciones locales sí (encendido manual desde el dispositivo o un mando físico asociado). Las funciones remotas y por voz sí requieren internet.' },
+        { q: '¿Puedo automatizarlo con Alexa o Google Home?', a: 'La mayoría sí, vinculando la cuenta del fabricante con el asistente. Confirma compatibilidad en la ficha del producto.' },
+      ],
+      'seguridad': [
+        { q: '¿Necesita instalación profesional?', a: 'Para sistemas conectados a CRA (Central Receptora de Alarmas) sí, por normativa. Sistemas autónomos los puedes instalar tú siguiendo el manual.' },
+        { q: '¿Funciona con corte de luz?', a: 'Sí, las centralitas llevan batería interna que da autonomía durante varias horas. Las cámaras Wi-Fi pierden la transmisión si cae el router.' },
+      ],
+      'antenas-telecomunicaciones': [
+        { q: '¿Vale para TDT y para satélite?', a: 'Verifica el rango de frecuencia indicado. Antenas UHF cubren TDT (470-790 MHz). Para satélite necesitas una parabólica con LNB universal.' },
+        { q: '¿Hace falta un técnico para apuntarla?', a: 'Recomendable. Sin medidor de campo es difícil optimizar el nivel y la calidad (BER) de señal.' },
+      ],
+      'cableado': [
+        { q: '¿Qué sección elijo?', a: 'Depende de la potencia y la longitud. Para alumbrado 1,5 mm²; para enchufes generales 2,5 mm²; cocinas/lavadoras 4 mm²; cargadores VE consulta cálculo específico.' },
+        { q: '¿Puedo empalmar dos tramos?', a: 'Solo dentro de una caja registrable y con bornes homologados (no recortes con cinta aislante). Las cajas deben ser accesibles.' },
+      ],
+    };
+    const generic = [
+      { q: '¿Tiene garantía?', a: `Sí. Los productos vendidos por GarperLux tienen como mínimo 3 años de garantía legal frente al consumidor (RD-Ley 7/2021), ampliable según las condiciones que aplique ${brand}.` },
+      { q: '¿Cómo lo devuelvo si no me sirve?', a: 'Tienes 30 días desde la recepción para devolverlo sin preguntas. Inicia el proceso desde tu cuenta o llama al servicio de atención al cliente.' },
+    ];
+
+    const list = (QA_BY_CAT[cat] || []).slice(0, 3).concat(generic.slice(0, 1));
+    host.innerHTML = list.map((item) => `
+      <details class="bg-paper-2 border border-line rounded-xl p-5 group open:border-ink">
+        <summary class="flex items-start justify-between gap-4 cursor-pointer list-none">
+          <h4 class="font-medium">${escapeHtml(item.q)}</h4>
+          <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+        </summary>
+        <p class="text-graphite text-sm mt-3">${escapeHtml(item.a)}</p>
+      </details>
+    `).join('');
+
+    const counter = ctx.querySelector('[data-glx-qa-count]');
+    if (counter) counter.textContent = `(${list.length})`;
+  }
+
+  // Actualiza el contador de reseñas en la pestaña a partir del hash del SKU
+  // (el bloque visual de reseñas se mantiene como demo de UJA).
+  function _renderReviewMeta(product, ctx) {
+    const counter = ctx.querySelector('[data-glx-rev-count]');
+    if (!counter) return;
+    const h = _hash(product.sku || '');
+    const total = 18 + (h % 220);
+    counter.textContent = `(${total})`;
   }
 
   function bindCheckout() {
@@ -2384,18 +3098,45 @@
         return;
       }
       event.preventDefault();
-      if (!requireSession()) return;
+      const selectedPayment = document.querySelector('input[name="metodo"]:checked')?.closest('.pay-method')?.textContent?.replace(/\s+/g, ' ').trim() || 'Tarjeta demo';
+      const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
+
+      // Modo INVITADO: nunca bloqueamos. Generamos un pedido local con un
+      // código aleatorio y la confirmación funciona desde localStorage. El
+      // usuario podrá vincularlo a su cuenta más tarde si se registra.
+      if (!api.getToken()) {
+        const items = (window.GarperLuxCart?.getItems()) || [];
+        if (!items.length) { toast('Tu cesta está vacía.'); return; }
+        const subtotal = items.reduce((s, it) => s + ((it.price || 0) * (it.quantity || 0)), 0);
+        const tax = +(subtotal * 0.21).toFixed(2);
+        const total = +(subtotal + tax + SHIPPING_COST).toFixed(2);
+        const code = 'GLX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 5).toUpperCase();
+        const lastOrder = {
+          code,
+          status: 'pendiente',
+          guest: true,
+          items: items.map((i) => ({ sku: i.sku, title: i.title, name: i.title, price: i.price, quantity: i.quantity })),
+          totals: { subtotal, tax, shipping: SHIPPING_COST, total },
+          payment: selectedPayment,
+          shippingMethod: draft.shippingMethod || 'standard',
+          createdAt: new Date().toISOString(),
+        };
+        localStorage.setItem('garperlux_last_order', JSON.stringify(lastOrder));
+        localStorage.removeItem(CHECKOUT_KEY);
+        if (window.GarperLuxCart) window.GarperLuxCart.clear();
+        location.href = `/pages/tienda/pedido-confirmado.html?order=${encodeURIComponent(code)}`;
+        return;
+      }
+
       try {
         const options = await api.checkoutOptions();
-        const selectedPayment = document.querySelector('input[name="metodo"]:checked')?.closest('.pay-method')?.textContent?.replace(/\s+/g, ' ').trim() || 'Tarjeta demo';
-        const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
         const order = await api.checkout({
           ...draft,
           payment: selectedPayment,
           paymentMethodId: options.paymentMethods?.[0]?.id || null,
           acceptedTerms: true,
         });
-        // Guardar también los items del carrito en localStorage para poder mostrar la confirmación incluso sin sesión
+        // Guardar items en localStorage para mostrar confirmación incluso si la sesión expira
         const cartItems = options?.cart?.items || (JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]'));
         const lastOrder = { ...order, items: cartItems, totals: order.totals || options?.totals || null };
         localStorage.setItem('garperlux_last_order', JSON.stringify(lastOrder));
@@ -3135,13 +3876,72 @@
     await load().catch((error) => toast(error.message));
   }
 
+  // Cifras globales que aparecen en topbars y descripciones: total de
+  // referencias del catálogo y total de marcas. Se rellenan en cuanto la
+  // app arranca, sin pegar al backend si no hay marcadores en la página.
+  async function bindGlobalStats() {
+    const refTargets = document.querySelectorAll('[data-glx-stat-references-inline], [data-glx-stat-references]');
+    const brandTargets = document.querySelectorAll('[data-glx-stat-brands]');
+    if (!refTargets.length && !brandTargets.length) return;
+    const fmt = (n) => Number(n || 0).toLocaleString('es-ES');
+    try {
+      const [products, brands] = await Promise.all([
+        refTargets.length ? api.products({}).catch(() => []) : [],
+        brandTargets.length ? api.brands().catch(() => []) : [],
+      ]);
+      refTargets.forEach((el) => { el.textContent = fmt((products || []).length); });
+      brandTargets.forEach((el) => { el.textContent = fmt((brands || []).length); });
+    } catch { /* noop */ }
+  }
+
+  // Carga perezosa del módulo del cart-drawer: cualquier página que tenga
+  // backend-integration.js (todas) podrá usar GarperLuxCartDrawer sin que
+  // toquemos el HTML.
+  function _ensureCartDrawer() {
+    if (window.GarperLuxCartDrawer) return;
+    if (document.querySelector('script[data-glx-cart-drawer]')) return;
+    const s = document.createElement('script');
+    s.src = '/assets/js/cart-drawer.js';
+    s.dataset.glxCartDrawer = '1';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  function _ensureCartModule() {
+    if (window.GarperLuxCart) return;
+    if (document.querySelector('script[data-glx-cart]')) return;
+    const s = document.createElement('script');
+    s.src = '/assets/js/cart.js';
+    s.dataset.glxCart = '1';
+    // No-async: necesitamos que esté listo antes de procesar clicks.
+    document.head.appendChild(s);
+  }
+  function _ensureCartRecos() {
+    if (window.GarperLuxCartRecos) return;
+    if (document.querySelector('script[data-glx-cart-recos-loader]')) return;
+    // Solo en la página del carrito tiene sentido cargarlo.
+    if (page !== '/pages/tienda/carrito.html') return;
+    const s = document.createElement('script');
+    s.src = '/assets/js/cart-recos.js';
+    // OJO: usamos un atributo DIFERENTE al data-glx-cart-recos del marcado
+    // (el contenedor en carrito.html lleva ese mismo dataset). Si fueran
+    // iguales, querySelector('[data-glx-cart-recos]') matchearía el script
+    // en <head> antes que el div del carrito y romperíamos el render.
+    s.dataset.glxCartRecosLoader = '1';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
   async function boot() {
+    _ensureCartModule();
+    _ensureCartDrawer();
+    _ensureCartRecos();
     bindLogin();
     bindPasswordRecovery();
     if (!publicAuthlessPages.has(page)) {
       await syncSessionToLegacyAuth();
       await refreshCartCount();
     }
+    bindGlobalStats();
     bindCatalogActions();
     bindCheckout();
     bindConfirmationPages();
@@ -3161,6 +3961,10 @@
   }
 
   document.addEventListener('garperlux:components-ready', () => {
+    // Hidrata el badge del header incluso si el usuario es invitado: la
+    // verdad sale de localStorage / GarperLuxCart, no del server.
+    if (window.GarperLuxCart) window.GarperLuxCart.refreshBadges();
+    else addCartBadge(Number(localStorage.getItem('garperlux_cart_count') || 0));
     if (publicAuthlessPages.has(page)) return;
     syncLegacySessionToApi().finally(() => window.glxRefreshSidebarCounts?.());
     syncSessionToLegacyAuth().finally(() => window.glxRefreshSidebarCounts?.());

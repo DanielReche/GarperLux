@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <base href="/.">
@@ -31,7 +31,7 @@
     <div class="container-x flex items-center justify-between py-2">
       <span class="opacity-90 hidden sm:inline-flex items-center gap-2">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg>
-        12.480 referencias · stock verificado en tiempo real
+        <span data-glx-stat-references-inline>—</span> referencias · stock verificado en tiempo real
       </span>
       <a href="/pages/auth/login.html" class="link-underline opacity-90">Tarifas profesionales</a>
     </div>
@@ -56,36 +56,34 @@
           <em class="italic text-filament">eléctrica.</em>
         </h1>
         <p class="mt-6 text-graphite text-lg max-w-xl leading-relaxed">
-          12.480 referencias de las marcas que de verdad usan los electricistas. Stock real en tiempo real, envío en 24–48 h y devoluciones gratis durante 30 días.
+          <span data-glx-stat-references-inline>—</span> referencias de las marcas que de verdad usan los electricistas. Stock real en tiempo real, envío en 24–48 h y devoluciones gratis durante 30 días.
         </p>
       </div>
 
       <div class="lg:col-span-5">
-        <!-- Buscador especializado -->
-        <div class="bg-white rounded-2xl border border-line p-5 shadow-sm">
-          <div class="eyebrow text-graphite mb-3">Buscador profesional</div>
-          <div class="flex gap-2 mb-3">
-            <button class="px-3 py-1.5 rounded-full bg-ink text-paper text-xs font-medium">Por nombre</button>
-            <button class="px-3 py-1.5 rounded-full bg-paper-2 text-graphite text-xs font-mono hover:bg-paper-3">Por referencia / SKU</button>
-            <button class="px-3 py-1.5 rounded-full bg-paper-2 text-graphite text-xs font-mono hover:bg-paper-3">Por código de barras</button>
-          </div>
+        <!-- Buscador unificado: nombre, marca, SKU, EAN o lenguaje natural ("bombilla rosca gorda"). -->
+        <form action="/pages/tienda/buscador.html" method="get" class="bg-white rounded-2xl border border-line p-5 shadow-sm">
+          <div class="eyebrow text-graphite mb-3">Buscador unificado</div>
           <div class="relative">
-            <input id="tienda-search" type="search" placeholder="Ej: Schneider iC60N o 27101-31" class="w-full pl-12 pr-4 py-4 bg-paper border border-line rounded-xl text-[15px] placeholder:text-graphite/60 focus:border-ink outline-none font-mono" />
+            <input id="tienda-search" type="search" name="q" autocomplete="off"
+              placeholder='Busca por nombre, marca, SKU, código de barras o "bombilla rosca gorda"…'
+              class="w-full pl-12 pr-24 py-4 bg-paper border border-line rounded-xl text-[15px] placeholder:text-graphite/55 focus:border-ink outline-none"/>
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-graphite" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <button type="submit" class="absolute right-2.5 top-1/2 -translate-y-1/2 btn btn-sm btn-ink">Buscar</button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
 
-    <!-- Barra de cifras -->
+    <!-- Barra de cifras (referencias y marcas se rellenan al cargar el catálogo). -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border border-line rounded-xl overflow-hidden">
       <div class="bg-paper p-5">
         <div class="font-mono text-xs text-graphite uppercase tracking-wider mb-1">Referencias</div>
-        <div class="font-serif text-2xl font-medium">12.480</div>
+        <div class="font-serif text-2xl font-medium" data-glx-stat-references>—</div>
       </div>
       <div class="bg-paper p-5">
-        <div class="font-mono text-xs text-graphite uppercase tracking-wider mb-1">Marcas pro</div>
-        <div class="font-serif text-2xl font-medium">14</div>
+        <div class="font-mono text-xs text-graphite uppercase tracking-wider mb-1">Marcas</div>
+        <div class="font-serif text-2xl font-medium" data-glx-stat-brands>—</div>
       </div>
       <div class="bg-paper p-5">
         <div class="font-mono text-xs text-graphite uppercase tracking-wider mb-1">Envío gratis</div>
@@ -118,7 +116,7 @@
         <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(11,13,18,0.2) 0%, rgba(11,13,18,0.85) 100%);"></div>
         <div class="absolute top-6 left-6 right-6 flex items-start justify-between">
           <span class="pill pill-dark">Más popular</span>
-          <span class="font-mono text-xs text-paper/60">2.184 ref.</span>
+          <span class="font-mono text-xs text-paper/60" data-glx-cat-count="iluminacion">— ref.</span>
         </div>
         <div class="absolute bottom-6 left-6 right-6">
           <div class="font-mono text-xs text-paper/60 mb-2 uppercase tracking-wider">Familia 01</div>
@@ -139,7 +137,7 @@
             <h3 class="font-serif text-3xl md:text-4xl font-medium leading-tight">Mecanismos</h3>
             <p class="text-sm text-graphite mt-2">Interruptores, enchufes, conmutadores.</p>
           </div>
-          <span class="font-mono text-xs text-graphite">1.642 ref.</span>
+          <span class="font-mono text-xs text-graphite" data-glx-cat-count="mecanismos">— ref.</span>
         </div>
         <div class="relative flex items-center justify-between">
           <div class="flex gap-2 text-xs text-graphite">
@@ -163,7 +161,7 @@
             <h3 class="font-serif text-3xl md:text-4xl font-medium leading-tight">Cableado y Canalizaciones</h3>
             <p class="text-sm text-graphite mt-2">Hilos, mangueras, bobinas y tubo corrugado.</p>
           </div>
-          <span class="font-mono text-xs text-graphite">948 ref.</span>
+          <span class="font-mono text-xs text-graphite" data-glx-cat-count="cableado">— ref.</span>
         </div>
         <div class="relative flex items-center justify-between">
           <span class="pill pill-info text-[10px]">Corte por metros</span>
@@ -182,7 +180,7 @@
           <p class="text-sm text-graphite mt-2">Magnetotérmicos, diferenciales, protectores.</p>
         </div>
         <div class="relative flex items-end justify-between">
-          <span class="font-mono text-xs text-graphite">1.124 ref.</span>
+          <span class="font-mono text-xs text-graphite" data-glx-cat-count="proteccion">— ref.</span>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-graphite group-hover:text-filament transition-colors"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </a>
@@ -196,7 +194,7 @@
           <p class="text-sm text-graphite mt-2">Telefonillos, cámaras Wi-Fi, monitores.</p>
         </div>
         <div class="relative flex items-end justify-between">
-          <span class="font-mono text-xs text-graphite">472 ref.</span>
+          <span class="font-mono text-xs text-graphite" data-glx-cat-count="porteros-videoporteros">— ref.</span>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-graphite group-hover:text-filament transition-colors"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </a>
@@ -214,7 +212,7 @@
           <p class="text-sm text-paper/70 mt-2">Shelly, Sonoff, Aqara, Hue.</p>
         </div>
         <div class="relative flex items-end justify-between">
-          <span class="font-mono text-xs text-paper/60">1.348 ref.</span>
+          <span class="font-mono text-xs text-paper/60" data-glx-cat-count="domotica">— ref.</span>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-filament"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </a>
@@ -227,7 +225,7 @@
           <h3 class="font-serif text-xl font-medium leading-tight">Automatismos</h3>
           <p class="text-sm text-graphite mt-2">Persianas, puertas, garaje.</p>
         </div>
-        <span class="font-mono text-xs text-graphite">692 ref.</span>
+        <span class="font-mono text-xs text-graphite" data-glx-cat-count="automatismos">— ref.</span>
       </a>
 
       <a href="/pages/tienda/antenas-telecomunicaciones.html" class="md:col-span-2 group relative overflow-hidden rounded-2xl border border-line bg-white p-6 min-h-[180px] flex flex-col justify-between hover:border-ink transition-colors" style="background-image: url('/assets/img/categorias/cat_antenas-teleco.jpg'); background-size: cover; background-position: center;">
@@ -237,7 +235,7 @@
           <h3 class="font-serif text-xl font-medium leading-tight">Antenas y telecomunicaciones</h3>
           <p class="text-sm text-graphite mt-2">TV, satélite, redes, fibra.</p>
         </div>
-        <span class="font-mono text-xs text-graphite">812 ref.</span>
+        <span class="font-mono text-xs text-graphite" data-glx-cat-count="antenas-telecomunicaciones">— ref.</span>
       </a>
 
       <a href="/pages/tienda/seguridad.html" class="md:col-span-2 group relative overflow-hidden rounded-2xl border border-line bg-white p-6 min-h-[180px] flex flex-col justify-between hover:border-ink transition-colors" style="background-image: url('/assets/img/categorias/cat_seguridad.png'); background-size: cover; background-position: center;">
@@ -247,7 +245,7 @@
           <h3 class="font-serif text-xl font-medium leading-tight">Seguridad</h3>
           <p class="text-sm text-graphite mt-2">Alarmas, sensores, cámaras IP.</p>
         </div>
-        <span class="font-mono text-xs text-graphite">528 ref.</span>
+        <span class="font-mono text-xs text-graphite" data-glx-cat-count="seguridad">— ref.</span>
       </a>
     </div>
   </section>
@@ -457,18 +455,24 @@
     </div>
   </section>
 
-  <!-- ============ BANDA PRO ============ -->
-  <section class="bg-ink text-paper">
-    <div class="container-x py-16 md:py-20">
-      <div class="grid lg:grid-cols-12 gap-10 items-center">
-        <div class="lg:col-span-7">
-          <div class="eyebrow text-filament mb-4">Eres instalador autorizado</div>
-          <h2 class="h1 text-paper mb-4">Tarifas profesionales y stock al instante.</h2>
-          <p class="text-paper/70 leading-relaxed max-w-xl">Regístrate como instalador con carnet vigente y accede a precios especiales, descargas de albaranes, búsqueda por referencia y un panel pensado para no perder tardes en la oficina.</p>
-        </div>
-        <div class="lg:col-span-5 lg:text-right space-y-3">
-          <a href="/pages/auth/login.html" class="btn btn-primary w-full lg:w-auto justify-center">Acceder al área pro</a>
-          <a href="/pages/auth/login.html#registro-pro" class="btn btn-ghost-light w-full lg:w-auto justify-center">Registrarse</a>
+  <!-- ============ BANDA PRO — tarjeta flotante con separación visible
+       respecto al footer para que no parezca parte del pie de página ============ -->
+  <section class="container-x pb-20 md:pb-24">
+    <div class="relative rounded-3xl overflow-hidden bg-ink text-paper shadow-[0_30px_60px_-30px_rgba(11,13,18,0.45)]">
+      <!-- glow decorativo -->
+      <div aria-hidden="true" class="pointer-events-none absolute -top-24 -right-16 w-72 h-72 rounded-full" style="background: radial-gradient(circle, rgba(232,165,69,0.35) 0%, rgba(232,165,69,0) 70%);"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute -bottom-32 -left-24 w-80 h-80 rounded-full" style="background: radial-gradient(circle, rgba(184,117,58,0.18) 0%, rgba(184,117,58,0) 70%);"></div>
+      <div class="relative px-7 py-12 md:px-14 md:py-16">
+        <div class="grid lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-7">
+            <div class="eyebrow text-filament mb-4">Eres instalador autorizado</div>
+            <h2 class="h1 text-paper mb-4">Tarifas profesionales y stock al instante.</h2>
+            <p class="text-paper/70 leading-relaxed max-w-xl">Regístrate como instalador con carnet vigente y accede a precios especiales, descargas de albaranes, búsqueda por referencia y un panel pensado para no perder tardes en la oficina.</p>
+          </div>
+          <div class="lg:col-span-5 lg:text-right space-y-3">
+            <a href="/pages/auth/login.html" class="btn btn-primary w-full lg:w-auto justify-center">Acceder al área pro</a>
+            <a href="/pages/auth/login.html#registro-pro" class="btn btn-ghost-light w-full lg:w-auto justify-center">Registrarse</a>
+          </div>
         </div>
       </div>
     </div>
@@ -501,20 +505,41 @@
 
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
+  <script src="/assets/js/search-engine.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
   <script>
     (function(){
       const input = document.getElementById('tienda-search');
-      if (!input) return;
-      input.addEventListener('keydown', (e) => {
-        if (e.key !== 'Enter') return;
-        const q = input.value.trim();
-        if (!q) return;
-        e.preventDefault();
-        window.location.href = '/pages/tienda/buscador.html?q=' + encodeURIComponent(q);
-      });
+      if (input) {
+        input.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter') return;
+          const q = input.value.trim();
+          if (!q) return;
+          e.preventDefault();
+          window.location.href = '/pages/tienda/buscador.html?q=' + encodeURIComponent(q);
+        });
+      }
+
+      // Conteo por categoría (las cifras de "referencias" y "marcas" las
+      // rellena bindGlobalStats() en backend-integration.js a nivel global).
+      if (!document.querySelector('[data-glx-cat-count]')) return;
+      const fmt = (n) => Number(n || 0).toLocaleString('es-ES');
+      const api = window.GarperLuxApi;
+      if (!api) return;
+      api.products({}).then((products) => {
+        const counts = {};
+        for (const p of products || []) {
+          const slug = p.category && p.category.slug;
+          if (!slug) continue;
+          counts[slug] = (counts[slug] || 0) + 1;
+        }
+        document.querySelectorAll('[data-glx-cat-count]').forEach((el) => {
+          const slug = el.dataset.glxCatCount;
+          el.textContent = `${fmt(counts[slug] || 0)} ref.`;
+        });
+      }).catch(() => null);
     })();
   </script>
 </body>

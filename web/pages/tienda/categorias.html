@@ -1,296 +1,236 @@
-﻿<!DOCTYPE html>
-<html lang="es"><head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
   <base href="/.">
-<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Árbol completo de categorías · GarperLux</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Árbol completo de categorías · GarperLux</title>
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/img/favicon.png?v=2" />
-<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-<link rel="stylesheet" href="/assets/css/styles.css" />
-<style>
-.fam{display:grid;grid-template-columns:auto 1fr;gap:1.5rem 2rem;padding:1.75rem 2rem;background:white;border:1.5px solid var(--line);border-radius:18px;transition:all .15s}
-.fam:hover{border-color:var(--ink);box-shadow:0 8px 28px rgba(11,13,18,.05)}
-.fam-num{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.05em;text-transform:uppercase;align-self:start;padding-top:.3rem}
-.fam-title{font-family:var(--serif);font-size:1.625rem;font-weight:500;line-height:1.05;letter-spacing:-.01em;margin-bottom:.5rem}
-.fam-desc{color:var(--graphite);font-size:14px;margin-bottom:1.25rem;line-height:1.55;max-width:62ch}
-.fam-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.4rem .8rem;font-size:13px}
-.fam-cats a{color:var(--graphite);padding:.3rem 0;border-bottom:1px solid transparent;transition:all .12s}
-.fam-cats a:hover{color:var(--ink);border-bottom-color:var(--filament)}
-.fam-cats .featured{color:var(--ink);font-weight:500}
-.fam-cats .pill-mini{display:inline-block;font-family:var(--mono);font-size:9px;background:var(--paper-2);color:var(--graphite);padding:.05rem .35rem;border-radius:4px;margin-left:.25rem;letter-spacing:.04em;vertical-align:1px}
-</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <style>
+    .fam{display:grid;grid-template-columns:auto 1fr;gap:1.5rem 2rem;padding:1.75rem 2rem;background:white;border:1.5px solid var(--line);border-radius:18px;transition:all .15s}
+    .fam:hover{border-color:var(--ink);box-shadow:0 8px 28px rgba(11,13,18,.05)}
+    .fam-num{font-family:'JetBrains Mono', monospace;font-size:11px;color:var(--copper);letter-spacing:.05em;text-transform:uppercase;align-self:start;padding-top:.3rem}
+    .fam-title{font-family:'Fraunces', serif;font-size:1.625rem;font-weight:500;line-height:1.05;letter-spacing:-.01em;margin-bottom:.5rem}
+    .fam-desc{color:var(--graphite);font-size:14px;margin-bottom:1.25rem;line-height:1.55;max-width:62ch}
+    .fam-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.4rem .8rem;font-size:13px}
+    .fam-cats a{color:var(--graphite);padding:.3rem 0;border-bottom:1px solid transparent;transition:all .12s}
+    .fam-cats a:hover{color:var(--ink);border-bottom-color:var(--filament)}
+    .fam-cats a.featured{color:var(--ink);font-weight:500}
+    .fam-cats .pill-mini{display:inline-block;font-family:'JetBrains Mono', monospace;font-size:9px;background:var(--paper-2);color:var(--graphite);padding:.05rem .35rem;border-radius:4px;margin-left:.25rem;letter-spacing:.04em;vertical-align:1px}
+    .fam-cats .pill-mini.empty{background:transparent;color:var(--graphite);opacity:.55}
+    .fam-foot{margin-top:1.25rem;padding-top:1rem;border-top:1px dashed var(--line);font-size:12px;color:var(--graphite);display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+    .fam-foot a{color:var(--copper);font-weight:500}
+    .fam-foot a:hover{text-decoration:underline}
+    .fam-empty{padding:.75rem 0;color:var(--graphite);font-style:italic}
+  </style>
 </head>
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
 
-<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/tienda/tienda.html" class="hover:text-ink">Tienda</a><span class="opacity-50">/</span><span class="text-ink">Todas las categorías</span></nav></div>
-
-<!-- Hero -->
-<section class="container-x py-12 md:py-16 border-b border-line">
-  <div class="grid md:grid-cols-[2fr_1fr] gap-10 items-end">
-    <div>
-      <div class="eyebrow text-copper mb-3">9 familias · 78 categorías · 1.642 referencias</div>
-      <h1 class="font-serif font-medium leading-[0.93] tracking-[-0.02em]" style="font-size: clamp(2.75rem, 7vw, 5.5rem);">Todo el catálogo<br/><em class="text-copper not-italic">de un vistazo.</em></h1>
-      <p class="text-graphite mt-5 text-lg max-w-xl leading-relaxed">El árbol completo de categorías. Útil cuando ya sabes lo que buscas y quieres ir directo, sin pasar por filtros.</p>
-    </div>
-    <div>
-      <div class="relative">
-        <input type="search" placeholder="Buscar categoría o referencia…" class="w-full pl-10 pr-3 py-3 bg-white border border-line rounded-full text-sm outline-none focus:border-ink"/>
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      </div>
-    </div>
+  <div class="container-x pt-5 pb-2">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2">
+      <a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="/pages/tienda/tienda.html" class="hover:text-ink">Tienda</a><span class="opacity-50">/</span>
+      <span class="text-ink">Todas las categorías</span>
+    </nav>
   </div>
-</section>
 
-<!-- Quick jump -->
-<section class="container-x py-5 border-b border-line">
-  <div class="flex items-center gap-2 flex-wrap text-sm">
-    <span class="text-xs font-mono text-graphite uppercase tracking-wider mr-2">Saltar a</span>
-    <a href="#iluminacion" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Iluminación</a>
-    <a href="#mecanismos" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Mecanismos</a>
-    <a href="#cableado" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Cableado</a>
-    <a href="#protecciones" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Protecciones</a>
-    <a href="#videoporteros" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Videoporteros</a>
-    <a href="#seguridad" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Seguridad</a>
-    <a href="#teleco" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Antenas/Teleco</a>
-    <a href="#domotica" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Domótica</a>
-    <a href="#automatismos" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">Automatismos</a>
-  </div>
-</section>
-
-<!-- Árbol -->
-<section class="container-x py-10 space-y-4">
-
-  <article id="iluminacion" class="fam scroll-mt-8">
-    <div class="fam-num">01</div>
-    <div>
-      <h2 class="fam-title">Iluminación</h2>
-      <p class="fam-desc">Bombillas LED, downlights, plafones, tiras y proyectores. Lo que se enciende cuando hay corriente y deja de hacerlo cuando no.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/iluminacion.html" class="featured">Bombillas LED <span class="pill-mini">312 ref</span></a>
-        <a href="/pages/tienda/iluminacion.html">Bombillas Filament Edison</a>
-        <a href="/pages/tienda/iluminacion.html">Bombillas inteligentes</a>
-        <a href="/pages/tienda/iluminacion.html" class="featured">Downlights LED <span class="pill-mini">186 ref</span></a>
-        <a href="/pages/tienda/iluminacion.html">Downlights orientables</a>
-        <a href="/pages/tienda/iluminacion.html">Plafones de techo</a>
-        <a href="/pages/tienda/iluminacion.html">Plafones de pared</a>
-        <a href="/pages/tienda/iluminacion.html">Tiras LED 12 V</a>
-        <a href="/pages/tienda/iluminacion.html">Tiras LED 24 V</a>
-        <a href="/pages/tienda/iluminacion.html">Drivers y transformadores</a>
-        <a href="/pages/tienda/iluminacion.html">Proyectores exterior</a>
-        <a href="/pages/tienda/iluminacion.html">Apliques de exterior</a>
-        <a href="/pages/tienda/iluminacion.html">Balizas y empotrables suelo</a>
-        <a href="/pages/tienda/iluminacion.html">Iluminación de emergencia</a>
-        <a href="/pages/tienda/iluminacion.html">Lámparas de mesa y pie</a>
-        <a href="/pages/tienda/iluminacion.html">Tubos LED y pantallas</a>
+  <!-- Hero -->
+  <section class="container-x py-12 md:py-16 border-b border-line">
+    <div class="grid md:grid-cols-[2fr_1fr] gap-10 items-end">
+      <div>
+        <div class="eyebrow text-copper mb-3">
+          <span data-glx-fam-count>—</span> familias ·
+          <span data-glx-subcat-count>—</span> subcategorías ·
+          <span data-glx-ref-count>—</span> referencias
+        </div>
+        <h1 class="font-serif font-medium leading-[0.93] tracking-[-0.02em]" style="font-size: clamp(2.75rem, 7vw, 5.5rem);">
+          Todo el catálogo<br/>
+          <em class="text-copper not-italic">de un vistazo.</em>
+        </h1>
+        <p class="text-graphite mt-5 text-lg max-w-xl leading-relaxed">El árbol completo de categorías. Útil cuando ya sabes lo que buscas y quieres ir directo, sin pasar por filtros.</p>
+      </div>
+      <div>
+        <form action="/pages/tienda/buscador.html" method="get" class="block">
+          <div class="relative">
+            <input type="search" name="q" autocomplete="off" placeholder="Buscar categoría o referencia…" class="w-full pl-10 pr-3 py-3 bg-white border border-line rounded-full text-sm outline-none focus:border-ink"/>
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-graphite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          </div>
+        </form>
       </div>
     </div>
-  </article>
+  </section>
 
-  <article id="mecanismos" class="fam scroll-mt-8">
-    <div class="fam-num">02</div>
-    <div>
-      <h2 class="fam-title">Mecanismos</h2>
-      <p class="fam-desc">Interruptores, enchufes, conmutadores. La gama 27 de Simón sigue siendo la opción por defecto en vivienda. Para reformas premium, Niessen Sky.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/mecanismos.html" class="featured">Interruptores <span class="pill-mini">240 ref</span></a>
-        <a href="/pages/tienda/mecanismos.html">Conmutadores</a>
-        <a href="/pages/tienda/mecanismos.html">Cruzamientos</a>
-        <a href="/pages/tienda/mecanismos.html">Pulsadores con luminoso</a>
-        <a href="/pages/tienda/mecanismos.html" class="featured">Enchufes Schuko <span class="pill-mini">180 ref</span></a>
-        <a href="/pages/tienda/mecanismos.html">Enchufes con USB</a>
-        <a href="/pages/tienda/mecanismos.html">Tomas TV, R-TV, SAT</a>
-        <a href="/pages/tienda/mecanismos.html">Tomas de teléfono</a>
-        <a href="/pages/tienda/mecanismos.html">Tomas de red RJ45</a>
-        <a href="/pages/tienda/mecanismos.html">Reguladores y pulsadores dimmer</a>
-        <a href="/pages/tienda/mecanismos.html">Marcos · embellecedores</a>
-        <a href="/pages/tienda/mecanismos.html">Mecanismos antivandálicos</a>
-        <a href="/pages/tienda/mecanismos.html">Mecanismos para exterior IP44</a>
-        <a href="/pages/tienda/mecanismos.html">Toma horario / programadores</a>
+  <!-- Quick jump (los chips se rellenan dinámicamente con las familias reales) -->
+  <section class="container-x py-5 border-b border-line">
+    <div class="flex items-center gap-2 flex-wrap text-sm" data-glx-jump>
+      <span class="text-xs font-mono text-graphite uppercase tracking-wider mr-2">Saltar a</span>
+    </div>
+  </section>
+
+  <!-- Árbol -->
+  <section class="container-x py-10 space-y-4" data-glx-tree>
+    <div class="bg-white border border-line rounded-2xl p-12 text-center text-graphite">
+      <svg class="mx-auto mb-3 text-graphite/60" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Cargando árbol de categorías…
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="container-x pb-20">
+    <div class="bg-paper-2 border border-line rounded-2xl p-7 md:p-9 grid md:grid-cols-[1fr_auto] gap-5 items-center">
+      <div>
+        <h2 class="font-serif text-2xl md:text-3xl font-medium leading-tight">¿No encuentras la categoría que buscas?</h2>
+        <p class="text-graphite mt-2">Si necesitas un grupo de productos que no aparece, escríbenos. Si tiene tirón, lo abrimos como categoría propia con una decena de referencias mínimo.</p>
       </div>
+      <a href="/pages/empresa/contacto.html" class="btn btn-primary">Sugerir categoría</a>
     </div>
-  </article>
+  </section>
 
-  <article id="cableado" class="fam scroll-mt-8">
-    <div class="fam-num">03</div>
-    <div>
-      <h2 class="fam-title">Cableado y conducciones</h2>
-      <p class="fam-desc">Cable al corte, mangueras flexibles, regletas, tubos corrugados, canaletas. Vendemos manguera por metros: lo justo para tu obra.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/categoria-cableado.html" class="featured">Manguera 3×1.5 mm² <span class="pill-mini">corte</span></a>
-        <a href="/pages/tienda/categoria-cableado.html" class="featured">Manguera 3×2.5 mm² <span class="pill-mini">corte</span></a>
-        <a href="/pages/tienda/categoria-cableado.html">Manguera 5×4 mm²</a>
-        <a href="/pages/tienda/categoria-cableado.html">Manguera 5×6 mm²</a>
-        <a href="/pages/tienda/categoria-cableado.html">Cable libre de halógenos LH</a>
-        <a href="/pages/tienda/categoria-cableado.html">Cable RZ1-K 0.6/1 kV</a>
-        <a href="/pages/tienda/categoria-cableado.html">Cable de tierra TT</a>
-        <a href="/pages/tienda/categoria-cableado.html">Cable de teléfono y red</a>
-        <a href="/pages/tienda/categoria-cableado.html">Tubo corrugado 16/20/25 mm</a>
-        <a href="/pages/tienda/categoria-cableado.html">Canal y canaleta plástica</a>
-        <a href="/pages/tienda/categoria-cableado.html">Bandeja portacables</a>
-        <a href="/pages/tienda/categoria-cableado.html">Punteras y terminales</a>
-        <a href="/pages/tienda/categoria-cableado.html">Clemas Wago 222 / 221</a>
-        <a href="/pages/tienda/categoria-cableado.html">Cinta aislante 3M</a>
-        <a href="/pages/tienda/categoria-cableado.html">Bridas y abrazaderas</a>
-        <a href="/pages/tienda/categoria-cableado.html">Pasacables y guías</a>
-      </div>
-    </div>
-  </article>
-
-  <article id="protecciones" class="fam scroll-mt-8">
-    <div class="fam-num">04</div>
-    <div>
-      <h2 class="fam-title">Protecciones eléctricas</h2>
-      <p class="fam-desc">Cuadros, magnetotérmicos, diferenciales, ICP. Lo que protege tu vivienda de cortocircuitos, derivaciones y cabreos del seguro.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/protecciones-electricas.html" class="featured">Magnetotérmicos curva C <span class="pill-mini">96 ref</span></a>
-        <a href="/pages/tienda/protecciones-electricas.html">Magnetotérmicos curva D</a>
-        <a href="/pages/tienda/protecciones-electricas.html" class="featured">Diferenciales 30 mA <span class="pill-mini">68 ref</span></a>
-        <a href="/pages/tienda/protecciones-electricas.html">Diferenciales superinmunizados Tipo A</a>
-        <a href="/pages/tienda/protecciones-electricas.html">Diferenciales Tipo F (vehículos)</a>
-        <a href="/pages/tienda/protecciones-electricas.html">Diferenciales Tipo B (renovables)</a>
-        <a href="/pages/tienda/protecciones-electricas.html">PIA + Dif. combinado</a>
-        <a href="/pages/tienda/protecciones-electricas.html">Limitadores sobretensión</a>
-        <a href="/pages/tienda/protecciones-electricas.html">Telerruptores</a>
-        <a href="/pages/tienda/protecciones-electricas.html">Contactores</a>
-        <a href="/pages/tienda/protecciones-electricas.html">Cuadros 12, 24, 36 módulos</a>
-        <a href="/pages/tienda/protecciones-electricas.html">Cajas estancas exterior</a>
-        <a href="/pages/tienda/protecciones-electricas.html">ICP y bases ICP</a>
-        <a href="/pages/tienda/protecciones-electricas.html">Embarrados y peinetas</a>
-      </div>
-    </div>
-  </article>
-
-  <article id="videoporteros" class="fam scroll-mt-8">
-    <div class="fam-num">05</div>
-    <div>
-      <h2 class="fam-title">Videoporteros y telefonillos</h2>
-      <p class="fam-desc">Reposiciones de Fermax, Tegui y Comelit, así como instalaciones nuevas con conexión Wi-Fi para responder desde el móvil.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/porteros-videoporteros.html">Telefonillos audio individuales</a>
-        <a href="/pages/tienda/porteros-videoporteros.html" class="featured">Videoporteros Wi-Fi <span class="pill-mini">42 ref</span></a>
-        <a href="/pages/tienda/porteros-videoporteros.html">Videoporteros 2 hilos Fermax</a>
-        <a href="/pages/tienda/porteros-videoporteros.html">Placas de calle Way</a>
-        <a href="/pages/tienda/porteros-videoporteros.html">Placas de calle Skyline</a>
-        <a href="/pages/tienda/porteros-videoporteros.html">Placas con cámara</a>
-        <a href="/pages/tienda/porteros-videoporteros.html">Monitores adicionales</a>
-        <a href="/pages/tienda/porteros-videoporteros.html">Repuestos de teléfonos</a>
-        <a href="/pages/tienda/porteros-videoporteros.html">Pulsadores de portero</a>
-        <a href="/pages/tienda/porteros-videoporteros.html">Abrepuertas eléctricos</a>
-      </div>
-    </div>
-  </article>
-
-  <article id="seguridad" class="fam scroll-mt-8">
-    <div class="fam-num">06</div>
-    <div>
-      <h2 class="fam-title">Seguridad y vigilancia</h2>
-      <p class="fam-desc">Cámaras IP, alarmas Wi-Fi, sensores, kits que se instalan tú mismo. Sin obligación de cuota mensual.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/seguridad.html" class="featured">Cámaras IP exterior <span class="pill-mini">38 ref</span></a>
-        <a href="/pages/tienda/seguridad.html">Cámaras IP interior</a>
-        <a href="/pages/tienda/seguridad.html">Cámaras 360° y panorámicas</a>
-        <a href="/pages/tienda/seguridad.html">Grabadores NVR/DVR</a>
-        <a href="/pages/tienda/seguridad.html">Kits NVR + 4 cámaras</a>
-        <a href="/pages/tienda/seguridad.html" class="featured">Alarmas Ajax <span class="pill-mini">28 ref</span></a>
-        <a href="/pages/tienda/seguridad.html">Sensores de apertura</a>
-        <a href="/pages/tienda/seguridad.html">Sensores de movimiento</a>
-        <a href="/pages/tienda/seguridad.html">Sensores rotura cristal</a>
-        <a href="/pages/tienda/seguridad.html">Sirenas exterior</a>
-        <a href="/pages/tienda/seguridad.html">Cerraduras inteligentes</a>
-        <a href="/pages/tienda/seguridad.html">Detectores humo / gas</a>
-      </div>
-    </div>
-  </article>
-
-  <article id="teleco" class="fam scroll-mt-8">
-    <div class="fam-num">07</div>
-    <div>
-      <h2 class="fam-title">Antenas y telecomunicaciones</h2>
-      <p class="fam-desc">Reposición de antena TDT comunitaria, instalaciones de fibra hasta el hogar, redes domésticas estables.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Antenas TDT</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Antenas parabólicas</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Amplificadores</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Mezcladores y derivadores</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Cable coaxial</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Cable de fibra óptica</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Cable UTP cat 5e/6/6a</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Routers Wi-Fi 6</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Switches gigabit</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Repetidores Mesh</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">PLC adaptadores</a>
-        <a href="/pages/tienda/antenas-telecomunicaciones.html">Patch panels y conectores</a>
-      </div>
-    </div>
-  </article>
-
-  <article id="domotica" class="fam scroll-mt-8">
-    <div class="fam-num">08</div>
-    <div>
-      <h2 class="fam-title">Domótica</h2>
-      <p class="fam-desc">El mundo de los Shelly, Sonoff, Aqara, y los sistemas pro de Schneider Wiser y Loxone. Para añadir cerebro a una vivienda existente sin tirar tabiques.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/domotica.html" class="featured">Módulos Shelly Wi-Fi <span class="pill-mini">62 ref</span></a>
-        <a href="/pages/tienda/domotica.html">Sonoff Mini / Pro</a>
-        <a href="/pages/tienda/domotica.html">Aqara Zigbee</a>
-        <a href="/pages/tienda/domotica.html">Hubs y centralitas</a>
-        <a href="/pages/tienda/domotica.html">Mecanismos KNX</a>
-        <a href="/pages/tienda/domotica.html">Schneider Wiser</a>
-        <a href="/pages/tienda/domotica.html">Termostatos inteligentes</a>
-        <a href="/pages/tienda/domotica.html">Detectores de presencia</a>
-        <a href="/pages/tienda/domotica.html">Sensores de temperatura/humedad</a>
-        <a href="/pages/tienda/domotica.html">Enchufes Wi-Fi medidores</a>
-        <a href="/pages/tienda/domotica.html">Pulsadores de escena</a>
-        <a href="/pages/tienda/domotica.html">Persianas motorizadas</a>
-        <a href="/pages/tienda/domotica.html">Asistentes de voz compatibles</a>
-      </div>
-    </div>
-  </article>
-
-  <article id="automatismos" class="fam scroll-mt-8">
-    <div class="fam-num">09</div>
-    <div>
-      <h2 class="fam-title">Automatismos</h2>
-      <p class="fam-desc">Motores para puerta de garaje, cancelas batientes y correderas, persianas motorizadas y mandos de repuesto.</p>
-      <div class="fam-cats">
-        <a href="/pages/tienda/automatismos.html">Motor puerta garaje seccional</a>
-        <a href="/pages/tienda/automatismos.html">Motor puerta basculante</a>
-        <a href="/pages/tienda/automatismos.html">Motor cancela batiente</a>
-        <a href="/pages/tienda/automatismos.html">Motor cancela corredera</a>
-        <a href="/pages/tienda/automatismos.html">Motor persiana 230 V</a>
-        <a href="/pages/tienda/automatismos.html">Motor toldo</a>
-        <a href="/pages/tienda/automatismos.html">Mandos a distancia universales</a>
-        <a href="/pages/tienda/automatismos.html">Mandos Came / Faac / Nice</a>
-        <a href="/pages/tienda/automatismos.html">Bandas de seguridad</a>
-        <a href="/pages/tienda/automatismos.html">Fotocélulas</a>
-        <a href="/pages/tienda/automatismos.html">Receptores y cuadros</a>
-        <a href="/pages/tienda/automatismos.html">Llaveros codificados</a>
-      </div>
-    </div>
-  </article>
-
-</section>
-
-<!-- CTA -->
-<section class="container-x pb-20">
-  <div class="bg-paper-2 border border-line rounded-2xl p-7 md:p-9 grid md:grid-cols-[1fr_auto] gap-5 items-center">
-    <div>
-      <h2 class="font-serif text-2xl md:text-3xl font-medium leading-tight">¿No encuentras la categoría que buscas?</h2>
-      <p class="text-graphite mt-2">Si necesitas un grupo de productos que no aparece, escríbenos. Si tiene tirón, lo abrimos como categoría propia con una decena de referencias mínimo.</p>
-    </div>
-    <a href="/pages/empresa/contacto.html" class="btn btn-primary">Sugerir categoría</a>
-  </div>
-</section>
   <div data-component="site-footer"></div>
 
-<script src="/assets/js/main.js"></script>
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
-  <script src="/assets/js/catalog-ui.js"></script>
-</body></html>
+  <script src="/assets/js/main.js"></script>
+  <script>
+    // Render dinámico del árbol completo. Lee todos los productos del catálogo,
+    // los agrupa por familia y, dentro de cada familia, computa las
+    // subcategorías reales con _deriveSubcategories del módulo de catálogo.
+    (async function () {
+      const api = window.GarperLuxApi;
+      if (!api) return;
+
+      // Página de la familia → URL de la página de categoría correspondiente.
+      const FAMILY_PAGE = {
+        'iluminacion': '/pages/tienda/iluminacion.html',
+        'mecanismos': '/pages/tienda/mecanismos.html',
+        'cableado': '/pages/tienda/categoria-cableado.html',
+        'proteccion': '/pages/tienda/protecciones-electricas.html',
+        'porteros-videoporteros': '/pages/tienda/porteros-videoporteros.html',
+        'seguridad': '/pages/tienda/seguridad.html',
+        'antenas-telecomunicaciones': '/pages/tienda/antenas-telecomunicaciones.html',
+        'domotica': '/pages/tienda/domotica.html',
+        'automatismos': '/pages/tienda/automatismos.html',
+      };
+      // Orden y descripción editorial de cada familia. Si llegan otras, van
+      // al final con descripción genérica.
+      const FAMILY_ORDER = [
+        ['iluminacion',                'Iluminación',               'Bombillas LED, downlights, plafones, tiras y proyectores. La luz que va dentro de la lámpara y la luz que es la lámpara.'],
+        ['mecanismos',                 'Mecanismos',                'Interruptores, enchufes, conmutadores. Series Simon 27, 31 y 270, Niessen Zenit, Schneider Miluz: lo que ven tus dedos en la pared.'],
+        ['cableado',                   'Cableado y conducciones',   'Cable al corte, mangueras flexibles, tubo corrugado y canaletas. Vendemos por metros: lo justo para tu obra.'],
+        ['proteccion',                 'Protecciones eléctricas',   'Cuadros, magnetotérmicos, diferenciales, ICP. Lo que protege tu vivienda de cortocircuitos, derivaciones y cabreos del seguro.'],
+        ['porteros-videoporteros',     'Porteros y videoporteros',  'Reposiciones de Fermax, Tegui y Comelit, e instalaciones nuevas con Wi-Fi para abrir desde el móvil.'],
+        ['seguridad',                  'Seguridad y vigilancia',    'Cámaras IP, alarmas Wi-Fi, sensores y detectores. Para instalar tú mismo, sin obligación de cuota mensual.'],
+        ['antenas-telecomunicaciones', 'Antenas y telecomunicaciones', 'Antenas TDT, redes de fibra hasta el hogar, routers Wi-Fi y switches gigabit.'],
+        ['domotica',                   'Domótica',                  'Shelly, Sonoff, Aqara, Wiser. Para añadir cerebro a una vivienda existente sin tirar tabiques.'],
+        ['automatismos',               'Automatismos',              'Motores para puerta de garaje, cancelas batientes y correderas, persianas motorizadas y mandos de repuesto.'],
+      ];
+
+      const tree = document.querySelector('[data-glx-tree]');
+      const jump = document.querySelector('[data-glx-jump]');
+
+      let products = [];
+      try { products = await api.products({}); } catch {
+        tree.innerHTML = `<div class="bg-paper-2 border border-line rounded-2xl p-12 text-center text-graphite">No se pudo cargar el árbol. Pulsa F5 para reintentar.</div>`;
+        return;
+      }
+
+      // Agrupa productos por slug de familia.
+      const byFamily = new Map();
+      for (const p of products) {
+        const slug = p.category?.slug;
+        if (!slug) continue;
+        if (!byFamily.has(slug)) byFamily.set(slug, []);
+        byFamily.get(slug).push(p);
+      }
+
+      // Cifras del eyebrow.
+      const totalRefs = products.length;
+      const familyCount = byFamily.size;
+      const helpers = window.GarperLuxCatalog;
+      let totalSubcats = 0;
+      const subcatsByFamily = new Map();
+      for (const [slug, list] of byFamily) {
+        const subs = helpers ? helpers.deriveSubcategories(list, slug) : [];
+        subcatsByFamily.set(slug, subs);
+        totalSubcats += subs.length;
+      }
+      document.querySelector('[data-glx-fam-count]').textContent = familyCount;
+      document.querySelector('[data-glx-subcat-count]').textContent = totalSubcats;
+      document.querySelector('[data-glx-ref-count]').textContent = totalRefs.toLocaleString('es-ES');
+
+      // Construye el orden final (las del FAMILY_ORDER primero, luego el resto).
+      const seen = new Set();
+      const ordered = [];
+      for (const [slug, name, desc] of FAMILY_ORDER) {
+        if (byFamily.has(slug)) { ordered.push({ slug, name, desc }); seen.add(slug); }
+      }
+      for (const slug of byFamily.keys()) {
+        if (!seen.has(slug)) ordered.push({ slug, name: slug.charAt(0).toUpperCase() + slug.slice(1), desc: '' });
+      }
+
+      // Quick jump
+      const jumpHtml = ordered.map(({ slug, name }) =>
+        `<a href="#${slug}" class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3">${escapeHtml(name)}</a>`
+      ).join('');
+      jump.insertAdjacentHTML('beforeend', jumpHtml);
+
+      // Render del árbol
+      tree.innerHTML = ordered.map(({ slug, name, desc }, idx) => {
+        const list = byFamily.get(slug) || [];
+        const subs = subcatsByFamily.get(slug) || [];
+        const num = String(idx + 1).padStart(2, '0');
+        const familyHref = FAMILY_PAGE[slug] || `/pages/tienda/tienda.html?cat=${encodeURIComponent(slug)}`;
+        const top3 = subs.slice(0, 3).map((s) => s.label);
+        // El primer chip "(Todo)" lleva sin subcat al listado completo.
+        const chips = [
+          `<a href="${familyHref}" class="featured">Todo · ${name} <span class="pill-mini">${list.length} ref</span></a>`,
+          ...subs.map((s, i) => {
+            const featured = i < 2 ? 'featured' : '';
+            const url = `${familyHref}?subcat=${encodeURIComponent(s.label)}`;
+            return `<a href="${url}" class="${featured}">${escapeHtml(s.label)} <span class="pill-mini">${s.count} ref</span></a>`;
+          }),
+        ].join('');
+        const empty = list.length === 0
+          ? `<div class="fam-empty">Aún no hay productos en esta familia. Estamos negociando con proveedores.</div>`
+          : (subs.length === 0
+              ? `<div class="fam-empty">${list.length} productos sin subcategorías detectadas — usamos el listado plano.</div>`
+              : '');
+        return `
+          <article id="${slug}" class="fam scroll-mt-8">
+            <div class="fam-num">${num}</div>
+            <div>
+              <h2 class="fam-title">${escapeHtml(name)}</h2>
+              <p class="fam-desc">${escapeHtml(desc)}</p>
+              ${empty}
+              <div class="fam-cats">${chips}</div>
+              <div class="fam-foot">
+                <span><strong class="text-ink">${list.length}</strong> referencias · <strong class="text-ink">${subs.length}</strong> subcategorías${top3.length ? ` · destacadas: ${top3.map(escapeHtml).join(', ')}` : ''}</span>
+                <a href="${familyHref}">Ver todo el listado →</a>
+              </div>
+            </div>
+          </article>`;
+      }).join('');
+
+      function escapeHtml(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+    })();
+  </script>
+</body>
+</html>

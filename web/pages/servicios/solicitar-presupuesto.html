@@ -1,189 +1,454 @@
-﻿<!DOCTYPE html>
-<html lang="es"><head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
   <base href="/.">
-<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Solicitar presupuesto · GarperLux</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solicitar presupuesto · GarperLux</title>
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/img/favicon.png?v=2" />
-<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-<link rel="stylesheet" href="/assets/css/styles.css" />
-<style>
-.field{width:100%;padding:.85rem 1rem;background:white;border:1.5px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink)}
-.field:focus{outline:none;border-color:var(--ink)}
-.tag-pill{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.1rem;background:white;border:1.5px solid var(--line);border-radius:14px;cursor:pointer;transition:all .15s;font-size:14px}
-.tag-pill:hover{border-color:var(--graphite)}
-.tag-pill input{display:none}
-.tag-pill.is-on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+
+  <style>
+    .field { width:100%; padding:.85rem 1rem; background:white; border:1.5px solid var(--line); border-radius:10px; font-size:14px; color:var(--ink); transition:border-color .15s; }
+    .field:focus { outline:none; border-color:var(--ink); }
+
+    /* Pills tipo cliente: icono + texto, sin emojis. Estado activo en ink. */
+    .client-pill {
+      display:inline-flex; align-items:center; gap:.6rem;
+      padding:.7rem 1.1rem; background:white; border:1.5px solid var(--line);
+      border-radius:14px; cursor:pointer; transition:all .15s;
+      font-size:14px; color:var(--graphite);
+    }
+    .client-pill:hover { border-color: var(--graphite); color: var(--ink); }
+    .client-pill input { display:none; }
+    .client-pill svg { color: var(--copper); transition:color .15s; }
+    .client-pill.is-on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .client-pill.is-on svg { color: var(--filament); }
+
+    /* Filas de producto */
+    .quote-row {
+      display:grid; grid-template-columns: 56px 1fr 80px 100px 100px 32px;
+      gap:.75rem; align-items:center; padding:.75rem 0;
+    }
+    .quote-row .img {
+      width:56px; height:56px; border-radius:8px;
+      background: var(--paper-2); display:grid; place-items:center;
+      overflow:hidden;
+    }
+    .quote-row .img img { width:100%; height:100%; object-fit:contain; padding:6px; }
+
+    .empty-state {
+      padding:2.5rem 1rem; text-align:center; color: var(--graphite); font-size:14px;
+    }
+  </style>
 </head>
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
 
-<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/tienda/carrito.html" class="hover:text-ink">Tu carrito</a><span class="opacity-50">/</span><span class="text-ink">Solicitar presupuesto</span></nav></div>
-
-<section class="container-x py-10 pb-20">
-  <div class="grid lg:grid-cols-[1fr_400px] gap-10 lg:gap-12">
-
-    <!-- ========== FORM ========== -->
-    <div>
-      <div class="mb-8">
-        <div class="eyebrow text-copper mb-2">Para empresas, comunidades y AAPP</div>
-        <h1 class="font-serif font-medium leading-[0.95] tracking-[-0.02em]" style="font-size: clamp(2.25rem, 5vw, 3.5rem);">Solicitar<br/>presupuesto.</h1>
-        <p class="text-graphite mt-3 max-w-xl leading-relaxed">Cuando el pedido necesita aprobación interna, factura por adelantado o tiene volumen suficiente para negociar precio. Lo recibirás firmado en menos de 24 h hábiles.</p>
-      </div>
-
-      <form class="space-y-8">
-
-        <!-- Tipo de cliente -->
-        <div>
-          <h2 class="font-serif text-xl font-medium mb-1">1 · ¿Quién pide el presupuesto?</h2>
-          <p class="text-sm text-graphite mb-4">Esto nos ayuda a aplicar la fiscalidad correcta y los plazos adecuados.</p>
-          <div class="flex flex-wrap gap-3">
-            <label class="tag-pill is-on"><input type="radio" name="cliente" checked/>🏢 Empresa privada</label>
-            <label class="tag-pill"><input type="radio" name="cliente"/>??? Comunidad de vecinos</label>
-            <label class="tag-pill"><input type="radio" name="cliente"/>??? Administración pública</label>
-            <label class="tag-pill"><input type="radio" name="cliente"/>?? Asociación · ONG</label>
-            <label class="tag-pill"><input type="radio" name="cliente"/>👤 Particular (gran proyecto)</label>
-          </div>
-        </div>
-
-        <!-- Datos -->
-        <div class="bg-white border border-line rounded-2xl p-6">
-          <h2 class="font-serif text-xl font-medium mb-1">2 · Datos del solicitante</h2>
-          <p class="text-sm text-graphite mb-5">A nombre de quién emitiremos el presupuesto.</p>
-
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Razón social / Nombre</label><input type="text" class="field" placeholder="Ej. Comunidad de Propietarios Olivos 12"/></div>
-            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CIF / NIF</label><input type="text" class="field font-mono" placeholder="H-12345678"/></div>
-            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Persona de contacto</label><input type="text" class="field"/></div>
-            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Email</label><input type="email" class="field"/></div>
-            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono</label><input type="tel" class="field font-mono"/></div>
-            <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Dirección de facturación</label><input type="text" class="field" placeholder="Calle, CP, localidad"/></div>
-            <div data-aapp-only style="display:none" class="sm:col-span-2 bg-paper-2 rounded-xl p-4">
-              <h3 class="font-medium text-sm mb-2">Códigos DIR3 (administración pública)</h3>
-              <div class="grid grid-cols-3 gap-2"><input type="text" placeholder="Oficina contable" class="field font-mono text-xs"/><input type="text" placeholder="Órgano gestor" class="field font-mono text-xs"/><input type="text" placeholder="Unidad tramitadora" class="field font-mono text-xs"/></div>
-              <div class="text-[11px] text-graphite mt-2">Los puedes encontrar en la web del organismo bajo "Datos de facturación electrónica".</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Productos -->
-        <div class="bg-white border border-line rounded-2xl p-6">
-          <h2 class="font-serif text-xl font-medium mb-1">3 · Productos del carrito</h2>
-          <p class="text-sm text-graphite mb-5">3 artículos · puedes editar cantidades antes de enviar.</p>
-
-          <div class="divide-y divide-line">
-            <div class="py-3 grid grid-cols-[1fr_70px_90px_90px] gap-3 items-center text-sm">
-              <div class="font-medium">Interruptor Simón 27 10A blanco</div>
-              <input type="number" value="1" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <div class="text-right font-mono text-graphite">5,90 €</div>
-              <div class="text-right font-mono font-medium">5,90 €</div>
-            </div>
-            <div class="py-3 grid grid-cols-[1fr_70px_90px_90px] gap-3 items-center text-sm">
-              <div class="font-medium">Destornillador aislado 1000V 3mm</div>
-              <input type="number" value="1" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <div class="text-right font-mono text-graphite">8,40 €</div>
-              <div class="text-right font-mono font-medium">8,40 €</div>
-            </div>
-            <div class="py-3 grid grid-cols-[1fr_70px_90px_90px] gap-3 items-center text-sm">
-              <div class="font-medium">Polímetro digital A03 básico</div>
-              <input type="number" value="1" class="field !py-1.5 !px-2 text-right font-mono"/>
-              <div class="text-right font-mono text-graphite">14,90 €</div>
-              <div class="text-right font-mono font-medium">14,90 €</div>
-            </div>
-          </div>
-
-          <button type="button" class="text-xs text-copper hover:underline mt-3">+ Añadir más productos</button>
-        </div>
-
-        <!-- Detalles -->
-        <div class="bg-white border border-line rounded-2xl p-6">
-          <h2 class="font-serif text-xl font-medium mb-1">4 · Detalles del proyecto</h2>
-          <p class="text-sm text-graphite mb-5">Información que nos ayuda a ajustar plazos y condiciones.</p>
-
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Plazo de entrega ideal</label><select class="field"><option>Lo antes posible</option><option>En las próximas 2 semanas</option><option>Este mes</option><option>Próximo mes</option><option>Sin urgencia</option></select></div>
-            <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Validez requerida</label><select class="field"><option>10 días</option><option>15 días</option><option>30 días</option><option>60 días (típico AAPP)</option></select></div>
-            <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Comentarios</label><textarea class="field" rows="3" placeholder="Si necesitas que el pedido se reparta en varias entregas, plazos especiales, o cualquier otra particularidad."></textarea></div>
-          </div>
-        </div>
-
-        <!-- Aviso -->
-        <div class="bg-paper-2 border border-line rounded-2xl p-5 flex items-start gap-3 text-sm">
-          <svg class="text-graphite shrink-0 mt-0.5" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          <div class="text-graphite">El presupuesto se envía firmado al email indicado en menos de 24 h hábiles. Solicitarlo no genera reserva de stock. La reserva se confirma al aceptar el presupuesto.</div>
-        </div>
-
-        <!-- Acciones -->
-        <div class="flex justify-between flex-wrap gap-3 pt-2">
-          <a href="/pages/tienda/carrito.html" class="btn btn-ghost">Volver al carrito</a>
-          <button class="btn btn-primary">Enviar solicitud<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
-        </div>
-
-      </form>
-    </div>
-
-    <!-- ========== ASIDE ========== -->
-    <aside>
-      <div class="lg:sticky lg:top-6 space-y-4">
-
-        <div class="bg-white border border-line rounded-2xl overflow-hidden">
-          <div class="px-6 py-4 bg-paper-2 border-b border-line">
-            <h2 class="font-serif text-lg font-medium">Resumen del presupuesto</h2>
-            <p class="text-xs text-graphite font-mono mt-0.5">3 productos · Bruto sin IVA</p>
-          </div>
-          <div class="p-5 space-y-2 text-sm">
-            <div class="flex justify-between"><span class="text-graphite">Material</span><span class="font-mono">29,20 €</span></div>
-            <div class="flex justify-between"><span class="text-graphite">Portes (estimado)</span><span class="font-mono">4,90 €</span></div>
-            <div class="flex justify-between font-medium"><span>Base imponible</span><span class="font-mono">34,10 €</span></div>
-            <div class="flex justify-between text-graphite"><span>IVA 21%</span><span class="font-mono">7,16 €</span></div>
-            <div class="pt-3 border-t border-line flex items-baseline justify-between">
-              <span class="font-medium">Total con IVA</span>
-              <span class="font-serif text-2xl">41,26 €</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-paper-2 border border-line rounded-2xl p-5 text-sm">
-          <h3 class="font-medium mb-3">Cómo va a ir</h3>
-          <ol class="space-y-3">
-            <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">01</span><span class="text-graphite">Envías la solicitud con tus datos.</span></li>
-            <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">02</span><span class="text-graphite">Te confirmamos disponibilidad y, si procede, descuento por volumen.</span></li>
-            <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">03</span><span class="text-graphite">Te enviamos el presupuesto firmado en PDF en &lt; 24 h hábiles.</span></li>
-            <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">04</span><span class="text-graphite">Aceptas y reservamos stock. Pago al recibir factura, según condiciones acordadas.</span></li>
-          </ol>
-        </div>
-
-        <div class="bg-ink text-paper rounded-2xl p-5">
-          <div class="eyebrow text-filament mb-2">¿Eres instalador profesional?</div>
-          <p class="text-sm text-paper/70 mb-4">Las cuentas pro pueden generar presupuestos para sus propios clientes finales con un descuento del 22% aplicado.</p>
-          <a href="/pages/auth/login.html" class="btn btn-ghost-light btn-sm w-full justify-center">Acceder al área pro</a>
-        </div>
-
-      </div>
-    </aside>
-
+  <div class="container-x pt-5 pb-2">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2">
+      <a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="/pages/tienda/carrito.html" class="hover:text-ink">Tu carrito</a><span class="opacity-50">/</span>
+      <span class="text-ink">Solicitar presupuesto</span>
+    </nav>
   </div>
-</section>
+
+  <section class="container-x py-10 pb-20">
+    <div class="grid lg:grid-cols-[1fr_400px] gap-10 lg:gap-12">
+
+      <!-- ========== FORM ========== -->
+      <div>
+        <div class="mb-8">
+          <div class="eyebrow text-copper mb-2">Para empresas, comunidades y AAPP</div>
+          <h1 class="font-serif font-medium leading-[0.95] tracking-[-0.02em]" style="font-size: clamp(2.25rem, 5vw, 3.5rem);">Solicitar<br/>presupuesto.</h1>
+          <p class="text-graphite mt-3 max-w-xl leading-relaxed">Cuando el pedido necesita aprobación interna, factura por adelantado o tiene volumen suficiente para negociar precio. Lo recibirás firmado en menos de 24 h hábiles.</p>
+        </div>
+
+        <form id="quote-form" class="space-y-8">
+
+          <!-- 1. Tipo de cliente -->
+          <div>
+            <h2 class="font-serif text-xl font-medium mb-1">1 · ¿Quién pide el presupuesto?</h2>
+            <p class="text-sm text-graphite mb-4">Esto nos ayuda a aplicar la fiscalidad correcta y los plazos adecuados.</p>
+            <div class="flex flex-wrap gap-3" data-client-pills>
+              <label class="client-pill is-on" data-client="empresa">
+                <input type="radio" name="cliente" value="empresa" checked/>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V7a2 2 0 0 1 2-2h7v16M3 21h18M12 21V3a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v18M7 9h2M7 13h2M7 17h2M16 7h2M16 11h2M16 15h2"/></svg>
+                Empresa privada
+              </label>
+              <label class="client-pill" data-client="comunidad">
+                <input type="radio" name="cliente" value="comunidad"/>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Comunidad de vecinos
+              </label>
+              <label class="client-pill" data-client="aapp">
+                <input type="radio" name="cliente" value="aapp"/>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
+                Administración pública
+              </label>
+              <label class="client-pill" data-client="ong">
+                <input type="radio" name="cliente" value="ong"/>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                Asociación · ONG
+              </label>
+              <label class="client-pill" data-client="particular">
+                <input type="radio" name="cliente" value="particular"/>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Particular (gran proyecto)
+              </label>
+            </div>
+          </div>
+
+          <!-- 2. Datos del solicitante -->
+          <div class="bg-white border border-line rounded-2xl p-6">
+            <h2 class="font-serif text-xl font-medium mb-1">2 · Datos del solicitante</h2>
+            <p class="text-sm text-graphite mb-5">A nombre de quién emitiremos el presupuesto.</p>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div class="sm:col-span-2">
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Razón social / Nombre</label>
+                <input name="razon" type="text" class="field" placeholder="Ej. Comunidad de Propietarios Olivos 12" required/>
+              </div>
+              <div>
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">CIF / NIF</label>
+                <input name="cif" type="text" class="field font-mono" placeholder="H-12345678" required/>
+              </div>
+              <div>
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Persona de contacto</label>
+                <input name="contacto" type="text" class="field" required/>
+              </div>
+              <div>
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Email</label>
+                <input name="email" type="email" class="field" required/>
+              </div>
+              <div>
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Teléfono</label>
+                <input name="telefono" type="tel" class="field font-mono"/>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Dirección de facturación</label>
+                <input name="direccion" type="text" class="field" placeholder="Calle, CP, localidad"/>
+              </div>
+              <div data-aapp-only style="display:none" class="sm:col-span-2 bg-paper-2 rounded-xl p-4">
+                <h3 class="font-medium text-sm mb-2 flex items-center gap-2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-copper"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></svg>
+                  Códigos DIR3 (administración pública)
+                </h3>
+                <div class="grid grid-cols-3 gap-2">
+                  <input name="dir3_oc" type="text" placeholder="Oficina contable" class="field font-mono text-xs"/>
+                  <input name="dir3_og" type="text" placeholder="Órgano gestor" class="field font-mono text-xs"/>
+                  <input name="dir3_ut" type="text" placeholder="Unidad tramitadora" class="field font-mono text-xs"/>
+                </div>
+                <div class="text-[11px] text-graphite mt-2">Los puedes encontrar en la web del organismo bajo "Datos de facturación electrónica".</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Productos del carrito (DINÁMICO) -->
+          <div class="bg-white border border-line rounded-2xl p-6">
+            <h2 class="font-serif text-xl font-medium mb-1">3 · Productos del carrito</h2>
+            <p class="text-sm text-graphite mb-5" data-glx-quote-summary>Cargando productos…</p>
+            <div data-glx-quote-rows class="divide-y divide-line"></div>
+            <a href="/pages/tienda/tienda.html" class="text-xs text-copper hover:underline mt-3 inline-flex items-center gap-1">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+              Añadir más productos
+            </a>
+          </div>
+
+          <!-- 4. Detalles -->
+          <div class="bg-white border border-line rounded-2xl p-6">
+            <h2 class="font-serif text-xl font-medium mb-1">4 · Detalles del proyecto</h2>
+            <p class="text-sm text-graphite mb-5">Información que nos ayuda a ajustar plazos y condiciones.</p>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Plazo de entrega ideal</label>
+                <select name="plazo" class="field">
+                  <option>Lo antes posible</option>
+                  <option>En las próximas 2 semanas</option>
+                  <option>Este mes</option>
+                  <option>Próximo mes</option>
+                  <option>Sin urgencia</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Validez requerida</label>
+                <select name="validez" class="field">
+                  <option>10 días</option>
+                  <option>15 días</option>
+                  <option>30 días</option>
+                  <option>60 días (típico AAPP)</option>
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1.5 block">Comentarios</label>
+                <textarea name="comentarios" class="field" rows="3" placeholder="Si necesitas que el pedido se reparta en varias entregas, plazos especiales, o cualquier otra particularidad."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aviso -->
+          <div class="bg-paper-2 border border-line rounded-2xl p-5 flex items-start gap-3 text-sm">
+            <svg class="text-graphite shrink-0 mt-0.5" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <div class="text-graphite">El presupuesto se envía firmado al email indicado en menos de 24 h hábiles. Solicitarlo no genera reserva de stock. La reserva se confirma al aceptar el presupuesto.</div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="flex justify-between flex-wrap gap-3 pt-2">
+            <a href="/pages/tienda/carrito.html" class="btn btn-ghost">Volver al carrito</a>
+            <button type="submit" class="btn btn-primary" data-glx-submit>
+              Enviar solicitud
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ========== ASIDE — RESUMEN DINÁMICO ========== -->
+      <aside>
+        <div class="lg:sticky lg:top-6 space-y-4">
+
+          <div class="bg-white border border-line rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 bg-paper-2 border-b border-line">
+              <h2 class="font-serif text-lg font-medium">Resumen del presupuesto</h2>
+              <p class="text-xs text-graphite font-mono mt-0.5" data-glx-aside-meta>—</p>
+            </div>
+            <div class="p-5 space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-graphite">Material <span class="text-[11px] text-graphite/70">(PVP IVA incl.)</span></span><span class="font-mono" data-glx-total-material>—</span></div>
+              <div class="flex justify-between"><span class="text-graphite">Portes <span class="text-[11px] text-graphite/70">(IVA incl.)</span></span><span class="font-mono" data-glx-total-portes>—</span></div>
+              <div class="flex justify-between text-graphite"><span>Base imponible</span><span class="font-mono" data-glx-total-base>—</span></div>
+              <div class="flex justify-between text-graphite"><span>IVA 21%</span><span class="font-mono" data-glx-total-iva>—</span></div>
+              <div class="pt-3 border-t border-line flex items-baseline justify-between">
+                <span class="font-medium">Total</span>
+                <span class="font-serif text-2xl" data-glx-total-grand>—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-paper-2 border border-line rounded-2xl p-5 text-sm">
+            <h3 class="font-medium mb-3">Cómo va a ir</h3>
+            <ol class="space-y-3">
+              <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">01</span><span class="text-graphite">Envías la solicitud con tus datos.</span></li>
+              <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">02</span><span class="text-graphite">Te confirmamos disponibilidad y, si procede, descuento por volumen.</span></li>
+              <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">03</span><span class="text-graphite">Te enviamos el presupuesto firmado en PDF en &lt; 24 h hábiles.</span></li>
+              <li class="flex gap-3"><span class="font-mono text-xs text-copper shrink-0">04</span><span class="text-graphite">Aceptas y reservamos stock. Pago al recibir factura, según condiciones acordadas.</span></li>
+            </ol>
+          </div>
+
+          <div class="bg-ink text-paper rounded-2xl p-5">
+            <div class="eyebrow text-filament mb-2">¿Eres instalador profesional?</div>
+            <p class="text-sm text-paper/70 mb-4">Las cuentas pro pueden generar presupuestos para sus propios clientes finales con un descuento del 22% aplicado.</p>
+            <a href="/pages/auth/login.html?redirect=area-personal.html" class="btn btn-ghost-light btn-sm w-full justify-center">Acceder al área pro</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
   <div data-component="site-footer"></div>
 
-<script src="/assets/js/main.js"></script>
-<script>
-document.querySelectorAll('.tag-pill').forEach(p=>{
-  p.addEventListener('change',()=>{
-    const i=p.querySelector('input');
-    if(i.type==='radio'){document.querySelectorAll(`.tag-pill input[name="${i.name}"]`).forEach(o=>o.closest('.tag-pill').classList.remove('is-on'));}
-    if(i.checked)p.classList.add('is-on');
-    document.querySelectorAll('[data-aapp-only]').forEach(e => { e.style.display = document.querySelector('input[name=cliente]:checked')?.parentElement.textContent.includes('Administración') ? '' : 'none'; });
-  });
-});
-</script>
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
-  <script src="/assets/js/catalog-ui.js"></script>
-</body></html>
+  <script src="/assets/js/main.js"></script>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ---- Pills tipo cliente: estado activo + mostrar bloque DIR3 si es AAPP
+      const pills = [...document.querySelectorAll('[data-client-pills] .client-pill')];
+      const aappBlock = document.querySelector('[data-aapp-only]');
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          pill.querySelector('input').checked = true;
+          pills.forEach((p) => p.classList.toggle('is-on', p === pill));
+          aappBlock.style.display = pill.dataset.client === 'aapp' ? '' : 'none';
+        });
+      });
+
+      // ---- Render dinámico de productos del carrito + totales en aside
+      const PORTES = 4.90;
+      const IVA = 0.21;
+      const money = (v) => `${Number(v || 0).toFixed(2).replace('.', ',')} €`;
+      const escape = (s) => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+      const rowsEl = document.querySelector('[data-glx-quote-rows]');
+      const summaryEl = document.querySelector('[data-glx-quote-summary]');
+      const asideMeta = document.querySelector('[data-glx-aside-meta]');
+      const totEls = {
+        material: document.querySelector('[data-glx-total-material]'),
+        portes: document.querySelector('[data-glx-total-portes]'),
+        base: document.querySelector('[data-glx-total-base]'),
+        iva: document.querySelector('[data-glx-total-iva]'),
+        grand: document.querySelector('[data-glx-total-grand]'),
+      };
+
+      let catalog = null;
+      async function _catalogIndex() {
+        if (catalog) return catalog;
+        try {
+          const products = await window.GarperLuxApi?.products({}) || [];
+          catalog = new Map(products.map((p) => [p.sku, p]));
+        } catch { catalog = new Map(); }
+        return catalog;
+      }
+
+      async function render() {
+        const items = window.GarperLuxCart?.getItems() || [];
+        const idx = await _catalogIndex();
+
+        if (!items.length) {
+          rowsEl.innerHTML = `
+            <div class="empty-state">
+              <p class="mb-3">Tu carrito está vacío. Para pedir un presupuesto necesitas al menos un producto.</p>
+              <a href="/pages/tienda/tienda.html" class="btn btn-sm btn-ghost">Explorar la tienda</a>
+            </div>`;
+          summaryEl.textContent = 'Aún no hay productos en tu carrito.';
+          asideMeta.textContent = 'Sin productos · Bruto sin IVA';
+          ['material', 'portes', 'base', 'iva', 'grand'].forEach((k) => totEls[k].textContent = '—');
+          return;
+        }
+
+        // Hidrata cada item con datos del catálogo (precio/imagen) si faltan
+        const rich = items.map((it) => {
+          const p = idx.get(it.sku);
+          return {
+            sku: it.sku,
+            name: it.title || p?.name || it.sku,
+            price: Number(it.price || p?.price || 0),
+            image: it.image || p?.image || null,
+            brand: (typeof it.brand === 'string' ? it.brand : (it.brand?.name || null)) || p?.brand?.name || '—',
+            quantity: Number(it.quantity || 1),
+          };
+        });
+
+        rowsEl.innerHTML = rich.map((it) => `
+          <div class="quote-row" data-sku="${escape(it.sku)}">
+            <div class="img">
+              ${it.image
+                ? `<img src="${escape(it.image)}" alt="${escape(it.name)}" loading="lazy"/>`
+                : `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="text-graphite/40"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>`}
+            </div>
+            <div>
+              <div class="text-[10px] font-mono text-graphite uppercase tracking-wider">${escape(it.brand)}</div>
+              <div class="font-medium leading-tight">${escape(it.name)}</div>
+              <div class="text-[11px] font-mono text-graphite mt-0.5">SKU ${escape(it.sku)}</div>
+            </div>
+            <input type="number" min="1" value="${it.quantity}" class="field !py-1.5 !px-2 text-right font-mono" data-glx-row-qty="${escape(it.sku)}"/>
+            <div class="text-right font-mono text-graphite">${money(it.price)}</div>
+            <div class="text-right font-mono font-medium" data-glx-row-line="${escape(it.sku)}">${money(it.price * it.quantity)}</div>
+            <button type="button" class="text-graphite hover:text-warn" data-glx-row-delete="${escape(it.sku)}" aria-label="Quitar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            </button>
+          </div>`).join('');
+
+        // Los precios del catálogo son PVP IVA-incluido; portes también.
+        // Total = material + portes (lo que paga el cliente). Base imponible
+        // e IVA se descomponen del total (informativos para B2B), por lo que
+        // este total CUADRA exactamente con el de carrito.html.
+        const material = rich.reduce((s, it) => s + (it.price * it.quantity), 0);
+        const grand = +(material + PORTES).toFixed(2);
+        const base = +(grand / (1 + IVA)).toFixed(2);
+        const iva = +(grand - base).toFixed(2);
+        const totalUnits = rich.reduce((s, it) => s + it.quantity, 0);
+        summaryEl.textContent = `${rich.length} producto${rich.length === 1 ? '' : 's'} · ${totalUnits} ${totalUnits === 1 ? 'unidad' : 'unidades'} · puedes editar cantidades antes de enviar.`;
+        asideMeta.textContent = `${rich.length} producto${rich.length === 1 ? '' : 's'} · IVA incluido`;
+        totEls.material.textContent = money(material);
+        totEls.portes.textContent = money(PORTES);
+        totEls.base.textContent = money(base);
+        totEls.iva.textContent = money(iva);
+        totEls.grand.textContent = money(grand);
+      }
+
+      // Eventos: cambios de cantidad y borrado en línea actualizan el carrito
+      // central → vuelve a re-renderizar gracias al event garperlux:cart-changed.
+      document.addEventListener('change', (e) => {
+        const inp = e.target.closest('[data-glx-row-qty]');
+        if (!inp) return;
+        const sku = inp.dataset.glxRowQty;
+        const q = Math.max(1, Math.floor(Number(inp.value) || 1));
+        inp.value = q;
+        window.GarperLuxCart?.setQty(sku, q);
+      });
+      document.addEventListener('click', (e) => {
+        const del = e.target.closest('[data-glx-row-delete]');
+        if (!del) return;
+        e.preventDefault();
+        window.GarperLuxCart?.removeItem(del.dataset.glxRowDelete);
+      });
+
+      // Re-render automático en cada mutación del carrito
+      window.addEventListener('garperlux:cart-changed', () => render().catch(() => null));
+
+      // ---- Submit del formulario: persiste el presupuesto en localStorage
+      // y redirige a una página de confirmación (que ya muestra el detalle
+      // desde el mismo storage, igual que `pedido-confirmado.html`).
+      document.getElementById('quote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const items = window.GarperLuxCart?.getItems() || [];
+        if (!items.length) {
+          alert('Tu carrito está vacío. Añade al menos un producto antes de pedir presupuesto.');
+          return;
+        }
+        const fd = new FormData(e.target);
+        const data = Object.fromEntries(fd.entries());
+        const code = 'PRE-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 5).toUpperCase();
+
+        const idx = catalog || new Map();
+        const enriched = items.map((it) => {
+          const p = idx.get(it.sku);
+          return {
+            sku: it.sku,
+            name: it.title || p?.name || it.sku,
+            price: Number(it.price || p?.price || 0),
+            quantity: Number(it.quantity || 1),
+            brand: (typeof it.brand === 'string' ? it.brand : (it.brand?.name || null)) || p?.brand?.name || null,
+          };
+        });
+        const material = enriched.reduce((s, it) => s + it.price * it.quantity, 0);
+        const total = +(material + PORTES).toFixed(2);
+        const base = +(total / (1 + IVA)).toFixed(2);
+        const iva = +(total - base).toFixed(2);
+
+        const quote = {
+          code,
+          createdAt: new Date().toISOString(),
+          status: 'enviado',
+          client: data,
+          items: enriched,
+          totals: { material, portes: PORTES, base, iva, total },
+        };
+        localStorage.setItem('garperlux_last_quote', JSON.stringify(quote));
+        const all = JSON.parse(localStorage.getItem('garperlux_quotes') || '[]');
+        all.unshift(quote);
+        localStorage.setItem('garperlux_quotes', JSON.stringify(all.slice(0, 10)));
+        // Reuso de la página de confirmación de pedido para no inflar el
+        // sitio: incluye soporte para distinguir presupuestos por el prefijo
+        // del código (PRE-).
+        location.href = `/pages/tienda/pedido-confirmado.html?order=${encodeURIComponent(code)}&quote=1`;
+      });
+
+      // Espera a que el módulo de carrito esté listo antes de pintar
+      function _ready() {
+        if (window.GarperLuxCart) render();
+        else setTimeout(_ready, 80);
+      }
+      if (document.readyState !== 'loading') _ready();
+      else document.addEventListener('DOMContentLoaded', _ready);
+    })();
+  </script>
+</body>
+</html>

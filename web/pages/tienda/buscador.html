@@ -1,17 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <base href="/.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resultados: interruptor simón · GarperLux</title>
+  <title>Buscador · GarperLux</title>
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/img/favicon.png?v=2" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -23,323 +22,91 @@
   <link rel="stylesheet" href="/assets/css/styles.css" />
 
   <style>
-    mark { background: rgba(232,165,69,0.3); color: var(--ink); padding: 0 2px; border-radius: 3px; }
+    mark { background: rgba(232,165,69,0.32); color: var(--ink); padding: 0 2px; border-radius: 3px; font-weight: 500; }
     .res-tab { padding: 0.65rem 0; font-weight: 500; color: var(--graphite); border-bottom: 2px solid transparent; transition: all .15s; cursor: pointer; }
     .res-tab.is-active { color: var(--ink); border-bottom-color: var(--filament); }
     .res-pane { display: none; }
     .res-pane.is-active { display: block; animation: fadeIn .25s ease both; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .search-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; font-size: 11px; font-family: 'JetBrains Mono', monospace;
+      background: var(--paper-2); color: var(--graphite); border-radius: 999px;
+    }
+    .search-pill strong { color: var(--ink); font-weight: 500; }
   </style>
 </head>
 
 <body class="bg-paper text-ink">
 
-  <div class="bg-ink text-paper text-[12.5px]"><div class="container-x flex items-center justify-between py-2"><span class="opacity-90 hidden sm:inline">Buscador global · productos, tutoriales, servicios y ayuda</span><a href="/pages/auth/login.html" class="link-underline opacity-90">¿Eres instalador Accede al área pro</a>?</div></div>
+  <div class="bg-ink text-paper text-[12.5px]">
+    <div class="container-x flex items-center justify-between py-2">
+      <span class="opacity-90 hidden sm:inline">Buscador global · productos, tutoriales, servicios y ayuda</span>
+      <a href="/pages/auth/login.html" class="link-underline opacity-90">¿Eres instalador? Accede al área pro</a>
+    </div>
+  </div>
   <div data-component="site-header"></div>
 
   <!-- BREADCRUMBS -->
-  <div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><span class="text-ink">Resultados de búsqueda</span></nav></div>
+  <div class="container-x pt-5 pb-2">
+    <nav class="text-xs font-mono text-graphite flex items-center gap-2">
+      <a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <span class="text-ink">Resultados de búsqueda</span>
+    </nav>
+  </div>
 
   <!-- ============ HERO BUSCADOR ============ -->
   <section class="container-x pt-8 md:pt-12 pb-8">
-    <div class="relative">
-      <input type="search" value="interruptor simón" autofocus class="w-full pl-14 pr-32 py-5 bg-white border border-line rounded-2xl text-xl md:text-2xl font-serif placeholder:text-graphite/60 focus:border-ink outline-none shadow-sm"/>
+    <form id="search-form" class="relative">
+      <input
+        id="search-input"
+        type="search"
+        name="q"
+        autocomplete="off"
+        autofocus
+        placeholder='Busca lo que necesites: "interruptor simón", "bombilla rosca gorda", "27101-31"…'
+        class="w-full pl-14 pr-32 py-5 bg-white border border-line rounded-2xl text-lg md:text-xl font-serif placeholder:text-graphite/55 focus:border-ink outline-none shadow-sm"/>
       <svg class="absolute left-5 top-1/2 -translate-y-1/2 text-graphite" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <button class="absolute right-3 top-1/2 -translate-y-1/2 btn btn-sm btn-ink">Buscar</button>
+      <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 btn btn-sm btn-ink">Buscar</button>
+    </form>
+
+    <div class="mt-5 flex items-start justify-between flex-wrap gap-3 text-sm">
+      <div class="text-graphite">
+        <span data-search-meta>Escribe lo que necesites para empezar a buscar.</span>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap text-xs" data-suggestions style="display: none;"></div>
     </div>
 
-    <div class="mt-5 flex items-center justify-between flex-wrap gap-3 text-sm">
-      <div class="text-graphite">
-        <strong class="text-ink font-medium">37 resultados</strong> para
-        <span class="font-mono">"interruptor simón"</span>
-        <span class="text-graphite/60">· en 0,12 s</span>
-      </div>
-      <div class="flex items-center gap-2 text-xs">
-        <span class="text-graphite">Sugerencias:</span>
-        <a href="/pages/tienda/buscador.html?q=interruptor+27" class="link-underline">interruptor 27</a>
-        <span class="text-graphite/40">·</span>
-        <a href="/pages/tienda/buscador.html?q=conmutador+simon" class="link-underline">conmutador simón</a>
-        <span class="text-graphite/40">·</span>
-        <a href="/pages/tienda/buscador.html?q=simon+blanco" class="link-underline">simón blanco</a>
-      </div>
+    <div class="mt-3 flex items-center flex-wrap gap-2" data-tokens-strip hidden>
+      <span class="search-pill" data-strip-label>Buscaste por</span>
     </div>
   </section>
 
   <!-- ============ TABS DE RESULTADOS ============ -->
   <section class="container-x pb-20">
-    <div class="flex gap-7 border-b border-line mb-8 overflow-x-auto">
-      <button class="res-tab is-active whitespace-nowrap" data-tab="all">Todos <span class="font-mono text-xs text-graphite ml-1">37</span></button>
-      <button class="res-tab whitespace-nowrap" data-tab="productos">Productos <span class="font-mono text-xs text-graphite ml-1">24</span></button>
-      <button class="res-tab whitespace-nowrap" data-tab="tutoriales">Tutoriales <span class="font-mono text-xs text-graphite ml-1">7</span></button>
-      <button class="res-tab whitespace-nowrap" data-tab="servicios">Servicios <span class="font-mono text-xs text-graphite ml-1">3</span></button>
-      <button class="res-tab whitespace-nowrap" data-tab="ayuda">Ayuda <span class="font-mono text-xs text-graphite ml-1">3</span></button>
+    <div class="flex gap-7 border-b border-line mb-8 overflow-x-auto" id="tabs-bar">
+      <button class="res-tab is-active whitespace-nowrap" data-tab="all">Todos <span class="font-mono text-xs text-graphite ml-1" data-count="all">0</span></button>
+      <button class="res-tab whitespace-nowrap" data-tab="product">Productos <span class="font-mono text-xs text-graphite ml-1" data-count="product">0</span></button>
+      <button class="res-tab whitespace-nowrap" data-tab="tutorial">Tutoriales <span class="font-mono text-xs text-graphite ml-1" data-count="tutorial">0</span></button>
+      <button class="res-tab whitespace-nowrap" data-tab="brand">Marcas <span class="font-mono text-xs text-graphite ml-1" data-count="brand">0</span></button>
+      <button class="res-tab whitespace-nowrap" data-tab="category">Categorías <span class="font-mono text-xs text-graphite ml-1" data-count="category">0</span></button>
+      <button class="res-tab whitespace-nowrap" data-tab="service">Servicios <span class="font-mono text-xs text-graphite ml-1" data-count="service">0</span></button>
+      <button class="res-tab whitespace-nowrap" data-tab="faq">Ayuda <span class="font-mono text-xs text-graphite ml-1" data-count="faq">0</span></button>
     </div>
 
     <div class="grid lg:grid-cols-[1fr_280px] gap-10">
       <div>
-
-        <!-- ============ TODOS ============ -->
-        <div class="res-pane is-active" data-pane="all">
-
-          <!-- Sección productos -->
-          <div class="mb-12">
-            <div class="flex items-center justify-between mb-5">
-              <h2 class="font-serif text-2xl font-medium">Productos <span class="font-mono text-sm text-graphite">— 24 resultados</span></h2>
-              <button data-tab-trigger="productos" class="link-underline text-sm">Ver todos →</button>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <a href="/pages/tienda/producto.html" class="card-prod group">
-                <div class="img relative">
-                  <img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=400&q=80" alt="" class="w-full h-full object-cover rounded-lg" loading="lazy" onerror="this.style.display='none'"/>
-                  <span class="absolute top-2 left-2 pill pill-stock text-[10px]">47 uds</span>
-                </div>
-                <div>
-                  <div class="text-[11px] font-mono text-graphite">Simón · gama 27</div>
-                  <h3 class="text-[14px] font-medium leading-snug"><mark>Interruptor</mark> <mark>Simón</mark> 27 10A blanco</h3>
-                  <div class="font-mono text-[11px] text-graphite/70">SKU 27101-31</div>
-                </div>
-                <div class="font-serif text-lg font-medium">5,90 €</div>
-              </a>
-              <a href="/pages/tienda/producto.html" class="card-prod group">
-                <div class="img grid place-items-center text-graphite/30">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9l6 6"/></svg>
-                  <span class="absolute top-2 left-2 pill pill-stock text-[10px]">31 uds</span>
-                </div>
-                <div>
-                  <div class="text-[11px] font-mono text-graphite">Simón · gama 27</div>
-                  <h3 class="text-[14px] font-medium leading-snug">Conmutador <mark>Simón</mark> 27 10A blanco</h3>
-                  <div class="font-mono text-[11px] text-graphite/70">SKU 27201-31</div>
-                </div>
-                <div class="font-serif text-lg font-medium">6,40 €</div>
-              </a>
-              <a href="/pages/tienda/producto.html" class="card-prod group">
-                <div class="img grid place-items-center text-graphite/30">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>
-                  <span class="absolute top-2 left-2 pill bg-ink text-paper text-[10px]">Premium</span>
-                </div>
-                <div>
-                  <div class="text-[11px] font-mono text-graphite">Simón · gama 75</div>
-                  <h3 class="text-[14px] font-medium leading-snug"><mark>Interruptor</mark> <mark>Simón</mark> 75 aluminio</h3>
-                  <div class="font-mono text-[11px] text-graphite/70">SKU 75101-39</div>
-                </div>
-                <div class="font-serif text-lg font-medium">14,90 €</div>
-              </a>
-              <a href="/pages/tienda/producto.html" class="card-prod group">
-                <div class="img grid place-items-center text-graphite/30">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-                  <span class="absolute top-2 left-2 pill pill-stock text-[10px]">23 uds</span>
-                </div>
-                <div>
-                  <div class="text-[11px] font-mono text-graphite">Simón · gama 27</div>
-                  <h3 class="text-[14px] font-medium leading-snug">Doble <mark>interruptor</mark> <mark>Simón</mark></h3>
-                  <div class="font-mono text-[11px] text-graphite/70">SKU 27502-31</div>
-                </div>
-                <div class="font-serif text-lg font-medium">11,40 €</div>
-              </a>
-            </div>
-          </div>
-
-          <!-- Sección tutoriales -->
-          <div class="mb-12">
-            <div class="flex items-center justify-between mb-5">
-              <h2 class="font-serif text-2xl font-medium">Tutoriales <span class="font-mono text-sm text-graphite">— 7 resultados</span></h2>
-              <button data-tab-trigger="tutoriales" class="link-underline text-sm">Ver todos →</button>
-            </div>
-            <div class="grid md:grid-cols-2 gap-5">
-              <a href="/pages/aprender/tutorial.html" class="card-tut group">
-                <div class="cover aspect-[16/9] relative" style="background: linear-gradient(135deg, #40454F, #1C1F26);">
-                  <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=900&q=80" alt="" class="w-full h-full object-cover opacity-70" loading="lazy" onerror="this.style.display='none'"/>
-                  <div class="absolute top-3 left-3 flex gap-2"><span class="pill pill-info">Mecanismos</span><span class="pill pill-caution">Media</span></div>
-                </div>
-                <div class="p-5">
-                  <h3 class="font-serif text-xl font-medium leading-snug mb-2">Cambiar un <mark>interruptor</mark> desgastado sin volverte loco</h3>
-                  <p class="text-sm text-graphite leading-relaxed">Chisporroteo al encender, tecla floja: cómo cambiar tu mecanismo de la gama <mark>Simón</mark> 27 en 25 minutos.</p>
-                  <div class="flex items-center gap-3 mt-3 text-xs font-mono text-graphite">
-                    <span>25 min</span><span>·</span>
-                    <span>Tutorial #042</span>
-                  </div>
-                </div>
-              </a>
-              <a href="/pages/aprender/tutorial.html" class="card-tut group">
-                <div class="cover aspect-[16/9] bg-paper-2">
-                  <div class="w-full h-full grid place-items-center text-graphite/30">
-                    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-                  </div>
-                </div>
-                <div class="p-5">
-                  <span class="pill pill-info text-[10px] mb-2">Mecanismos</span>
-                  <h3 class="font-serif text-xl font-medium leading-snug mb-2">Diferencias entre <mark>interruptor</mark>, conmutador y cruzamiento</h3>
-                  <p class="text-sm text-graphite">Sin jerga: cómo elegir el mecanismo correcto antes de comprar.</p>
-                </div>
-              </a>
-            </div>
-          </div>
-
-          <!-- Sección servicios -->
-          <div class="mb-12">
-            <div class="flex items-center justify-between mb-5">
-              <h2 class="font-serif text-2xl font-medium">Servicios <span class="font-mono text-sm text-graphite">— 3 resultados</span></h2>
-            </div>
-            <div class="space-y-3">
-              <a href="/pages/servicios/servicio.html" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
-                <div class="flex items-start justify-between flex-wrap gap-3">
-                  <div>
-                    <div class="flex items-center gap-2 mb-2">
-                      <span class="pill bg-warn text-paper text-[10px]">Avería</span>
-                      <span class="pill bg-electric/10 text-electric text-[10px]">Eléctrica</span>
-                    </div>
-                    <h3 class="font-serif text-xl font-medium leading-tight mb-1">Cambio o reparación urgente de <mark>interruptor</mark> defectuoso</h3>
-                    <p class="text-sm text-graphite">Si el chisporroteo o el calor en la tecla te asusta, vamos en menos de 4 h.</p>
-                  </div>
-                  <span class="font-mono text-sm text-copper">desde 65 €</span>
-                </div>
-              </a>
-              <a href="/pages/servicios/servicio.html" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
-                <div class="flex items-start justify-between flex-wrap gap-3">
-                  <div>
-                    <div class="flex items-center gap-2 mb-2">
-                      <span class="pill bg-copper/15 text-copper text-[10px]">Nueva instalación</span>
-                      <span class="pill bg-electric/10 text-electric text-[10px]">Eléctrica</span>
-                    </div>
-                    <h3 class="font-serif text-xl font-medium leading-tight mb-1">Renovación completa de mecanismos en vivienda</h3>
-                    <p class="text-sm text-graphite">Cambio de gama <mark>Simón</mark> antigua por gama actual con marcos coordinados.</p>
-                  </div>
-                  <span class="font-mono text-sm text-copper">presup. a medida</span>
-                </div>
-              </a>
-            </div>
-          </div>
-
-          <!-- Sección ayuda -->
-          <div>
-            <div class="flex items-center justify-between mb-5">
-              <h2 class="font-serif text-2xl font-medium">Centro de ayuda <span class="font-mono text-sm text-graphite">— 3 resultados</span></h2>
-            </div>
-            <div class="space-y-3">
-              <a href="/pages/sistema/faqs.html#productos" class="block bg-paper-2 border border-line rounded-xl p-5 hover:border-ink transition-colors">
-                <div class="font-mono text-[10px] uppercase tracking-wider text-copper mb-2">Centro de ayuda · Material</div>
-                <h3 class="font-serif text-lg font-medium leading-tight mb-1">¿Vale un mecanismo <mark>Simón</mark> 27 con un marco de Niessen?</h3>
-                <p class="text-sm text-graphite">Aunque el mecanismo encaja en cualquier caja universal de 60 mm, el marco no es compatible…</p>
-              </a>
-              <a href="/pages/sistema/faqs.html#productos" class="block bg-paper-2 border border-line rounded-xl p-5 hover:border-ink transition-colors">
-                <div class="font-mono text-[10px] uppercase tracking-wider text-copper mb-2">Centro de ayuda · Material</div>
-                <h3 class="font-serif text-lg font-medium leading-tight mb-1">¿Cómo identifico la gama de mi <mark>interruptor</mark> actual para reponer?</h3>
-                <p class="text-sm text-graphite">Mira la cara interna del marco. La gama suele estar grabada (<mark>Simón</mark> 27, 75, 82…).</p>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- ============ TAB PRODUCTOS ============ -->
-        <div class="res-pane" data-pane="productos">
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img relative">
-                <img src="https://images.unsplash.com/photo-1556909114-44e3e9399a2e?auto=format&fit=crop&w=400&q=80" alt="" class="w-full h-full object-cover rounded-lg" loading="lazy" onerror="this.style.display='none'"/>
-                <span class="absolute top-2 left-2 pill pill-stock text-[10px]">47 uds</span>
-              </div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Simón · 27</div>
-                <h3 class="text-[14px] font-medium leading-snug"><mark>Interruptor</mark> <mark>Simón</mark> 27 10A blanco</h3>
-              </div>
-              <div class="font-serif text-lg font-medium">5,90 €</div>
-            </a>
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Simón · 27</div>
-                <h3 class="text-[14px] font-medium leading-snug">Conmutador <mark>Simón</mark> 27 10A</h3>
-              </div>
-              <div class="font-serif text-lg font-medium">6,40 €</div>
-            </a>
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Simón · 75</div>
-                <h3 class="text-[14px] font-medium leading-snug"><mark>Interruptor</mark> <mark>Simón</mark> 75 aluminio</h3>
-              </div>
-              <div class="font-serif text-lg font-medium">14,90 €</div>
-            </a>
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg></div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Simón · 27</div>
-                <h3 class="text-[14px] font-medium leading-snug">Doble <mark>interruptor</mark> <mark>Simón</mark></h3>
-              </div>
-              <div class="font-serif text-lg font-medium">11,40 €</div>
-            </a>
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Simón · 27</div>
-                <h3 class="text-[14px] font-medium leading-snug">Pulsador <mark>Simón</mark> 27 con LED</h3>
-              </div>
-              <div class="font-serif text-lg font-medium">9,80 €</div>
-            </a>
-            <a href="/pages/tienda/producto.html" class="card-prod group">
-              <div class="img grid place-items-center text-graphite/30"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
-              <div>
-                <div class="text-[11px] font-mono text-graphite">Simón · 82</div>
-                <h3 class="text-[14px] font-medium leading-snug"><mark>Interruptor</mark> <mark>Simón</mark> 82 marfil</h3>
-              </div>
-              <div class="font-serif text-lg font-medium">7,20 €</div>
-            </a>
-          </div>
-          <div class="mt-8 text-center">
-            <a href="/pages/tienda/mecanismos.html" class="btn btn-ghost">Ver los 24 productos en la categoría</a>
-          </div>
-        </div>
-
-        <!-- ============ TAB TUTORIALES ============ -->
-        <div class="res-pane" data-pane="tutoriales">
-          <div class="space-y-3">
-            <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
-              <div class="flex items-center gap-2 mb-2"><span class="pill pill-info text-[10px]">Mecanismos</span><span class="pill pill-caution text-[10px]">Media</span><span class="text-xs font-mono text-graphite">25 min</span></div>
-              <h3 class="font-serif text-xl font-medium leading-tight mb-1">Cambiar un <mark>interruptor</mark> desgastado sin volverte loco</h3>
-              <p class="text-sm text-graphite">Tutorial #042 · Antonio lo hizo solo en 25 minutos siguiendo los 6 pasos.</p>
-            </a>
-            <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
-              <h3 class="font-serif text-xl font-medium leading-tight mb-1">Diferencias entre <mark>interruptor</mark>, conmutador y cruzamiento</h3>
-              <p class="text-sm text-graphite">Sin jerga: cómo elegir antes de comprar.</p>
-            </a>
-            <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
-              <h3 class="font-serif text-xl font-medium leading-tight mb-1">Cómo identificar la gama de tu <mark>interruptor</mark> actual</h3>
-              <p class="text-sm text-graphite">Para que la reposición sea coherente con el resto de la vivienda.</p>
-            </a>
-            <a href="/pages/aprender/tutorial.html" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
-              <h3 class="font-serif text-xl font-medium leading-tight mb-1">Convertir un <mark>interruptor</mark> normal en domótico</h3>
-              <p class="text-sm text-graphite">Con módulos Shelly o Sonoff sin tirar la pared.</p>
-            </a>
-          </div>
-        </div>
-
-        <!-- ============ TAB SERVICIOS ============ -->
-        <div class="res-pane" data-pane="servicios">
-          <div class="space-y-3">
-            <a href="/pages/servicios/servicio.html" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
-              <div class="flex items-center gap-2 mb-2"><span class="pill bg-warn text-paper text-[10px]">Avería</span></div>
-              <h3 class="font-serif text-xl font-medium leading-tight mb-1">Cambio o reparación urgente de <mark>interruptor</mark> defectuoso</h3>
-              <p class="text-sm text-graphite">desde 65 €</p>
-            </a>
-            <a href="/pages/servicios/servicio.html" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
-              <div class="flex items-center gap-2 mb-2"><span class="pill bg-copper/15 text-copper text-[10px]">Instalación nueva</span></div>
-              <h3 class="font-serif text-xl font-medium leading-tight mb-1">Renovación completa de mecanismos <mark>Simón</mark> en vivienda</h3>
-              <p class="text-sm text-graphite">Presupuesto a medida</p>
-            </a>
-          </div>
-        </div>
-
-        <!-- ============ TAB AYUDA ============ -->
-        <div class="res-pane" data-pane="ayuda">
-          <div class="space-y-3">
-            <a href="/pages/sistema/faqs.html" class="block bg-paper-2 border border-line rounded-xl p-5 hover:border-ink transition-colors">
-              <div class="font-mono text-[10px] uppercase tracking-wider text-copper mb-2">FAQ · Material</div>
-              <h3 class="font-serif text-lg font-medium leading-tight">¿Vale un mecanismo <mark>Simón</mark> 27 con marco Niessen?</h3>
-            </a>
-            <a href="/pages/sistema/faqs.html" class="block bg-paper-2 border border-line rounded-xl p-5 hover:border-ink transition-colors">
-              <div class="font-mono text-[10px] uppercase tracking-wider text-copper mb-2">FAQ · Material</div>
-              <h3 class="font-serif text-lg font-medium leading-tight">¿Cómo identifico la gama de mi <mark>interruptor</mark> actual?</h3>
-            </a>
+        <!-- Container donde se renderizan los resultados -->
+        <div id="results-host">
+          <div class="bg-paper-2 border border-line rounded-xl p-10 text-center">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="mx-auto mb-3 text-graphite"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <h2 class="font-serif text-2xl font-medium mb-1">Buscador unificado</h2>
+            <p class="text-graphite text-sm leading-relaxed max-w-md mx-auto">
+              Escribe lo que necesites — nombre del producto, marca, SKU, código de barras o lenguaje natural.
+              El motor entiende sinónimos: <em>"bombilla rosca gorda"</em> encuentra
+              <em>"casquillo E27"</em>.
+            </p>
           </div>
         </div>
       </div>
@@ -348,35 +115,26 @@
       <aside class="hidden lg:block">
         <div class="sticky top-24 space-y-5 text-sm">
           <div>
-            <div class="eyebrow text-graphite mb-3">Filtrar por</div>
-            <div class="space-y-2">
-              <label class="flex items-center justify-between cursor-pointer hover:text-ink">
-                <span class="flex items-center gap-2">
-                  <input type="checkbox" class="w-4 h-4"/> Solo en stock
-                </span>
-                <span class="text-graphite text-xs font-mono">28</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer hover:text-ink">
-                <span class="flex items-center gap-2">
-                  <input type="checkbox" class="w-4 h-4"/> Con tutorial
-                </span>
-                <span class="text-graphite text-xs font-mono">14</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer hover:text-ink">
-                <span class="flex items-center gap-2">
-                  <input type="checkbox" class="w-4 h-4"/> Tarifa pro disp.
-                </span>
-                <span class="text-graphite text-xs font-mono">22</span>
-              </label>
+            <div class="eyebrow text-graphite mb-3">Búsquedas habituales</div>
+            <div class="space-y-1.5 text-graphite text-[13px]">
+              <button type="button" class="block hover:text-ink text-left" data-quick-search="bombilla rosca gorda 9w">→ bombilla rosca gorda 9W</button>
+              <button type="button" class="block hover:text-ink text-left" data-quick-search="diferencial 30ma">→ diferencial 30 mA</button>
+              <button type="button" class="block hover:text-ink text-left" data-quick-search="videoportero wifi">→ videoportero wifi</button>
+              <button type="button" class="block hover:text-ink text-left" data-quick-search="motor garaje corredera">→ motor garaje corredera</button>
+              <button type="button" class="block hover:text-ink text-left" data-quick-search="schuko ip55">→ enchufe schuko exterior</button>
+              <button type="button" class="block hover:text-ink text-left" data-quick-search="enchufe wifi shelly">→ enchufe wifi (Shelly)</button>
+              <button type="button" class="block hover:text-ink text-left" data-quick-search="cable 2.5 amarillo verde">→ cable 2,5 mm² tierra</button>
             </div>
           </div>
           <div class="border-t border-line pt-5">
             <div class="eyebrow text-graphite mb-3">Tipo de contenido</div>
             <div class="space-y-2 text-graphite">
-              <a href="#" data-tab-trigger="productos" class="block hover:text-ink">→ Productos <span class="font-mono text-xs">24</span></a>
-              <a href="#" data-tab-trigger="tutoriales" class="block hover:text-ink">→ Tutoriales <span class="font-mono text-xs">7</span></a>
-              <a href="#" data-tab-trigger="servicios" class="block hover:text-ink">→ Servicios <span class="font-mono text-xs">3</span></a>
-              <a href="#" data-tab-trigger="ayuda" class="block hover:text-ink">→ FAQs <span class="font-mono text-xs">3</span></a>
+              <a href="#" data-tab-trigger="product" class="block hover:text-ink">→ Productos <span class="font-mono text-xs" data-count-aside="product">0</span></a>
+              <a href="#" data-tab-trigger="tutorial" class="block hover:text-ink">→ Tutoriales <span class="font-mono text-xs" data-count-aside="tutorial">0</span></a>
+              <a href="#" data-tab-trigger="brand" class="block hover:text-ink">→ Marcas <span class="font-mono text-xs" data-count-aside="brand">0</span></a>
+              <a href="#" data-tab-trigger="category" class="block hover:text-ink">→ Categorías <span class="font-mono text-xs" data-count-aside="category">0</span></a>
+              <a href="#" data-tab-trigger="service" class="block hover:text-ink">→ Servicios <span class="font-mono text-xs" data-count-aside="service">0</span></a>
+              <a href="#" data-tab-trigger="faq" class="block hover:text-ink">→ FAQs <span class="font-mono text-xs" data-count-aside="faq">0</span></a>
             </div>
           </div>
           <div class="bg-paper-2 border border-line rounded-xl p-4">
@@ -388,7 +146,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <div data-component="site-footer"></div>
 
   <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto"><div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="/assets/img/logo.png" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><nav class="px-5 py-6"><a href="/pages/aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a><a href="/pages/tienda/tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Tienda</a><a href="/pages/servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a><a href="/pages/servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a><a href="/pages/empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a></nav></div>
@@ -397,21 +154,368 @@
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/main.js"></script>
-  <script src="/assets/js/catalog-ui.js"></script>
+  <script src="/assets/js/search-engine.js"></script>
   <script>
-    // Tabs
-    const tabs = document.querySelectorAll('.res-tab');
-    const panes = document.querySelectorAll('.res-pane');
-    const showPane = (name) => {
-      tabs.forEach(t => t.classList.toggle('is-active', t.dataset.tab === name));
-      panes.forEach(p => p.classList.toggle('is-active', p.dataset.pane === name));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-    tabs.forEach(t => t.addEventListener('click', () => showPane(t.dataset.tab)));
-    document.querySelectorAll('[data-tab-trigger]').forEach(b => b.addEventListener('click', (e) => {
-      e.preventDefault();
-      showPane(b.dataset.tabTrigger);
-    }));
+    (() => {
+      'use strict';
+      const engine = window.GarperLuxSearch;
+      const form = document.getElementById('search-form');
+      const input = document.getElementById('search-input');
+      const host = document.getElementById('results-host');
+      const meta = document.querySelector('[data-search-meta]');
+      const tokensStrip = document.querySelector('[data-tokens-strip]');
+      const tabBar = document.getElementById('tabs-bar');
+      const suggBox = document.querySelector('[data-suggestions]');
+
+      const moneyFmt = (v) => `${Number(v || 0).toFixed(2).replace('.', ',')} €`;
+
+      let lastResults = null;
+      let activeTab = 'all';
+
+      function setTab(name) {
+        activeTab = name;
+        document.querySelectorAll('.res-tab').forEach(t => t.classList.toggle('is-active', t.dataset.tab === name));
+        renderResults();
+      }
+
+      tabBar.addEventListener('click', (e) => {
+        const t = e.target.closest('.res-tab');
+        if (!t) return;
+        setTab(t.dataset.tab);
+      });
+      document.querySelectorAll('[data-tab-trigger]').forEach((el) => {
+        el.addEventListener('click', (e) => { e.preventDefault(); setTab(el.dataset.tabTrigger); });
+      });
+      document.querySelectorAll('[data-quick-search]').forEach((b) => {
+        b.addEventListener('click', () => {
+          input.value = b.dataset.quickSearch;
+          submitSearch();
+        });
+      });
+
+      // Sincroniza el query con la URL (compartible).
+      const params = new URLSearchParams(location.search);
+      const initialQ = params.get('q') || '';
+      if (initialQ) input.value = initialQ;
+
+      form.addEventListener('submit', (e) => { e.preventDefault(); submitSearch(); });
+      input.addEventListener('input', debounce(submitSearch, 200));
+
+      function debounce(fn, ms) {
+        let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+      }
+
+      async function submitSearch() {
+        const q = input.value.trim();
+        const url = new URL(location.href);
+        if (q) url.searchParams.set('q', q); else url.searchParams.delete('q');
+        history.replaceState(null, '', url);
+        if (!q) {
+          renderEmpty();
+          return;
+        }
+        meta.textContent = 'Buscando…';
+        const out = await engine.run(q);
+        lastResults = out;
+        updateMeta(out);
+        renderResults();
+      }
+
+      function updateMeta(out) {
+        if (!out.total) {
+          meta.innerHTML = `Sin resultados para <span class="font-mono">"${escapeHtml(out.query)}"</span>. Prueba con sinónimos o palabras más simples.`;
+        } else {
+          meta.innerHTML = `<strong class="text-ink font-medium">${out.total} resultados</strong> para <span class="font-mono">"${escapeHtml(out.query)}"</span> · en <span class="font-mono">${out.elapsed_ms} ms</span>`;
+        }
+
+        // Strip de tokens efectivos (incluyendo expansión de sinónimos)
+        const expandedDiff = out.expanded && out.expanded !== out.normalized;
+        if (out.tokens.length || expandedDiff) {
+          tokensStrip.hidden = false;
+          let html = '<span class="search-pill"><strong>Buscaste por</strong></span>';
+          out.tokens.forEach(tok => {
+            html += `<span class="search-pill">${escapeHtml(tok)}</span>`;
+          });
+          if (expandedDiff) {
+            html += `<span class="search-pill" title="Sinónimos aplicados"><strong>≈</strong> ${escapeHtml(out.expanded)}</span>`;
+          }
+          tokensStrip.innerHTML = html;
+        } else {
+          tokensStrip.hidden = true;
+          tokensStrip.innerHTML = '';
+        }
+
+        // Contadores en pestañas
+        document.querySelectorAll('[data-count]').forEach(el => {
+          const t = el.dataset.count;
+          const n = t === 'all' ? out.total : (out.byType[t] || 0);
+          el.textContent = n;
+        });
+        document.querySelectorAll('[data-count-aside]').forEach(el => {
+          const t = el.dataset.countAside;
+          el.textContent = out.byType[t] || 0;
+        });
+
+        // Sugerencias automáticas: muestra los sinónimos disparados
+        renderSuggestions(out);
+      }
+
+      function renderSuggestions(out) {
+        const suggestions = [];
+        if (out.expanded && out.expanded !== out.normalized) {
+          suggestions.push({ label: out.expanded, q: out.expanded });
+        }
+        if (suggestions.length) {
+          suggBox.style.display = '';
+          suggBox.innerHTML = '<span class="text-graphite">¿Te referías a:</span>'
+            + suggestions.map(s => `<button type="button" class="link-underline ml-2" data-suggest>${escapeHtml(s.label)}</button>`).join('');
+          suggBox.querySelectorAll('[data-suggest]').forEach((b) => {
+            b.addEventListener('click', () => {
+              input.value = b.textContent;
+              submitSearch();
+            });
+          });
+        } else {
+          suggBox.style.display = 'none';
+          suggBox.innerHTML = '';
+        }
+      }
+
+      function renderResults() {
+        if (!lastResults) {
+          renderEmpty();
+          return;
+        }
+        const out = lastResults;
+        if (!out.total) {
+          host.innerHTML = renderNoResults(out);
+          return;
+        }
+        const filtered = activeTab === 'all'
+          ? out.results
+          : out.results.filter(r => r.type === activeTab);
+        if (!filtered.length) {
+          host.innerHTML = `<div class="bg-paper-2 border border-line rounded-xl p-8 text-center text-graphite">Sin resultados de este tipo.</div>`;
+          return;
+        }
+        if (activeTab === 'all') {
+          host.innerHTML = renderAllPane(out);
+        } else {
+          host.innerHTML = renderTypePane(activeTab, filtered, out.tokens);
+        }
+      }
+
+      function renderEmpty() {
+        host.innerHTML = `
+          <div class="bg-paper-2 border border-line rounded-xl p-10 text-center">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="mx-auto mb-3 text-graphite"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <h2 class="font-serif text-2xl font-medium mb-1">Buscador unificado</h2>
+            <p class="text-graphite text-sm leading-relaxed max-w-md mx-auto">
+              Escribe lo que necesites — nombre del producto, marca, SKU, código de barras o lenguaje natural.
+              El motor entiende sinónimos: <em>"bombilla rosca gorda"</em> encuentra <em>"casquillo E27"</em>.
+            </p>
+          </div>`;
+      }
+
+      function renderNoResults(out) {
+        return `
+          <div class="bg-paper-2 border border-line rounded-xl p-10 text-center">
+            <h2 class="font-serif text-2xl font-medium mb-1">Sin resultados</h2>
+            <p class="text-graphite text-sm leading-relaxed max-w-md mx-auto">
+              No hemos encontrado nada para <span class="font-mono">"${escapeHtml(out.query)}"</span>.
+              Prueba con palabras más simples o pregúntanos directamente.
+            </p>
+            <a href="/pages/empresa/contacto.html" class="btn btn-ghost mt-5 inline-flex">Pregúntanos</a>
+          </div>`;
+      }
+
+      // ----- Render por sección ------------------------------------------------
+
+      const SECTION_TITLES = {
+        product: 'Productos',
+        tutorial: 'Tutoriales',
+        brand: 'Marcas',
+        category: 'Categorías',
+        service: 'Servicios',
+        faq: 'Centro de ayuda',
+        page: 'Páginas',
+      };
+
+      function renderAllPane(out) {
+        // Agrupa por type y renderiza por orden de relevancia.
+        const ORDER = ['product', 'tutorial', 'brand', 'category', 'service', 'faq', 'page'];
+        const groups = {};
+        for (const r of out.results) {
+          (groups[r.type] = groups[r.type] || []).push(r);
+        }
+        let html = '';
+        for (const t of ORDER) {
+          const list = groups[t];
+          if (!list || !list.length) continue;
+          const limit = t === 'product' ? 8 : 4;
+          const top = list.slice(0, limit);
+          html += `
+            <div class="mb-12">
+              <div class="flex items-center justify-between mb-5">
+                <h2 class="font-serif text-2xl font-medium">${SECTION_TITLES[t]}
+                  <span class="font-mono text-sm text-graphite">— ${list.length} resultado${list.length === 1 ? '' : 's'}</span>
+                </h2>
+                ${list.length > top.length ? `<button type="button" data-tab-trigger="${t}" class="link-underline text-sm">Ver todos →</button>` : ''}
+              </div>
+              ${renderTypePane(t, top, out.tokens, { compact: true })}
+            </div>`;
+        }
+        const result = document.createElement('div');
+        result.innerHTML = html;
+        // Re-attach tab triggers
+        result.querySelectorAll('[data-tab-trigger]').forEach((b) => {
+          b.addEventListener('click', (e) => { e.preventDefault(); setTab(b.dataset.tabTrigger); });
+        });
+        return result.innerHTML;
+      }
+
+      function renderTypePane(type, list, tokens, { compact = false } = {}) {
+        switch (type) {
+          case 'product': return renderProducts(list, tokens, compact);
+          case 'tutorial': return renderTutorials(list, tokens);
+          case 'brand': return renderBrands(list, tokens);
+          case 'category': return renderCategories(list, tokens);
+          case 'service': return renderServices(list, tokens);
+          case 'faq': return renderFaqs(list, tokens);
+          case 'page': return renderPages(list, tokens);
+          default: return '';
+        }
+      }
+
+      function hl(text, tokens) { return engine.highlight(text || '', tokens); }
+      function escapeHtml(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      function renderProducts(list, tokens, compact) {
+        const cols = compact ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3';
+        return `<div class="grid ${cols} gap-4">
+          ${list.map(({ item: p, score }) => {
+            const stockTxt = p.stock > 10 ? `${p.stock} uds` : p.stock > 0 ? `${p.stock} uds` : 'Sin stock';
+            const stockClass = p.stock > 10 ? 'pill-stock' : p.stock > 0 ? 'pill-caution' : 'pill-warn';
+            const img = p.image
+              ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" class="absolute inset-0 w-full h-full object-contain p-3"/>`
+              : `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="text-graphite/30"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>`;
+            return `
+              <a href="/pages/tienda/producto.html?sku=${encodeURIComponent(p.sku)}" class="card-prod group" data-sku="${escapeHtml(p.sku)}">
+                <div class="img relative">
+                  ${img}
+                  <span class="absolute top-2 left-2 pill ${stockClass} text-[10px]">${escapeHtml(stockTxt)}</span>
+                </div>
+                <div>
+                  <div class="text-[11px] font-mono text-graphite">${hl(p.brand?.name || '—', tokens)}${p.category?.name ? ` · ${hl(p.category.name, tokens)}` : ''}</div>
+                  <h3 class="text-[14px] font-medium leading-snug">${hl(p.name, tokens)}</h3>
+                  <div class="font-mono text-[11px] text-graphite/70">SKU ${hl(p.sku, tokens)}</div>
+                </div>
+                <div class="font-serif text-lg font-medium">${moneyFmt(p.price)}</div>
+              </a>`;
+          }).join('')}
+        </div>`;
+      }
+
+      function renderTutorials(list, tokens) {
+        return `<div class="space-y-3">
+          ${list.map(({ item: t }) => `
+            <a href="/pages/aprender/tutorial.html?slug=${encodeURIComponent(t.slug)}" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="pill pill-info text-[10px]">Tutorial</span>
+                ${t.difficulty ? `<span class="pill pill-caution text-[10px]">${escapeHtml(t.difficulty)}</span>` : ''}
+                ${t.minutes ? `<span class="text-xs font-mono text-graphite">${t.minutes} min</span>` : ''}
+              </div>
+              <h3 class="font-serif text-xl font-medium leading-tight mb-1">${hl(t.title, tokens)}</h3>
+              ${t.reviewer ? `<p class="text-sm text-graphite">Revisado por ${escapeHtml(t.reviewer)}</p>` : ''}
+            </a>`).join('')}
+        </div>`;
+      }
+
+      function renderBrands(list, tokens) {
+        return `<div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          ${list.map(({ item: b }) => `
+            <a href="/pages/empresa/marcas.html?slug=${encodeURIComponent(b.slug)}" class="block bg-white border border-line rounded-xl p-4 hover:border-ink transition-colors flex items-center gap-3">
+              ${b.logo ? `<img src="${escapeHtml(b.logo)}" alt="" class="w-12 h-12 rounded-lg object-contain bg-paper-2"/>`
+                       : `<div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center font-serif text-xl text-graphite">${escapeHtml((b.name || '?')[0])}</div>`}
+              <div class="min-w-0 flex-1">
+                <div class="font-medium leading-tight truncate">${hl(b.name, tokens)}</div>
+                ${b.country ? `<div class="text-xs text-graphite truncate">${escapeHtml(b.country)}${b.yearFounded ? ` · ${escapeHtml(b.yearFounded)}` : ''}</div>` : ''}
+                ${b.isOfficial ? `<div class="font-mono text-[10px] text-copper uppercase tracking-wider">Marca oficial</div>` : ''}
+              </div>
+            </a>`).join('')}
+        </div>`;
+      }
+
+      function renderCategories(list, tokens) {
+        const PAGE_BY_SLUG = {
+          'mecanismos': '/pages/tienda/mecanismos.html',
+          'iluminacion': '/pages/tienda/iluminacion.html',
+          'proteccion': '/pages/tienda/protecciones-electricas.html',
+          'porteros-videoporteros': '/pages/tienda/porteros-videoporteros.html',
+          'domotica': '/pages/tienda/domotica.html',
+          'automatismos': '/pages/tienda/automatismos.html',
+          'antenas-telecomunicaciones': '/pages/tienda/antenas-telecomunicaciones.html',
+          'seguridad': '/pages/tienda/seguridad.html',
+          'cableado': '/pages/tienda/categoria-cableado.html',
+        };
+        return `<div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          ${list.map(({ item: c }) => {
+            const href = PAGE_BY_SLUG[c.slug] || `/pages/tienda/tienda.html?cat=${encodeURIComponent(c.slug)}`;
+            return `
+              <a href="${href}" class="block bg-paper-2 border border-line rounded-xl p-5 hover:border-ink transition-colors">
+                <div class="font-mono text-[10px] uppercase tracking-wider text-copper mb-1">Categoría</div>
+                <h3 class="font-serif text-lg font-medium leading-tight">${hl(c.name, tokens)}</h3>
+                ${c.description ? `<p class="text-xs text-graphite mt-1 line-clamp-2">${hl(c.description, tokens)}</p>` : ''}
+              </a>`;
+          }).join('')}
+        </div>`;
+      }
+
+      function renderServices(list, tokens) {
+        return `<div class="space-y-3">
+          ${list.map(({ item: s }) => `
+            <a href="${escapeHtml(s.href)}" class="block bg-white border border-line rounded-xl p-5 hover:border-ink transition-colors">
+              <div class="flex items-start justify-between flex-wrap gap-3">
+                <div>
+                  <div class="flex items-center gap-2 mb-2">
+                    ${(s.badges || []).map(b => `<span class="pill pill-info text-[10px]">${escapeHtml(b)}</span>`).join('')}
+                  </div>
+                  <h3 class="font-serif text-xl font-medium leading-tight mb-1">${hl(s.title, tokens)}</h3>
+                  <p class="text-sm text-graphite">${hl(s.excerpt, tokens)}</p>
+                </div>
+              </div>
+            </a>`).join('')}
+        </div>`;
+      }
+
+      function renderFaqs(list, tokens) {
+        return `<div class="space-y-3">
+          ${list.map(({ item: f }) => `
+            <a href="${escapeHtml(f.href)}" class="block bg-paper-2 border border-line rounded-xl p-5 hover:border-ink transition-colors">
+              <div class="font-mono text-[10px] uppercase tracking-wider text-copper mb-2">FAQ</div>
+              <h3 class="font-serif text-lg font-medium leading-tight">${hl(f.title, tokens)}</h3>
+              ${f.excerpt ? `<p class="text-sm text-graphite mt-1">${hl(f.excerpt, tokens)}</p>` : ''}
+            </a>`).join('')}
+        </div>`;
+      }
+
+      function renderPages(list, tokens) {
+        return `<div class="space-y-2">
+          ${list.map(({ item: p }) => `
+            <a href="${escapeHtml(p.href)}" class="block px-4 py-3 bg-paper-2 border border-line rounded-lg hover:border-ink transition-colors">
+              <div class="font-mono text-[10px] uppercase tracking-wider text-graphite">Página · ${escapeHtml(p.href)}</div>
+              <div class="font-medium">${hl(p.title, tokens)}</div>
+            </a>`).join('')}
+        </div>`;
+      }
+
+      // Arranca con el query inicial si lo hay.
+      if (input.value.trim()) submitSearch();
+    })();
   </script>
 </body>
 </html>

@@ -132,8 +132,12 @@
     if (!text) return;
 
     if (text.includes('añadir') && (text.includes('carrito') || text.includes('kit') || text.includes('todo'))) {
+      // El drawer (cart-drawer.js + backend-integration.js) ya gestiona su propio
+      // feedback con animación lateral; aquí sólo bumpeamos el contador. Si aún
+      // así no se ha abierto el drawer (por ejemplo en una página sin catálogo
+      // dinámico), caemos a un mini toast como respaldo.
       bumpCart(text.includes('todo') ? 4 : 1);
-      toast('Añadido al carrito del prototipo.');
+      if (!window.GarperLuxCartDrawer) toast('Añadido al carrito del prototipo.');
     } else if (text.includes('favorito') || text.includes('guardar para luego') || text === 'guardar') {
       toast('Guardado en tu área personal.');
     } else if (text.includes('pdf') || text.includes('descargar') || text.includes('exportar')) {
