@@ -239,13 +239,19 @@
       // El módulo se encarga del sync best-effort al servidor cuando hay
       // sesión iniciada — sin bloquear la UI ni depender del resultado.
       if (window.GarperLuxCart) {
-        window.GarperLuxCart.addItem({
+        const maxStock = productInfo?.stock != null ? productInfo.stock : null;
+        const result = window.GarperLuxCart.addItem({
           sku: productInfo.sku,
           title: productInfo.name,
           price: productInfo.price,
           image: productInfo.image,
           brand: productInfo.brand?.name || productInfo.brand,
-        }, qty);
+        }, qty, maxStock);
+
+        if (result?.capped) {
+          toast(`Stock limitado: ya tienes ${result.finalQty} uds en la cesta (máximo ${maxStock}).`);
+          return;
+        }
       }
       addCartBadge((window.GarperLuxCart?.getCount() ?? 0));
 
@@ -2137,7 +2143,6 @@
     const subtotal = items.reduce((s, i) => s + ((Number(i.price) || 0) * (Number(i.quantity) || 0)), 0);
     const total = subtotal + SHIPPING_COST;
     const tax = +(total - total / 1.21).toFixed(2);
-    document.querySelectorAll('[data-cart-item-count]').forEach((el) => { el.textContent = items.length; });
     document.querySelectorAll('[data-cart-subtotal]').forEach((el) => { el.textContent = money(subtotal); });
     document.querySelectorAll('[data-cart-tax]').forEach((el) => { el.textContent = money(tax); });
     document.querySelectorAll('[data-cart-total]').forEach((el) => { el.textContent = money(total); });
@@ -2197,8 +2202,8 @@
               <div class="flex items-center gap-3 flex-wrap">
                 <div class="flex items-center bg-paper-2 rounded-full overflow-hidden">
                   <button type="button" class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" data-cart-minus="${item.sku}" aria-label="-">-</button>
-                  <input type="number" value="${item.quantity}" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none" data-cart-qty-input="${item.sku}" min="1"/>
-                  <button type="button" class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm" data-cart-plus="${item.sku}" aria-label="+">+</button>
+                  <input type="number" value="${item.quantity}" class="w-10 text-center bg-transparent font-mono text-sm font-medium outline-none" data-cart-qty-input="${item.sku}" min="1"${item.stock != null ? ` max="${item.stock}"` : ''} data-stock="${item.stock != null ? item.stock : ''}"/>
+                  <button type="button" class="w-8 h-8 grid place-items-center hover:bg-paper-3 text-sm${item.stock != null && item.quantity >= item.stock ? ' opacity-30 cursor-not-allowed' : ''}" data-cart-plus="${item.sku}" aria-label="+"${item.stock != null && item.quantity >= item.stock ? ' disabled' : ''}>+</button>
                 </div>
                 <button type="button" class="text-xs text-graphite hover:text-warn" data-cart-delete="${item.sku}">Eliminar</button>
               </div>
@@ -2210,9 +2215,23 @@
           </div>`).join('');
       }
       addCartBadge(cart.getCount());
+      const totalUnits = rich.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+      const productCount = rich.length;
       document.querySelectorAll('[data-cart-summary]').forEach((el) => {
-        const n = rich.length;
-        el.textContent = n === 0 ? 'Tu cesta esta vacia' : `${n} producto${n === 1 ? '' : 's'} listo para tramitar`;
+        if (productCount === 0) {
+          el.textContent = 'Tu cesta está vacía';
+        } else {
+          const refLabel = productCount === 1 ? '1 referencia' : `${productCount} referencias`;
+          const unitLabel = totalUnits === 1 ? '1 unidad' : `${totalUnits} unidades`;
+          el.textContent = `${refLabel} · ${unitLabel} · listo para tramitar`;
+        }
+      });
+      document.querySelectorAll('[data-cart-item-count]').forEach((el) => {
+        if (productCount === 0) {
+          el.textContent = 'Subtotal';
+        } else {
+          el.textContent = `Subtotal (${productCount} ref. · ${totalUnits} uds)`;
+        }
       });
       updateCartTotals(rich.map((it) => ({ price: it.price, quantity: it.quantity })));
     }
@@ -2243,10 +2262,19 @@
       const plus = ev.target.closest('[data-cart-plus]');
       if (plus) {
         ev.preventDefault();
+        if (plus.disabled) return;
         const sku = plus.dataset.cartPlus;
         const items = cart.getItems();
         const it = items.find((i) => i.sku === sku);
-        if (it) cart.setQty(sku, (it.quantity || 0) + 1);
+        if (!it) return;
+        const p = productBySku.get(sku);
+        const maxStock = p?.stock ?? null;
+        const newQty = (it.quantity || 0) + 1;
+        if (maxStock != null && newQty > maxStock) {
+          toast(`Stock máximo alcanzado (${maxStock} uds).`);
+          return;
+        }
+        cart.setQty(sku, newQty);
         return;
       }
       const minus = ev.target.closest('[data-cart-minus]');
@@ -2263,7 +2291,14 @@
       const inp = ev.target.closest('[data-cart-qty-input]');
       if (!inp) return;
       const sku = inp.dataset.cartQtyInput;
-      const q = Math.max(1, Number(inp.value) || 1);
+      const p = productBySku.get(sku);
+      const maxStock = p?.stock ?? null;
+      let q = Math.max(1, Number(inp.value) || 1);
+      if (maxStock != null && q > maxStock) {
+        q = maxStock;
+        inp.value = q;
+        toast(`Stock máximo: ${maxStock} uds.`);
+      }
       cart.setQty(sku, q);
     });
   }
@@ -2396,7 +2431,11 @@
   }
 
   function _renderVariantSelector(product, ctx) {
-    const variants = product?.specs?._variants;
+    const dbVariants = product?.variants;
+    const specVariants = product?.specs?._variants;
+    const variants = (Array.isArray(specVariants) && specVariants.length >= 2) ? specVariants
+                   : (Array.isArray(dbVariants) && dbVariants.length >= 2) ? dbVariants
+                   : null;
     if (!Array.isArray(variants) || variants.length < 2) return;
     const axis = product?.specs?._variant_axis || 'Variante';
     // Anclamos el selector inmediatamente antes del bloque de facetas para
@@ -2433,7 +2472,13 @@
       }
       const lbl = document.createElement('span');
       lbl.className = 'text-sm font-medium leading-tight';
-      lbl.textContent = v.label || v.sku;
+      
+      let vLabel = v.label;
+      if (!vLabel && (v.finish || v.amps)) {
+        vLabel = [v.finish, v.amps].filter(Boolean).join(' · ');
+      }
+      lbl.textContent = vLabel || v.sku;
+      
       const pr = document.createElement('span');
       pr.className = `font-mono text-xs ${isCurrent ? 'text-paper/70' : 'text-graphite'}`;
       pr.textContent = typeof v.price === 'number' ? money(v.price) : '';
@@ -3105,33 +3150,95 @@
           const checkoutItemsContainer = document.querySelector('[data-checkout-items]');
           if (!checkoutItemsContainer) return;
 
-          let items = [];
-          if (api.getToken()) {
-            // Usuarios logueados: obtener del servidor
-            const cart = await api.cart();
-            items = cart.items;
-          } else {
-            // Usuarios anónimos: obtener de localStorage con detalles
-            const local = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
-            if (local.length) {
-              items = await Promise.all(
-                local.map(async (item) => {
-                  try {
-                    const product = await api.product(item.sku);
-                    return { ...item, name: product.name, price: product.price };
-                  } catch {
-                    return item;
-                  }
-                })
-              );
+          if (api.getToken() && window.GarperLuxCart?.syncOnLogin) {
+            try {
+              const remoteCart = await api.cart();
+              if (!remoteCart?.items?.length) await window.GarperLuxCart.syncOnLogin();
+            } catch {
+              await window.GarperLuxCart.syncOnLogin().catch(() => null);
             }
           }
 
+          const local = JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]');
+          const localCheckoutItems = local.length ? await Promise.all(
+            local.map(async (item) => {
+              try {
+                const product = await api.product(item.sku);
+                return {
+                  ...item,
+                  name: product.name || item.name || item.title,
+                  title: product.name || item.title,
+                  price: Number(item.price) || Number(product.price) || 0,
+                  image: product.image || item.image || (product.specs_json ? JSON.parse(product.specs_json)._images?.[0] : null) || null,
+                };
+              } catch {
+                return item;
+              }
+            })
+          ) : [];
+
+          let items = localCheckoutItems;
+          if (api.getToken()) {
+            // Si el servidor ya tiene carrito, lo usamos para enriquecer,
+            // pero no dejamos que una sincronización tardía vacíe el checkout.
+            try {
+              const cart = await api.cart();
+              if (cart?.items?.length) {
+                const serverItems = cart.items.map((item) => ({
+                  sku: item.sku,
+                  title: item.name || item.title || item.sku,
+                  name: item.name || item.title || item.sku,
+                  price: Number(item.price) || 0,
+                  quantity: Number(item.quantity) || 1,
+                  image: item.image || null,
+                  brand: item.brand || null,
+                }));
+                if (items.length === 0) items = serverItems;
+                else {
+                  const bySku = new Map(items.map((item) => [item.sku, item]));
+                  for (const serverItem of serverItems) {
+                    const existing = bySku.get(serverItem.sku);
+                    if (existing) {
+                      existing.quantity = Number(existing.quantity) || Number(serverItem.quantity) || 1;
+                      existing.name = existing.name || serverItem.name;
+                      existing.title = existing.title || serverItem.title;
+                      existing.price = Number(existing.price) || Number(serverItem.price) || 0;
+                      existing.image = existing.image || serverItem.image;
+                      existing.brand = existing.brand || serverItem.brand;
+                    } else {
+                      items.push(serverItem);
+                    }
+                  }
+                }
+              }
+            } catch {
+              // Si el backend aún no tiene cart, seguimos con localStorage.
+            }
+          }
+
+          // Enriquecer imágenes si faltan (doble check)
+          await Promise.all(items.map(async (item) => {
+            if (!item.image) {
+              try {
+                const product = await api.product(item.sku);
+                item.image = product.image || (product.specs_json ? JSON.parse(product.specs_json)._images?.[0] : null);
+              } catch {}
+            }
+          }));
+
           // Renderizar items
           if (items.length) {
+            const productCount = items.length;
+            const totalUnits = items.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+            document.querySelectorAll('[data-order-item-count]').forEach(el => {
+              el.textContent = `${productCount} ${productCount === 1 ? 'producto' : 'productos'} · ${totalUnits} ${totalUnits === 1 ? 'unidad' : 'unidades'}`;
+            });
+
             checkoutItemsContainer.innerHTML = items.map((item) => `
               <div class="p-4 flex gap-3 items-center">
-                <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></div>
+                <div class="w-12 h-12 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0 overflow-hidden">
+                  ${item.image ? `<img src="${item.image}" alt="${item.name || item.title}" class="w-full h-full object-cover">` : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>`}
+                </div>
                 <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">${item.name || item.title || 'Producto'}</div><div class="text-xs text-graphite font-mono">×${item.quantity}</div></div>
                 <span class="font-mono text-sm">${money((item.price || 0) * item.quantity)}</span>
               </div>`).join('');
@@ -3142,56 +3249,170 @@
           // Actualizar totales
           const subtotal = items.reduce((s, i) => s + ((i.price || 0) * (i.quantity || 0)), 0);
           const tax = subtotal * 0.21;
-          const total = subtotal + tax + SHIPPING_COST;
+          
+          const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
+          const shippingMethodsMap = {
+            'standard': { label: 'Envío estándar', price: 4.90 },
+            'express': { label: 'Envío urgente', price: 9.90 },
+            'pickup': { label: 'Recogida en almacén', price: 0 }
+          };
+          const method = shippingMethodsMap[draft.shippingMethod] || shippingMethodsMap.standard;
+          const shippingCost = method.price;
+          const total = subtotal + tax + shippingCost;
 
           document.querySelectorAll('[data-order-subtotal]').forEach((el) => { el.textContent = money(subtotal); });
           document.querySelectorAll('[data-order-tax]').forEach((el) => { el.textContent = money(tax); });
+          document.querySelectorAll('[data-order-shipping-label]').forEach((el) => { el.textContent = method.label; });
+          document.querySelectorAll('[data-order-shipping-cost]').forEach((el) => { el.textContent = money(shippingCost); });
           document.querySelectorAll('[data-order-total]').forEach((el) => { el.textContent = money(total); });
+          document.querySelectorAll('[data-order-pay-button]').forEach((el) => {
+            el.innerHTML = `Pagar ${money(total)}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+          });
+          
+          // Renderizar resumen de envío si estamos en pago.html
+          if (page === '/pages/tienda/pago.html') {
+            const summaryContainer = document.querySelector('[data-checkout-address-summary]');
+            if (summaryContainer && draft.shippingAddress) {
+              summaryContainer.innerHTML = `
+                <strong>Envío a:</strong> ${draft.shippingAddress} · <strong>${method.label}</strong>
+                <a href="/pages/tienda/checkout.html" class="block text-xs text-copper hover:underline mt-1">Cambiar dirección o velocidad</a>
+              `;
+            }
+          }
         } catch (err) {
           console.error('[CHECKOUT DEBUG]', err);
         }
       })();
 
       if (page === '/pages/tienda/checkout.html') {
-        api.checkoutOptions().then((options) => {
-          const defaultAddress = options.addresses?.[0];
-          if (defaultAddress) {
-            const addressText = document.querySelector('input[name="dir"]:checked')?.closest('.bg-white')?.querySelector('.text-sm.text-graphite');
-            if (addressText) addressText.textContent = `${defaultAddress.recipient} · ${defaultAddress.line1} · ${defaultAddress.postal_code} ${defaultAddress.city} · ${defaultAddress.phone || ''}`.trim();
+        const renderAddresses = (addresses, containerId, namePrefix, checkedId = null) => {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          if (!addresses.length) {
+            container.innerHTML = '<div class="p-5 text-sm text-graphite italic text-center">No hay direcciones guardadas.</div>';
+            return;
           }
-        }).catch(() => null);
+          container.innerHTML = addresses.map((addr, idx) => {
+            const isSelected = checkedId ? (addr.id === checkedId) : (idx === 0 || addr.is_default);
+            return `
+              <div class="bg-white border ${isSelected ? 'border-2 border-ink' : 'border-line'} rounded-2xl p-5 cursor-pointer hover:border-graphite transition-all" onclick="this.querySelector('input').click()">
+                <div class="flex items-start gap-3">
+                  <input type="radio" name="${namePrefix}" value="${addr.id}" ${isSelected ? 'checked' : ''} class="mt-1.5" onchange="document.querySelectorAll('input[name=${namePrefix}]').forEach(i => i.closest('.bg-white').classList.remove('border-2', 'border-ink')); this.closest('.bg-white').classList.add('border-2', 'border-ink');"/>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                      <span class="font-medium">${addr.label || 'Dirección'}</span>
+                      ${addr.is_default ? '<span class="pill bg-paper-2 text-graphite text-[10px]">Predeterminada</span>' : ''}
+                      ${addr.is_billing ? '<span class="pill bg-electric/10 text-electric text-[10px]">Facturación</span>' : ''}
+                    </div>
+                    <div class="text-sm text-graphite">${addr.recipient || ''} · ${addr.line1 || ''} · ${addr.postal_code || ''} ${addr.city || ''} · ${addr.phone || ''}</div>
+                  </div>
+                  <button class="text-xs text-copper hover:underline" onclick="event.stopPropagation(); location.href='/pages/cuenta/editar-direccion.html?id=${addr.id}'">Editar</button>
+                </div>
+              </div>`;
+          }).join('') + `
+            <button onclick="location.href='/pages/cuenta/anadir-direccion.html?redirect=checkout.html'" class="w-full p-4 border border-dashed border-line rounded-2xl text-sm font-medium text-graphite hover:border-ink hover:text-ink transition-all flex items-center justify-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              Añadir nueva dirección
+            </button>`;
+        };
+
+        api.checkoutOptions().then((options) => {
+          const allAddresses = options.addresses || [];
+          renderAddresses(allAddresses, 'checkout-addresses-container', 'dir');
+          
+          const billingCheckbox = document.getElementById('billing-same-as-shipping');
+          const billingSection = document.getElementById('billing-address-section');
+          const billingContainer = document.getElementById('billing-addresses-container');
+
+          if (billingCheckbox && billingSection) {
+            billingCheckbox.addEventListener('change', () => {
+              billingSection.classList.toggle('hidden', billingCheckbox.checked);
+              if (!billingCheckbox.checked) {
+                const billingAddrs = allAddresses.filter(a => a.is_billing);
+                renderAddresses(billingAddrs, 'billing-addresses-container', 'billing_dir');
+              }
+            });
+          }
+        }).catch((err) => {
+          console.error('[CHECKOUT OPTIONS ERROR]', err);
+          const container = document.getElementById('checkout-addresses-container');
+          if (container) container.innerHTML = '<div class="p-8 text-center text-sm text-warn bg-warn/5 border border-warn/20 rounded-2xl">Error al cargar direcciones. Por favor, intenta de nuevo.</div>';
+        });
       }
     }
     const primary = [...document.querySelectorAll('a.btn-primary, button.btn-primary')].at(-1);
     primary?.addEventListener('click', async (event) => {
       if (page === '/pages/tienda/checkout.html') {
+        if (api.getToken() && window.GarperLuxCart?.syncOnLogin) {
+          try {
+            const remoteCart = await api.cart();
+            if (!remoteCart?.items?.length) await window.GarperLuxCart.syncOnLogin();
+          } catch {
+            await window.GarperLuxCart.syncOnLogin().catch(() => null);
+          }
+        }
         const selectedShipping = checkedLabel('vel', 'Estándar 24-48 h').toLowerCase();
         const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
         draft.shippingMethod = selectedShipping.includes('expr') ? 'express' : selectedShipping.includes('recogida') ? 'pickup' : 'standard';
-        draft.addressLabel = checkedLabel('dir', 'Dirección predeterminada');
+        
+        // Direcciones
+        const selectedDirRadio = document.querySelector('input[name="dir"]:checked');
+        if (selectedDirRadio) {
+          const card = selectedDirRadio.closest('.bg-white');
+          draft.addressLabel = card.querySelector('.font-medium')?.textContent || 'Mi dirección';
+          draft.shippingAddress = card.querySelector('.text-sm.text-graphite')?.textContent || '';
+          draft.shippingAddressId = selectedDirRadio.value;
+        }
+
+        const billingCheckbox = document.getElementById('billing-same-as-shipping');
+        if (billingCheckbox && !billingCheckbox.checked) {
+          const selectedBillingRadio = document.querySelector('input[name="billing_dir"]:checked');
+          if (selectedBillingRadio) {
+            const card = selectedBillingRadio.closest('.bg-white');
+            draft.billingAddress = card.querySelector('.text-sm.text-graphite')?.textContent || '';
+            draft.billingAddressId = selectedBillingRadio.value;
+          }
+        } else {
+          draft.billingAddress = draft.shippingAddress;
+          draft.billingAddressId = draft.shippingAddressId;
+        }
+
         localStorage.setItem(CHECKOUT_KEY, JSON.stringify(draft));
         return;
       }
       event.preventDefault();
-      const selectedPayment = document.querySelector('input[name="metodo"]:checked')?.closest('.pay-method')?.textContent?.replace(/\s+/g, ' ').trim() || 'Tarjeta demo';
+      
       const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
+      const selectedPayment = document.querySelector('input[name="metodo"]:checked')?.closest('.pay-method')?.textContent?.replace(/\s+/g, ' ').trim() || 'Tarjeta demo';
+      
+      // Validación de términos si estamos en pago.html
+      if (page === '/pages/tienda/pago.html') {
+        const termsCheckbox = document.getElementById('terms-checkbox');
+        if (termsCheckbox && !termsCheckbox.checked) {
+          toast('Debes aceptar los términos y condiciones para continuar.');
+          return;
+        }
+      }
 
-      // Modo INVITADO: nunca bloqueamos. Generamos un pedido local con un
-      // código aleatorio y la confirmación funciona desde localStorage. El
-      // usuario podrá vincularlo a su cuenta más tarde si se registra.
+      // Modo INVITADO
       if (!api.getToken()) {
         const items = (window.GarperLuxCart?.getItems()) || [];
         if (!items.length) { toast('Tu cesta está vacía.'); return; }
+        
+        const shippingMethodsMap = { 'standard': 4.9, 'express': 9.9, 'pickup': 0 };
+        const sCost = shippingMethodsMap[draft.shippingMethod] ?? SHIPPING_COST;
+        
         const subtotal = items.reduce((s, it) => s + ((it.price || 0) * (it.quantity || 0)), 0);
         const tax = +(subtotal * 0.21).toFixed(2);
-        const total = +(subtotal + tax + SHIPPING_COST).toFixed(2);
+        const total = +(subtotal + tax + sCost).toFixed(2);
         const code = 'GLX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 5).toUpperCase();
+        
         const lastOrder = {
           code,
           status: 'pendiente',
           guest: true,
           items: items.map((i) => ({ sku: i.sku, title: i.title, name: i.title, price: i.price, quantity: i.quantity })),
-          totals: { subtotal, tax, shipping: SHIPPING_COST, total },
+          totals: { subtotal, tax, shipping: sCost, total },
           payment: selectedPayment,
           shippingMethod: draft.shippingMethod || 'standard',
           createdAt: new Date().toISOString(),
@@ -3203,6 +3424,7 @@
         return;
       }
 
+      // Modo LOGUEADO
       try {
         const options = await api.checkoutOptions();
         const order = await api.checkout({
@@ -3211,14 +3433,16 @@
           paymentMethodId: options.paymentMethods?.[0]?.id || null,
           acceptedTerms: true,
         });
+        
         // Guardar items en localStorage para mostrar confirmación incluso si la sesión expira
         const cartItems = options?.cart?.items || (JSON.parse(localStorage.getItem('garperlux_cart_items') || '[]'));
         const lastOrder = { ...order, items: cartItems, totals: order.totals || options?.totals || null };
         localStorage.setItem('garperlux_last_order', JSON.stringify(lastOrder));
         localStorage.removeItem(CHECKOUT_KEY);
+        if (window.GarperLuxCart) window.GarperLuxCart.clear();
         location.href = `/pages/tienda/pedido-confirmado.html?order=${encodeURIComponent(order.code)}`;
       } catch (error) {
-        toast(error.message);
+        toast(error.message || 'Error al procesar el pedido');
       }
     });
   }

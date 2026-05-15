@@ -2,6 +2,7 @@ const { getDb } = require('../db');
 const { ok } = require('../response');
 
 function parseJson(value, fallback) {
+  if (typeof value === 'object' && value !== null) return value;
   try { return JSON.parse(value); } catch { return fallback; }
 }
 
@@ -96,13 +97,13 @@ function productSelect() {
 }
 
 function registerCatalogRoutes(router) {
-  router.get('/api/catalog/categories', (_req, res) => {
-    const rows = getDb().prepare('SELECT * FROM categories ORDER BY name').all();
+  router.get('/api/catalog/categories', async (_req, res) => {
+    const rows = await getDb().prepare('SELECT * FROM categories ORDER BY name').all();
     return ok(res, rows);
   });
 
-  router.get('/api/catalog/brands', (_req, res) => {
-    const rows = getDb().prepare('SELECT * FROM brands ORDER BY name').all();
+  router.get('/api/catalog/brands', async (_req, res) => {
+    const rows = await getDb().prepare('SELECT * FROM brands ORDER BY name').all();
     return ok(res, rows.map((brand) => ({
       id: brand.id,
       slug: brand.slug,
@@ -118,7 +119,7 @@ function registerCatalogRoutes(router) {
     })));
   });
 
-  router.get('/api/catalog/products', (req, res) => {
+  router.get('/api/catalog/products', async (req, res) => {
     const url = new URL(req.url, 'http://localhost');
     const q = `%${(url.searchParams.get('q') || '').trim()}%`;
     const category = url.searchParams.get('category');
@@ -138,25 +139,21 @@ function registerCatalogRoutes(router) {
       params.push(brand);
     }
     const sql = `${productSelect()} ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY products.name`;
-    return ok(res, getDb().prepare(sql).all(...params).map(productDto));
+    return ok(res, (await getDb().prepare(sql).all(...params)).map(productDto));
   });
 
-  router.get('/api/catalog/products/:slug', (_req, res, { params }) => {
-    const row = getDb().prepare(`${productSelect()} WHERE products.slug = ? OR products.sku = ?`).get(params.slug, params.slug);
+  router.get('/api/catalog/products/:slug', async (_req, res, { params }) => {
+    const row = await getDb().prepare(`${productSelect()} WHERE products.slug = ? OR products.sku = ?`).get(params.slug, params.slug);
     if (!row) return ok(res, null);
     const product = productDto(row);
-    product.variants = getDb().prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY is_default DESC, finish, amps')
-      .all(row.id)
-      .map(variantDto);
+    product.variants = (await getDb().prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY is_default DESC, finish, amps').all(row.id)).map(variantDto);
     return ok(res, product);
   });
 
-  router.get('/api/catalog/products/:slug/variants', (_req, res, { params }) => {
-    const row = getDb().prepare('SELECT id FROM products WHERE slug = ? OR sku = ?').get(params.slug, params.slug);
+  router.get('/api/catalog/products/:slug/variants', async (_req, res, { params }) => {
+    const row = await getDb().prepare('SELECT id FROM products WHERE slug = ? OR sku = ?').get(params.slug, params.slug);
     if (!row) return ok(res, []);
-    return ok(res, getDb().prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY is_default DESC, finish, amps')
-      .all(row.id)
-      .map(variantDto));
+    return ok(res, (await getDb().prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY is_default DESC, finish, amps').all(row.id)).map(variantDto));
   });
 }
 

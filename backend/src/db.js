@@ -1,93 +1,133 @@
 const fs = require('node:fs');
-const { DatabaseSync } = require('node:sqlite');
+const mysql = require('mysql2/promise');
 const { databaseDir, databaseFile } = require('./config');
 const { hashPassword } = require('./security');
 
-let database;
+class DatabaseWrapper {
+  constructor(pool) { this.pool = pool; }
+  async exec(sql) {
+    await this.pool.query(sql);
+  }
+  prepare(sql) {
+    return {
+      get: async (...args) => {
+        const [rows] = await this.pool.execute(sql, args);
+        return rows[0];
+      },
+      all: async (...args) => {
+        const [rows] = await this.pool.execute(sql, args);
+        return rows;
+      },
+      run: async (...args) => {
+        const [result] = await this.pool.execute(sql, args);
+        return { lastInsertRowid: result.insertId, changes: result.affectedRows };
+      }
+    };
+  }
+}
 
-function connect({ reset = false } = {}) {
-  fs.mkdirSync(databaseDir, { recursive: true });
-  if (reset && fs.existsSync(databaseFile)) fs.unlinkSync(databaseFile);
+let pool;
+let databaseWrapper;
 
-  database = new DatabaseSync(databaseFile);
-  database.exec('PRAGMA foreign_keys = ON;');
-  database.exec('PRAGMA journal_mode = WAL;');
-  migrate(database);
-  seed(database);
-  return database;
+async function connect({ reset = false } = {}) {
+  pool = mysql.createPool({
+    host: '127.0.0.1',
+    port: 6446,
+    user: 'garperlux',
+    password: 'garperlux',
+    database: 'garperlux',
+    multipleStatements: true,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  });
+
+  databaseWrapper = new DatabaseWrapper(pool);
+
+  if (reset) {
+    const [tables] = await pool.query('SHOW TABLES');
+    for (const row of tables) {
+      const tableName = Object.values(row)[0];
+      await pool.query('DROP TABLE IF EXISTS ' + tableName);
+    }
+  }
+
+  await migrate(databaseWrapper);
+  await seed(databaseWrapper);
+  return databaseWrapper;
 }
 
 function getDb() {
-  if (!database) return connect();
-  return database;
+  if (!databaseWrapper) throw new Error("Database not initialized");
+  return databaseWrapper;
 }
 
-function migrate(db) {
-  db.exec(`
+async function migrate(db) {
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      role TEXT NOT NULL CHECK(role IN ('particular','pro','admin')),
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      role TEXT NOT NULL,
       full_name TEXT NOT NULL,
-      email TEXT NOT NULL UNIQUE,
+      email VARCHAR(255) NOT NULL UNIQUE,
       password_hash TEXT NOT NULL,
       phone TEXT,
       fiscal_id TEXT,
       pro_discount INTEGER DEFAULT 0,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS sessions (
-      token TEXT PRIMARY KEY,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token VARCHAR(255) PRIMARY KEY,
+      user_id INTEGER NOT NULL,
       expires_at TEXT NOT NULL,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS password_resets (
-      token TEXT PRIMARY KEY,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token VARCHAR(255) PRIMARY KEY,
+      user_id INTEGER NOT NULL,
       expires_at TEXT NOT NULL,
       used_at TEXT,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS categories (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      slug TEXT NOT NULL UNIQUE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      slug VARCHAR(255) NOT NULL UNIQUE,
       name TEXT NOT NULL,
-      parent_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
+      parent_id INTEGER,
       description TEXT
     );
 
     CREATE TABLE IF NOT EXISTS brands (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      slug TEXT NOT NULL UNIQUE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      slug VARCHAR(255) NOT NULL UNIQUE,
       name TEXT NOT NULL,
       professional INTEGER NOT NULL DEFAULT 0,
       is_official INTEGER NOT NULL DEFAULT 0
     );
 
     CREATE TABLE IF NOT EXISTS products (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      sku TEXT NOT NULL UNIQUE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      sku VARCHAR(255) NOT NULL UNIQUE,
       name TEXT NOT NULL,
-      slug TEXT NOT NULL UNIQUE,
-      category_id INTEGER NOT NULL REFERENCES categories(id),
-      brand_id INTEGER NOT NULL REFERENCES brands(id),
+      slug VARCHAR(255) NOT NULL UNIQUE,
+      category_id INTEGER NOT NULL,
+      brand_id INTEGER NOT NULL,
       price REAL NOT NULL,
       tax_rate REAL NOT NULL DEFAULT 21,
       stock INTEGER NOT NULL DEFAULT 0,
-      safety_level TEXT NOT NULL DEFAULT 'basic',
+      safety_level VARCHAR(255) NOT NULL DEFAULT 'basic',
       pro_only INTEGER NOT NULL DEFAULT 0,
       description TEXT,
-      specs_json TEXT NOT NULL DEFAULT '{}',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      specs_json JSON DEFAULT (JSON_OBJECT()),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS product_variants (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-      sku TEXT NOT NULL UNIQUE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      product_id INTEGER NOT NULL,
+      sku VARCHAR(255) NOT NULL UNIQUE,
       finish TEXT NOT NULL,
       amps TEXT NOT NULL,
       price REAL NOT NULL,
@@ -96,23 +136,23 @@ function migrate(db) {
     );
 
     CREATE TABLE IF NOT EXISTS carts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-      status TEXT NOT NULL DEFAULT 'active',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INTEGER,
+      status VARCHAR(255) NOT NULL DEFAULT 'active',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS cart_items (
-      cart_id INTEGER NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
-      product_id INTEGER NOT NULL REFERENCES products(id),
-      quantity INTEGER NOT NULL CHECK(quantity > 0),
+      cart_id INTEGER NOT NULL,
+      product_id INTEGER NOT NULL,
+      quantity INTEGER NOT NULL,
       PRIMARY KEY(cart_id, product_id)
     );
 
     CREATE TABLE IF NOT EXISTS addresses (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INTEGER NOT NULL,
       label TEXT NOT NULL,
       recipient TEXT NOT NULL,
       line1 TEXT NOT NULL,
@@ -125,8 +165,8 @@ function migrate(db) {
     );
 
     CREATE TABLE IF NOT EXISTS payment_methods (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INTEGER NOT NULL,
       type TEXT NOT NULL,
       label TEXT NOT NULL,
       last4 TEXT,
@@ -139,7 +179,7 @@ function migrate(db) {
     );
 
     CREATE TABLE IF NOT EXISTS fiscal_profiles (
-      user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      user_id INTEGER PRIMARY KEY,
       legal_name TEXT NOT NULL,
       tax_id TEXT NOT NULL,
       legal_form TEXT,
@@ -152,145 +192,156 @@ function migrate(db) {
       postal_code TEXT,
       city TEXT,
       province TEXT,
-      country TEXT NOT NULL DEFAULT 'España',
+      country VARCHAR(255) NOT NULL DEFAULT 'España',
       iban TEXT,
-      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS orders (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code TEXT NOT NULL UNIQUE,
-      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-      status TEXT NOT NULL DEFAULT 'pending',
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      code VARCHAR(255) NOT NULL UNIQUE,
+      user_id INTEGER,
+      status VARCHAR(255) NOT NULL DEFAULT 'pending',
       total REAL NOT NULL,
       payload_json TEXT NOT NULL,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS order_events (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      order_id INTEGER NOT NULL,
       status TEXT NOT NULL,
       title TEXT NOT NULL,
       description TEXT,
-      happened_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      happened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS quotes (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code TEXT NOT NULL UNIQUE,
-      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-      status TEXT NOT NULL DEFAULT 'draft',
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      code VARCHAR(255) NOT NULL UNIQUE,
+      user_id INTEGER,
+      status VARCHAR(255) NOT NULL DEFAULT 'draft',
       title TEXT NOT NULL,
       total REAL NOT NULL DEFAULT 0,
-      payload_json TEXT NOT NULL DEFAULT '{}',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      payload_json JSON DEFAULT (JSON_OBJECT()),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS service_requests (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code TEXT NOT NULL UNIQUE,
-      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-      status TEXT NOT NULL DEFAULT 'received',
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      code VARCHAR(255) NOT NULL UNIQUE,
+      user_id INTEGER,
+      status VARCHAR(255) NOT NULL DEFAULT 'received',
       service_type TEXT NOT NULL,
-      urgency TEXT NOT NULL DEFAULT 'normal',
+      urgency VARCHAR(255) NOT NULL DEFAULT 'normal',
       address TEXT NOT NULL,
       description TEXT NOT NULL,
-      payload_json TEXT NOT NULL DEFAULT '{}',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      payload_json JSON DEFAULT (JSON_OBJECT()),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS service_request_events (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      service_request_id INTEGER NOT NULL REFERENCES service_requests(id) ON DELETE CASCADE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      service_request_id INTEGER NOT NULL,
       status TEXT NOT NULL,
       title TEXT NOT NULL,
       description TEXT,
-      happened_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      happened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS favorites (
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      user_id INTEGER NOT NULL,
+      product_id INTEGER NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY(user_id, product_id)
     );
 
     CREATE TABLE IF NOT EXISTS documents (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-      type TEXT NOT NULL CHECK(type IN ('invoice','delivery_note')),
-      code TEXT NOT NULL UNIQUE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INTEGER,
+      type TEXT NOT NULL,
+      code VARCHAR(255) NOT NULL UNIQUE,
       related_order_code TEXT,
       total REAL NOT NULL DEFAULT 0,
-      issued_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS tutorials (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      slug TEXT NOT NULL UNIQUE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      slug VARCHAR(255) NOT NULL UNIQUE,
       title TEXT NOT NULL,
       difficulty TEXT NOT NULL,
       safety_level TEXT NOT NULL,
       minutes INTEGER NOT NULL,
       reviewer TEXT NOT NULL,
-      related_product_skus TEXT NOT NULL DEFAULT '[]'
+      related_product_skus JSON DEFAULT (JSON_ARRAY())
     );
 
     CREATE TABLE IF NOT EXISTS saved_tutorials (
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      tutorial_id INTEGER NOT NULL REFERENCES tutorials(id) ON DELETE CASCADE,
+      user_id INTEGER NOT NULL,
+      tutorial_id INTEGER NOT NULL,
       progress INTEGER NOT NULL DEFAULT 0,
       notes TEXT,
-      saved_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY(user_id, tutorial_id)
     );
 
+    CREATE TABLE IF NOT EXISTS tips (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      number INTEGER NOT NULL UNIQUE,
+      category TEXT NOT NULL,
+      body TEXT NOT NULL,
+      author TEXT NOT NULL,
+      author_initials TEXT NOT NULL,
+      published_at TEXT NOT NULL,
+      dark INTEGER NOT NULL DEFAULT 0
+    );
+
     CREATE TABLE IF NOT EXISTS reviews (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-      product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INTEGER,
+      product_id INTEGER NOT NULL,
       order_code TEXT,
-      rating INTEGER NOT NULL CHECK(rating BETWEEN 1 AND 5),
+      rating INTEGER NOT NULL,
       title TEXT NOT NULL,
       body TEXT NOT NULL,
       display_name TEXT NOT NULL,
-      tags_json TEXT NOT NULL DEFAULT '[]',
+      tags_json JSON DEFAULT (JSON_ARRAY()),
       verified_purchase INTEGER NOT NULL DEFAULT 0,
-      status TEXT NOT NULL DEFAULT 'pending',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      status VARCHAR(255) NOT NULL DEFAULT 'pending',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS returns (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code TEXT NOT NULL UNIQUE,
-      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      code VARCHAR(255) NOT NULL UNIQUE,
+      user_id INTEGER,
       order_code TEXT NOT NULL,
-      status TEXT NOT NULL DEFAULT 'requested',
+      status VARCHAR(255) NOT NULL DEFAULT 'requested',
       reason TEXT NOT NULL,
       shipping_method TEXT NOT NULL,
       refund_method TEXT NOT NULL,
       amount REAL NOT NULL DEFAULT 0,
-      payload_json TEXT NOT NULL DEFAULT '{}',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      payload_json JSON DEFAULT (JSON_OBJECT()),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS recurring_orders (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code TEXT NOT NULL UNIQUE,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      code VARCHAR(255) NOT NULL UNIQUE,
+      user_id INTEGER NOT NULL,
       name TEXT NOT NULL,
       frequency TEXT NOT NULL,
       next_run_at TEXT,
-      status TEXT NOT NULL DEFAULT 'active',
-      payload_json TEXT NOT NULL DEFAULT '{}',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      status VARCHAR(255) NOT NULL DEFAULT 'active',
+      payload_json JSON DEFAULT (JSON_OBJECT()),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS contact_messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code TEXT NOT NULL UNIQUE,
-      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      code VARCHAR(255) NOT NULL UNIQUE,
+      user_id INTEGER,
       reason TEXT NOT NULL,
       name TEXT NOT NULL,
       email TEXT NOT NULL,
@@ -298,75 +349,109 @@ function migrate(db) {
       reference TEXT,
       subject TEXT NOT NULL,
       message TEXT NOT NULL,
-      status TEXT NOT NULL DEFAULT 'new',
-      payload_json TEXT NOT NULL DEFAULT '{}',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      status VARCHAR(255) NOT NULL DEFAULT 'new',
+      payload_json JSON DEFAULT (JSON_OBJECT()),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS job_applications (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code TEXT NOT NULL UNIQUE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      code VARCHAR(255) NOT NULL UNIQUE,
       name TEXT NOT NULL,
       email TEXT NOT NULL,
       phone TEXT,
       role TEXT NOT NULL,
       message TEXT,
-      status TEXT NOT NULL DEFAULT 'received',
-      payload_json TEXT NOT NULL DEFAULT '{}',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      status VARCHAR(255) NOT NULL DEFAULT 'received',
+      payload_json JSON DEFAULT (JSON_OBJECT()),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS admin_audit (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      admin_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      admin_user_id INTEGER,
       action TEXT NOT NULL,
       entity_type TEXT NOT NULL,
       entity_id TEXT NOT NULL,
-      payload_json TEXT NOT NULL DEFAULT '{}',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      payload_json JSON DEFAULT (JSON_OBJECT()),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS help_categories (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      slug VARCHAR(255) NOT NULL UNIQUE,
+      name TEXT NOT NULL,
+      short_label TEXT NOT NULL,
+      description TEXT,
+      icon_svg TEXT,
+      accent VARCHAR(255) NOT NULL DEFAULT 'default',
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS help_articles (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      category_id INTEGER NOT NULL,
+      slug VARCHAR(255) NOT NULL UNIQUE,
+      question TEXT NOT NULL,
+      answer_html TEXT NOT NULL,
+      keywords VARCHAR(255) NOT NULL DEFAULT '',
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      featured INTEGER NOT NULL DEFAULT 0
     );
   `);
 
 
-  const usersColumns = db.prepare('PRAGMA table_info(users)').all().map((row) => row.name);
-  const addColumn = (columnSql, columnName) => {
-    if (!usersColumns.includes(columnName)) db.exec(`ALTER TABLE users ADD COLUMN ${columnSql}`);
+  const usersColumns = (await db.prepare('SHOW COLUMNS FROM users').all()).map((row) => row.Field);
+  const addColumn = async (columnSql, columnName) => {
+    if (!usersColumns.includes(columnName)) await await db.exec(`ALTER TABLE users ADD COLUMN ${columnSql}`);
   };
 
-  addColumn('birth_date TEXT', 'birth_date');
-  addColumn('marketing_email INTEGER NOT NULL DEFAULT 1', 'marketing_email');
-  addColumn('order_notifications INTEGER NOT NULL DEFAULT 1', 'order_notifications');
-  addColumn('tutorial_reminders INTEGER NOT NULL DEFAULT 0', 'tutorial_reminders');
-  addColumn('sms_urgency INTEGER NOT NULL DEFAULT 0', 'sms_urgency');
-  ensureColumn(db, 'payment_methods', 'brand', 'TEXT');
-  ensureColumn(db, 'payment_methods', 'exp_month', 'TEXT');
-  ensureColumn(db, 'payment_methods', 'exp_year', 'TEXT');
-  ensureColumn(db, 'payment_methods', 'holder', 'TEXT');
-  ensureColumn(db, 'payment_methods', 'allow_recurring', 'INTEGER NOT NULL DEFAULT 0');
-  ensureColumn(db, 'addresses', 'is_billing', 'INTEGER NOT NULL DEFAULT 0');
-  ensureColumn(db, 'documents', 'payload_json', "TEXT NOT NULL DEFAULT '{}'");
-  ensureColumn(db, 'products', 'image', 'TEXT');
-  ensureColumn(db, 'brands', 'logo', 'TEXT');
-  ensureColumn(db, 'brands', 'description', 'TEXT');
-  ensureColumn(db, 'brands', 'country', 'TEXT');
-  ensureColumn(db, 'brands', 'year_founded', 'TEXT');
-  ensureColumn(db, 'brands', 'website', 'TEXT');
-  ensureColumn(db, 'brands', 'categories_json', "TEXT NOT NULL DEFAULT '[]'");
-  ensureColumn(db, 'brands', 'is_official', 'INTEGER NOT NULL DEFAULT 0');
+  await addColumn('birth_date TEXT', 'birth_date');
+  await addColumn('marketing_email INTEGER NOT NULL DEFAULT 1', 'marketing_email');
+  await addColumn('order_notifications INTEGER NOT NULL DEFAULT 1', 'order_notifications');
+  await addColumn('tutorial_reminders INTEGER NOT NULL DEFAULT 0', 'tutorial_reminders');
+  await addColumn('sms_urgency INTEGER NOT NULL DEFAULT 0', 'sms_urgency');
+  await ensureColumn(db, 'payment_methods', 'brand', 'TEXT');
+  await ensureColumn(db, 'payment_methods', 'exp_month', 'TEXT');
+  await ensureColumn(db, 'payment_methods', 'exp_year', 'TEXT');
+  await ensureColumn(db, 'payment_methods', 'holder', 'TEXT');
+  await ensureColumn(db, 'payment_methods', 'allow_recurring', 'INTEGER NOT NULL DEFAULT 0');
+  await ensureColumn(db, 'addresses', 'is_billing', 'INTEGER NOT NULL DEFAULT 0');
+  await ensureColumn(db, 'documents', 'payload_json', "JSON DEFAULT (JSON_OBJECT())");
+  await ensureColumn(db, 'products', 'image', 'TEXT');
+  await ensureColumn(db, 'brands', 'logo', 'TEXT');
+  await ensureColumn(db, 'brands', 'description', 'TEXT');
+  await ensureColumn(db, 'brands', 'country', 'TEXT');
+  await ensureColumn(db, 'brands', 'year_founded', 'TEXT');
+  await ensureColumn(db, 'brands', 'website', 'TEXT');
+  await ensureColumn(db, 'brands', 'categories_json', "JSON DEFAULT (JSON_ARRAY())");
+  await ensureColumn(db, 'brands', 'is_official', 'INTEGER NOT NULL DEFAULT 0');
+  // Tutoriales: contenido enriquecido para el catálogo de Hazlo Tú Mismo (18+ guías).
+  // La columna `content_json` lleva toda la estructura editorial (intro, secciones, pasos,
+  // FAQs) — se serializa así para evitar tablas hijas que multiplicarían joins.
+  await ensureColumn(db, 'tutorials', 'excerpt', 'TEXT');
+  await ensureColumn(db, 'tutorials', 'category', 'TEXT');
+  await ensureColumn(db, 'tutorials', 'location', "VARCHAR(255) NOT NULL DEFAULT 'interior'");
+  await ensureColumn(db, 'tutorials', 'has_video', 'INTEGER NOT NULL DEFAULT 0');
+  await ensureColumn(db, 'tutorials', 'cover_photo_id', 'TEXT');
+  await ensureColumn(db, 'tutorials', 'cover_gradient', 'TEXT');
+  await ensureColumn(db, 'tutorials', 'content_json', "JSON DEFAULT (JSON_OBJECT())");
+  await ensureColumn(db, 'tutorials', 'published_at', 'TEXT');
+  await ensureColumn(db, 'tutorials', 'views', 'INTEGER NOT NULL DEFAULT 0');
 }
 
-function ensureColumn(db, table, column, definition) {
-  const exists = db.prepare(`PRAGMA table_info(${table})`).all().some((row) => row.name === column);
-  if (!exists) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+async function ensureColumn(db, table, column, definition) {
+  const exists = (await db.prepare(`SHOW COLUMNS FROM ${table}`).all()).some((row) => row.Field === column);
+  if (!exists) await db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
 }
 
-function seed(db) {
-  const users = Number(db.prepare('SELECT COUNT(*) AS total FROM users').get().total);
+async function seed(db) {
+  const users = Number((await db.prepare('SELECT COUNT(*) AS total FROM users').get()).total);
   if (users > 0) {
-    ensureAdminUser(db);
-    seedBrands(db);
-    seedProductVariants(db);
-    seedDemoAccountData(db);
+    await ensureAdminUser(db);
+    await seedBrands(db);
+    await seedProductVariants(db);
+    await seedDemoAccountData(db);
     return;
   }
 
@@ -374,35 +459,35 @@ function seed(db) {
     INSERT INTO users (role, full_name, email, password_hash, phone, fiscal_id, pro_discount)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
-  insertUser.run('particular', 'Antonio García', 'antonio.garcia@correo.com', hashPassword('garperlux123'), '600111222', null, 0);
-  insertUser.run('pro', 'Jose Luis García', 'chispas@instaladoreseljaen.es', hashPassword('garperlux123'), '600333444', 'B12345678', 22);
-  ensureAdminUser(db);
+  await insertUser.run('particular', 'Antonio García', 'antonio.garcia@correo.com', hashPassword('garperlux123'), '600111222', null, 0);
+  await insertUser.run('pro', 'Jose Luis García', 'chispas@instaladoreseljaen.es', hashPassword('garperlux123'), '600333444', 'B12345678', 22);
+  await ensureAdminUser(db);
 
   const insertCategory = db.prepare('INSERT INTO categories (slug, name, parent_id, description) VALUES (?, ?, ?, ?)');
-  insertCategory.run('mecanismos', 'Mecanismos', null, 'Interruptores, enchufes, marcos y series compatibles.');
-  insertCategory.run('iluminacion', 'Iluminación', null, 'Lámparas, bombillas LED, tiras y proyectores.');
-  insertCategory.run('domotica', 'Domótica', null, 'Control inteligente para vivienda y local.');
-  insertCategory.run('proteccion', 'Protección eléctrica', null, 'Magnetotérmicos, diferenciales y cuadros.');
+  await await insertCategory.run('mecanismos', 'Mecanismos', null, 'Interruptores, enchufes, marcos y series compatibles.');
+  await await insertCategory.run('iluminacion', 'Iluminación', null, 'Lámparas, bombillas LED, tiras y proyectores.');
+  await await insertCategory.run('domotica', 'Domótica', null, 'Control inteligente para vivienda y local.');
+  await await insertCategory.run('proteccion', 'Protección eléctrica', null, 'Magnetotérmicos, diferenciales y cuadros.');
 
   const insertBrand = db.prepare('INSERT INTO brands (slug, name, professional) VALUES (?, ?, ?)');
-  insertBrand.run('simon', 'Simón', 1);
-  insertBrand.run('lexman', 'Lexman', 1);
-  insertBrand.run('schneider', 'Schneider Electric', 1);
-  insertBrand.run('garperlux', 'GarperLux', 0);
+  await insertBrand.run('simon', 'Simón', 1);
+  await insertBrand.run('lexman', 'Lexman', 1);
+  await insertBrand.run('schneider', 'Schneider Electric', 1);
+  await insertBrand.run('garperlux', 'GarperLux', 0);
 
-  seedBrands(db);
+  await seedBrands(db);
 
-  const categoryBySlug = (slug) => db.prepare('SELECT id FROM categories WHERE slug = ?').get(slug).id;
-  const brandBySlug = (slug) => db.prepare('SELECT id FROM brands WHERE slug = ?').get(slug).id;
+  const categoryBySlug = async (slug) => (await db.prepare("SELECT id FROM categories WHERE slug = ?").get(slug)).id;
+  const brandBySlug = async (slug) => (await db.prepare("SELECT id FROM brands WHERE slug = ?").get(slug)).id;
   const insertProduct = db.prepare(`
     INSERT INTO products (sku, name, slug, category_id, brand_id, price, stock, safety_level, pro_only, description, specs_json)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  insertProduct.run('SIM-75201-39', 'Interruptor conmutador Simon 75 grafito', 'interruptor-conmutador-simon-75-grafito', categoryBySlug('mecanismos'), brandBySlug('simon'), 12.95, 38, 'basic', 0, 'Mecanismo compatible con marcos Simon 75.', JSON.stringify({ voltage: '250V', amps: '10AX', finish: 'Grafito' }));
-  insertProduct.run('LED-A60-9W-2700K', 'Bombilla LED A60 9W cálida', 'bombilla-led-a60-9w-calida', categoryBySlug('iluminacion'), brandBySlug('lexman'), 4.5, 120, 'basic', 0, 'Bombilla LED de luz cálida para uso doméstico.', JSON.stringify({ lumens: 806, kelvin: 2700, socket: 'E27' }));
-  insertProduct.run('SCH-A9R60240', 'Diferencial Schneider 40A 30mA', 'diferencial-schneider-40a-30ma', categoryBySlug('proteccion'), brandBySlug('schneider'), 49.9, 14, 'pro', 1, 'Diferencial para cuadro eléctrico. Instalación por profesional autorizado.', JSON.stringify({ poles: 2, amps: '40A', sensitivity: '30mA' }));
-  [
-    ['27101-31', 'Interruptor unipolar Simón 27 blanco', 'interruptor-unipolar-simon-27-blanco', 'mecanismos', 'simon', 5.42, 86, 'basic', 0],
+  await await insertProduct.run('SIM-75201-39', 'Interruptor conmutador Simon 75 grafito', 'interruptor-conmutador-simon-75-grafito', await categoryBySlug('mecanismos'), await brandBySlug('simon'), 12.95, 38, 'basic', 0, 'Mecanismo compatible con marcos Simon 75.', JSON.stringify({ voltage: '250V', amps: '10AX', finish: 'Grafito' }));
+  await await insertProduct.run('LED-A60-9W-2700K', 'Bombilla LED A60 9W cálida', 'bombilla-led-a60-9w-calida', await categoryBySlug('iluminacion'), await brandBySlug('lexman'), 4.5, 120, 'basic', 0, 'Bombilla LED de luz cálida para uso doméstico.', JSON.stringify({ lumens: 806, kelvin: 2700, socket: 'E27' }));
+  await await insertProduct.run('SCH-A9R60240', 'Diferencial Schneider 40A 30mA', 'diferencial-schneider-40a-30ma', await categoryBySlug('proteccion'), await brandBySlug('schneider'), 49.9, 14, 'pro', 1, 'Diferencial para cuadro eléctrico. Instalación por profesional autorizado.', JSON.stringify({ poles: 2, amps: '40A', sensitivity: '30mA' }));
+  const itemsToInsert = [
+    ['27101-31', 'Interruptor unipolar Simn 27 blanco', 'interruptor-unipolar-simon-27-blanco', 'mecanismos', 'simon', 5.42, 86, 'basic', 0],
     ['27201-31', 'Conmutador Simón 27 blanco', 'conmutador-simon-27-blanco', 'mecanismos', 'simon', 6.18, 74, 'basic', 0],
     ['27431-31', 'Base enchufe schuko Simón 27 blanco', 'base-enchufe-schuko-simon-27-blanco', 'mecanismos', 'simon', 7.9, 62, 'basic', 0],
     ['75101-39', 'Marco Simón 75 grafito 1 elemento', 'marco-simon-75-grafito-1-elemento', 'mecanismos', 'simon', 3.85, 140, 'basic', 0],
@@ -415,43 +500,47 @@ function seed(db) {
     ['PRY-MNG3-1.5', 'Cable manguera 3x1,5 mm²', 'cable-manguera-3x15', 'proteccion', 'garperlux', 1.15, 500, 'basic', 0],
     ['LX-PR50-65', 'Proyector LED exterior 50W IP65', 'proyector-led-exterior-50w-ip65', 'iluminacion', 'garperlux', 24.9, 29, 'basic', 0],
     ['LEG-401222', 'Cuadro superficie Legrand 12 módulos', 'cuadro-superficie-legrand-12-modulos', 'proteccion', 'garperlux', 22.5, 18, 'pro', 1],
-  ].forEach(([sku, name, slug, category, brand, price, stock, safety, proOnly]) => {
-    insertProduct.run(sku, name, slug, categoryBySlug(category), brandBySlug(brand), price, stock, safety, proOnly, `${name}. Producto incorporado al catálogo provisional GarperLux.`, JSON.stringify({ provisional: true }));
-  });
+  ];
+  for (const [sku, name, slug, category, brand, price, stock, safety, proOnly] of itemsToInsert) {
+
+    await insertProduct.run(sku, name, slug, await categoryBySlug(category), await brandBySlug(brand), price, stock, safety, proOnly, `${name}. Producto incorporado al catálogo provisional GarperLux.`, JSON.stringify({ provisional: true }));
+  
+  }
 
   const insertAddress = db.prepare(`
     INSERT INTO addresses (user_id, label, recipient, line1, city, province, postal_code, phone, is_default)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  insertAddress.run(1, 'Casa', 'Antonio García', 'Calle Real 12', 'Mengíbar', 'Jaén', '23620', '600111222', 1);
-  insertAddress.run(2, 'Nave taller', 'Jose Luis García', 'Polígono Industrial 4', 'Jaén', 'Jaén', '23009', '600333444', 1);
+  await insertAddress.run(1, 'Casa', 'Antonio García', 'Calle Real 12', 'Mengíbar', 'Jaén', '23620', '600111222', 1);
+  await insertAddress.run(2, 'Nave taller', 'Jose Luis García', 'Polígono Industrial 4', 'Jaén', 'Jaén', '23009', '600333444', 1);
 
-  db.prepare('INSERT INTO payment_methods (user_id, type, label, last4, is_default) VALUES (?, ?, ?, ?, ?)').run(1, 'card', 'Visa personal', '4242', 1);
-  db.prepare('INSERT INTO payment_methods (user_id, type, label, last4, is_default) VALUES (?, ?, ?, ?, ?)').run(2, 'bank_transfer', 'Transferencia empresa', null, 1);
+  await db.prepare('INSERT INTO payment_methods (user_id, type, label, last4, is_default) VALUES (?, ?, ?, ?, ?)').run(1, 'card', 'Visa personal', '4242', 1);
+  await db.prepare('INSERT INTO payment_methods (user_id, type, label, last4, is_default) VALUES (?, ?, ?, ?, ?)').run(2, 'bank_transfer', 'Transferencia empresa', null, 1);
 
   db.prepare(`
     INSERT INTO fiscal_profiles (user_id, legal_name, tax_id, legal_form, vat_regime, cnae, license_number, license_expires, license_region, fiscal_address, postal_code, city, province, country, iban)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(2, 'Jose Luis García - El Chispas Instalaciones', 'B12345678', 'Autónomo', 'General', '4321 — Instalaciones eléctricas', 'BT-123456-AND', '2031-04', 'Andalucía', 'Polígono Los Olivares, nave 24', '23009', 'Jaén', 'Jaén', 'España', 'ES1200491234567890123456');
 
-  seedTutorialsCatalog(db);
+  await seedTutorialsCatalog(db);
+  await seedTipsCatalog(db);
 
-  seedProductVariants(db);
-  seedDemoAccountData(db);
+  await seedProductVariants(db);
+  await seedDemoAccountData(db);
 }
 
-function seedBrands(db) {
+async function seedBrands(db) {
   // Migración: Ledvance → Lexman. Reasigna productos al nuevo slug y elimina el viejo.
-  const oldBrand = db.prepare("SELECT id FROM brands WHERE slug = 'ledvance'").get();
+  const oldBrand = await db.prepare("SELECT id FROM brands WHERE slug = 'ledvance'").get();
   if (oldBrand) {
     db.prepare(`
       INSERT INTO brands (slug, name, professional, is_official)
       VALUES ('lexman', 'Lexman', 1, 0)
-      ON CONFLICT(slug) DO NOTHING
+      ON DUPLICATE KEY UPDATE slug=slug
     `).run();
-    const newBrandId = db.prepare("SELECT id FROM brands WHERE slug = 'lexman'").get().id;
-    db.prepare('UPDATE products SET brand_id = ? WHERE brand_id = ?').run(newBrandId, oldBrand.id);
-    db.prepare("DELETE FROM brands WHERE slug = 'ledvance'").run();
+    const newBrandId = (await db.prepare("SELECT id FROM brands WHERE slug = 'lexman'").get()).id;
+    await db.prepare("UPDATE products SET brand_id = ? WHERE brand_id = ?").run(newBrandId, oldBrand.id);
+    await db.prepare("DELETE FROM brands WHERE slug = 'ledvance'").run();
   }
 
   // UPSERT: si la marca ya existe (por scraper), actualiza la metadata oficial
@@ -460,16 +549,16 @@ function seedBrands(db) {
   const upsert = db.prepare(`
     INSERT INTO brands (slug, name, professional, is_official, logo, description, country, year_founded, website, categories_json)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT(slug) DO UPDATE SET
-      name = excluded.name,
-      professional = excluded.professional,
-      is_official = excluded.is_official,
-      logo = excluded.logo,
-      description = excluded.description,
-      country = excluded.country,
-      year_founded = excluded.year_founded,
-      website = excluded.website,
-      categories_json = excluded.categories_json
+    ON DUPLICATE KEY UPDATE
+      name = VALUES(name),
+      professional = VALUES(professional),
+      is_official = VALUES(is_official),
+      logo = VALUES(logo),
+      description = VALUES(description),
+      country = VALUES(country),
+      year_founded = VALUES(year_founded),
+      website = VALUES(website),
+      categories_json = VALUES(categories_json)
   `);
 
   const brands = [
@@ -541,43 +630,200 @@ function seedBrands(db) {
       'Francia', '2003', 'https://www.leroymerlin.es/marcas/lexman', ['Iluminación']],
   ];
 
-  brands.forEach(([slug, name, professional, isOfficial, logo, description, country, yearFounded, website, categories]) => {
-    upsert.run(slug, name, professional, isOfficial, logo, description, country, yearFounded, website, JSON.stringify(categories));
-  });
+  for (const [slug, name, professional, isOfficial, logo, description, country, yearFounded, website, categories] of brands) {
+
+    await upsert.run(slug, name, professional, isOfficial, logo, description, country, yearFounded, website, JSON.stringify(categories));
+  
+  }
 }
 
-function seedTutorialsCatalog(db) {
+async function seedTutorialsCatalog(db) {
+  // El catálogo vive en seeds/tutorials-catalog.json para que el contenido editorial
+  // (intro, pasos, FAQs por tutorial) sea editable sin tocar lógica de DB.
+  const catalogPath = require('node:path').join(__dirname, '..', 'seeds', 'tutorials-catalog.json');
+  let catalog;
+  try {
+    catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+  } catch (err) {
+    console.warn(`[seedTutorialsCatalog] catálogo no encontrado en ${catalogPath}: ${err.message}`);
+    return;
+  }
+
   const insertTutorial = db.prepare(`
-    INSERT OR IGNORE INTO tutorials (slug, title, difficulty, safety_level, minutes, reviewer, related_product_skus)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT IGNORE INTO tutorials (
+      slug, title, difficulty, safety_level, minutes, reviewer,
+      related_product_skus, excerpt, category, location, has_video,
+      cover_photo_id, cover_gradient, content_json, published_at
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  const tutorials = [
-    ['cambiar-interruptor-sin-riesgos', 'Cambiar un interruptor sin riesgos', 'media', 'basic', 35, 'Alfonso Torres', ['SIM-75201-39']],
-    ['cambiar-interruptor-desgastado', 'Cambiar un interruptor desgastado sin volverte loco', 'media', 'basic', 25, 'Alfonso Torres', ['27101-31']],
-    ['instalar-videoportero-wifi', 'Instalar un videoportero con Wi-Fi', 'avanzada', 'medium', 50, 'Pedro Ramírez', ['SHL-1M-G3']],
-    ['voltios-vatios-amperios-en-5-min', 'Voltios, vatios y amperios en 5 minutos', 'basica', 'basic', 8, 'Equipo GarperLux', []],
-    ['cortar-luz-circuito-correcto', 'Cómo cortar la luz del circuito correcto', 'basica', 'basic', 12, 'Alfonso Torres', ['A9F74225']],
-    ['polimetro-sin-miedo', 'Qué es un polímetro y cómo usarlo sin miedo', 'media', 'basic', 18, 'Equipo GarperLux', ['UNI-T-A03']],
-    ['temperatura-de-color', 'Entender la temperatura de color', 'basica', 'basic', 10, 'Equipo GarperLux', ['LED-A60-9W-2700K']],
-    ['cambiar-enchufe-doble', 'Cambiar un enchufe doble', 'media', 'basic', 22, 'Alfonso Torres', ['27431-31']],
-  ];
-  tutorials.forEach((row) => insertTutorial.run(row[0], row[1], row[2], row[3], row[4], row[5], JSON.stringify(row[6])));
+
+  // Si la fila ya existe (DB con seed antiguo), refresca los campos ricos
+  // para que el reseed siempre traiga el contenido canónico. No tocamos `views`
+  // (contador dinámico).
+  const updateRich = db.prepare(`
+    UPDATE tutorials SET
+      title = ?, difficulty = ?, safety_level = ?, minutes = ?, reviewer = ?,
+      related_product_skus = ?, excerpt = ?, category = ?, location = ?,
+      has_video = ?, cover_photo_id = ?, cover_gradient = ?, content_json = ?,
+      published_at = COALESCE(published_at, ?)
+    WHERE slug = ?
+  `);
+
+  // Limpia slugs del seed antiguo que ya no están en el catálogo nuevo. ON DELETE
+  // CASCADE quita también las entradas de saved_tutorials que apuntaban a ellos.
+  const obsoleteSlugs = ['cambiar-interruptor-sin-riesgos', 'instalar-videoportero-wifi', 'cortar-luz-circuito-correcto', 'polimetro-sin-miedo', 'temperatura-de-color', 'cambiar-enchufe-doble'];
+  const placeholders = obsoleteSlugs.map(() => '?').join(',');
+  await db.prepare(`DELETE FROM tutorials WHERE slug IN (${placeholders})`).run(...obsoleteSlugs);
+
+  const publishedAt = new Date().toISOString().split('T')[0];
+
+  for (const t of catalog) {
+    const skus = JSON.stringify(t.related_product_skus || []);
+    const content = JSON.stringify(t.content || {});
+    const hasVideo = t.has_video ? 1 : 0;
+    await insertTutorial.run(
+      t.slug, t.title, t.difficulty, t.safety_level, t.minutes, t.reviewer,
+      skus, t.excerpt || null, t.category || null, t.location || 'interior', hasVideo,
+      t.cover_photo_id || null, t.cover_gradient || null, content, publishedAt,
+    );
+    await updateRich.run(
+      t.title, t.difficulty, t.safety_level, t.minutes, t.reviewer,
+      skus, t.excerpt || null, t.category || null, t.location || 'interior',
+      hasVideo, t.cover_photo_id || null, t.cover_gradient || null, content,
+      publishedAt, t.slug,
+    );
+  }
 }
 
-function seedDemoAccountData(db) {
+async function seedTipsCatalog(db) {
+  // El catálogo de consejos (47 tips firmados por Alfonso Torres y otros) vive en
+  // seeds/consejos-catalog.json. UPSERT por `number` para que reseed actualice
+  // textos sin perder identidad.
+  const catalogPath = require('node:path').join(__dirname, '..', 'seeds', 'consejos-catalog.json');
+  let catalog;
+  try {
+    catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+  } catch (err) {
+    console.warn(`[seedTipsCatalog] catálogo no encontrado en ${catalogPath}: ${err.message}`);
+    return;
+  }
+
+  const upsert = db.prepare(`
+    INSERT INTO tips (number, category, body, author, author_initials, published_at, dark)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      category = VALUES(category),
+      body = VALUES(body),
+      author = VALUES(author),
+      author_initials = VALUES(author_initials),
+      published_at = VALUES(published_at),
+      dark = VALUES(dark)
+  `);
+
+  for (const tip of catalog) {
+    await upsert.run(
+      tip.number,
+      tip.category,
+      tip.body,
+      tip.author || 'Equipo GarperLux',
+      tip.author_initials || (tip.author ? tip.author.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase() : 'EG'),
+      tip.published_at,
+      tip.dark ? 1 : 0,
+    );
+  }
+}
+
+async function seedHelpCenter(db) {
+  // El catálogo del centro de ayuda vive en seeds/help-center.json para que
+  // el contenido editorial (categorías + preguntas/respuestas) sea editable
+  // sin tocar lógica de DB. Cada vez que arranca se hace upsert idempotente:
+  // - mantiene IDs si las categorías/artículos ya existen
+  // - actualiza textos y orden si han cambiado en el JSON
+  // - elimina categorías/artículos cuyos slugs ya no aparecen en el JSON
+  const catalogPath = require('node:path').join(__dirname, '..', 'seeds', 'help-center.json');
+  let catalog;
+  try {
+    catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+  } catch (err) {
+    console.warn(`[seedHelpCenter] catálogo no encontrado en ${catalogPath}: ${err.message}`);
+    return;
+  }
+  const categories = catalog.categories || [];
+
+  const insertCategory = db.prepare(`
+    INSERT INTO help_categories (slug, name, short_label, description, icon_svg, accent, sort_order)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      name = VALUES(name),
+      short_label = VALUES(short_label),
+      description = VALUES(description),
+      icon_svg = VALUES(icon_svg),
+      accent = VALUES(accent),
+      sort_order = VALUES(sort_order)
+  `);
+  const insertArticle = db.prepare(`
+    INSERT INTO help_articles (category_id, slug, question, answer_html, keywords, sort_order, featured)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      category_id = VALUES(category_id),
+      question = VALUES(question),
+      answer_html = VALUES(answer_html),
+      keywords = VALUES(keywords),
+      sort_order = VALUES(sort_order),
+      featured = VALUES(featured)
+  `);
+  const getCategoryId = db.prepare('SELECT id FROM help_categories WHERE slug = ?');
+
+  const keepCategorySlugs = [];
+  const keepArticleSlugs = [];
+  let articleOrder = 0;
+  for (const cat of categories) {
+    await await insertCategory.run(
+      cat.slug, cat.name, cat.short_label, cat.description || null,
+      cat.icon_svg || null, cat.accent || 'default', cat.sort_order || 0,
+    );
+    keepCategorySlugs.push(cat.slug);
+    const categoryId = (await getCategoryId.get(cat.slug)).id;
+    for (const article of cat.articles || []) {
+      await insertArticle.run(
+        categoryId, article.slug, article.question, article.answer_html,
+        article.keywords || '', article.sort_order ?? articleOrder++,
+        article.featured ? 1 : 0,
+      );
+      keepArticleSlugs.push(article.slug);
+    }
+  }
+
+  // Limpia artículos/categorías que ya no están en el JSON. Hacemos artículos
+  // primero por si una categoría desaparece pero sus artículos no — quedarían
+  // huérfanos sin la FK on-delete-cascade, y queremos forzar consistencia con el JSON.
+  if (keepArticleSlugs.length) {
+    const ph = keepArticleSlugs.map(() => '?').join(',');
+    await db.prepare(`DELETE FROM help_articles WHERE slug NOT IN (${ph})`).run(...keepArticleSlugs);
+  }
+  if (keepCategorySlugs.length) {
+    const ph = keepCategorySlugs.map(() => '?').join(',');
+    await db.prepare(`DELETE FROM help_categories WHERE slug NOT IN (${ph})`).run(...keepCategorySlugs);
+  }
+}
+
+async function seedDemoAccountData(db) {
   // Idempotent: solo insertar si el usuario aún no tiene datos demo.
   // Asegura tutoriales catálogo (puede faltar en DBs preexistentes con un único tutorial).
-  seedTutorialsCatalog(db);
+  await seedTutorialsCatalog(db);
+  await seedTipsCatalog(db);
+  await seedHelpCenter(db);
 
-  const antonio = db.prepare('SELECT id FROM users WHERE email = ?').get('antonio.garcia@correo.com');
-  const chispas = db.prepare('SELECT id FROM users WHERE email = ?').get('chispas@instaladoreseljaen.es');
+  const antonio = await db.prepare('SELECT id FROM users WHERE email = ?').get('antonio.garcia@correo.com');
+  const chispas = await db.prepare('SELECT id FROM users WHERE email = ?').get('chispas@instaladoreseljaen.es');
 
-  const skuToId = (sku) => db.prepare('SELECT id FROM products WHERE sku = ?').get(sku)?.id;
-  const tutorialBySlug = (slug) => db.prepare('SELECT id FROM tutorials WHERE slug = ?').get(slug)?.id;
+  const skuToId = async (sku) => (await db.prepare("SELECT id FROM products WHERE sku = ?").get(sku))?.id;
+  const tutorialBySlug = async (slug) => (await db.prepare("SELECT id FROM tutorials WHERE slug = ?").get(slug))?.id;
 
-  const insertFavorite = db.prepare('INSERT OR IGNORE INTO favorites (user_id, product_id) VALUES (?, ?)');
+  const insertFavorite = db.prepare('INSERT IGNORE INTO favorites (user_id, product_id) VALUES (?, ?)');
   const insertSaved = db.prepare(`
-    INSERT OR IGNORE INTO saved_tutorials (user_id, tutorial_id, progress, notes)
+    INSERT IGNORE INTO saved_tutorials (user_id, tutorial_id, progress, notes)
     VALUES (?, ?, ?, ?)
   `);
   const insertServiceRequest = db.prepare(`
@@ -591,37 +837,42 @@ function seedDemoAccountData(db) {
 
   // ===== ANTONIO (particular) =====
   if (antonio) {
-    const hasFavs = db.prepare('SELECT COUNT(*) AS n FROM favorites WHERE user_id = ?').get(antonio.id).n;
+    const hasFavs = (await db.prepare('SELECT COUNT(*) AS n FROM favorites WHERE user_id = ?').get(antonio.id)).n;
     if (!hasFavs) {
-      ['27101-31', '8718699-04', 'UNI-T-A03', 'A9F74225', 'SHL-1M-G3', 'WH-DA-3'].forEach((sku) => {
-        const id = skuToId(sku);
-        if (id) insertFavorite.run(antonio.id, id);
-      });
+      for (const sku of ['27101-31', '8718699-04', 'UNI-T-A03', 'A9F74225', 'SHL-1M-G3', 'WH-DA-3']) {
+        const id = await skuToId(sku);
+        if (id) await insertFavorite.run(antonio.id, id);
+      }
     }
 
-    const hasSaved = db.prepare('SELECT COUNT(*) AS n FROM saved_tutorials WHERE user_id = ?').get(antonio.id).n;
+    const hasSaved = (await db.prepare('SELECT COUNT(*) AS n FROM saved_tutorials WHERE user_id = ?').get(antonio.id)).n;
     if (!hasSaved) {
       [
         ['cambiar-interruptor-desgastado', 65, 'Pendiente paso 5: probar conmutación.'],
-        ['instalar-videoportero-wifi', 22, null],
+        ['domotizar-interruptor-shelly-1mini', 22, null],
         ['voltios-vatios-amperios-en-5-min', 100, null],
-        ['cortar-luz-circuito-correcto', 100, null],
-        ['polimetro-sin-miedo', 100, null],
-        ['temperatura-de-color', 100, null],
-        ['cambiar-enchufe-doble', 100, null],
-      ].forEach(([slug, progress, notes]) => {
-        const id = tutorialBySlug(slug);
-        if (id) insertSaved.run(antonio.id, id, progress, notes);
-      });
+        ['cortar-luz-del-circuito-correcto', 100, null],
+        ['usar-polimetro-sin-miedo', 100, null],
+        ['entender-temperatura-de-color', 100, null],
+        ['cambiar-enchufe-schuko-suelto', 100, null],
+      ];
+      for (const [slug, progress, notes] of [
+        ['usar-polimetro-sin-miedo', 100, null],
+        ['entender-temperatura-de-color', 100, null],
+        ['cambiar-enchufe-schuko-suelto', 100, null],
+      ]) {
+        const id = await tutorialBySlug(slug);
+        if (id) await insertSaved.run(antonio.id, id, progress, notes);
+      }
     }
 
-    const hasRequests = db.prepare('SELECT COUNT(*) AS n FROM service_requests WHERE user_id = ?').get(antonio.id).n;
+    const hasRequests = (await db.prepare('SELECT COUNT(*) AS n FROM service_requests WHERE user_id = ?').get(antonio.id)).n;
     if (!hasRequests) {
-      const seedRequest = (req) => {
-        const result = insertServiceRequest.run(req.code, antonio.id, req.status, req.service_type, req.urgency, req.address, req.description, JSON.stringify(req.payload), req.created_at);
-        req.events.forEach((ev) => insertServiceEvent.run(result.lastInsertRowid, ev.status, ev.title, ev.description, ev.happened_at));
+      const seedRequest = async (req) => {
+        const result = await insertServiceRequest.run(req.code, antonio.id, req.status, req.service_type, req.urgency, req.address, req.description, JSON.stringify(req.payload), req.created_at);
+        for (const ev of req.events) await insertServiceEvent.run(result.lastInsertRowid, ev.status, ev.title, ev.description, ev.happened_at);
       };
-      seedRequest({
+      await seedRequest({
         code: 'GLX-2026-04-2748',
         status: 'reviewing',
         service_type: 'Avería eléctrica',
@@ -635,7 +886,7 @@ function seedDemoAccountData(db) {
           { status: 'reviewing', title: 'En revisión', description: 'Estamos revisando la información para asignar técnico.', happened_at: '2026-04-26 18:55:00' },
         ],
       });
-      seedRequest({
+      await seedRequest({
         code: 'GLX-2026-03-2104',
         status: 'resolved',
         service_type: 'Cambio de magnetotérmico defectuoso',
@@ -650,7 +901,7 @@ function seedDemoAccountData(db) {
           { status: 'resolved', title: 'Resuelto', description: 'Magnetotérmico sustituido y verificado.', happened_at: '2026-03-18 13:25:00' },
         ],
       });
-      seedRequest({
+      await seedRequest({
         code: 'GLX-2026-02-1487',
         status: 'resolved',
         service_type: 'Instalación de videoportero Wi-Fi',
@@ -664,7 +915,7 @@ function seedDemoAccountData(db) {
           { status: 'resolved', title: 'Resuelto', description: 'Videoportero instalado y configurado.', happened_at: '2026-02-22 17:45:00' },
         ],
       });
-      seedRequest({
+      await seedRequest({
         code: 'GLX-2026-01-0892',
         status: 'cancelled',
         service_type: 'Revisión preventiva anual',
@@ -683,41 +934,46 @@ function seedDemoAccountData(db) {
 
   // ===== JOSE LUIS "EL CHISPAS" (pro) =====
   if (chispas) {
-    const hasFavs = db.prepare('SELECT COUNT(*) AS n FROM favorites WHERE user_id = ?').get(chispas.id).n;
+    const hasFavs = (await db.prepare('SELECT COUNT(*) AS n FROM favorites WHERE user_id = ?').get(chispas.id)).n;
     if (!hasFavs) {
       // Para pro mostramos lista densa de material habitual.
-      ['27101-31', '27201-31', '27431-31', '75101-39', '27502-31', 'A9F74225', 'SCH-A9R60240', 'SHL-1M-G3', 'PRY-MNG3-1.5', 'LEG-401222', 'LX-PR50-65', 'LED-A60-9W-2700K', 'UNI-T-A03', 'WH-DA-3', '8718699-04'].forEach((sku) => {
-        const id = skuToId(sku);
-        if (id) insertFavorite.run(chispas.id, id);
-      });
+      for (const sku of ['27101-31', '27201-31', '27431-31', '75101-39', '27502-31', 'A9F74225', 'SCH-A9R60240', 'SHL-1M-G3', 'PRY-MNG3-1.5', 'LEG-401222', 'LX-PR50-65', 'LED-A60-9W-2700K', 'UNI-T-A03', 'WH-DA-3', '8718699-04']) {
+        const id = await skuToId(sku);
+        if (id) await insertFavorite.run(chispas.id, id);
+      }
     }
 
-    const hasSaved = db.prepare('SELECT COUNT(*) AS n FROM saved_tutorials WHERE user_id = ?').get(chispas.id).n;
+    const hasSaved = (await db.prepare('SELECT COUNT(*) AS n FROM saved_tutorials WHERE user_id = ?').get(chispas.id)).n;
     if (!hasSaved) {
       [
-        ['cambiar-interruptor-sin-riesgos', 100, null],
-        ['polimetro-sin-miedo', 100, null],
-        ['cortar-luz-circuito-correcto', 100, null],
-      ].forEach(([slug, progress, notes]) => {
-        const id = tutorialBySlug(slug);
-        if (id) insertSaved.run(chispas.id, id, progress, notes);
-      });
+        ['cambiar-interruptor-desgastado', 100, null],
+        ['usar-polimetro-sin-miedo', 100, null],
+        ['cortar-luz-del-circuito-correcto', 100, null],
+      ];
+      for (const [slug, progress, notes] of [
+        ['cambiar-interruptor-desgastado', 100, null],
+        ['usar-polimetro-sin-miedo', 100, null],
+        ['cortar-luz-del-circuito-correcto', 100, null],
+      ]) {
+        const id = await tutorialBySlug(slug);
+        if (id) await insertSaved.run(chispas.id, id, progress, notes);
+      }
     }
 
-    seedProOrders(db, chispas.id);
-    seedProQuotes(db, chispas.id);
-    seedProRecurringOrders(db, chispas.id);
+    await seedProOrders(db, chispas.id);
+    await seedProQuotes(db, chispas.id);
+    await seedProRecurringOrders(db, chispas.id);
   }
 }
 
 function moneyRound(n) { return Math.round(Number(n) * 100) / 100; }
 
-function seedProOrders(db, userId) {
-  const has = db.prepare('SELECT COUNT(*) AS n FROM orders WHERE user_id = ?').get(userId).n;
+async function seedProOrders(db, userId) {
+  const has = (await db.prepare('SELECT COUNT(*) AS n FROM orders WHERE user_id = ?').get(userId)).n;
   if (has) return;
 
-  const skuRow = (sku) => db.prepare('SELECT id, sku, name, price FROM products WHERE sku = ?').get(sku);
-  const proDiscount = Number(db.prepare('SELECT pro_discount FROM users WHERE id = ?').get(userId).pro_discount || 0);
+  const skuRow = async (sku) => await db.prepare('SELECT id, sku, name, price FROM products WHERE sku = ?').get(sku);
+  const proDiscount = Number((await db.prepare('SELECT pro_discount FROM users WHERE id = ?').get(userId)).pro_discount || 0);
   const applyPro = (price) => moneyRound(price * (1 - proDiscount / 100));
 
   const insertOrder = db.prepare(`
@@ -815,7 +1071,7 @@ function seedProOrders(db, userId) {
     const items = [];
     let subtotal = 0;
     for (const [sku, qty] of tmpl.lines) {
-      const p = skuRow(sku);
+      const p = await skuRow(sku);
       if (!p) continue;
       const unitPro = applyPro(p.price);
       const lineTotal = moneyRound(unitPro * qty);
@@ -840,12 +1096,12 @@ function seedProOrders(db, userId) {
       paymentMethod: tmpl.paymentMethod,
     };
 
-    const result = insertOrder.run(tmpl.code, userId, tmpl.status, total, JSON.stringify(orderPayload), tmpl.created_at);
+    const result = await insertOrder.run(tmpl.code, userId, tmpl.status, total, JSON.stringify(orderPayload), tmpl.created_at);
     const orderId = result.lastInsertRowid;
-    insertOrderEvent.run(orderId, 'confirmed', 'Pedido recibido', 'Hemos registrado el pedido correctamente.', tmpl.created_at);
-    insertOrderEvent.run(orderId, 'paid', 'Pago confirmado', `Pago confirmado con ${tmpl.paymentMethod.label}.`, tmpl.created_at);
-    insertOrderEvent.run(orderId, 'preparing', 'En preparación', 'Estamos preparando el pedido en almacén.', tmpl.created_at);
-    (tmpl.eventsExtra || []).forEach((ev) => insertOrderEvent.run(orderId, ev.status, ev.title, ev.description, ev.happened_at));
+    await insertOrderEvent.run(orderId, 'confirmed', 'Pedido recibido', 'Hemos registrado el pedido correctamente.', tmpl.created_at);
+    await insertOrderEvent.run(orderId, 'paid', 'Pago confirmado', `Pago confirmado con ${tmpl.paymentMethod.label}.`, tmpl.created_at);
+    await insertOrderEvent.run(orderId, 'preparing', 'En preparación', 'Estamos preparando el pedido en almacén.', tmpl.created_at);
+    for (const ev of (tmpl.eventsExtra || [])) await insertOrderEvent.run(orderId, ev.status, ev.title, ev.description, ev.happened_at);
 
     // Documentos asociados (albarán + factura) con payload_json para el detalle.
     const baseDocPayload = {
@@ -862,21 +1118,21 @@ function seedProOrders(db, userId) {
 
     if (tmpl.documents.delivery) {
       const d = tmpl.documents.delivery;
-      insertDocument.run(userId, 'delivery_note', d.code, tmpl.code, subtotal, JSON.stringify({ ...baseDocPayload, signedBy: d.signedBy, signedAt: d.issued_at, status: 'delivered' }), d.issued_at);
+      await insertDocument.run(userId, 'delivery_note', d.code, tmpl.code, subtotal, JSON.stringify({ ...baseDocPayload, signedBy: d.signedBy, signedAt: d.issued_at, status: 'delivered' }), d.issued_at);
     }
     if (tmpl.documents.invoice) {
       const f = tmpl.documents.invoice;
-      insertDocument.run(userId, 'invoice', f.code, tmpl.code, total, JSON.stringify({ ...baseDocPayload, dueAt: f.dueAt, paid: f.paid, status: f.paid ? 'paid' : 'pending' }), f.issued_at);
+      await insertDocument.run(userId, 'invoice', f.code, tmpl.code, total, JSON.stringify({ ...baseDocPayload, dueAt: f.dueAt, paid: f.paid, status: f.paid ? 'paid' : 'pending' }), f.issued_at);
     }
   }
 }
 
-function seedProQuotes(db, userId) {
-  const has = db.prepare('SELECT COUNT(*) AS n FROM quotes WHERE user_id = ?').get(userId).n;
+async function seedProQuotes(db, userId) {
+  const has = (await db.prepare('SELECT COUNT(*) AS n FROM quotes WHERE user_id = ?').get(userId)).n;
   if (has) return;
-  const proDiscount = Number(db.prepare('SELECT pro_discount FROM users WHERE id = ?').get(userId).pro_discount || 0);
+  const proDiscount = Number((await db.prepare('SELECT pro_discount FROM users WHERE id = ?').get(userId)).pro_discount || 0);
   const applyPro = (p) => moneyRound(p * (1 - proDiscount / 100));
-  const skuRow = (sku) => db.prepare('SELECT id, sku, name, price FROM products WHERE sku = ?').get(sku);
+  const skuRow = async (sku) => await db.prepare('SELECT id, sku, name, price FROM products WHERE sku = ?').get(sku);
 
   const insertQuote = db.prepare(`
     INSERT INTO quotes (code, user_id, status, title, total, payload_json, created_at)
@@ -954,25 +1210,25 @@ function seedProQuotes(db, userId) {
   ];
 
   for (const q of QUOTES) {
-    const enriched = q.lines.map((line) => {
+    const enriched = await Promise.all(q.lines.map(async (line) => {
       if (line.kind === 'product') {
-        const p = skuRow(line.sku);
+        const p = await skuRow(line.sku);
         if (!p) return null;
         const unit = applyPro(p.price);
         return { kind: 'product', sku: p.sku, name: p.name, quantity: line.quantity, unitPrice: unit, originalPrice: p.price, lineTotal: moneyRound(unit * line.quantity) };
       }
       return { kind: 'free', concept: line.concept, quantity: line.quantity, unitPrice: line.unitPrice, note: line.note || '', lineTotal: moneyRound(line.unitPrice * line.quantity) };
-    }).filter(Boolean);
+    })).then(r => r.filter(Boolean));
     const subtotal = moneyRound(enriched.reduce((s, l) => s + l.lineTotal, 0));
     const tax = moneyRound(subtotal * 0.21);
     const total = moneyRound(subtotal + tax);
     const payload = { ...q, items: enriched, subtotal, tax, total };
-    insertQuote.run(q.code, userId, q.status, q.title, total, JSON.stringify(payload), q.created_at);
+    await insertQuote.run(q.code, userId, q.status, q.title, total, JSON.stringify(payload), q.created_at);
   }
 }
 
-function seedProRecurringOrders(db, userId) {
-  const has = db.prepare('SELECT COUNT(*) AS n FROM recurring_orders WHERE user_id = ?').get(userId).n;
+async function seedProRecurringOrders(db, userId) {
+  const has = (await db.prepare('SELECT COUNT(*) AS n FROM recurring_orders WHERE user_id = ?').get(userId)).n;
   if (has) return;
   const insertRec = db.prepare(`
     INSERT INTO recurring_orders (code, user_id, name, frequency, next_run_at, status, payload_json, created_at)
@@ -984,7 +1240,7 @@ function seedProRecurringOrders(db, userId) {
     { sku: 'LED-A60-9W-2700K', name: 'Bombilla LED A60 9W cálida', quantity: 24, unitPrice: 3.51 },
   ];
   const subtotal = moneyRound(items.reduce((s, it) => s + it.quantity * it.unitPrice, 0));
-  insertRec.run(
+  await insertRec.run(
     'REC-2026-0001', userId, 'Reposición taller mensual', 'monthly', '2026-05-05',
     'active',
     JSON.stringify({ items, subtotal, dayOfMonth: 5, addressLabel: 'Polígono Los Olivares, nave 24 · 23009 Jaén', paymentMethodLabel: 'Aplazado 30 días (cuenta pro)' }),
@@ -993,8 +1249,8 @@ function seedProRecurringOrders(db, userId) {
 }
 
 
-function ensureAdminUser(db) {
-  const exists = db.prepare('SELECT id FROM users WHERE email = ?').get('admin@garperlux.local');
+async function ensureAdminUser(db) {
+  const exists = await db.prepare('SELECT id FROM users WHERE email = ?').get('admin@garperlux.local');
   if (exists) return;
   db.prepare(`
     INSERT INTO users (role, full_name, email, password_hash, phone, fiscal_id, pro_discount)
@@ -1002,18 +1258,18 @@ function ensureAdminUser(db) {
   `).run('admin', 'Administración GarperLux', 'admin@garperlux.local', hashPassword('garperlux123'), '953212223', null, 0);
 }
 
-function seedProductVariants(db) {
-  const variants = Number(db.prepare('SELECT COUNT(*) AS total FROM product_variants').get().total);
+async function seedProductVariants(db) {
+  const variants = Number((await db.prepare('SELECT COUNT(*) AS total FROM product_variants').get()).total);
   if (variants > 0) return;
 
-  const product = db.prepare('SELECT id FROM products WHERE sku = ?').get('27101-31');
+  const product = await db.prepare('SELECT id FROM products WHERE sku = ?').get('27101-31');
   if (!product) return;
 
   const insertVariant = db.prepare(`
     INSERT INTO product_variants (product_id, sku, finish, amps, price, stock, is_default)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
-  [
+  const insertVariants = [
     ['27101-31', 'Blanco', '10 A', 5.42, 86, 1],
     ['27101-32', 'Marfil', '10 A', 5.62, 34, 0],
     ['27101-39', 'Aluminio', '10 A', 6.25, 19, 0],
@@ -1023,7 +1279,8 @@ function seedProductVariants(db) {
     ['27101-31-20A', 'Blanco', '20 A', 7.20, 12, 0],
     ['27101-32-20A', 'Marfil', '20 A', 7.40, 8, 0],
     ['27101-39-20A', 'Aluminio', '20 A', 8.10, 5, 0],
-  ].forEach((variant) => insertVariant.run(product.id, ...variant));
+  ];
+  for (const variant of insertVariants) await insertVariant.run(product.id, ...variant);
 }
 
 module.exports = { connect, getDb };

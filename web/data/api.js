@@ -89,6 +89,17 @@ window.GarperLuxApi = (() => {
     fiscalProfile: () => request('/account/fiscal-profile'),
     saveFiscalProfile: (payload) => request('/account/fiscal-profile', { method: 'PUT', body: JSON.stringify(payload) }),
     favorites: () => request('/account/favorites'),
+    tutorials: () => request('/content/tutorials'),
+    tutorial: (slug) => request(`/content/tutorials/${encodeURIComponent(slug)}`),
+    tips: () => request('/content/tips'),
+    helpCenter: () => request('/public/faqs'),
+    helpCategories: () => request('/public/faqs/categories'),
+    helpCategory: (slug) => request(`/public/faqs/categories/${encodeURIComponent(slug)}`),
+    helpSearch: (query, opts = {}) => {
+      const params = new URLSearchParams({ q: query });
+      if (opts.category) params.set('category', opts.category);
+      return request(`/public/faqs/search?${params}`);
+    },
     savedTutorials: () => request('/account/saved-tutorials'),
     saveTutorial: (slug, payload = {}) => request(`/account/saved-tutorials/${encodeURIComponent(slug)}`, { method: 'POST', body: JSON.stringify(payload) }),
     reviews: (sku) => request(`/catalog/products/${encodeURIComponent(sku)}/reviews`),

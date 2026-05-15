@@ -11,5 +11,10 @@
   },
   "engines": {
     "node": ">=22.5"
+  },
+  "dependencies": {
+    "mysql2": "^3.22.3",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
   }
 }

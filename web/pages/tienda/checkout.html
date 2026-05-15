@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <base href="/.">
@@ -83,64 +83,32 @@
 
         <!-- Dirección -->
         <h2 class="font-serif text-lg font-medium mb-3">Dirección de entrega</h2>
-        <div class="bg-white border-2 border-ink rounded-2xl p-5 mb-3">
-          <div class="flex items-start gap-3">
-            <input type="radio" name="dir" checked class="mt-1.5"/>
-            <div class="flex-1">
-              <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-medium">Casa</span><span class="pill bg-paper-2 text-graphite text-[10px]">Predeterminada</span></div>
-              <div class="text-sm text-graphite">Antonio García · Calle Bernabé Soriano 12, 3º B · 23001 Jaén · 600 123 456</div>
-            </div>
-            <button class="text-xs text-copper hover:underline">Editar</button>
-          </div>
-        </div>
-        <div class="bg-white border border-line rounded-2xl p-5 mb-3">
-          <div class="flex items-start gap-3">
-            <input type="radio" name="dir" class="mt-1.5"/>
-            <div class="flex-1">
-              <div class="font-medium mb-1">Trabajo</div>
-              <div class="text-sm text-graphite">Antonio García · Avda. de Madrid 14, of. 4 · 23004 Jaén · 953 224 488</div>
-            </div>
-            <button class="text-xs text-copper hover:underline">Editar</button>
-          </div>
+        <div id="checkout-addresses-container" class="space-y-3 mb-8">
+          <!-- JS rellenará esto con las direcciones reales -->
+          <div class="p-8 text-center text-sm text-graphite bg-white border border-line rounded-2xl">Cargando tus direcciones...</div>
         </div>
 
-        <details class="bg-paper-2 border border-line rounded-2xl mb-8">
-          <summary class="px-5 py-4 cursor-pointer text-sm font-medium flex items-center gap-2 list-none">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-            Añadir nueva dirección
-          </summary>
-          <div class="px-5 pb-5 grid sm:grid-cols-2 gap-3">
-            <input type="text" placeholder="Nombre completo" class="field sm:col-span-2"/>
-            <input type="text" placeholder="Dirección" class="field sm:col-span-2"/>
-            <input type="text" placeholder="CP" class="field"/>
-            <input type="text" placeholder="Localidad" class="field"/>
-            <input type="text" placeholder="Provincia" class="field"/>
-            <input type="tel" placeholder="Teléfono de contacto" class="field"/>
-            <textarea placeholder="Indicaciones para el repartidor (opcional)" class="field sm:col-span-2" rows="2"></textarea>
-          </div>
-        </details>
-
-        <!-- Modo de envío -->
+        <!-- Velocidad de envío -->
         <h2 class="font-serif text-lg font-medium mb-3">Velocidad de envío</h2>
         <div class="bg-white border border-line rounded-2xl divide-y divide-line mb-8">
           <label class="p-4 flex items-center gap-3 cursor-pointer hover:bg-paper-2/50">
-            <input type="radio" name="vel" checked/>
+            <input type="radio" name="vel" value="standard" checked/>
             <div class="flex-1">
               <div class="font-medium text-sm">Estándar 24-48 h</div>
-              <div class="text-xs text-graphite">Llega entre el 28/04 y el 29/04</div>
+              <div class="text-xs text-graphite">Llega en 1-2 días laborables</div>
             </div>
             <span class="font-mono text-sm">4,90 €</span>
           </label>
           <label class="p-4 flex items-center gap-3 cursor-pointer hover:bg-paper-2/50">
-            <input type="radio" name="vel"/>
+            <input type="radio" name="vel" value="express"/>
             <div class="flex-1">
               <div class="font-medium text-sm">Exprés 24 h</div>
-              <div class="text-xs text-graphite">Llega mañana 28/04 antes de las 14:00</div>
+              <div class="text-xs text-graphite">Llega mañana antes de las 14:00</div>
             </div>
             <span class="font-mono text-sm">9,90 €</span>
           </label>
           <label class="p-4 flex items-center gap-3 cursor-pointer hover:bg-paper-2/50">
-            <input type="radio" name="vel"/>
+            <input type="radio" name="vel" value="pickup"/>
             <div class="flex-1">
               <div class="font-medium text-sm">Recogida en almacén Jaén</div>
               <div class="text-xs text-graphite">Listo hoy en 2 h · L-V 8:00-18:30</div>
@@ -152,9 +120,16 @@
         <!-- Datos de facturación -->
         <h2 class="font-serif text-lg font-medium mb-3">Datos de facturación</h2>
         <label class="flex items-center gap-2 mb-4 text-sm cursor-pointer">
-          <input type="checkbox" checked class="w-4 h-4"/>
+          <input type="checkbox" id="billing-same-as-shipping" checked class="w-4 h-4"/>
           La factura va a la misma dirección que el envío
         </label>
+
+        <div id="billing-address-section" class="hidden space-y-3 mb-8">
+          <h3 class="text-sm font-medium text-graphite mb-2 uppercase tracking-wider">Selecciona dirección de facturación</h3>
+          <div id="billing-addresses-container" class="space-y-3">
+            <!-- JS rellenará esto con las direcciones de facturación -->
+          </div>
+        </div>
 
         <div class="flex justify-between flex-wrap gap-4 mt-10">
           <a href="/pages/tienda/carrito.html" class="btn btn-ghost">← Volver al carrito</a>

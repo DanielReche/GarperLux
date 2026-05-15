@@ -5,19 +5,19 @@ const { requireAuth } = require('../middleware/auth');
 const { publicUser } = require('./auth');
 
 function registerAccountRoutes(router) {
-  router.get('/api/account/profile', (req, res) => {
-    const user = requireAuth(req, res);
+  router.get('/api/account/profile', async (req, res) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    return ok(res, publicUser(getDb().prepare('SELECT * FROM users WHERE id = ?').get(user.id)));
+    return ok(res, publicUser(await getDb().prepare('SELECT * FROM users WHERE id = ?').get(user.id)));
   });
 
   router.patch('/api/account/profile', async (req, res) => {
-    const user = requireAuth(req, res);
+    const user = await requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
       const db = getDb();
-      const current = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+      const current = await db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
       const fullName = payload.fullName || [payload.firstName, payload.lastName].filter(Boolean).join(' ').trim() || current.full_name;
       const email = payload.email ? String(payload.email).toLowerCase() : current.email;
       const birthDate = Object.prototype.hasOwnProperty.call(payload, 'birthDate')
@@ -30,7 +30,7 @@ function registerAccountRoutes(router) {
       const smsUrgency = Object.prototype.hasOwnProperty.call(payload, 'smsUrgency') ? (payload.smsUrgency ? 1 : 0) : current.sms_urgency;
 
       try {
-        db.prepare(`
+        await db.prepare(`
           UPDATE users SET
             full_name = ?,
             email = ?,
@@ -49,26 +49,26 @@ function registerAccountRoutes(router) {
         }
         throw error;
       }
-      const updated = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+      const updated = await db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
       return ok(res, publicUser(updated));
     } catch (error) {
       if (!handleInputError(res, error)) throw error;
     }
   });
 
-  router.get('/api/account/fiscal-profile', (req, res) => {
-    const user = requireAuth(req, res);
+  router.get('/api/account/fiscal-profile', async (req, res) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    return ok(res, getDb().prepare('SELECT * FROM fiscal_profiles WHERE user_id = ?').get(user.id) || null);
+    return ok(res, await getDb().prepare('SELECT * FROM fiscal_profiles WHERE user_id = ?').get(user.id) || null);
   });
 
   router.put('/api/account/fiscal-profile', async (req, res) => {
-    const user = requireAuth(req, res);
+    const user = await requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
       requireFields(payload, ['legalName', 'taxId']);
-      getDb().prepare(`
+      await getDb().prepare(`
         INSERT INTO fiscal_profiles (
           user_id, legal_name, tax_id, legal_form, vat_regime, cnae, license_number, license_expires,
           license_region, fiscal_address, postal_code, city, province, country, iban, updated_at
@@ -107,31 +107,31 @@ function registerAccountRoutes(router) {
         payload.country || 'España',
         payload.iban || null
       );
-      return ok(res, getDb().prepare('SELECT * FROM fiscal_profiles WHERE user_id = ?').get(user.id));
+      return ok(res, await getDb().prepare('SELECT * FROM fiscal_profiles WHERE user_id = ?').get(user.id));
     } catch (error) {
       if (!handleInputError(res, error)) throw error;
     }
   });
 
-  router.get('/api/account/addresses', (req, res) => {
-    const user = requireAuth(req, res);
+  router.get('/api/account/addresses', async (req, res) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    return ok(res, getDb().prepare('SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id));
+    return ok(res, await getDb().prepare('SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id));
   });
 
-  router.get('/api/account/addresses/:id', (req, res, { params }) => {
-    const user = requireAuth(req, res);
+  router.get('/api/account/addresses/:id', async (req, res, { params }) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    const address = getDb().prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
+    const address = await getDb().prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
     if (!address) return fail(res, 404, 'ADDRESS_NOT_FOUND', 'Dirección no encontrada.');
     return ok(res, address);
   });
 
   router.patch('/api/account/addresses/:id', async (req, res, { params }) => {
-    const user = requireAuth(req, res);
+    const user = await requireAuth(req, res);
     if (!user) return;
     try {
-      const current = getDb().prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
+      const current = await getDb().prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
       if (!current) return fail(res, 404, 'ADDRESS_NOT_FOUND', 'Dirección no encontrada.');
       const payload = await readJson(req);
       const normalized = {
@@ -150,8 +150,8 @@ function registerAccountRoutes(router) {
       const recipient = normalized.recipient || user.full_name;
       if (!recipient) return fail(res, 422, 'MISSING_FIELD', 'El destinatario es obligatorio.');
       const db = getDb();
-      if (normalized.isDefault) db.prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?').run(user.id);
-      db.prepare(`
+      if (normalized.isDefault) await db.prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?').run(user.id);
+      await db.prepare(`
         UPDATE addresses SET
           label = ?,
           recipient = ?,
@@ -164,33 +164,33 @@ function registerAccountRoutes(router) {
           is_billing = ?
         WHERE id = ? AND user_id = ?
       `).run(label, recipient, normalized.line1, normalized.city, normalized.province, normalized.postalCode, normalized.phone, normalized.isDefault ? 1 : 0, normalized.isBilling ? 1 : 0, params.id, user.id);
-      return ok(res, db.prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id));
+      return ok(res, await db.prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id));
     } catch (error) {
       if (!handleInputError(res, error)) throw error;
     }
   });
 
-  router.patch('/api/account/addresses/:id/default', (req, res, { params }) => {
-    const user = requireAuth(req, res);
+  router.patch('/api/account/addresses/:id/default', async (req, res, { params }) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
     const db = getDb();
-    const address = db.prepare('SELECT id FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
+    const address = await db.prepare('SELECT id FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id);
     if (!address) return fail(res, 404, 'ADDRESS_NOT_FOUND', 'Dirección no encontrada.');
-    db.prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?').run(user.id);
-    db.prepare('UPDATE addresses SET is_default = 1 WHERE id = ? AND user_id = ?').run(params.id, user.id);
-    return ok(res, db.prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id));
+    await db.prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?').run(user.id);
+    await db.prepare('UPDATE addresses SET is_default = 1 WHERE id = ? AND user_id = ?').run(params.id, user.id);
+    return ok(res, await db.prepare('SELECT * FROM addresses WHERE id = ? AND user_id = ?').get(params.id, user.id));
   });
 
-  router.delete('/api/account/addresses/:id', (req, res, { params }) => {
-    const user = requireAuth(req, res);
+  router.delete('/api/account/addresses/:id', async (req, res, { params }) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    const result = getDb().prepare('DELETE FROM addresses WHERE id = ? AND user_id = ?').run(params.id, user.id);
+    const result = await getDb().prepare('DELETE FROM addresses WHERE id = ? AND user_id = ?').run(params.id, user.id);
     if (!result.changes) return fail(res, 404, 'ADDRESS_NOT_FOUND', 'Dirección no encontrada.');
     return noContent(res);
   });
 
   router.post('/api/account/addresses', async (req, res) => {
-    const user = requireAuth(req, res);
+    const user = await requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
@@ -210,7 +210,7 @@ function registerAccountRoutes(router) {
       const label = String(normalized.label || normalized.line1 || 'Dirección').trim();
       const recipient = String(normalized.recipient || user.full_name || '').trim();
       if (!recipient) return fail(res, 422, 'MISSING_FIELD', 'El destinatario es obligatorio.');
-      const result = getDb().prepare(`
+      const result = await getDb().prepare(`
         INSERT INTO addresses (user_id, label, recipient, line1, city, province, postal_code, phone, is_default, is_billing)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(user.id, label, recipient, normalized.line1, normalized.city, normalized.province, normalized.postalCode, normalized.phone, normalized.isDefault ? 1 : 0, normalized.isBilling ? 1 : 0);
@@ -220,21 +220,21 @@ function registerAccountRoutes(router) {
     }
   });
 
-  router.get('/api/account/payment-methods', (req, res) => {
-    const user = requireAuth(req, res);
+  router.get('/api/account/payment-methods', async (req, res) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    return ok(res, getDb().prepare('SELECT * FROM payment_methods WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id));
+    return ok(res, await getDb().prepare('SELECT * FROM payment_methods WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id));
   });
 
   router.post('/api/account/payment-methods', async (req, res) => {
-    const user = requireAuth(req, res);
+    const user = await requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
       requireFields(payload, ['type', 'label']);
       const db = getDb();
-      if (payload.isDefault) db.prepare('UPDATE payment_methods SET is_default = 0 WHERE user_id = ?').run(user.id);
-      const result = db.prepare(`
+      if (payload.isDefault) await db.prepare('UPDATE payment_methods SET is_default = 0 WHERE user_id = ?').run(user.id);
+      const result = await db.prepare(`
         INSERT INTO payment_methods (user_id, type, label, last4, brand, exp_month, exp_year, holder, allow_recurring, is_default)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
@@ -249,36 +249,36 @@ function registerAccountRoutes(router) {
         payload.allowRecurring ? 1 : 0,
         payload.isDefault ? 1 : 0
       );
-      return created(res, db.prepare('SELECT * FROM payment_methods WHERE id = ?').get(result.lastInsertRowid));
+      return created(res, await db.prepare('SELECT * FROM payment_methods WHERE id = ?').get(result.lastInsertRowid));
     } catch (error) {
       if (!handleInputError(res, error)) throw error;
     }
   });
 
-  router.patch('/api/account/payment-methods/:id/default', (req, res, { params }) => {
-    const user = requireAuth(req, res);
+  router.patch('/api/account/payment-methods/:id/default', async (req, res, { params }) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
     const db = getDb();
-    const method = db.prepare('SELECT id FROM payment_methods WHERE id = ? AND user_id = ?').get(params.id, user.id);
+    const method = await db.prepare('SELECT id FROM payment_methods WHERE id = ? AND user_id = ?').get(params.id, user.id);
     if (!method) return fail(res, 404, 'PAYMENT_METHOD_NOT_FOUND', 'Método de pago no encontrado.');
-    db.prepare('UPDATE payment_methods SET is_default = 0 WHERE user_id = ?').run(user.id);
-    db.prepare('UPDATE payment_methods SET is_default = 1 WHERE id = ?').run(params.id);
-    return ok(res, db.prepare('SELECT * FROM payment_methods WHERE id = ?').get(params.id));
+    await db.prepare('UPDATE payment_methods SET is_default = 0 WHERE user_id = ?').run(user.id);
+    await db.prepare('UPDATE payment_methods SET is_default = 1 WHERE id = ?').run(params.id);
+    return ok(res, await db.prepare('SELECT * FROM payment_methods WHERE id = ?').get(params.id));
   });
 
-  router.delete('/api/account/payment-methods/:id', (req, res, { params }) => {
-    const user = requireAuth(req, res);
+  router.delete('/api/account/payment-methods/:id', async (req, res, { params }) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    getDb().prepare('DELETE FROM payment_methods WHERE id = ? AND user_id = ?').run(params.id, user.id);
+    await getDb().prepare('DELETE FROM payment_methods WHERE id = ? AND user_id = ?').run(params.id, user.id);
     return noContent(res);
   });
 
-  router.get('/api/account/favorites', (req, res) => {
-    const user = requireAuth(req, res);
+  router.get('/api/account/favorites', async (req, res) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    const fullUser = getDb().prepare('SELECT pro_discount FROM users WHERE id = ?').get(user.id);
+    const fullUser = await getDb().prepare('SELECT pro_discount FROM users WHERE id = ?').get(user.id);
     const proDiscount = Number(fullUser?.pro_discount || 0);
-    const rows = getDb().prepare(`
+    const rows = await getDb().prepare(`
       SELECT products.id, products.sku, products.name, products.slug, products.price, products.stock,
              categories.slug AS category_slug, categories.name AS category_name,
              brands.slug AS brand_slug, brands.name AS brand_name,
@@ -304,20 +304,20 @@ function registerAccountRoutes(router) {
     })));
   });
 
-  router.post('/api/account/favorites/:sku', (req, res, { params }) => {
-    const user = requireAuth(req, res);
+  router.post('/api/account/favorites/:sku', async (req, res, { params }) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
     const db = getDb();
-    const product = db.prepare('SELECT id FROM products WHERE sku = ? OR slug = ?').get(params.sku, params.sku);
+    const product = await db.prepare('SELECT id FROM products WHERE sku = ? OR slug = ?').get(params.sku, params.sku);
     if (!product) return fail(res, 404, 'PRODUCT_NOT_FOUND', 'Producto no encontrado.');
-    db.prepare('INSERT OR IGNORE INTO favorites (user_id, product_id) VALUES (?, ?)').run(user.id, product.id);
+    await db.prepare('INSERT OR IGNORE INTO favorites (user_id, product_id) VALUES (?, ?)').run(user.id, product.id);
     return created(res, { sku: params.sku });
   });
 
-  router.delete('/api/account/favorites/:sku', (req, res, { params }) => {
-    const user = requireAuth(req, res);
+  router.delete('/api/account/favorites/:sku', async (req, res, { params }) => {
+    const user = await requireAuth(req, res);
     if (!user) return;
-    getDb().prepare(`
+    await getDb().prepare(`
       DELETE FROM favorites
       WHERE user_id = ? AND product_id IN (SELECT id FROM products WHERE sku = ? OR slug = ?)
     `).run(user.id, params.sku, params.sku);

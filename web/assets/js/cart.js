@@ -66,23 +66,42 @@
     } catch { /* best-effort */ }
   }
 
-  function addItem(product, qty = 1) {
-    if (!product?.sku) return;
+  function addItem(product, qty = 1, maxStock = null) {
+    if (!product?.sku) return { capped: false, finalQty: 0 };
     const items = _readRaw();
     const existing = items.find((i) => i.sku === product.sku);
-    if (existing) existing.quantity = (Number(existing.quantity) || 0) + qty;
-    else items.push({
-      sku: product.sku,
-      title: product.title || product.name || product.sku,
-      price: Number(product.price) || 0,
-      quantity: qty,
-      image: product.image || null,
-      brand: (product.brand && (product.brand.name || product.brand)) || null,
-      options: product.options || null,
-      addedAt: new Date().toISOString(),
-    });
+    const currentQty = existing ? (Number(existing.quantity) || 0) : 0;
+    let newTotal = currentQty + qty;
+    let capped = false;
+
+    // If stock limit is known, cap at it
+    if (maxStock != null && maxStock >= 0 && newTotal > maxStock) {
+      newTotal = maxStock;
+      capped = true;
+    }
+
+    if (newTotal <= 0) {
+      return { capped: true, finalQty: currentQty };
+    }
+
+    if (existing) {
+      existing.quantity = newTotal;
+    } else {
+      items.push({
+        sku: product.sku,
+        title: product.title || product.name || product.sku,
+        price: Number(product.price) || 0,
+        quantity: newTotal,
+        image: product.image || null,
+        brand: (product.brand && (product.brand.name || product.brand)) || null,
+        options: product.options || null,
+        addedAt: new Date().toISOString(),
+      });
+    }
     _writeRaw(items);
-    _syncToServer('add', product.sku, qty);
+    const addedQty = newTotal - currentQty;
+    if (addedQty > 0) _syncToServer('add', product.sku, addedQty);
+    return { capped, finalQty: newTotal };
   }
 
   function setQty(sku, qty) {

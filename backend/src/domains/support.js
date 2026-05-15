@@ -9,12 +9,12 @@ function code(prefix) {
 
 function registerSupportRoutes(router) {
   router.post('/api/contact-messages', async (req, res) => {
-    const user = currentUser(req);
+    const user = await currentUser(req);
     try {
       const payload = await readJson(req);
       requireFields(payload, ['reason', 'name', 'email', 'subject', 'message']);
       const messageCode = code('MSG');
-      getDb().prepare(`
+      await getDb().prepare(`
         INSERT INTO contact_messages (code, user_id, reason, name, email, phone, reference, subject, message, payload_json)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
@@ -40,7 +40,7 @@ function registerSupportRoutes(router) {
       const payload = await readJson(req);
       requireFields(payload, ['name', 'email', 'role']);
       const applicationCode = code('JOB');
-      getDb().prepare(`
+      await getDb().prepare(`
         INSERT INTO job_applications (code, name, email, phone, role, message, payload_json)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `).run(applicationCode, payload.name, payload.email, payload.phone || null, payload.role, payload.message || null, JSON.stringify(payload));
@@ -50,17 +50,17 @@ function registerSupportRoutes(router) {
     }
   });
 
-  router.get('/api/public/service-requests/:code', (req, res, { params }) => {
+  router.get('/api/public/service-requests/:code', async (req, res, { params }) => {
     const url = new URL(req.url, 'http://localhost');
     const email = (url.searchParams.get('email') || '').trim().toLowerCase();
-    const row = getDb().prepare(`
+    const row = await getDb().prepare(`
       SELECT service_requests.*
       FROM service_requests
       LEFT JOIN users ON users.id = service_requests.user_id
       WHERE service_requests.code = ? AND (? = '' OR lower(users.email) = ? OR lower(json_extract(service_requests.payload_json, '$.email')) = ?)
     `).get(params.code, email, email, email);
     if (!row) return fail(res, 404, 'REQUEST_NOT_FOUND', 'Solicitud no encontrada.');
-    const events = getDb().prepare('SELECT status, title, description, happened_at FROM service_request_events WHERE service_request_id = ? ORDER BY id').all(row.id);
+    const events = await getDb().prepare('SELECT status, title, description, happened_at FROM service_request_events WHERE service_request_id = ? ORDER BY id').all(row.id);
     return ok(res, { ...row, payload: JSON.parse(row.payload_json), events });
   });
 }

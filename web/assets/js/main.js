@@ -95,7 +95,11 @@
   }
 
   // ---------- Search inputs redirect to results ----------
+  // Los inputs con `data-search-scope` o dentro de <form action="...">
+  // gestionan su propio destino (FAQs, etc.) y no deben caer al buscador global.
   document.querySelectorAll('input[type="search"], input[placeholder*="Buscar"], input[placeholder*="busca"], input[placeholder*="referencia"]').forEach((input) => {
+    if (input.dataset.searchScope) return;
+    if (input.closest('form[action]')) return;
     input.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter') return;
       const query = input.value.trim();
@@ -155,6 +159,8 @@
   document.querySelectorAll('form').forEach((form) => {
     if (form.hasAttribute('onsubmit') || form.closest('[data-pane]')) return;
     if (['add-address-form', 'profile-form'].includes(form.id)) return;
+    // Forms with a real GET action (search forms etc.) deben navegar de verdad.
+    if (form.getAttribute('method')?.toLowerCase() === 'get' && form.getAttribute('action')) return;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       toast('Solicitud enviada en modo prototipo.');

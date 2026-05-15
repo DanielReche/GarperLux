@@ -1,211 +1,388 @@
-﻿<!DOCTYPE html>
-<html lang="es"><head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
   <base href="/.">
-<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Consejos y trucos · Hazlo Tú Mismo · GarperLux</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consejos y trucos · Hazlo Tú Mismo · GarperLux</title>
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/img/favicon.png?v=2" />
-<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626'},fontFamily:{serif:['Fraunces','Georgia','serif'],sans:['Inter','system-ui','sans-serif'],mono:['JetBrains Mono','monospace']}}}};</script>
-<link rel="stylesheet" href="/assets/css/styles.css" />
-<style>
-.tip-card{background:white;border:1.5px solid var(--line);border-radius:18px;padding:1.5rem 1.75rem;break-inside:avoid;margin-bottom:1rem;transition:all .15s}
-.tip-card:hover{border-color:var(--ink);transform:translateY(-2px)}
-.tip-num{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem}
-.tip-quote{font-family:var(--serif);font-size:1.15rem;line-height:1.35;color:var(--ink);margin-bottom:1rem;font-style:italic;font-weight:500}
-.tip-quote::before{content:'“';color:var(--filament);font-size:2.5rem;line-height:0;vertical-align:-.4em;margin-right:.15rem}
-.tip-author{display:flex;align-items:center;gap:.6rem;padding-top:1rem;border-top:1px solid var(--line);font-size:12px;color:var(--graphite)}
-.tip-author .av{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-weight:600;font-size:11px;flex-shrink:0}
-.masonry{column-count:1;column-gap:1rem}
-@media(min-width:640px){.masonry{column-count:2}}
-@media(min-width:1024px){.masonry{column-count:3}}
-.tip-card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.tip-card.dark .tip-quote{color:var(--paper)}
-.tip-card.dark .tip-quote::before{color:var(--filament)}
-.tip-card.dark .tip-num{color:var(--filament)}
-.tip-card.dark .tip-author{border-top-color:rgba(255,255,255,.1);color:rgba(247,243,236,.6)}
-.tip-card.dark .av{background:var(--filament);color:var(--ink)}
-</style>
+  <meta name="description" content="47 consejos prácticos del instalador Alfonso Torres. Seguridad, herramientas, cableado, cuadro, iluminación y domótica explicados sin solemnidad."/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B0D12','ink-soft':'#1C1F26',graphite:'#40454F',paper:'#F7F3EC','paper-2':'#EFE9DE','paper-3':'#E4DCCA',line:'#E5DED0',filament:'#E8A545','filament-glow':'#FFC878',copper:'#B8753A',electric:'#1E3A8A',stock:'#16A34A',warn:'#DC2626',caution:'#D97706' },
+      fontFamily: { serif:['Fraunces','Georgia','serif'], sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] },
+    }}};
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <style>
+    .tip-card { background: white; border: 1.5px solid var(--line); border-radius: 18px; padding: 1.5rem 1.75rem; break-inside: avoid; margin-bottom: 1rem; transition: all .15s; }
+    .tip-card:hover { border-color: var(--ink); transform: translateY(-2px); }
+    .tip-num { font-family: var(--mono); font-size: 11px; color: var(--copper); letter-spacing: .05em; text-transform: uppercase; margin-bottom: .5rem; }
+    .tip-quote { font-family: var(--serif); font-size: 1.15rem; line-height: 1.35; color: var(--ink); margin-bottom: 1rem; font-style: italic; font-weight: 500; }
+    .tip-quote::before { content: '\201C'; color: var(--filament); font-size: 2.5rem; line-height: 0; vertical-align: -.4em; margin-right: .15rem; }
+    .tip-author { display: flex; align-items: center; gap: .6rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 12px; color: var(--graphite); }
+    .tip-author .av { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-weight: 600; font-size: 11px; flex-shrink: 0; }
+    .masonry { column-count: 1; column-gap: 1rem; }
+    @media (min-width: 640px) { .masonry { column-count: 2; } }
+    @media (min-width: 1024px) { .masonry { column-count: 3; } }
+    .tip-card.dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .tip-card.dark .tip-quote { color: var(--paper); }
+    .tip-card.dark .tip-quote::before { color: var(--filament); }
+    .tip-card.dark .tip-num { color: var(--filament); }
+    .tip-card.dark .tip-author { border-top-color: rgba(255,255,255,.1); color: rgba(247,243,236,.6); }
+    .tip-card.dark .av { background: var(--filament); color: var(--ink); }
+    .filter-chip { padding: .35rem .85rem; border-radius: 999px; background: var(--paper-2); font-size: 12px; cursor: pointer; transition: all .15s; border: 0; color: var(--ink); }
+    .filter-chip:hover { background: var(--paper-3); }
+    .filter-chip.is-active { background: var(--ink); color: var(--paper); font-weight: 500; }
+    .sort-link { color: var(--graphite); cursor: pointer; background: none; border: 0; padding: 0; font-size: inherit; }
+    .sort-link.is-active { color: var(--ink); font-weight: 500; }
+    .sort-link:hover { color: var(--ink); }
+  </style>
 </head>
 <body class="bg-paper text-ink">
   <div data-component="site-header"></div>
 
-<div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><a href="/pages/aprender/hazlo-tu-mismo.html" class="hover:text-ink">Hazlo Tú Mismo</a><span class="opacity-50">/</span><span class="text-ink">Consejos y trucos</span></nav></div>
+  <div class="container-x pt-5 pb-2">
+    <nav aria-label="breadcrumb" class="text-xs font-mono text-graphite flex items-center gap-2">
+      <a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span>
+      <a href="/pages/aprender/hazlo-tu-mismo.html" class="hover:text-ink">Hazlo Tú Mismo</a><span class="opacity-50">/</span>
+      <span class="text-ink">Consejos y trucos</span>
+    </nav>
+  </div>
 
-<!-- Hero -->
-<section class="container-x py-12 md:py-16 border-b border-line">
-  <div class="grid md:grid-cols-[2fr_1fr] gap-10 items-end">
-    <div>
-      <div class="eyebrow text-copper mb-3">47 consejos firmados</div>
-      <h1 class="font-serif font-medium leading-[0.93] tracking-[-0.02em]" style="font-size: clamp(2.75rem, 7vw, 5.5rem);">Consejos<br/>y trucos.</h1>
-      <p class="text-graphite mt-5 text-lg max-w-xl leading-relaxed">Cosas que aprendes después de 24 años pisando obras. Dichas como las dirías en el mostrador a un amigo, sin solemnidad.</p>
-    </div>
-    <div class="bg-paper-2 rounded-2xl p-5 flex items-center gap-4">
-      <div class="w-16 h-16 rounded-full bg-ink text-paper grid place-items-center font-medium text-xl shrink-0">AT</div>
+  <!-- ============ HERO ============ -->
+  <section class="container-x py-12 md:py-16 border-b border-line">
+    <div class="grid md:grid-cols-[2fr_1fr] gap-10 items-end">
       <div>
-        <div class="font-medium">Alfonso Torres</div>
-        <div class="text-xs text-graphite font-mono">Instalador BT desde 2002 · Jaén</div>
-        <div class="text-xs text-copper mt-1">Autor invitado</div>
+        <div class="eyebrow text-copper mb-3"><span data-tip-hero-count>—</span> consejos firmados</div>
+        <h1 class="font-serif font-medium leading-[0.93] tracking-[-0.02em]" style="font-size: clamp(2.75rem, 7vw, 5.5rem);">
+          Consejos<br/>y trucos.
+        </h1>
+        <p class="text-graphite mt-5 text-lg max-w-xl leading-relaxed">
+          Cosas que aprendes después de 24 años pisando obras. Dichas como las dirías en el mostrador a un amigo, sin solemnidad.
+        </p>
+      </div>
+      <div class="bg-paper-2 rounded-2xl p-5 flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full bg-ink text-paper grid place-items-center font-medium text-xl shrink-0">AT</div>
+        <div>
+          <div class="font-medium">Alfonso Torres</div>
+          <div class="text-xs text-graphite font-mono">Instalador BT desde 2002 · Jaén</div>
+          <div class="text-xs text-copper mt-1">Autor invitado</div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Filtros -->
-<section class="container-x py-6 border-b border-line">
-  <div class="flex items-center gap-2 flex-wrap">
-    <span class="text-xs font-mono text-graphite uppercase tracking-wider mr-2">Filtrar</span>
-    <button class="px-3 py-1.5 rounded-full bg-ink text-paper text-xs font-medium">Todos · 47</button>
-    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Seguridad · 12</button>
-    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Herramienta · 8</button>
-    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Cableado · 9</button>
-    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Cuadro eléctrico · 7</button>
-    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Iluminación · 6</button>
-    <button class="px-3 py-1.5 rounded-full bg-paper-2 hover:bg-paper-3 text-xs">Domótica · 5</button>
-    <span class="ml-auto text-xs text-graphite hidden md:inline">Ordenar: <a href="#" class="text-ink font-medium">recientes</a> · <a href="#" class="hover:text-ink">guardados</a> · <a href="#" class="hover:text-ink">populares</a></span>
-  </div>
-</section>
+  <!-- ============ FILTROS ============ -->
+  <section class="container-x py-6 border-b border-line">
+    <div class="flex items-center gap-2 flex-wrap" data-tip-filters>
+      <span class="text-xs font-mono text-graphite uppercase tracking-wider mr-2">Filtrar</span>
+      <!-- Chips inyectados por JS desde byCategory del API -->
+    </div>
+    <div class="mt-3 flex items-center gap-2 flex-wrap text-xs">
+      <span class="text-graphite font-mono uppercase tracking-wider mr-2">Ordenar</span>
+      <button type="button" class="sort-link is-active" data-tip-sort="recientes">recientes</button>
+      <span class="text-graphite/50">·</span>
+      <button type="button" class="sort-link" data-tip-sort="antiguos">antiguos</button>
+      <span class="text-graphite/50">·</span>
+      <button type="button" class="sort-link" data-tip-sort="aleatorio">aleatorio</button>
+      <span class="ml-auto text-xs font-mono text-graphite" data-tip-meta>—</span>
+    </div>
+  </section>
 
-<!-- Grid masonry -->
-<section class="container-x py-10 md:py-14">
-  <div class="masonry">
+  <!-- ============ GRID MASONRY ============ -->
+  <section class="container-x py-10 md:py-14">
+    <div class="masonry" data-tip-grid>
+      <!-- skeleton placeholder mientras carga -->
+      <div class="tip-card animate-pulse">
+        <div class="tip-num">Cargando…</div>
+        <p class="tip-quote">Recuperando los consejos de Alfonso.</p>
+        <div class="tip-author"><span class="av">··</span><span>—</span></div>
+      </div>
+    </div>
 
-    <article class="tip-card">
-      <div class="tip-num">#001 · Seguridad</div>
-      <p class="tip-quote">Antes de tocar un enchufe, comprueba con el polímetro que no hay tensión. Sí, ya has bajado el plomo. Hazlo igual.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 24/04/2026</span></div>
-    </article>
+    <div class="text-center mt-12 hidden" data-tip-loadmore-wrap>
+      <button type="button" class="btn btn-ghost" data-tip-loadmore>
+        Cargar más consejos
+        <span class="text-xs font-mono text-graphite ml-2" data-tip-remaining>—</span>
+      </button>
+    </div>
 
-    <article class="tip-card dark">
-      <div class="tip-num">#002 · Cableado</div>
-      <p class="tip-quote">El amarillo-verde es tierra. Siempre. En cualquier país. Si encuentras una toma sin él, no es decoración.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 22/04/2026</span></div>
-    </article>
+    <div class="text-center mt-12 hidden" data-tip-empty>
+      <div class="font-mono text-xs text-graphite uppercase tracking-wider mb-2">Sin coincidencias</div>
+      <p class="text-graphite">No hay consejos en esta categoría todavía. Prueba con otro filtro.</p>
+    </div>
+  </section>
 
-    <article class="tip-card">
-      <div class="tip-num">#003 · Cuadro</div>
-      <p class="tip-quote">Etiqueta cada magnetotérmico con el cuarto al que protege. Cuando salte uno a las 3 de la mañana, te acordarás de mí.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 20/04/2026</span></div>
-    </article>
+  <!-- ============ SUSCRIPCIÓN ============ -->
+  <section class="bg-paper-2 border-t border-line py-14">
+    <div class="container-x max-w-2xl mx-auto text-center">
+      <div class="eyebrow text-copper mb-3">Boletín opcional</div>
+      <h2 class="font-serif font-medium leading-[1.05]" style="font-size: clamp(1.75rem, 4vw, 2.5rem);">
+        Un consejo a tu correo cada<br/>jueves a las 8.
+      </h2>
+      <p class="text-graphite mt-3">
+        Sin spam, sin «ofertas exclusivas». Solo un consejo por email firmado por Alfonso. Si te aburre, lo cancelas con un clic.
+      </p>
+      <form class="mt-6 flex gap-2 max-w-md mx-auto" data-tip-subscribe-form>
+        <input type="email" required placeholder="tu@correo.com"
+               class="flex-1 px-4 py-3 bg-white border border-line rounded-full outline-none focus:border-ink"
+               data-tip-subscribe-email/>
+        <button type="submit" class="btn btn-primary" data-tip-subscribe-button>Suscribirme</button>
+      </form>
+      <p class="text-xs text-graphite mt-3" data-tip-subscribe-status>
+        Te lo enviamos respetando la <a href="/pages/legal/privacidad.html" class="link-underline">política de privacidad</a>. 1 click para darte de baja.
+      </p>
+    </div>
+  </section>
 
-    <article class="tip-card">
-      <div class="tip-num">#004 · Herramienta</div>
-      <p class="tip-quote">Un destornillador aislado de 12 € te puede salvar la vida. Uno de bazar, no.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 18/04/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#005 · Iluminación</div>
-      <p class="tip-quote">Para un salón, 2700 K. Para un baño, 4000 K. Para una cocina, 4000 K. Si dudas, 3000 K. Lo que pasa de 5000 K es para almacenes y quirófanos.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 16/04/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#006 · Cableado</div>
-      <p class="tip-quote">Para una toma de 16 A en cocina, manguera de 3×2,5. Para iluminación, 1,5 vale. No mezcles secciones en la misma línea.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 14/04/2026</span></div>
-    </article>
-
-    <article class="tip-card dark">
-      <div class="tip-num">#007 · Cuándo no</div>
-      <p class="tip-quote">Si la regleta está caliente al tacto, no es que esté funcionando "a tope". Está muriéndose. Y se llevará por delante lo que tenga conectado.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 12/04/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#008 · Conexiones</div>
-      <p class="tip-quote">Las clemas Wago 222 cuesta 20 céntimos cada una. Hacer una conexión bien con cinta aislante te lleva 4 minutos. Hagamos las cuentas.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 10/04/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#009 · Seguridad</div>
-      <p class="tip-quote">Un diferencial dispara cuando hay fuga a tierra. Si dispara y no encuentras la causa, no lo dejes pulsado. Llama a alguien.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 08/04/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#010 · Cableado</div>
-      <p class="tip-quote">Las puntas de los cables se pelan con dientes de hojalatero, no con la navaja del padre. Y se hace puntera siempre que entren en una clema de tornillo.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 06/04/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#011 · Iluminación</div>
-      <p class="tip-quote">Una bombilla LED dura 25.000 horas. Una halógena, 2.000. Aunque la LED valga el cuádruple, sale 3 veces más barata.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 04/04/2026</span></div>
-    </article>
-
-    <article class="tip-card dark">
-      <div class="tip-num">#012 · Domótica</div>
-      <p class="tip-quote">No automatices nada que vayas a hacer dos veces al día como mucho. La pereza tiene un coste; la domótica vacía, también.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 02/04/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#013 · Herramienta</div>
-      <p class="tip-quote">El polímetro más barato útil cuesta 25 €. El más caro útil cuesta 80 €. Lo que está en medio no aporta lo suficiente para justificar la diferencia.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 31/03/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#014 · Cuadro</div>
-      <p class="tip-quote">Pon siempre 2 diferenciales en una vivienda: uno para "cocina + baños" y otro para "resto". Si salta uno, no te quedas sin nevera.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 29/03/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#015 · Seguridad</div>
-      <p class="tip-quote">Una alargadera de 1,5 mm² no aguanta una placa de inducción. Punto. La temperatura del cable te lo dirá.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 27/03/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#016 · Conexiones</div>
-      <p class="tip-quote">Si tienes que reapretar un tornillo cada 3 meses, ese tornillo está pidiendo socorro. Cambia la clema antes de que se queme.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 25/03/2026</span></div>
-    </article>
-
-    <article class="tip-card dark">
-      <div class="tip-num">#017 · Cuándo no</div>
-      <p class="tip-quote">Si huele a quemado y no se sabe de dónde viene, baja el general. Después se investiga, no antes.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 23/03/2026</span></div>
-    </article>
-
-    <article class="tip-card">
-      <div class="tip-num">#018 · Iluminación</div>
-      <p class="tip-quote">Las tiras LED se cortan solo por las marcas indicadas. Cortar a media línea las inutiliza. Y no, no se sueldan en casa.</p>
-      <div class="tip-author"><span class="av">AT</span><span>Alfonso Torres · 21/03/2026</span></div>
-    </article>
-
-  </div>
-
-  <div class="text-center mt-12">
-    <button class="btn btn-ghost">Cargar más consejos<span class="text-xs font-mono text-graphite ml-2">29 restantes</span></button>
-  </div>
-</section>
-
-<!-- Suscripción -->
-<section class="bg-paper-2 border-t border-line py-14">
-  <div class="container-x max-w-2xl mx-auto text-center">
-    <div class="eyebrow text-copper mb-3">Boletín opcional</div>
-    <h2 class="font-serif font-medium leading-[1.05]" style="font-size: clamp(1.75rem, 4vw, 2.5rem);">Un consejo a tu correo cada<br/>jueves a las 8.</h2>
-    <p class="text-graphite mt-3">Sin spam, sin "ofertas exclusivas". Solo un consejo por email firmado por Alfonso. Si te aburre, lo cancelas con un clic.</p>
-    <form class="mt-6 flex gap-2 max-w-md mx-auto">
-      <input type="email" placeholder="tu@correo.com" class="flex-1 px-4 py-3 bg-white border border-line rounded-full outline-none focus:border-ink"/>
-      <button class="btn btn-primary">Suscribirme</button>
-    </form>
-    <p class="text-xs text-graphite mt-3">Te lo enviamos respetando la <a href="/pages/legal/privacidad.html" class="link-underline">política de privacidad</a>. 1 click para darte de baja.</p>
-  </div>
-</section>
   <div data-component="site-footer"></div>
 
-<script src="/assets/js/main.js"></script>
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
+  <script src="/assets/js/main.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
-</body></html>
+
+  <!-- ============ CONSEJOS — DYNAMIC RENDER ============ -->
+  <script>
+    (() => {
+      'use strict';
+
+      const CATEGORY_LABEL = {
+        seguridad: 'Seguridad',
+        herramienta: 'Herramienta',
+        cableado: 'Cableado',
+        cuadro: 'Cuadro eléctrico',
+        iluminacion: 'Iluminación',
+        domotica: 'Domótica',
+        conexiones: 'Conexiones',
+        'cuando-no': 'Cuándo no',
+      };
+      // El orden en que aparecen los chips. Si llegan categorías nuevas del backend
+      // sin entrada aquí, se añaden al final por orden alfabético.
+      const CATEGORY_ORDER = ['seguridad', 'herramienta', 'cableado', 'cuadro', 'iluminacion', 'domotica', 'conexiones', 'cuando-no'];
+
+      const PAGE_SIZE = 18;
+      const state = {
+        all: [],            // todos los tips del backend
+        byCategory: {},     // { seguridad: 7, ... }
+        category: 'all',
+        sort: 'recientes',  // recientes | antiguos | aleatorio
+        page: 1,
+      };
+
+      function escapeHtml(s) {
+        return String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      }
+      function get(sel) { return document.querySelector(sel); }
+      function getAll(sel) { return Array.from(document.querySelectorAll(sel)); }
+
+      function formatDate(iso) {
+        // El backend guarda YYYY-MM-DD. Mostramos DD/MM/YYYY al estilo del prototipo.
+        if (!iso) return '—';
+        const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+      }
+
+      // ------- URL state sync -------
+      function readUrl() {
+        const p = new URLSearchParams(location.search);
+        state.category = p.get('cat') || 'all';
+        state.sort = p.get('orden') || 'recientes';
+      }
+      function writeUrl() {
+        const p = new URLSearchParams();
+        if (state.category !== 'all') p.set('cat', state.category);
+        if (state.sort !== 'recientes') p.set('orden', state.sort);
+        const qs = p.toString();
+        history.replaceState(null, '', location.pathname + (qs ? `?${qs}` : '') + location.hash);
+      }
+
+      // ------- Filter + sort -------
+      function filtered() {
+        let list = state.all.slice();
+        if (state.category !== 'all') {
+          list = list.filter((t) => t.category === state.category);
+        }
+        if (state.sort === 'recientes') {
+          list.sort((a, b) => (b.publishedAt || '').localeCompare(a.publishedAt || ''));
+        } else if (state.sort === 'antiguos') {
+          list.sort((a, b) => (a.publishedAt || '').localeCompare(b.publishedAt || ''));
+        } else if (state.sort === 'aleatorio') {
+          // Shuffle deterministico — sembrado por la categoría/sort para que recargar
+          // no cambie el orden visualmente (mejor UX que un random puro).
+          const seed = `${state.category}-${state.sort}`;
+          let h = 0;
+          for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+          list = list
+            .map((t) => ({ t, k: ((h ^ (t.number * 2654435761)) >>> 0) }))
+            .sort((a, b) => a.k - b.k)
+            .map((x) => x.t);
+        }
+        return list;
+      }
+
+      // ------- Filter chips render -------
+      function renderFilters() {
+        const wrap = get('[data-tip-filters]');
+        const total = state.all.length;
+        const cats = [];
+        for (const slug of CATEGORY_ORDER) {
+          if ((state.byCategory[slug] || 0) > 0) cats.push(slug);
+        }
+        // Cualquier categoría desconocida que llegue después de las conocidas
+        for (const slug of Object.keys(state.byCategory)) {
+          if (!cats.includes(slug)) cats.push(slug);
+        }
+        const html = [`<span class="text-xs font-mono text-graphite uppercase tracking-wider mr-2">Filtrar</span>`];
+        html.push(`<button type="button" class="filter-chip ${state.category === 'all' ? 'is-active' : ''}" data-cat="all">Todos · ${total}</button>`);
+        for (const slug of cats) {
+          const label = CATEGORY_LABEL[slug] || slug;
+          const count = state.byCategory[slug] || 0;
+          const active = state.category === slug ? 'is-active' : '';
+          html.push(`<button type="button" class="filter-chip ${active}" data-cat="${escapeHtml(slug)}">${escapeHtml(label)} · ${count}</button>`);
+        }
+        wrap.innerHTML = html.join('');
+        wrap.querySelectorAll('[data-cat]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            state.category = btn.dataset.cat;
+            state.page = 1;
+            writeUrl();
+            renderFilters();
+            renderGrid();
+          });
+        });
+      }
+
+      // ------- Grid render -------
+      function renderGrid() {
+        const grid = get('[data-tip-grid]');
+        const empty = get('[data-tip-empty]');
+        const moreWrap = get('[data-tip-loadmore-wrap]');
+        const remaining = get('[data-tip-remaining]');
+        const meta = get('[data-tip-meta]');
+
+        const list = filtered();
+        const showing = Math.min(list.length, state.page * PAGE_SIZE);
+        const visible = list.slice(0, showing);
+
+        if (visible.length === 0) {
+          grid.innerHTML = '';
+          empty.classList.remove('hidden');
+          moreWrap.classList.add('hidden');
+          meta.textContent = `0 de ${state.all.length}`;
+          return;
+        }
+        empty.classList.add('hidden');
+        grid.innerHTML = visible.map(cardHtml).join('');
+
+        const left = list.length - showing;
+        if (left > 0) {
+          moreWrap.classList.remove('hidden');
+          remaining.textContent = `${left} restante${left === 1 ? '' : 's'}`;
+        } else {
+          moreWrap.classList.add('hidden');
+        }
+        meta.textContent = `mostrando ${visible.length} de ${list.length}`;
+      }
+
+      function cardHtml(t) {
+        const catLabel = CATEGORY_LABEL[t.category] || t.category;
+        const darkClass = t.dark ? ' dark' : '';
+        const num = String(t.number).padStart(3, '0');
+        return `
+          <article class="tip-card${darkClass}">
+            <div class="tip-num">#${num} · ${escapeHtml(catLabel)}</div>
+            <p class="tip-quote">${escapeHtml(t.body)}</p>
+            <div class="tip-author">
+              <span class="av">${escapeHtml(t.authorInitials || '··')}</span>
+              <span>${escapeHtml(t.author || '—')} · ${escapeHtml(formatDate(t.publishedAt))}</span>
+            </div>
+          </article>
+        `;
+      }
+
+      // ------- Wire events -------
+      function wireEvents() {
+        getAll('[data-tip-sort]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            getAll('[data-tip-sort]').forEach((b) => b.classList.toggle('is-active', b === btn));
+            state.sort = btn.dataset.tipSort;
+            state.page = 1;
+            writeUrl();
+            renderGrid();
+          });
+        });
+
+        get('[data-tip-loadmore]').addEventListener('click', () => {
+          state.page += 1;
+          renderGrid();
+        });
+
+        const form = get('[data-tip-subscribe-form]');
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = get('[data-tip-subscribe-email]').value.trim();
+          const status = get('[data-tip-subscribe-status]');
+          const btn = get('[data-tip-subscribe-button]');
+          if (!email || !email.includes('@')) {
+            status.innerHTML = '<span class="text-warn">Introduce un email válido.</span>';
+            return;
+          }
+          btn.disabled = true;
+          btn.textContent = 'Enviando…';
+          try {
+            // Reutilizamos el endpoint /api/contact-messages que ya existe — marcado
+            // como reason "newsletter" para que el equipo lo procese aparte.
+            await window.GarperLuxApi.contactMessage({
+              reason: 'newsletter',
+              name: email.split('@')[0],
+              email,
+              subject: 'Suscripción al boletín de consejos',
+              message: `Quiero recibir el consejo semanal de Alfonso Torres en ${email}.`,
+            });
+            status.innerHTML = `<span class="text-stock font-medium">¡Listo!</span> Te enviaremos el primer consejo el próximo jueves.`;
+            form.reset();
+          } catch (err) {
+            status.innerHTML = `<span class="text-warn">No hemos podido registrar tu correo. ${escapeHtml(err.message || '')}</span>`;
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Suscribirme';
+          }
+        });
+      }
+
+      // ------- Load -------
+      async function load() {
+        try {
+          const data = await window.GarperLuxApi.tips();
+          state.all = data.tips || [];
+          state.byCategory = data.byCategory || {};
+        } catch (err) {
+          console.error('[consejos] error cargando tips', err);
+          get('[data-tip-grid]').innerHTML = `<div class="tip-card bg-warn/10 border-warn/30 text-warn"><p>No se han podido cargar los consejos. Asegúrate de que el backend está activo.</p></div>`;
+          return;
+        }
+        get('[data-tip-hero-count]').textContent = state.all.length;
+        readUrl();
+        // Sincroniza UI con state inicial
+        getAll('[data-tip-sort]').forEach((b) => b.classList.toggle('is-active', b.dataset.tipSort === state.sort));
+        wireEvents();
+        renderFilters();
+        renderGrid();
+      }
+
+      document.addEventListener('garperlux:components-ready', load);
+      if (window.__garperluxComponentsReady) load();
+    })();
+  </script>
+</body>
+</html>

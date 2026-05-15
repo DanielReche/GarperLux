@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <base href="/.">
@@ -11,7 +11,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -21,6 +21,31 @@
     }}};
   </script>
   <link rel="stylesheet" href="/assets/css/styles.css" />
+
+  <style>
+    /* Sugerencias del buscador FAQ */
+    .faq-suggest {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: #fff; border: 1px solid var(--line); border-radius: 14px;
+      box-shadow: 0 28px 48px -28px rgba(11,13,18,.24);
+      max-height: 360px; overflow-y: auto; z-index: 30;
+      padding: 6px;
+    }
+    .faq-suggest button {
+      width: 100%; text-align: left; padding: 10px 12px; border-radius: 10px;
+      font: inherit; color: var(--ink); background: transparent; cursor: pointer;
+      display: block;
+    }
+    .faq-suggest button:hover, .faq-suggest button[aria-selected="true"] {
+      background: var(--paper-2);
+    }
+    .faq-suggest .sg-q { font-size: 14px; font-weight: 500; }
+    .faq-suggest .sg-c { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--graphite); margin-top: 2px; text-transform: uppercase; letter-spacing: .04em; }
+    .faq-suggest mark { background: rgba(232,165,69,0.32); color: var(--ink); padding: 0 2px; border-radius: 3px; font-weight: 500; }
+    .faq-suggest .sg-empty { padding: 16px; color: var(--graphite); font-size: 14px; text-align: center; }
+    .faq-skeleton { background: linear-gradient(90deg, rgba(0,0,0,0.04), rgba(0,0,0,0.08), rgba(0,0,0,0.04)); background-size: 200% 100%; animation: faq-pulse 1.4s ease-in-out infinite; }
+    @keyframes faq-pulse { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  </style>
 </head>
 
 <body class="bg-paper text-ink">
@@ -31,7 +56,7 @@
   <!-- BREADCRUMBS -->
   <div class="container-x pt-5 pb-2"><nav class="text-xs font-mono text-graphite flex items-center gap-2"><a href="/index.html" class="hover:text-ink">Inicio</a><span class="opacity-50">/</span><span class="text-ink">Centro de ayuda</span></nav></div>
 
-  <!-- ============ HERO con buscador ============ -->
+  <!-- ============ HERO con buscador específico FAQ ============ -->
   <section class="container-x pt-12 md:pt-16 pb-12 md:pb-16 relative">
     <div class="absolute top-1/2 right-0 w-[400px] h-[400px] filament-glow opacity-30 hidden lg:block"></div>
     <div class="text-center max-w-3xl mx-auto relative">
@@ -45,12 +70,21 @@
         podemos <em class="italic text-filament">ayudarte?</em>
       </h1>
 
-      <!-- Buscador hero -->
-      <div class="relative max-w-2xl mx-auto mt-10">
-        <input type="search" placeholder="Buscar en el centro de ayuda…  ej: 'cómo devolver un pedido'" class="w-full pl-14 pr-4 py-5 bg-white border border-line rounded-2xl text-[16px] placeholder:text-graphite/60 focus:border-ink outline-none transition-colors shadow-sm"/>
-        <svg class="absolute left-5 top-1/2 -translate-y-1/2 text-graphite" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <kbd class="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:inline-block px-2 py-1 text-[10px] font-mono text-graphite bg-paper-2 border border-line rounded">⌘ K</kbd>
-      </div>
+      <!-- Buscador hero específico de FAQs. action=faqs-busqueda.html y data-search-scope="faqs"
+           evitan que el handler global lo mande a /pages/tienda/buscador.html -->
+      <form id="faq-hero-form" action="/pages/sistema/faqs-busqueda.html" method="get" class="relative max-w-2xl mx-auto mt-10" role="search" aria-label="Buscar en el centro de ayuda">
+        <input id="faq-hero-input"
+               name="q"
+               type="search"
+               autocomplete="off"
+               data-search-scope="faqs"
+               aria-controls="faq-hero-suggest"
+               placeholder="Buscar en el centro de ayuda…  ej: 'cómo devolver un pedido'"
+               class="w-full pl-14 pr-4 py-5 bg-white border border-line rounded-2xl text-[16px] placeholder:text-graphite/60 focus:border-ink outline-none transition-colors shadow-sm"/>
+        <svg class="absolute left-5 top-1/2 -translate-y-1/2 text-graphite pointer-events-none" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <kbd class="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:inline-block px-2 py-1 text-[10px] font-mono text-graphite bg-paper-2 border border-line rounded">↵</kbd>
+        <div id="faq-hero-suggest" class="faq-suggest" hidden role="listbox" aria-label="Sugerencias de ayuda"></div>
+      </form>
 
       <p class="text-sm text-graphite mt-5">
         Las dudas más frecuentes están abajo. Si no encuentras respuesta, escríbenos por <a href="/pages/empresa/contacto.html" class="link-underline text-ink">cualquiera de nuestros canales</a>.
@@ -58,242 +92,34 @@
     </div>
   </section>
 
-  <!-- ============ CATEGORÍAS DE AYUDA ============ -->
+  <!-- ============ CATEGORÍAS DE AYUDA (cargadas vía API) ============ -->
   <section class="container-x pb-16">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-      <a href="#pedidos" class="group bg-white border border-line rounded-2xl p-6 hover:border-ink transition-colors">
-        <div class="w-11 h-11 rounded-lg bg-paper-2 grid place-items-center mb-4 text-copper">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-        </div>
-        <h3 class="font-serif text-xl font-medium mb-1">Pedidos</h3>
-        <p class="text-sm text-graphite mb-3">Estado, modificación, cancelación.</p>
-        <span class="text-xs font-mono text-graphite">12 artículos</span>
-      </a>
-      <a href="#envios" class="group bg-white border border-line rounded-2xl p-6 hover:border-ink transition-colors">
-        <div class="w-11 h-11 rounded-lg bg-paper-2 grid place-items-center mb-4 text-copper">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-        </div>
-        <h3 class="font-serif text-xl font-medium mb-1">Envíos</h3>
-        <p class="text-sm text-graphite mb-3">Plazos, costes, recogida en tienda.</p>
-        <span class="text-xs font-mono text-graphite">8 artículos</span>
-      </a>
-      <a href="#devoluciones" class="group bg-white border border-line rounded-2xl p-6 hover:border-ink transition-colors">
-        <div class="w-11 h-11 rounded-lg bg-paper-2 grid place-items-center mb-4 text-copper">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12a9 9 0 1 0 9-9M3 12V3M3 12h9"/></svg>
-        </div>
-        <h3 class="font-serif text-xl font-medium mb-1">Devoluciones</h3>
-        <p class="text-sm text-graphite mb-3">Cómo devolver, plazos, reembolso.</p>
-        <span class="text-xs font-mono text-graphite">6 artículos</span>
-      </a>
-      <a href="#pagos" class="group bg-white border border-line rounded-2xl p-6 hover:border-ink transition-colors">
-        <div class="w-11 h-11 rounded-lg bg-paper-2 grid place-items-center mb-4 text-copper">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-        </div>
-        <h3 class="font-serif text-xl font-medium mb-1">Pagos y facturas</h3>
-        <p class="text-sm text-graphite mb-3">Métodos, factura, problemas.</p>
-        <span class="text-xs font-mono text-graphite">9 artículos</span>
-      </a>
-      <a href="#cuenta" class="group bg-white border border-line rounded-2xl p-6 hover:border-ink transition-colors">
-        <div class="w-11 h-11 rounded-lg bg-paper-2 grid place-items-center mb-4 text-copper">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
-        </div>
-        <h3 class="font-serif text-xl font-medium mb-1">Mi cuenta</h3>
-        <p class="text-sm text-graphite mb-3">Acceso, datos, registro pro.</p>
-        <span class="text-xs font-mono text-graphite">7 artículos</span>
-      </a>
-      <a href="#productos" class="group bg-white border border-line rounded-2xl p-6 hover:border-ink transition-colors">
-        <div class="w-11 h-11 rounded-lg bg-paper-2 grid place-items-center mb-4 text-copper">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        </div>
-        <h3 class="font-serif text-xl font-medium mb-1">Material y compatibilidad</h3>
-        <p class="text-sm text-graphite mb-3">Dudas técnicas, fichas, compatibilidad.</p>
-        <span class="text-xs font-mono text-graphite">14 artículos</span>
-      </a>
-      <a href="#tecnico" class="group bg-white border border-line rounded-2xl p-6 hover:border-ink transition-colors">
-        <div class="w-11 h-11 rounded-lg bg-paper-2 grid place-items-center mb-4 text-copper">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-        </div>
-        <h3 class="font-serif text-xl font-medium mb-1">Servicios técnicos</h3>
-        <p class="text-sm text-graphite mb-3">Solicitar técnico, presupuestos, garantía.</p>
-        <span class="text-xs font-mono text-graphite">11 artículos</span>
-      </a>
-      <a href="#pro" class="group bg-ink text-paper rounded-2xl p-6 hover:brightness-125 transition-all">
-        <div class="w-11 h-11 rounded-lg bg-white/10 grid place-items-center mb-4 text-filament">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/></svg>
-        </div>
-        <h3 class="font-serif text-xl font-medium mb-1">Área profesional</h3>
-        <p class="text-sm text-paper/70 mb-3">Tarifas pro, albaranes, validación carnet.</p>
-        <span class="text-xs font-mono text-paper/60">10 artículos</span>
-      </a>
+    <div data-help-categories class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5" aria-busy="true">
+      <!-- Skeletons mientras carga -->
+      <div class="faq-skeleton rounded-2xl h-40"></div>
+      <div class="faq-skeleton rounded-2xl h-40"></div>
+      <div class="faq-skeleton rounded-2xl h-40"></div>
+      <div class="faq-skeleton rounded-2xl h-40"></div>
+      <div class="faq-skeleton rounded-2xl h-40 hidden md:block"></div>
+      <div class="faq-skeleton rounded-2xl h-40 hidden md:block"></div>
+      <div class="faq-skeleton rounded-2xl h-40 hidden md:block"></div>
+      <div class="faq-skeleton rounded-2xl h-40 hidden md:block"></div>
     </div>
   </section>
 
-  <!-- ============ FAQs ARTICULOS DESTACADOS POR CATEGORÍA ============ -->
+  <!-- ============ FAQs ARTICULOS POR CATEGORÍA (cargadas vía API) ============ -->
   <section class="bg-paper-2 border-y border-line">
     <div class="container-x py-16 md:py-20">
-
-      <!-- Pedidos -->
-      <div id="pedidos" class="mb-14 scroll-mt-24">
-        <div class="flex items-center gap-3 mb-6">
-          <span class="font-mono text-xs uppercase tracking-wider text-copper">Categoría · Pedidos</span>
-          <div class="flex-1 h-px bg-line"></div>
-        </div>
-        <h2 class="h1 mb-7">Pedidos.</h2>
+      <div data-help-sections aria-busy="true">
+        <div class="faq-skeleton h-7 w-44 rounded mb-4"></div>
+        <div class="faq-skeleton h-10 w-60 rounded mb-6"></div>
         <div class="grid md:grid-cols-2 gap-3">
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cómo veo el estado de mi pedido?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Desde tu <a href="/pages/cuenta/area-personal.html" class="link-underline">área personal</a>, en la sección "Mis pedidos". Verás el tracking en tiempo real (recibido, pagado, en preparación, enviado, entregado) y el albarán/factura disponibles para descarga cuando proceda.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Puedo modificar un pedido ya hecho?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Sí, mientras esté en estado "En preparación". Llámanos al 953 00 00 00 con tu número de pedido. Si ya está enviado, tendrás que hacer una devolución una vez recibido.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Hasta qué hora puedo pedir para que salga hoy?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Hasta las 17:00 (lunes a viernes) sale en el mismo día. Después, sale al día hábil siguiente.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cómo cancelo un pedido?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Si está en "Recibido" o "En preparación", desde tu área personal hay un botón "Cancelar pedido". Si ya se envió, tendrás que rechazarlo cuando llegue o iniciar una devolución.</p>
-          </details>
+          <div class="faq-skeleton h-20 rounded-xl"></div>
+          <div class="faq-skeleton h-20 rounded-xl"></div>
+          <div class="faq-skeleton h-20 rounded-xl"></div>
+          <div class="faq-skeleton h-20 rounded-xl"></div>
         </div>
       </div>
-
-      <!-- Envíos -->
-      <div id="envios" class="mb-14 scroll-mt-24">
-        <div class="flex items-center gap-3 mb-6">
-          <span class="font-mono text-xs uppercase tracking-wider text-copper">Categoría · Envíos</span>
-          <div class="flex-1 h-px bg-line"></div>
-        </div>
-        <h2 class="h1 mb-7">Envíos y entrega.</h2>
-        <div class="grid md:grid-cols-2 gap-3">
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cuánto tarda en llegar mi pedido?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">24-48 h en península, en horario laboral. Para Baleares, 3-5 días. Canarias, Ceuta y Melilla, 5-7 días con trámite aduanero. Domingos no se hacen entregas.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cuánto cuesta el envío?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Estándar península: 4,90 € · gratis desde 75 €. Express 24h: 9,90 €. Recogida en almacén Jaén: gratis. Para Baleares y Canarias se calcula en checkout según peso y volumen.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Puedo recoger en almacén?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Sí, en nuestro almacén del Campus Las Lagunillas (Jaén). L-V de 8:00 a 18:30. Sábados de 9:00 a 13:00. Te avisamos cuando esté listo. Es gratis.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Y si no estoy en casa cuando llegue?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">El transportista deja aviso e intenta una segunda entrega al día siguiente. Si tampoco estás, puedes contactarles para reprogramar o recogerlo en su oficina más cercana.</p>
-          </details>
-        </div>
-      </div>
-
-      <!-- Devoluciones -->
-      <div id="devoluciones" class="mb-14 scroll-mt-24">
-        <div class="flex items-center gap-3 mb-6">
-          <span class="font-mono text-xs uppercase tracking-wider text-copper">Categoría · Devoluciones</span>
-          <div class="flex-1 h-px bg-line"></div>
-        </div>
-        <h2 class="h1 mb-7">Devoluciones.</h2>
-        <div class="grid md:grid-cols-2 gap-3">
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cuál es el plazo de devolución?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">30 días naturales desde la recepción del pedido. El producto debe estar sin usar, en su embalaje original y con todos sus accesorios.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿La devolución tiene coste?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">No. Generamos la etiqueta de devolución gratis y la enviamos por email. Solo tienes que pegarla y entregarla al transportista.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cuándo recibo el reembolso?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Una vez recibimos el producto y verificamos su estado (1-3 días), procesamos el reembolso al método de pago original. Suele tardar 3-5 días hábiles más en aparecer en tu cuenta.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">Compré una bombilla equivocada de temperatura. ¿La devuelvo?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Sí, sin problema. Es la devolución más común. Asegúrate de que la bombilla sigue en el blíster original o caja sin manipular. Aprovecha y mira nuestra <a href="/pages/aprender/tutorial.html" class="link-underline">guía de temperatura de color</a> para no fallar la próxima.</p>
-          </details>
-        </div>
-      </div>
-
-      <!-- Pagos -->
-      <div id="pagos" class="mb-14 scroll-mt-24">
-        <div class="flex items-center gap-3 mb-6">
-          <span class="font-mono text-xs uppercase tracking-wider text-copper">Categoría · Pagos</span>
-          <div class="flex-1 h-px bg-line"></div>
-        </div>
-        <h2 class="h1 mb-7">Pagos y facturas.</h2>
-        <div class="grid md:grid-cols-2 gap-3">
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Qué métodos de pago aceptáis?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Visa, Mastercard, American Express, Bizum, PayPal y transferencia bancaria. Para clientes profesionales validados, también aplazamiento a 30 días.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cuándo recibo la factura?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">La factura se genera automáticamente al cerrar el pedido y queda disponible en tu área personal en formato PDF. También te llega por email.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">Soy autónomo, ¿puedo pedir factura con mi NIF?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Sí. En el checkout indica tu NIF/CIF y razón social. Si es la primera vez, también puedes <a href="/pages/auth/login.html#registro-pro" class="link-underline">registrarte como cliente profesional</a> para tener todas las facturas centralizadas.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">El pago no se procesa. ¿Qué hago?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Suele ser autenticación 3DS de tu banco. Revisa el SMS o app del banco. Si persiste, prueba con otro método o llámanos al 953 00 00 00.</p>
-          </details>
-        </div>
-      </div>
-
-      <!-- Cuenta -->
-      <div id="cuenta" class="mb-14 scroll-mt-24">
-        <div class="flex items-center gap-3 mb-6">
-          <span class="font-mono text-xs uppercase tracking-wider text-copper">Categoría · Mi cuenta</span>
-          <div class="flex-1 h-px bg-line"></div>
-        </div>
-        <h2 class="h1 mb-7">Mi cuenta.</h2>
-        <div class="grid md:grid-cols-2 gap-3">
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Necesito cuenta para comprar?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">No. Puedes comprar como invitado. Pero si creas cuenta gratis, podrás guardar favoritos, ver el historial de pedidos, descargar facturas y, sobre todo, repetir compra en un clic.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cómo me registro como instalador profesional?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Desde <a href="/pages/auth/login.html#registro-pro" class="link-underline">esta página</a>. Te pediremos DNI, nº de carnet de baja tensión vigente, comunidad de emisión, copia del carnet y datos fiscales. Validamos en 24-48 h y entonces se activa la tarifa pro automáticamente.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">Olvidé la contraseña.</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">En la <a href="/pages/auth/login.html" class="link-underline">página de login</a> hay un enlace "¿La olvidaste". Te enviamos un email con un enlace para crear una nueva contraseña.?</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cómo borro mi cuenta?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">En "Datos personales" del área personal hay un botón "Borrar cuenta". Tendremos que conservar tus facturas durante 5 años por obligación fiscal, pero el resto de datos se eliminan en 30 días.</p>
-          </details>
-        </div>
-      </div>
-
-      <!-- Servicios técnicos -->
-      <div id="tecnico" class="mb-14 scroll-mt-24">
-        <div class="flex items-center gap-3 mb-6">
-          <span class="font-mono text-xs uppercase tracking-wider text-copper">Categoría · Servicios técnicos</span>
-          <div class="flex-1 h-px bg-line"></div>
-        </div>
-        <h2 class="h1 mb-7">Servicios técnicos.</h2>
-        <div class="grid md:grid-cols-2 gap-3">
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿La visita técnica es gratuita?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Sí en instalaciones nuevas y mantenimiento. En averías cobramos 30 € de visita si finalmente no contratas el trabajo, descontable del presupuesto si decides seguir.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Qué garantía dais en los trabajos?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Tres años en mano de obra. Materiales con garantía propia del fabricante (2 años en mecanismos, 5 en protecciones).</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Atendéis fuera de horario?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Urgencias 24/7 en Jaén capital y zona metropolitana. Resto de provincia, hasta las 22:00. Andalucía, en horario laboral. Recargo del 50 % en festivos y noches.</p>
-          </details>
-          <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors">
-            <summary class="flex items-start justify-between gap-4 cursor-pointer list-none"><h3 class="font-serif text-lg font-medium leading-tight">¿Cómo sigo el estado de mi solicitud técnica?</h3><svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></summary>
-            <p class="mt-3 text-graphite text-sm leading-relaxed">Con el código GLX-XXXX-XX-XXXX que recibes al enviar la solicitud, en tu área personal o introduciéndolo en la <a href="/pages/servicios/seguir-solicitud.html" class="link-underline">página de seguimiento anónimo</a>.</p>
-          </details>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -342,12 +168,259 @@
   <div data-component="site-footer"></div>
 
   <div data-nav-panel class="fixed inset-0 z-50 lg:hidden bg-ink text-paper translate-x-full transition-transform duration-300 [&.is-open]:translate-x-0 overflow-y-auto"><div class="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 bg-ink"><img src="/assets/img/logo.png" alt="" class="h-8 w-auto" style="filter: invert(1) hue-rotate(180deg);"/><button data-nav-toggle class="p-2.5 rounded-full hover:bg-white/10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><nav class="px-5 py-6"><a href="/pages/aprender/hazlo-tu-mismo.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Hazlo Tú Mismo</a><a href="/pages/tienda/tienda.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Tienda</a><a href="/pages/servicios/servicios.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Servicios</a><a href="/pages/servicios/solicitar-tecnico.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Solicitar técnico</a><a href="/pages/empresa/quienes-somos.html" class="block py-4 border-b border-white/10 text-2xl font-serif">Quiénes somos</a></nav></div>
-  <div data-search-overlay class="fixed inset-0 z-50 bg-ink/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300"><div class="container-x pt-24"><button data-search-close class="absolute top-6 right-6 text-paper p-3 hover:bg-white/10 rounded-full"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="max-w-3xl mx-auto"><input type="search" placeholder="¿Qué necesitas?" class="w-full bg-transparent text-paper text-2xl md:text-4xl font-serif pb-5 border-b-2 border-white/20 focus:border-filament outline-none placeholder:text-paper/30"/></div></div></div>
 
   <script src="/assets/js/component-loader.js"></script>
   <script src="/data/api.js"></script>
   <script src="/assets/js/backend-integration.js"></script>
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/catalog-ui.js"></script>
+
+  <!-- FAQ page integration -->
+  <script>
+    (() => {
+      'use strict';
+      const api = window.GarperLuxApi;
+
+      const categoriesHost = document.querySelector('[data-help-categories]');
+      const sectionsHost = document.querySelector('[data-help-sections]');
+      const heroForm = document.getElementById('faq-hero-form');
+      const heroInput = document.getElementById('faq-hero-input');
+      const suggestBox = document.getElementById('faq-hero-suggest');
+
+      const escapeHtml = (str) => String(str ?? '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+      const normalize = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+      const highlightText = (raw, tokens) => {
+        const safe = escapeHtml(raw);
+        if (!tokens?.length) return safe;
+        const norm = normalize(raw);
+        const ranges = [];
+        for (const tok of tokens) {
+          const t = normalize(tok);
+          if (!t || t.length < 2) continue;
+          let from = 0;
+          while (true) {
+            const idx = norm.indexOf(t, from);
+            if (idx === -1) break;
+            ranges.push([idx, idx + t.length]);
+            from = idx + t.length;
+          }
+        }
+        if (!ranges.length) return safe;
+        ranges.sort((a, b) => a[0] - b[0]);
+        const merged = [];
+        for (const [s, e] of ranges) {
+          if (merged.length && s <= merged[merged.length - 1][1]) {
+            merged[merged.length - 1][1] = Math.max(merged[merged.length - 1][1], e);
+          } else {
+            merged.push([s, e]);
+          }
+        }
+        let out = '';
+        let cursor = 0;
+        for (const [s, e] of merged) {
+          out += safe.slice(cursor, s);
+          out += `<mark>${safe.slice(s, e)}</mark>`;
+          cursor = e;
+        }
+        out += safe.slice(cursor);
+        return out;
+      };
+
+      // ---- Renderizado de categorías (cards) ---------------------------------
+      function renderCategories(categories) {
+        if (!categoriesHost) return;
+        if (!categories.length) {
+          categoriesHost.innerHTML = '<div class="col-span-full bg-white border border-line rounded-2xl p-8 text-center text-graphite">No hay categorías de ayuda configuradas.</div>';
+          categoriesHost.removeAttribute('aria-busy');
+          return;
+        }
+        const items = categories.map((cat) => {
+          const isDark = cat.accent === 'dark';
+          const wrap = isDark
+            ? 'group bg-ink text-paper rounded-2xl p-6 hover:brightness-125 transition-all'
+            : 'group bg-white border border-line rounded-2xl p-6 hover:border-ink transition-colors';
+          const iconWrap = isDark
+            ? 'w-11 h-11 rounded-lg bg-white/10 grid place-items-center mb-4 text-filament'
+            : 'w-11 h-11 rounded-lg bg-paper-2 grid place-items-center mb-4 text-copper';
+          const subText = isDark ? 'text-sm text-paper/70 mb-3' : 'text-sm text-graphite mb-3';
+          const meta = isDark ? 'text-xs font-mono text-paper/60' : 'text-xs font-mono text-graphite';
+          return `
+            <a href="#cat-${escapeHtml(cat.slug)}" class="${wrap}" data-help-cat-link="${escapeHtml(cat.slug)}">
+              <div class="${iconWrap}">${cat.iconSvg || ''}</div>
+              <h3 class="font-serif text-xl font-medium mb-1">${escapeHtml(cat.shortLabel || cat.name)}</h3>
+              <p class="${subText}">${escapeHtml(cat.description || '')}</p>
+              <span class="${meta}">${Number(cat.articleCount || 0)} artículo${cat.articleCount === 1 ? '' : 's'}</span>
+            </a>`;
+        }).join('');
+        categoriesHost.innerHTML = items;
+        categoriesHost.removeAttribute('aria-busy');
+      }
+
+      // ---- Renderizado de secciones (acordeón de FAQs por categoría) ---------
+      function renderSections(categories) {
+        if (!sectionsHost) return;
+        const withArticles = categories.filter((cat) => (cat.articles || []).length);
+        if (!withArticles.length) {
+          sectionsHost.innerHTML = '<div class="bg-white border border-line rounded-2xl p-8 text-center text-graphite">No hay preguntas frecuentes publicadas.</div>';
+          sectionsHost.removeAttribute('aria-busy');
+          return;
+        }
+        const sections = withArticles.map((cat, ci) => {
+          const articles = cat.articles.map((a) => `
+            <details class="group bg-white border border-line rounded-xl p-5 open:border-ink transition-colors" data-help-article="${escapeHtml(a.slug)}">
+              <summary class="flex items-start justify-between gap-4 cursor-pointer list-none">
+                <h3 class="font-serif text-lg font-medium leading-tight">${escapeHtml(a.question)}</h3>
+                <svg class="shrink-0 mt-1 group-open:rotate-45 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+              </summary>
+              <div class="mt-3 text-graphite text-sm leading-relaxed">${a.answerHtml}</div>
+            </details>`).join('');
+          // Mantenemos el id legacy `#${slug}` para que enlaces antiguos sigan funcionando,
+          // y añadimos `cat-${slug}` que es el que generan las tarjetas dinámicas.
+          return `
+            <div id="${escapeHtml(cat.slug)}" class="${ci === withArticles.length - 1 ? '' : 'mb-14'} scroll-mt-24">
+              <a id="cat-${escapeHtml(cat.slug)}" class="block scroll-mt-24" aria-hidden="true"></a>
+              <div class="flex items-center gap-3 mb-6">
+                <span class="font-mono text-xs uppercase tracking-wider text-copper">Categoría · ${escapeHtml(cat.shortLabel || cat.name)}</span>
+                <div class="flex-1 h-px bg-line"></div>
+              </div>
+              <h2 class="h1 mb-7">${escapeHtml(cat.name)}.</h2>
+              <div class="grid md:grid-cols-2 gap-3">${articles}</div>
+            </div>`;
+        }).join('');
+        sectionsHost.innerHTML = sections;
+        sectionsHost.removeAttribute('aria-busy');
+      }
+
+      // ---- Buscador con sugerencias en vivo ----------------------------------
+      let suggestController = null;
+      let suggestActiveIndex = -1;
+      let lastSuggestions = [];
+
+      const hideSuggest = () => {
+        suggestBox.hidden = true;
+        suggestBox.innerHTML = '';
+        suggestActiveIndex = -1;
+        lastSuggestions = [];
+        heroInput.setAttribute('aria-expanded', 'false');
+      };
+
+      const showSuggestions = (data) => {
+        const results = (data.results || []).slice(0, 6);
+        lastSuggestions = results;
+        const tokens = data.tokens || [];
+        if (!results.length) {
+          suggestBox.hidden = false;
+          suggestBox.innerHTML = `
+            <div class="sg-empty">
+              Sin resultados para <strong>"${escapeHtml(data.query)}"</strong>.
+              Pulsa Enter para ver la página completa de búsqueda.
+            </div>`;
+          heroInput.setAttribute('aria-expanded', 'true');
+          return;
+        }
+        const rows = results.map((r, i) => `
+          <button type="button" data-help-pick="${escapeHtml(r.slug)}" data-help-href="/pages/sistema/faqs-busqueda.html?q=${encodeURIComponent(data.query)}#a-${encodeURIComponent(r.slug)}" role="option" aria-selected="${i === suggestActiveIndex ? 'true' : 'false'}">
+            <div class="sg-q">${highlightText(r.question, tokens)}</div>
+            <div class="sg-c">${escapeHtml(r.categoryName || r.categorySlug)}</div>
+          </button>`).join('');
+        const seeAll = `
+          <button type="button" data-help-see-all class="border-t border-line mt-2 pt-3" role="option">
+            <div class="sg-q text-copper">Ver todos los resultados →</div>
+            <div class="sg-c">${data.total} respuesta${data.total === 1 ? '' : 's'} para "${escapeHtml(data.query)}"</div>
+          </button>`;
+        suggestBox.innerHTML = rows + seeAll;
+        suggestBox.hidden = false;
+        heroInput.setAttribute('aria-expanded', 'true');
+      };
+
+      let suggestDebounce = null;
+      const runSuggest = (rawQuery) => {
+        clearTimeout(suggestDebounce);
+        suggestDebounce = setTimeout(async () => {
+          const q = rawQuery.trim();
+          if (q.length < 2) { hideSuggest(); return; }
+          if (suggestController) suggestController.abort();
+          suggestController = new AbortController();
+          try {
+            const data = await api.helpSearch(q);
+            showSuggestions(data);
+          } catch (err) {
+            if (err.name !== 'AbortError') console.warn('FAQ suggest error', err);
+          }
+        }, 180);
+      };
+
+      heroInput.addEventListener('input', (e) => runSuggest(e.target.value));
+      heroInput.addEventListener('focus', (e) => { if (e.target.value.trim().length >= 2) runSuggest(e.target.value); });
+      document.addEventListener('click', (e) => {
+        if (!suggestBox.contains(e.target) && e.target !== heroInput) hideSuggest();
+      });
+      heroInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { hideSuggest(); return; }
+        const options = suggestBox.querySelectorAll('button[role="option"]');
+        if (!options.length) return;
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          suggestActiveIndex = (suggestActiveIndex + 1) % options.length;
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          suggestActiveIndex = (suggestActiveIndex - 1 + options.length) % options.length;
+        } else if (e.key === 'Enter' && suggestActiveIndex >= 0) {
+          e.preventDefault();
+          options[suggestActiveIndex].click();
+          return;
+        } else {
+          return;
+        }
+        options.forEach((opt, i) => opt.setAttribute('aria-selected', i === suggestActiveIndex ? 'true' : 'false'));
+        options[suggestActiveIndex].scrollIntoView({ block: 'nearest' });
+      });
+      suggestBox.addEventListener('click', (e) => {
+        const see = e.target.closest('[data-help-see-all]');
+        if (see) {
+          const q = heroInput.value.trim();
+          if (q) location.href = `/pages/sistema/faqs-busqueda.html?q=${encodeURIComponent(q)}`;
+          return;
+        }
+        const pick = e.target.closest('[data-help-pick]');
+        if (!pick) return;
+        location.href = pick.dataset.helpHref;
+      });
+
+      // ---- Pre-rellenar input si llega de la search page ---------------------
+      const initialQ = new URLSearchParams(location.search).get('q');
+      if (initialQ) heroInput.value = initialQ;
+
+      // ---- Carga inicial ------------------------------------------------------
+      async function load() {
+        try {
+          const data = await api.helpCenter();
+          renderCategories(data);
+          renderSections(data);
+          // Si hay hash al cargar, intenta abrir el detalle correspondiente
+          if (location.hash) {
+            const target = document.querySelector(decodeURIComponent(location.hash));
+            if (target && target.tagName === 'DETAILS') target.open = true;
+          }
+        } catch (err) {
+          console.error('Error cargando FAQs', err);
+          if (categoriesHost) {
+            categoriesHost.innerHTML = '<div class="col-span-full bg-white border border-line rounded-2xl p-8 text-center text-graphite">No se ha podido cargar el centro de ayuda. Refresca la página o <a href="/pages/empresa/contacto.html" class="link-underline text-ink">contáctanos</a>.</div>';
+            categoriesHost.removeAttribute('aria-busy');
+          }
+          if (sectionsHost) {
+            sectionsHost.innerHTML = '';
+            sectionsHost.removeAttribute('aria-busy');
+          }
+        }
+      }
+
+      load();
+    })();
+  </script>
 </body>
 </html>

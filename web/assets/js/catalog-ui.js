@@ -353,14 +353,24 @@
     const image = document.querySelector('[data-glx-main-image] img')?.src;
     const brand = document.querySelector('[data-glx-brand-link]')?.textContent?.trim();
 
+    // Read the product stock from the page to prevent exceeding it
+    const stockText = document.getElementById('stock-qty')?.textContent || '';
+    const stockMatch = stockText.match(/(\d+)\s*(?:unidades|uds)/i);
+    const maxStock = stockMatch ? parseInt(stockMatch[1], 10) : null;
+
     // Único punto de escritura: el módulo `GarperLuxCart` ya replica al
     // servidor si hay sesión y dispara los eventos para refrescar todas
     // las vistas (drawer, header badge, carrito.html...).
     if (window.GarperLuxCart) {
-      window.GarperLuxCart.addItem({
+      const result = window.GarperLuxCart.addItem({
         sku, title, price, image, brand,
         options: { acabado: productState.acabado, amperaje: productState.amperaje },
-      }, quantity);
+      }, quantity, maxStock);
+
+      if (result?.capped) {
+        toast(`Stock limitado: ya tienes ${result.finalQty} uds en la cesta (máximo ${maxStock}).`);
+        return;
+      }
     }
 
     if (window.GarperLuxCartDrawer && window.GarperLuxApi) {

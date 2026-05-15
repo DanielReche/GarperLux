@@ -527,6 +527,7 @@
         if (api) {
           const user = await api.login(email, password);
           await window.glxSyncSessionToLegacyAuth?.();
+          await window.GarperLuxCart?.syncOnLogin?.().catch(() => null);
           notify(`Sesión iniciada como ${user.fullName}`);
           location.href = redirectTarget;
           return;
@@ -566,6 +567,7 @@
           });
           if (data?.token) api.setToken(data.token);
           await window.glxSyncSessionToLegacyAuth?.();
+          await window.GarperLuxCart?.syncOnLogin?.().catch(() => null);
           notify(`Cuenta creada como ${fullName}`);
           location.href = redirectTarget;
           return;
