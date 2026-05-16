@@ -3272,11 +3272,19 @@
           // Renderizar resumen de envío si estamos en pago.html
           if (page === '/pages/tienda/pago.html') {
             const summaryContainer = document.querySelector('[data-checkout-address-summary]');
-            if (summaryContainer && draft.shippingAddress) {
-              summaryContainer.innerHTML = `
-                <strong>Envío a:</strong> ${draft.shippingAddress} · <strong>${method.label}</strong>
-                <a href="/pages/tienda/checkout.html" class="block text-xs text-copper hover:underline mt-1">Cambiar dirección o velocidad</a>
-              `;
+            if (summaryContainer) {
+              if (draft.shippingMethod === 'pickup') {
+                summaryContainer.innerHTML = `
+                  <strong>Envío a:</strong> Recogida en almacén · <strong>${method.label}</strong>
+                  <a href="/pages/tienda/checkout.html" class="block text-xs text-copper hover:underline mt-1">Cambiar modo de entrega</a>
+                `;
+              } else {
+                const addressText = draft.shippingAddress || 'Dirección de envío pendiente';
+                summaryContainer.innerHTML = `
+                  <strong>Envío a:</strong> ${addressText} · <strong>${method.label}</strong>
+                  <a href="/pages/tienda/checkout.html" class="block text-xs text-copper hover:underline mt-1">Cambiar dirección o velocidad</a>
+                `;
+              }
             }
           }
         } catch (err) {
@@ -3338,6 +3346,27 @@
           const container = document.getElementById('checkout-addresses-container');
           if (container) container.innerHTML = '<div class="p-8 text-center text-sm text-warn bg-warn/5 border border-warn/20 rounded-2xl">Error al cargar direcciones. Por favor, intenta de nuevo.</div>';
         });
+
+        // Toggle address section based on shipping method
+        const modoRadios = document.querySelectorAll('input[name="modo"]');
+        const addressWrapper = document.getElementById('shipping-address-section-wrapper');
+        if (modoRadios.length && addressWrapper) {
+          modoRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+              const isPickup = document.getElementById('modo-pickup')?.checked;
+              addressWrapper.classList.toggle('hidden', isPickup);
+              
+              // Also sync with the velocity radios if needed
+              const pickupVel = document.querySelector('input[name="vel"][value="pickup"]');
+              const standardVel = document.querySelector('input[name="vel"][value="standard"]');
+              if (isPickup && pickupVel) {
+                pickupVel.checked = true;
+              } else if (!isPickup && pickupVel?.checked && standardVel) {
+                standardVel.checked = true;
+              }
+            });
+          });
+        }
       }
     }
     const primary = [...document.querySelectorAll('a.btn-primary, button.btn-primary')].at(-1);
@@ -3496,6 +3525,79 @@
             el.textContent = `${count} producto${count !== 1 ? 's' : ''}`;
           });
           document.querySelectorAll('[data-confirm-total]').forEach((el) => { el.textContent = money(total); });
+
+          // Rellenar Nombre y Email
+          let glxEmail = null;
+          try {
+            if (typeof glxGetUser === 'function') glxEmail = glxGetUser()?.email;
+          } catch (e) {}
+          const recipientName = order.payload?.checkout?.recipient || order.payload?.checkout?.fullName || 'Cliente';
+          const recipientEmail = order.payload?.checkout?.email || order.user_email || glxEmail || 'correo@garperlux.com';
+          const userNameEl = document.getElementById('glx-user-name');
+          if (userNameEl) userNameEl.textContent = recipientName;
+          document.querySelectorAll('[data-confirm-email]').forEach(el => { el.textContent = recipientEmail; });
+
+          // Dirección de entrega
+          const deliveryContainer = document.querySelector('[data-confirm-delivery-container]');
+          const addressNameEl = document.querySelector('[data-confirm-address-name]');
+          const addressTextEl = document.querySelector('[data-confirm-address-text]');
+          const shippingMethodEl = document.querySelector('[data-confirm-shipping-method]');
+          
+          if (deliveryContainer) {
+            const addressLabel = order.payload?.checkout?.addressLabel;
+            if (addressLabel && addressLabel !== 'Mi dirección' && addressLabel !== 'Recogida en almacén' && !addressLabel.includes('Dirección de entrega')) {
+              const titleEl = deliveryContainer.querySelector('.text-\\[10px\\]');
+              if (titleEl) titleEl.textContent = `Envío a: ${addressLabel}`;
+            }
+          }
+          
+          if (order.payload?.checkout?.shippingMethod === 'pickup' || order.payload?.totals?.shippingMethod?.label?.toLowerCase().includes('recogida')) {
+            if (addressNameEl) addressNameEl.textContent = 'Recogida en almacén';
+            if (addressTextEl) addressTextEl.innerHTML = 'Polígono Los Olivares<br/>23009 Jaén';
+            if (shippingMethodEl) shippingMethodEl.innerHTML = 'Recogida en persona';
+          } else {
+            if (addressTextEl) {
+              const addr = order.payload?.checkout?.shippingAddress || order.payload?.checkout?.address || order.shipping_address || 'Dirección pendiente';
+              const parts = addr.split('·').map(s => s.trim());
+              
+              if (parts.length >= 3) {
+                const extractedName = parts[0];
+                if (addressNameEl) addressNameEl.textContent = extractedName;
+                
+                // Update hero name if fallback was used
+                if (userNameEl && (userNameEl.textContent === 'Cliente' || userNameEl.textContent === recipientName)) {
+                  userNameEl.textContent = extractedName.split(' ')[0];
+                }
+                
+                const phone = parts.length >= 4 ? `<br/><br/><span class="text-graphite">${parts[parts.length - 1]}</span>` : '';
+                const city = parts.length >= 4 ? parts[parts.length - 2] : parts[parts.length - 1];
+                const addressLines = parts.slice(1, parts.length >= 4 ? -2 : -1).join('<br/>');
+                
+                addressTextEl.innerHTML = `${addressLines}<br/>${city}${phone}`;
+              } else {
+                if (addressNameEl) addressNameEl.textContent = recipientName;
+                addressTextEl.innerHTML = addr.replace(/,\s*/g, '<br/>').replace(/·/g, '<br/>');
+              }
+            }
+            if (shippingMethodEl) shippingMethodEl.innerHTML = `${order.payload?.checkout?.carrier || order.payload?.totals?.shippingMethod?.label || 'SEUR'} · seguimiento <a href="/pages/servicios/seguir-solicitud.html?code=${code}" class="text-copper">${code}</a>`;
+          }
+
+          // Fechas del timeline (Simulado basado en created_at)
+          const orderDate = new Date(order.created_at || Date.now());
+          const dateStr = (d) => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+          const timeStr = (d) => `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+          const tomorrow = new Date(orderDate); tomorrow.setDate(tomorrow.getDate() + 1);
+          const afterTomorrow = new Date(orderDate); afterTomorrow.setDate(afterTomorrow.getDate() + 2);
+          
+          document.querySelectorAll('[data-confirm-date-1]').forEach(el => { el.textContent = `${dateStr(orderDate)} · ${timeStr(orderDate)}`; });
+          document.querySelectorAll('[data-confirm-date-2]').forEach(el => { el.textContent = 'Ahora'; });
+          document.querySelectorAll('[data-confirm-date-3]').forEach(el => { el.textContent = `est. ${dateStr(tomorrow)}`; });
+          document.querySelectorAll('[data-confirm-date-4]').forEach(el => { el.textContent = `est. ${dateStr(afterTomorrow)}`; });
+          
+          // Actualizar botón "Ver detalle"
+          const detailLink = document.querySelector('a[href="/pages/cuenta/mis-pedido.html"]');
+          if (detailLink) detailLink.href = `/pages/cuenta/mis-pedido.html?order=${code}`;
+
         } catch (err) {
           console.error('[CONFIRMATION DEBUG]', err);
         }
@@ -3649,12 +3751,47 @@
     const order = await api.order(code);
     const payload = order.payload || {};
     const items = payload.cart?.items || order.items || [];
+    
+    // Enriquecer imágenes si faltan para que salgan en el pedido
+    await Promise.all(items.map(async (item) => {
+      if (!item.image && item.sku) {
+        try {
+          const product = await api.product(item.sku);
+          item.image = product.image || (product.specs_json ? JSON.parse(product.specs_json)._images?.[0] : null);
+        } catch {}
+      }
+    }));
+
     const totals = payload.totals || {};
     const shippingMethod = totals.shippingMethod?.label || payload.checkout?.shippingMethod || 'Envío estándar';
     const paymentMethod = payload.paymentMethod?.label || payload.checkout?.payment || 'Pago confirmado';
     const address = payload.checkout?.addressLabel || payload.checkout?.shippingAddress || payload.checkout?.address || order.shipping_address || 'Dirección no disponible';
     const meta = orderStatusInfo(order.status);
     const firstItem = items[0];
+    let deliveryName = payload.checkout?.recipient || payload.checkout?.fullName || 'Cliente';
+    let deliveryAddressHtml = 'Dirección no disponible';
+    const rawAddress = payload.checkout?.shippingAddress || payload.checkout?.address || order.shipping_address || '';
+
+    if (payload.checkout?.shippingMethod === 'pickup' || totals.shippingMethod?.label?.toLowerCase().includes('recogida')) {
+      deliveryName = 'Recogida en almacén';
+      deliveryAddressHtml = 'Polígono Los Olivares<br/>23009 Jaén';
+    } else if (typeof rawAddress === 'string' && rawAddress) {
+      const parts = rawAddress.split('·').map(s => s.trim());
+      if (parts.length >= 3) {
+        deliveryName = parts[0];
+        const phone = parts.length >= 4 ? `<br/><br/><span class="text-graphite">${parts[parts.length - 1]}</span>` : '';
+        const city = parts.length >= 4 ? parts[parts.length - 2] : parts[parts.length - 1];
+        const lines = parts.slice(1, parts.length >= 4 ? -2 : -1).join('<br/>');
+        deliveryAddressHtml = `${lines}<br/>${city}${phone}`;
+      } else {
+        deliveryAddressHtml = rawAddress.replace(/,\s*/g, '<br/>').replace(/·/g, '<br/>');
+      }
+    }
+
+    const addressLabel = payload.checkout?.addressLabel;
+    const hasAddressLabel = addressLabel && addressLabel !== 'Mi dirección' && addressLabel !== 'Recogida en almacén' && !addressLabel.includes('Dirección de entrega');
+    const addressLabelHtml = hasAddressLabel ? `<div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">${addressLabel}</div>` : '';
+
     const title = payload.checkout?.summary || (firstItem ? `${firstItem.name || firstItem.title}` : `Pedido ${order.code}`);
 
     main.innerHTML = `
@@ -3697,8 +3834,9 @@
           <div class="bg-paper-2 border border-line rounded-2xl p-6">
             <h3 class="font-serif text-lg font-medium mb-4">Entrega</h3>
             <div class="text-sm space-y-1">
-              <div class="font-medium">${payload.checkout?.recipient || payload.checkout?.fullName || 'Cliente GarperLux'}</div>
-              <div class="text-graphite">${typeof address === 'string' ? address : 'Dirección no disponible'}</div>
+              ${addressLabelHtml}
+              <div class="font-medium">${deliveryName}</div>
+              <div class="text-graphite">${deliveryAddressHtml}</div>
             </div>
             <div class="mt-5 pt-5 border-t border-line">
               <div class="text-xs font-mono uppercase tracking-wider text-graphite mb-1">Transportista</div>

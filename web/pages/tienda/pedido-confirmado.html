@@ -76,22 +76,22 @@
             <div class="relative text-center">
               <span class="block w-8 h-8 rounded-full bg-stock text-paper grid place-items-center mx-auto z-20 relative"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
               <div class="text-sm font-medium mt-2.5">Recibido</div>
-              <div class="text-[11px] font-mono text-graphite">26/04 · 14:30</div>
+              <div class="text-[11px] font-mono text-graphite" data-confirm-date-1>26/04 · 14:30</div>
             </div>
             <div class="relative text-center">
               <span class="block w-8 h-8 rounded-full bg-filament text-ink grid place-items-center mx-auto z-20 relative animate-pulse"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
               <div class="text-sm font-medium mt-2.5">Preparando</div>
-              <div class="text-[11px] font-mono text-filament">Ahora</div>
+              <div class="text-[11px] font-mono text-filament" data-confirm-date-2>Ahora</div>
             </div>
             <div class="relative text-center">
               <span class="block w-8 h-8 rounded-full bg-paper-2 border border-line grid place-items-center mx-auto z-20 relative text-graphite/60"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7zM5.5 19a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0M16.5 19a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0"/></svg></span>
               <div class="text-sm font-medium mt-2.5 text-graphite">En reparto</div>
-              <div class="text-[11px] font-mono text-graphite">est. 27/04</div>
+              <div class="text-[11px] font-mono text-graphite" data-confirm-date-3>est. 27/04</div>
             </div>
             <div class="relative text-center">
               <span class="block w-8 h-8 rounded-full bg-paper-2 border border-line grid place-items-center mx-auto z-20 relative text-graphite/60"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l2-2 4 4 8-8 4 4"/></svg></span>
               <div class="text-sm font-medium mt-2.5 text-graphite">Entregado</div>
-              <div class="text-[11px] font-mono text-graphite">est. 28/04</div>
+              <div class="text-[11px] font-mono text-graphite" data-confirm-date-4>est. 28/04</div>
             </div>
           </div>
         </div>
@@ -131,17 +131,17 @@
           </div>
 
           <!-- Entrega -->
-          <div class="bg-paper-2 border border-line rounded-2xl p-5">
+          <div class="bg-paper-2 border border-line rounded-2xl p-5" data-confirm-delivery-container>
             <div class="text-[10px] font-mono uppercase tracking-wider text-graphite mb-2">Dirección de entrega</div>
-            <div class="text-sm font-medium mb-1">Antonio García</div>
-            <div class="text-sm text-graphite">Calle Bernabé Soriano 12, 3º B<br/>23001 Jaén</div>
-            <div class="text-xs text-graphite font-mono mt-2">SEUR · seguimiento <a href="/pages/servicios/seguir-solicitud.html" class="text-copper">SE-7748392</a></div>
+            <div class="text-sm font-medium mb-1" data-confirm-address-name>Antonio García</div>
+            <div class="text-sm text-graphite" data-confirm-address-text>Calle Bernabé Soriano 12, 3º B<br/>23001 Jaén</div>
+            <div class="text-xs text-graphite font-mono mt-2" data-confirm-shipping-method>SEUR · seguimiento <a href="/pages/servicios/seguir-solicitud.html" class="text-copper">SE-7748392</a></div>
           </div>
 
           <!-- Email confirm -->
           <div class="bg-paper-2 border border-line rounded-2xl p-5 flex items-start gap-3">
             <span class="w-8 h-8 rounded-full bg-stock/15 text-stock grid place-items-center shrink-0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6 12 13 2 6"/></svg></span>
-            <div class="text-sm">Confirmación enviada a<br/><strong class="font-mono text-xs">antonio.garcia@correo.com</strong></div>
+            <div class="text-sm">Confirmación enviada a<br/><strong class="font-mono text-xs" data-confirm-email>antonio.garcia@correo.com</strong></div>
           </div>
 
           <!-- Soporte -->

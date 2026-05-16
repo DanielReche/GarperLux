@@ -58,7 +58,7 @@
         <h2 class="font-serif text-lg font-medium mb-3">Modo de entrega</h2>
         <div class="grid sm:grid-cols-2 gap-3 mb-8">
           <label class="opt-card is-on">
-            <input type="radio" name="modo" checked/>
+            <input type="radio" name="modo" value="delivery" id="modo-delivery" checked/>
             <div class="flex items-start gap-3">
               <span class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center shrink-0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7zM5.5 19a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0M16.5 19a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0"/></svg></span>
               <div>
@@ -69,7 +69,7 @@
             </div>
           </label>
           <label class="opt-card">
-            <input type="radio" name="modo"/>
+            <input type="radio" name="modo" value="pickup" id="modo-pickup"/>
             <div class="flex items-start gap-3">
               <span class="w-9 h-9 rounded-full bg-paper-2 text-graphite grid place-items-center shrink-0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg></span>
               <div>
@@ -82,10 +82,12 @@
         </div>
 
         <!-- Dirección -->
-        <h2 class="font-serif text-lg font-medium mb-3">Dirección de entrega</h2>
-        <div id="checkout-addresses-container" class="space-y-3 mb-8">
-          <!-- JS rellenará esto con las direcciones reales -->
-          <div class="p-8 text-center text-sm text-graphite bg-white border border-line rounded-2xl">Cargando tus direcciones...</div>
+        <div id="shipping-address-section-wrapper">
+          <h2 class="font-serif text-lg font-medium mb-3">Dirección de entrega</h2>
+          <div id="checkout-addresses-container" class="space-y-3 mb-8">
+            <!-- JS rellenará esto con las direcciones reales -->
+            <div class="p-8 text-center text-sm text-graphite bg-white border border-line rounded-2xl">Cargando tus direcciones...</div>
+          </div>
         </div>
 
         <!-- Velocidad de envío -->
@@ -175,7 +177,11 @@
         if(!inp) return;
         const name=inp.name;
         document.querySelectorAll(`.opt-card input[name="${name}"]`).forEach(i=>i.closest('.opt-card').classList.remove('is-on'));
+        const wasChecked = inp.checked;
         inp.checked=true;c.classList.add('is-on');
+        if (!wasChecked) {
+          inp.dispatchEvent(new Event('change', { bubbles: true }));
+        }
       });
     });
   </script>
