@@ -2802,6 +2802,20 @@
         button.dataset.sku = product.sku;
       }
     });
+
+    // Bind add to favorites
+    root.querySelectorAll('[data-action="add-favorite"]').forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          if (window.GarperLuxApi) await window.GarperLuxApi.addFavorite(product.sku);
+          if (typeof window.glxRefreshSidebarCounts === 'function') window.glxRefreshSidebarCounts();
+          toast('Se ha añadido a Mis favoritos con éxito. <br/><a href="/pages/cuenta/mis-favoritos.html" class="underline font-medium hover:text-white mt-1 inline-block">Ver mis favoritos</a>');
+        } catch (err) {
+          toast(err.status === 401 ? 'Debes iniciar sesión para añadir a favoritos.' : 'Añadido a Mis favoritos (modo prototipo).');
+        }
+      });
+    });
   }
 
   // ============== HELPERS DE VISTA PRO Y RELACIONADOS ==============

@@ -438,11 +438,91 @@ async function migrate(db) {
   await ensureColumn(db, 'tutorials', 'content_json', "JSON DEFAULT (JSON_OBJECT())");
   await ensureColumn(db, 'tutorials', 'published_at', 'TEXT');
   await ensureColumn(db, 'tutorials', 'views', 'INTEGER NOT NULL DEFAULT 0');
+
+  // ── Claves foráneas (restauradas desde el esquema SQLite original) ─────────
+  // Relaciones con users — CASCADE en tablas hijas propias, SET NULL en referencias opcionales
+  await ensureFK(db, 'sessions',           'fk_sessions_user',          'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'password_resets',    'fk_password_resets_user',   'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'carts',              'fk_carts_user',             'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'addresses',          'fk_addresses_user',         'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'payment_methods',    'fk_payment_methods_user',   'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'fiscal_profiles',    'fk_fiscal_profiles_user',   'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'recurring_orders',   'fk_recurring_orders_user',  'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'saved_tutorials',    'fk_saved_tutorials_user',   'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'favorites',          'fk_favorites_user',         'user_id',           'users', 'id', 'CASCADE');
+  await ensureFK(db, 'orders',             'fk_orders_user',            'user_id',           'users', 'id', 'SET NULL');
+  await ensureFK(db, 'quotes',             'fk_quotes_user',            'user_id',           'users', 'id', 'SET NULL');
+  await ensureFK(db, 'service_requests',   'fk_service_requests_user',  'user_id',           'users', 'id', 'SET NULL');
+  await ensureFK(db, 'documents',          'fk_documents_user',         'user_id',           'users', 'id', 'SET NULL');
+  await ensureFK(db, 'reviews',            'fk_reviews_user',           'user_id',           'users', 'id', 'SET NULL');
+  await ensureFK(db, 'returns',            'fk_returns_user',           'user_id',           'users', 'id', 'SET NULL');
+  await ensureFK(db, 'contact_messages',   'fk_contact_messages_user',  'user_id',           'users', 'id', 'SET NULL');
+  await ensureFK(db, 'admin_audit',        'fk_admin_audit_user',       'admin_user_id',     'users', 'id', 'SET NULL');
+  // Relaciones con categorías y marcas
+  await ensureFK(db, 'categories',         'fk_categories_parent',      'parent_id',         'categories', 'id', 'SET NULL');
+  await ensureFK(db, 'products',           'fk_products_category',      'category_id',       'categories', 'id');
+  await ensureFK(db, 'products',           'fk_products_brand',         'brand_id',          'brands',     'id');
+  // Relaciones con productos
+  await ensureFK(db, 'product_variants',   'fk_variants_product',       'product_id',        'products', 'id', 'CASCADE');
+  await ensureFK(db, 'favorites',          'fk_favorites_product',      'product_id',        'products', 'id', 'CASCADE');
+  await ensureFK(db, 'reviews',            'fk_reviews_product',        'product_id',        'products', 'id', 'CASCADE');
+  await ensureFK(db, 'cart_items',         'fk_cart_items_product',     'product_id',        'products', 'id');
+  // Relaciones con carts, orders, service_requests, tutorials
+  await ensureFK(db, 'cart_items',         'fk_cart_items_cart',        'cart_id',           'carts',            'id', 'CASCADE');
+  await ensureFK(db, 'order_events',       'fk_order_events_order',     'order_id',          'orders',           'id', 'CASCADE');
+  await ensureFK(db, 'service_request_events', 'fk_sre_request',        'service_request_id','service_requests', 'id', 'CASCADE');
+  await ensureFK(db, 'saved_tutorials',    'fk_saved_tutorials_tut',    'tutorial_id',       'tutorials',        'id', 'CASCADE');
+  await ensureFK(db, 'help_articles',      'fk_help_articles_category', 'category_id',       'help_categories',  'id', 'CASCADE');
+
+  // ── CHECK constraints (restaurados desde el esquema SQLite original) ───────
+  await ensureCheck(db, 'users',      'chk_users_role',      "role IN ('particular','pro','admin')");
+  await ensureCheck(db, 'cart_items', 'chk_cart_items_qty',  'quantity > 0');
+  await ensureCheck(db, 'documents',  'chk_documents_type',  "type IN ('invoice','delivery_note')");
 }
 
 async function ensureColumn(db, table, column, definition) {
   const exists = (await db.prepare(`SHOW COLUMNS FROM ${table}`).all()).some((row) => row.Field === column);
   if (!exists) await db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+}
+
+/**
+ * Añade una clave foránea solo si no existe ya.
+ * Consulta INFORMATION_SCHEMA para ser idempotente (seguro ejecutar en cada arranque).
+ * @param {string} onDelete  'CASCADE' | 'SET NULL' | null (→ RESTRICT por defecto)
+ */
+async function ensureFK(db, table, constraintName, column, refTable, refCol, onDelete = null) {
+  try {
+    const exists = await db.prepare(`
+      SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND CONSTRAINT_NAME = ? AND CONSTRAINT_TYPE = 'FOREIGN KEY'
+    `).get(table, constraintName);
+    if (!exists) {
+      const onDeleteClause = onDelete ? ` ON DELETE ${onDelete}` : '';
+      await db.exec(`ALTER TABLE \`${table}\` ADD CONSTRAINT \`${constraintName}\` FOREIGN KEY (\`${column}\`) REFERENCES \`${refTable}\`(\`${refCol}\`)${onDeleteClause}`);
+    }
+  } catch (err) {
+    // No interrumpimos el arranque si la FK falla (p.ej. datos huérfanos previos).
+    // Se loguea para que el desarrollador pueda limpiar la BD si fuera necesario.
+    console.warn(`[ensureFK] No se pudo añadir ${constraintName} en ${table}: ${err.message}`);
+  }
+}
+
+/**
+ * Añade un CHECK constraint solo si no existe ya.
+ * Requiere MySQL 8.0.16+.
+ */
+async function ensureCheck(db, table, constraintName, checkExpr) {
+  try {
+    const exists = await db.prepare(`
+      SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND CONSTRAINT_NAME = ? AND CONSTRAINT_TYPE = 'CHECK'
+    `).get(table, constraintName);
+    if (!exists) {
+      await db.exec(`ALTER TABLE \`${table}\` ADD CONSTRAINT \`${constraintName}\` CHECK (${checkExpr})`);
+    }
+  } catch (err) {
+    console.warn(`[ensureCheck] No se pudo añadir ${constraintName} en ${table}: ${err.message}`);
+  }
 }
 
 async function seed(db) {

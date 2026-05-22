@@ -89,6 +89,8 @@ window.GarperLuxApi = (() => {
     fiscalProfile: () => request('/account/fiscal-profile'),
     saveFiscalProfile: (payload) => request('/account/fiscal-profile', { method: 'PUT', body: JSON.stringify(payload) }),
     favorites: () => request('/account/favorites'),
+    addFavorite: (sku) => request(`/account/favorites/${encodeURIComponent(sku)}`, { method: 'POST' }),
+    deleteFavorite: (sku) => request(`/account/favorites/${encodeURIComponent(sku)}`, { method: 'DELETE' }),
     tutorials: () => request('/content/tutorials'),
     tutorial: (slug) => request(`/content/tutorials/${encodeURIComponent(slug)}`),
     tips: () => request('/content/tips'),

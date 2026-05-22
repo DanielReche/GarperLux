@@ -11,7 +11,7 @@ async function iniciarMigracion() {
     try {
         // 1. Conexión a SQLite
         sqliteDb = await open({
-            filename: 'C:/GarperLux/backend/database/garperlux.sqlite', 
+            filename: 'C:/GarperLux/backend/database/garperlux.sqlite',
             driver: sqlite3.Database
         });
 
@@ -21,7 +21,7 @@ async function iniciarMigracion() {
             port: 6446,
             user: 'garperlux',
             password: 'garperlux',
-            database: 'garperlux' 
+            database: 'garperlux'
         });
 
         console.log("✅ Conexiones listas. Limpiando tablas antiguas...");
