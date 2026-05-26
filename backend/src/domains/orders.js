@@ -8,12 +8,12 @@ function orderCode() {
   return `GLX-${new Date().getFullYear()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 }
 
-async function orderEvents(db, orderId) {
-  return await db.prepare('SELECT status, title, description, happened_at FROM order_events WHERE order_id = ? ORDER BY id').all(orderId);
+function orderEvents(db, orderId) {
+  return db.prepare('SELECT status, title, description, happened_at FROM order_events WHERE order_id = ? ORDER BY id').all(orderId);
 }
 
-async function addOrderEvent(db, orderId, status, title, description = null) {
-  await db.prepare('INSERT INTO order_events (order_id, status, title, description) VALUES (?, ?, ?, ?)')
+function addOrderEvent(db, orderId, status, title, description = null) {
+  db.prepare('INSERT INTO order_events (order_id, status, title, description) VALUES (?, ?, ?, ?)')
     .run(orderId, status, title, description);
 }
 
@@ -51,21 +51,21 @@ function checkoutTotals(summary, payload, user) {
 }
 
 function registerOrderRoutes(router) {
-  router.get('/api/orders', async (req, res) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/orders', (req, res) => {
+    const user = requireAuth(req, res);
     if (!user) return;
-    const rows = await getDb().prepare('SELECT id, code, status, total, created_at FROM orders WHERE user_id = ? ORDER BY id DESC').all(user.id);
+    const rows = getDb().prepare('SELECT id, code, status, total, created_at FROM orders WHERE user_id = ? ORDER BY id DESC').all(user.id);
     return ok(res, rows);
   });
 
-  router.get('/api/checkout/options', async (req, res) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/checkout/options', (req, res) => {
+    const user = requireAuth(req, res);
     if (!user) return;
     const db = getDb();
-    const cart = await getActiveCart(db, user.id);
-    const summary = await cartDto(db, cart);
-    const paymentMethods = await db.prepare('SELECT * FROM payment_methods WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id);
-    const addresses = await db.prepare('SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id);
+    const cart = getActiveCart(db, user.id);
+    const summary = cartDto(db, cart);
+    const paymentMethods = db.prepare('SELECT * FROM payment_methods WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id);
+    const addresses = db.prepare('SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC').all(user.id);
     return ok(res, {
       cart: summary,
       totals: checkoutTotals(summary, { shippingMethod: 'standard' }, user),
@@ -76,34 +76,34 @@ function registerOrderRoutes(router) {
     });
   });
 
-  router.get('/api/orders/:code', async (req, res, { params }) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/orders/:code', (req, res, { params }) => {
+    const user = requireAuth(req, res);
     if (!user) return;
-    const row = await getDb().prepare('SELECT * FROM orders WHERE code = ? AND user_id = ?').get(params.code, user.id);
+    const row = getDb().prepare('SELECT * FROM orders WHERE code = ? AND user_id = ?').get(params.code, user.id);
     if (!row) return fail(res, 404, 'ORDER_NOT_FOUND', 'Pedido no encontrado.');
-    return ok(res, { ...row, payload: JSON.parse(row.payload_json), events: await orderEvents(getDb(), row.id) });
+    return ok(res, { ...row, payload: JSON.parse(row.payload_json), events: orderEvents(getDb(), row.id) });
   });
 
   router.post('/api/orders/checkout', async (req, res) => {
-    const user = await requireAuth(req, res);
+    const user = requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
       const db = getDb();
-      const cart = await getActiveCart(db, user.id);
-      const summary = await cartDto(db, cart);
+      const cart = getActiveCart(db, user.id);
+      const summary = cartDto(db, cart);
       if (summary.items.length === 0) return fail(res, 422, 'EMPTY_CART', 'No se puede crear un pedido con el carrito vacío.');
       const totals = checkoutTotals(summary, payload, user);
       if (totals.error) return fail(res, 422, totals.error[0], totals.error[1]);
       let paymentMethod = null;
       if (payload.paymentMethodId) {
-        paymentMethod = await db.prepare('SELECT * FROM payment_methods WHERE id = ? AND user_id = ?').get(payload.paymentMethodId, user.id);
+        paymentMethod = db.prepare('SELECT * FROM payment_methods WHERE id = ? AND user_id = ?').get(payload.paymentMethodId, user.id);
         if (!paymentMethod) return fail(res, 422, 'PAYMENT_METHOD_NOT_FOUND', 'Método de pago no encontrado.');
       } else {
-        paymentMethod = await db.prepare('SELECT * FROM payment_methods WHERE user_id = ? AND is_default = 1 ORDER BY id DESC LIMIT 1').get(user.id) || null;
+        paymentMethod = db.prepare('SELECT * FROM payment_methods WHERE user_id = ? AND is_default = 1 ORDER BY id DESC LIMIT 1').get(user.id) || null;
       }
       const code = orderCode();
-      const result = await db.prepare('INSERT INTO orders (code, user_id, status, total, payload_json) VALUES (?, ?, ?, ?, ?)').run(
+      const result = db.prepare('INSERT INTO orders (code, user_id, status, total, payload_json) VALUES (?, ?, ?, ?, ?)').run(
         code,
         user.id,
         'confirmed',
@@ -113,12 +113,12 @@ function registerOrderRoutes(router) {
       addOrderEvent(db, result.lastInsertRowid, 'confirmed', 'Pedido recibido', 'Hemos registrado el pedido correctamente.');
       addOrderEvent(db, result.lastInsertRowid, 'paid', 'Pago confirmado', paymentMethod ? `Pago confirmado con ${paymentMethod.label}.` : 'El pago se ha confirmado en modo demo.');
       addOrderEvent(db, result.lastInsertRowid, 'preparing', 'En preparación', 'Estamos preparando el pedido en almacén.');
-      await db.prepare('UPDATE carts SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run('ordered', cart.id);
-      await db.prepare('INSERT INTO documents (user_id, type, code, related_order_code, total) VALUES (?, ?, ?, ?, ?)').run(user.id, 'invoice', `FAC-${code}`, code, totals.total);
+      db.prepare('UPDATE carts SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run('ordered', cart.id);
+      db.prepare('INSERT INTO documents (user_id, type, code, related_order_code, total) VALUES (?, ?, ?, ?, ?)').run(user.id, 'invoice', `FAC-${code}`, code, totals.total);
       
-      const updateStock = db.prepare('UPDATE products SET stock = GREATEST(0, stock - ?) WHERE id = ?');
+      const updateStock = db.prepare('UPDATE products SET stock = MAX(0, stock - ?) WHERE id = ?');
       for (const item of summary.items) {
-        await updateStock.run(item.quantity, item.id);
+        updateStock.run(item.quantity, item.id);
       }
 
       return created(res, { code, status: 'confirmed', total: totals.total, totals, shippingMethod: totals.shippingMethod, coupon: totals.coupon });
@@ -128,17 +128,17 @@ function registerOrderRoutes(router) {
   });
 
   router.patch('/api/orders/:code/status', async (req, res, { params }) => {
-    const user = await requireAuth(req, res);
+    const user = requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
       const db = getDb();
-      const row = await db.prepare('SELECT * FROM orders WHERE code = ? AND user_id = ?').get(params.code, user.id);
+      const row = db.prepare('SELECT * FROM orders WHERE code = ? AND user_id = ?').get(params.code, user.id);
       if (!row) return fail(res, 404, 'ORDER_NOT_FOUND', 'Pedido no encontrado.');
       const status = payload.status || row.status;
-      await db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, row.id);
-      await addOrderEvent(db, row.id, status, payload.title || `Estado actualizado: ${status}`, payload.description || null);
-      return ok(res, { code: row.code, status, events: await orderEvents(db, row.id) });
+      db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, row.id);
+      addOrderEvent(db, row.id, status, payload.title || `Estado actualizado: ${status}`, payload.description || null);
+      return ok(res, { code: row.code, status, events: orderEvents(db, row.id) });
     } catch (error) {
       if (!handleInputError(res, error)) throw error;
     }

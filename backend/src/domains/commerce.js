@@ -12,8 +12,8 @@ function parseJson(value, fallback) {
 }
 
 function registerCommerceRoutes(router) {
-  router.get('/api/catalog/products/:sku/reviews', async (_req, res, { params }) => {
-    const rows = await getDb().prepare(`
+  router.get('/api/catalog/products/:sku/reviews', (_req, res, { params }) => {
+    const rows = getDb().prepare(`
       SELECT reviews.*
       FROM reviews
       JOIN products ON products.id = reviews.product_id
@@ -24,14 +24,14 @@ function registerCommerceRoutes(router) {
   });
 
   router.post('/api/reviews', async (req, res) => {
-    const user = await requireAuth(req, res);
+    const user = requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
       requireFields(payload, ['sku', 'rating', 'title', 'body', 'displayName']);
-      const product = await getDb().prepare('SELECT id FROM products WHERE sku = ? OR slug = ?').get(payload.sku, payload.sku);
+      const product = getDb().prepare('SELECT id FROM products WHERE sku = ? OR slug = ?').get(payload.sku, payload.sku);
       if (!product) return fail(res, 404, 'PRODUCT_NOT_FOUND', 'Producto no encontrado.');
-      const result = await getDb().prepare(`
+      const result = getDb().prepare(`
         INSERT INTO reviews (user_id, product_id, order_code, rating, title, body, display_name, tags_json, verified_purchase, status)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
@@ -52,21 +52,21 @@ function registerCommerceRoutes(router) {
     }
   });
 
-  router.get('/api/returns', async (req, res) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/returns', (req, res) => {
+    const user = requireAuth(req, res);
     if (!user) return;
-    const rows = await getDb().prepare('SELECT * FROM returns WHERE user_id = ? ORDER BY id DESC').all(user.id);
+    const rows = getDb().prepare('SELECT * FROM returns WHERE user_id = ? ORDER BY id DESC').all(user.id);
     return ok(res, rows.map((row) => ({ ...row, payload: parseJson(row.payload_json, {}) })));
   });
 
   router.post('/api/returns', async (req, res) => {
-    const user = await requireAuth(req, res);
+    const user = requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
       requireFields(payload, ['orderCode', 'reason', 'shippingMethod', 'refundMethod']);
       const returnCode = code('DEV');
-      await getDb().prepare(`
+      getDb().prepare(`
         INSERT INTO returns (code, user_id, order_code, status, reason, shipping_method, refund_method, amount, payload_json)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
@@ -86,35 +86,35 @@ function registerCommerceRoutes(router) {
     }
   });
 
-  router.get('/api/recurring-orders', async (req, res) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/recurring-orders', (req, res) => {
+    const user = requireAuth(req, res);
     if (!user) return;
-    const rows = await getDb().prepare('SELECT * FROM recurring_orders WHERE user_id = ? ORDER BY id DESC').all(user.id);
+    const rows = getDb().prepare('SELECT * FROM recurring_orders WHERE user_id = ? ORDER BY id DESC').all(user.id);
     return ok(res, rows.map((row) => ({ ...row, payload: parseJson(row.payload_json, {}) })));
   });
 
-  router.get('/api/recurring-orders/:code', async (req, res, { params }) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/recurring-orders/:code', (req, res, { params }) => {
+    const user = requireAuth(req, res);
     if (!user) return;
-    const row = await getDb().prepare('SELECT * FROM recurring_orders WHERE code = ? AND user_id = ?').get(params.code, user.id);
+    const row = getDb().prepare('SELECT * FROM recurring_orders WHERE code = ? AND user_id = ?').get(params.code, user.id);
     if (!row) return fail(res, 404, 'RECURRING_NOT_FOUND', 'Pedido recurrente no encontrado.');
     return ok(res, { ...row, payload: parseJson(row.payload_json, {}) });
   });
 
-  router.delete('/api/recurring-orders/:code', async (req, res, { params }) => {
-    const user = await requireAuth(req, res);
+  router.delete('/api/recurring-orders/:code', (req, res, { params }) => {
+    const user = requireAuth(req, res);
     if (!user) return;
-    const result = await getDb().prepare('DELETE FROM recurring_orders WHERE code = ? AND user_id = ?').run(params.code, user.id);
+    const result = getDb().prepare('DELETE FROM recurring_orders WHERE code = ? AND user_id = ?').run(params.code, user.id);
     if (!result.changes) return fail(res, 404, 'RECURRING_NOT_FOUND', 'Pedido recurrente no encontrado.');
     return ok(res, { code: params.code, deleted: true });
   });
 
-  router.get('/api/account/reorder-suggestions', async (req, res) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/account/reorder-suggestions', (req, res) => {
+    const user = requireAuth(req, res);
     if (!user) return;
-    const fullUser = await getDb().prepare('SELECT pro_discount FROM users WHERE id = ?').get(user.id);
+    const fullUser = getDb().prepare('SELECT pro_discount FROM users WHERE id = ?').get(user.id);
     const proDiscount = Number(fullUser?.pro_discount || 0);
-    const orders = await getDb().prepare(`SELECT id, code, payload_json, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC`).all(user.id);
+    const orders = getDb().prepare(`SELECT id, code, payload_json, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC`).all(user.id);
     const aggregate = new Map();
     const now = Date.now();
     for (const order of orders) {
@@ -137,7 +137,7 @@ function registerCommerceRoutes(router) {
 
     const enriched = [];
     for (const item of aggregate.values()) {
-      const product = await getDb().prepare('SELECT id, sku, name, price, stock FROM products WHERE sku = ?').get(item.sku);
+      const product = getDb().prepare('SELECT id, sku, name, price, stock FROM products WHERE sku = ?').get(item.sku);
       if (!product) continue;
       const unit = proDiscount > 0 ? Math.round(product.price * (1 - proDiscount / 100) * 100) / 100 : product.price;
       const avgPerOrder = item.totalQty / item.occurrences;
@@ -163,13 +163,13 @@ function registerCommerceRoutes(router) {
   });
 
   router.post('/api/recurring-orders', async (req, res) => {
-    const user = await requireAuth(req, res);
+    const user = requireAuth(req, res);
     if (!user) return;
     try {
       const payload = await readJson(req);
       requireFields(payload, ['name', 'frequency']);
       const recurringCode = code('REC');
-      await getDb().prepare(`
+      getDb().prepare(`
         INSERT INTO recurring_orders (code, user_id, name, frequency, next_run_at, status, payload_json)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `).run(recurringCode, user.id, payload.name, payload.frequency, payload.nextRunAt || null, 'active', JSON.stringify(payload));

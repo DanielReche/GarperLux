@@ -12,8 +12,8 @@ function decorate(row) {
 }
 
 function registerDocumentRoutes(router) {
-  router.get('/api/documents', async (req, res) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/documents', (req, res) => {
+    const user = requireAuth(req, res);
     if (!user) return;
     const url = new URL(req.url, 'http://localhost');
     const type = url.searchParams.get('type');
@@ -23,15 +23,15 @@ function registerDocumentRoutes(router) {
       where += ' AND type = ?';
       params.push(type);
     }
-    const rows = await getDb().prepare(`SELECT * FROM documents ${where} ORDER BY issued_at DESC`).all(...params);
+    const rows = getDb().prepare(`SELECT * FROM documents ${where} ORDER BY issued_at DESC`).all(...params);
     return ok(res, rows.map(decorate));
   });
 
-  router.get('/api/documents/summary', async (req, res) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/documents/summary', (req, res) => {
+    const user = requireAuth(req, res);
     if (!user) return;
     const db = getDb();
-    const row = async (sql, ...args) => await db.prepare(sql).get(user.id, ...args);
+    const row = (sql, ...args) => db.prepare(sql).get(user.id, ...args);
     // Trimestre en curso = año/trimestre del max(issued_at) del usuario, fallback a now.
     const stats = {
       invoices: {
@@ -47,10 +47,10 @@ function registerDocumentRoutes(router) {
     return ok(res, stats);
   });
 
-  router.get('/api/documents/:code', async (req, res, { params }) => {
-    const user = await requireAuth(req, res);
+  router.get('/api/documents/:code', (req, res, { params }) => {
+    const user = requireAuth(req, res);
     if (!user) return;
-    const row = await getDb().prepare('SELECT * FROM documents WHERE code = ? AND user_id = ?').get(params.code, user.id);
+    const row = getDb().prepare('SELECT * FROM documents WHERE code = ? AND user_id = ?').get(params.code, user.id);
     if (!row) return fail(res, 404, 'DOCUMENT_NOT_FOUND', 'Documento no encontrado.');
     return ok(res, decorate(row));
   });

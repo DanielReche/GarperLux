@@ -93,18 +93,11 @@ function createServer() {
 }
 
 if (require.main === module) {
-  (async () => {
-    try {
-      await connect({ reset: process.argv.includes('--reset-db') });
-      createServer().listen(port, () => {
-        console.log(`GarperLux backend: http://localhost:${port}`);
-        console.log(`API health:        http://localhost:${port}/api/health`);
-      });
-    } catch (err) {
-      console.error('Failed to start server:', err);
-      process.exit(1);
-    }
-  })();
+  connect({ reset: process.argv.includes('--reset-db') });
+  createServer().listen(port, () => {
+    console.log(`GarperLux backend: http://localhost:${port}`);
+    console.log(`API health:        http://localhost:${port}/api/health`);
+  });
 }
 
 module.exports = { createServer };

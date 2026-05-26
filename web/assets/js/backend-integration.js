@@ -2700,6 +2700,18 @@
     }
     const stockText = root.querySelector('[data-glx-stock-text]');
     if (stockText) stockText.textContent = product.stock > 0 ? `En stock · ${product.stock} unidades` : 'Sin stock';
+    
+    const stockRow = root.querySelector('[data-glx-stock-row]');
+    if (stockRow) {
+      const dot = stockRow.querySelector('span.rounded-full');
+      if (dot) {
+        dot.className = `w-2.5 h-2.5 rounded-full shrink-0 ${product.stock > 0 ? 'bg-stock animate-pulse' : 'bg-warn'}`;
+      }
+      const subtitle = stockRow.querySelector('.text-xs.text-graphite');
+      if (subtitle) {
+        subtitle.textContent = product.stock > 0 ? 'Si pides antes de las 17:00, sale hoy mismo.' : 'Consulta plazo de reposición desde tu cuenta o por teléfono.';
+      }
+    }
 
     // Price
     root.querySelectorAll('[data-glx-price], [data-glx-price-pvp]').forEach((el) => { el.textContent = money(product.price); });
@@ -3265,20 +3277,29 @@
           const tax = subtotal * 0.21;
           
           const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
+          const FREE_SHIPPING_THRESHOLD = 75; // envío estándar a domicilio gratis a partir de 75 €
           const shippingMethodsMap = {
             'standard': { label: 'Envío estándar', price: 4.90 },
             'express': { label: 'Envío urgente', price: 9.90 },
             'pickup': { label: 'Recogida en almacén', price: 0 }
           };
           const method = shippingMethodsMap[draft.shippingMethod] || shippingMethodsMap.standard;
-          const shippingCost = method.price;
+          // El envío estándar a domicilio es gratis al superar el umbral (la recogida ya es 0).
+          const qualifiesFreeShipping = (draft.shippingMethod || 'standard') === 'standard' && subtotal >= FREE_SHIPPING_THRESHOLD;
+          const shippingCost = qualifiesFreeShipping ? 0 : method.price;
           const total = subtotal + tax + shippingCost;
 
           document.querySelectorAll('[data-order-subtotal]').forEach((el) => { el.textContent = money(subtotal); });
           document.querySelectorAll('[data-order-tax]').forEach((el) => { el.textContent = money(tax); });
           document.querySelectorAll('[data-order-shipping-label]').forEach((el) => { el.textContent = method.label; });
-          document.querySelectorAll('[data-order-shipping-cost]').forEach((el) => { el.textContent = money(shippingCost); });
+          document.querySelectorAll('[data-order-shipping-cost]').forEach((el) => { el.textContent = shippingCost === 0 ? 'Gratis' : money(shippingCost); });
           document.querySelectorAll('[data-order-total]').forEach((el) => { el.textContent = money(total); });
+          // Refleja el envío gratis en el precio de la opción "Estándar" del paso de entrega.
+          document.querySelectorAll('[data-vel-standard-price]').forEach((el) => {
+            const free = subtotal >= FREE_SHIPPING_THRESHOLD;
+            el.textContent = free ? 'Gratis' : '4,90 €';
+            el.classList.toggle('text-stock', free);
+          });
           document.querySelectorAll('[data-order-pay-button]').forEach((el) => {
             el.innerHTML = `Pagar ${money(total)}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
           });
@@ -3338,7 +3359,19 @@
             </button>`;
         };
 
-        api.checkoutOptions().then((options) => {
+        if (!api.getToken()) {
+          const gc = document.getElementById('checkout-addresses-container');
+          if (gc) gc.innerHTML = `<div class="bg-white border border-line rounded-2xl p-5 space-y-4">
+            <p class="text-sm text-graphite">Compra como invitado — te enviaremos la confirmación y el seguimiento del pedido por email.</p>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1 block">Email *</label><input id="guest-email" type="email" class="field" placeholder="tu@correo.com" autocomplete="email"></div>
+              <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1 block">Nombre y apellidos *</label><input id="guest-name" class="field" placeholder="Antonio García" autocomplete="name"></div>
+              <div><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1 block">Teléfono</label><input id="guest-phone" type="tel" class="field" placeholder="600 000 000" autocomplete="tel"></div>
+              <div class="sm:col-span-2"><label class="text-xs font-mono text-graphite uppercase tracking-wider mb-1 block">Dirección de envío *</label><input id="guest-address" class="field" placeholder="Calle, número, piso · CP · ciudad" autocomplete="street-address"></div>
+            </div>
+            <p class="text-xs text-graphite">¿Ya tienes cuenta? <a href="/pages/auth/login.html?redirect=checkout.html" class="link-underline">Inicia sesión</a> para usar tus direcciones guardadas.</p>
+          </div>`;
+        } else api.checkoutOptions().then((options) => {
           const allAddresses = options.addresses || [];
           renderAddresses(allAddresses, 'checkout-addresses-container', 'dir');
           
@@ -3397,6 +3430,24 @@
         const selectedShipping = checkedLabel('vel', 'Estándar 24-48 h').toLowerCase();
         const draft = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || '{}');
         draft.shippingMethod = selectedShipping.includes('expr') ? 'express' : selectedShipping.includes('recogida') ? 'pickup' : 'standard';
+
+        // Invitado: capturamos contacto + dirección del formulario antes de pasar al pago.
+        if (!api.getToken()) {
+          const email = (document.getElementById('guest-email')?.value || '').trim();
+          const name = (document.getElementById('guest-name')?.value || '').trim();
+          const phone = (document.getElementById('guest-phone')?.value || '').trim();
+          const address = (document.getElementById('guest-address')?.value || '').trim();
+          const needsAddress = draft.shippingMethod !== 'pickup';
+          if (!/.+@.+\..+/.test(email) || (needsAddress && !address)) {
+            event.preventDefault();
+            toast('Para continuar como invitado necesitamos tu email' + (needsAddress ? ' y tu dirección de envío.' : '.'));
+            return;
+          }
+          draft.contact = { email, name, phone };
+          draft.shippingAddress = needsAddress ? address : 'Recogida en almacén (Jaén)';
+          localStorage.setItem(CHECKOUT_KEY, JSON.stringify(draft));
+          return;
+        }
         
         // Direcciones
         const selectedDirRadio = document.querySelector('input[name="dir"]:checked');
@@ -3441,29 +3492,28 @@
       if (!api.getToken()) {
         const items = (window.GarperLuxCart?.getItems()) || [];
         if (!items.length) { toast('Tu cesta está vacía.'); return; }
-        
-        const shippingMethodsMap = { 'standard': 4.9, 'express': 9.9, 'pickup': 0 };
-        const sCost = shippingMethodsMap[draft.shippingMethod] ?? SHIPPING_COST;
-        
-        const subtotal = items.reduce((s, it) => s + ((it.price || 0) * (it.quantity || 0)), 0);
-        const tax = +(subtotal * 0.21).toFixed(2);
-        const total = +(subtotal + tax + sCost).toFixed(2);
-        const code = 'GLX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 5).toUpperCase();
-        
-        const lastOrder = {
-          code,
-          status: 'pendiente',
-          guest: true,
-          items: items.map((i) => ({ sku: i.sku, title: i.title, name: i.title, price: i.price, quantity: i.quantity })),
-          totals: { subtotal, tax, shipping: sCost, total },
-          payment: selectedPayment,
-          shippingMethod: draft.shippingMethod || 'standard',
-          createdAt: new Date().toISOString(),
-        };
-        localStorage.setItem('garperlux_last_order', JSON.stringify(lastOrder));
-        localStorage.removeItem(CHECKOUT_KEY);
-        if (window.GarperLuxCart) window.GarperLuxCart.clear();
-        location.href = `/pages/tienda/pedido-confirmado.html?order=${encodeURIComponent(code)}`;
+        if (!draft.contact?.email) {
+          toast('Falta tu email de contacto. Te llevamos al paso de entrega.');
+          location.href = '/pages/tienda/checkout.html';
+          return;
+        }
+        try {
+          // Pedido REAL de invitado: el backend recalcula precios/stock y persiste (user_id NULL).
+          const order = await api.guestCheckout({
+            items: items.map((i) => ({ sku: i.sku, quantity: i.quantity })),
+            contact: draft.contact,
+            shippingAddress: draft.shippingAddress || '',
+            shippingMethod: draft.shippingMethod || 'standard',
+            payment: selectedPayment,
+          });
+          const lastOrder = { ...order, guest: true, contact: draft.contact, items, payment: selectedPayment };
+          localStorage.setItem('garperlux_last_order', JSON.stringify(lastOrder));
+          localStorage.removeItem(CHECKOUT_KEY);
+          if (window.GarperLuxCart) window.GarperLuxCart.clear();
+          location.href = `/pages/tienda/pedido-confirmado.html?order=${encodeURIComponent(order.code)}`;
+        } catch (error) {
+          toast(error.message || 'No se pudo tramitar el pedido. Inténtalo de nuevo.');
+        }
         return;
       }
 
@@ -3508,7 +3558,9 @@
         try {
           let order = null;
           try {
-            order = await api.order(code);
+            order = api.getToken()
+              ? await api.order(code)
+              : await api.publicOrder(code, orderFromStorage?.contact?.email || '');
           } catch (err) {
             order = orderFromStorage;
           }
@@ -3517,7 +3569,7 @@
           const itemsContainer = document.querySelector('[data-confirm-order-items]');
           if (itemsContainer) {
             // Prefer payload.cart.items if API returns payload, otherwise fallback
-            const items = (order.payload && order.payload.cart && order.payload.cart.items) || order.items || order.lineItems || [];
+            const items = (order.payload && order.payload.cart && order.payload.cart.items) || (order.payload && order.payload.items) || order.items || order.lineItems || [];
             if (items && items.length) {
               itemsContainer.innerHTML = items.map((it) => `\n                <div class="p-5 flex gap-4 items-center">\n                  <div class="w-14 h-14 rounded-lg bg-paper-2 grid place-items-center text-graphite/40 shrink-0">${it.image ? `<img src="${it.image}" alt="" class="object-cover w-full h-full"/>` : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>`}</div>\n                  <div class="flex-1"><div class="font-medium">${it.name || it.title || it.productName || 'Producto'}</div><div class="text-xs text-graphite font-mono">SKU ${it.sku || it.productSku || ''} · cantidad: ${it.quantity || it.qty || 1}</div></div>\n                  <div class="font-mono font-medium">${money((it.price || it.unitPrice || it.amount || 0) * (it.quantity || it.qty || 1))}</div>\n                </div>`).join('');
             } else {
