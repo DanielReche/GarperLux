@@ -5,15 +5,12 @@
   "description": "Prototipo GarperLux con backend provisional SQLite.",
   "type": "commonjs",
   "scripts": {
+    "start": "node backend/src/server.js",
     "backend": "node backend/src/server.js",
     "backend:reset": "node backend/src/server.js --reset-db",
     "check:backend": "node --check backend/src/server.js && node --check backend/src/db.js && node --check backend/src/router.js"
   },
   "engines": {
-    "node": ">=22.5"
-  },
-  "dependencies": {
-    "sqlite": "^5.1.1",
-    "sqlite3": "^6.0.1"
+    "node": ">=24"
   }
 }
