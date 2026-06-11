@@ -279,7 +279,7 @@ function registerAccountRoutes(router) {
     const fullUser = getDb().prepare('SELECT pro_discount FROM users WHERE id = ?').get(user.id);
     const proDiscount = Number(fullUser?.pro_discount || 0);
     const rows = getDb().prepare(`
-      SELECT products.id, products.sku, products.name, products.slug, products.price, products.stock,
+      SELECT products.id, products.sku, products.name, products.slug, products.price, products.stock, products.image,
              categories.slug AS category_slug, categories.name AS category_name,
              brands.slug AS brand_slug, brands.name AS brand_name,
              favorites.created_at AS favorited_at
@@ -298,6 +298,7 @@ function registerAccountRoutes(router) {
       price: row.price,
       proPrice: proDiscount > 0 ? Math.round(row.price * (1 - proDiscount / 100) * 100) / 100 : row.price,
       stock: row.stock,
+      image: row.image || null,
       category: { slug: row.category_slug, name: row.category_name },
       brand: { slug: row.brand_slug, name: row.brand_name },
       favoritedAt: row.favorited_at,

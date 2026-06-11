@@ -108,7 +108,7 @@
       const curY = now.getFullYear() % 100;
       const curM = now.getMonth() + 1;
       if (expY < curY || (expY === curY && expM < curM)) {
-        expiredWarning = '<div class="absolute top-0 left-0 right-0 bg-warn/90 text-white text-[10px] uppercase tracking-wider text-center py-1 font-bold z-20">⚠️ Tarjeta caducada</div>';
+        expiredWarning = '<div class="absolute top-0 left-0 right-0 bg-warn/90 text-white text-[10px] uppercase tracking-wider py-1 font-bold z-20 flex items-center justify-center gap-1"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>Tarjeta caducada</div>';
       }
     }
 

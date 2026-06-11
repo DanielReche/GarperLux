@@ -30,12 +30,6 @@
 
   const buttonText = (el) => (el?.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
 
-  const bumpCart = (amount = 1) => {
-    const next = Number(localStorage.getItem('garperlux_cart_count') || '0') + amount;
-    localStorage.setItem('garperlux_cart_count', String(next));
-    document.querySelectorAll('[data-cart-count]').forEach((el) => { el.textContent = next; });
-  };
-
   // ---------- Header sticky shrink on scroll ----------
   const header = document.querySelector('[data-header]');
   if (header) {
@@ -136,12 +130,11 @@
     if (!text) return;
 
     if (text.includes('añadir') && (text.includes('carrito') || text.includes('kit') || text.includes('todo'))) {
-      // El drawer (cart-drawer.js + backend-integration.js) ya gestiona su propio
-      // feedback con animación lateral; aquí sólo bumpeamos el contador. Si aún
-      // así no se ha abierto el drawer (por ejemplo en una página sin catálogo
-      // dinámico), caemos a un mini toast como respaldo.
-      bumpCart(text.includes('todo') ? 4 : 1);
-      if (!window.GarperLuxCartDrawer) toast('Añadido al carrito del prototipo.');
+      // El carrito real (GarperLuxCart) ya gestiona el contador del badge y su
+      // propio feedback (drawer + toast). NO tocamos aquí el contador: hacerlo
+      // creaba productos "fantasma" (el número subía pero el carrito quedaba
+      // vacío). Sólo damos un toast de respaldo en páginas estáticas sin drawer.
+      if (!window.GarperLuxCart && !window.GarperLuxCartDrawer) toast('Añadido al carrito del prototipo.');
     } else if (text.includes('favorito') || text.includes('guardar para luego') || text === 'guardar') {
       toast('Guardado en tu área personal.');
     } else if (text.includes('pdf') || text.includes('descargar') || text.includes('exportar')) {

@@ -108,8 +108,13 @@
       try{
         if (addressId) await api.updateAddress(addressId, payload);
         else await api.addAddress(payload);
-        // redirect back to list
-        location.href = '/pages/cuenta/direcciones.html';
+        // Si venimos del checkout, volvemos allí; si no, a la lista de direcciones.
+        const redirect = params.get('redirect');
+        if (redirect === 'checkout.html' || redirect === 'checkout') {
+          location.href = '/pages/tienda/checkout.html';
+        } else {
+          location.href = '/pages/cuenta/direcciones.html';
+        }
       }catch(err){
         console.error('Failed saving address', err);
         if (err?.code === 'VALIDATION_ERROR' && err?.details?.missing?.length) {

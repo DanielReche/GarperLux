@@ -3332,7 +3332,14 @@
           const container = document.getElementById(containerId);
           if (!container) return;
           if (!addresses.length) {
-            container.innerHTML = '<div class="p-5 text-sm text-graphite italic text-center">No hay direcciones guardadas.</div>';
+            container.innerHTML = `
+              <div class="bg-white border border-line rounded-2xl p-6 text-center space-y-4">
+                <p class="text-sm text-graphite">Todavía no tienes ninguna dirección guardada. Añade una para continuar con el envío de tu pedido.</p>
+                <button onclick="location.href='/pages/cuenta/anadir-direccion.html?redirect=checkout.html'" class="btn btn-primary inline-flex items-center gap-2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Añadir dirección de envío
+                </button>
+              </div>`;
             return;
           }
           container.innerHTML = addresses.map((addr, idx) => {
