@@ -135,8 +135,6 @@
       // creaba productos "fantasma" (el número subía pero el carrito quedaba
       // vacío). Sólo damos un toast de respaldo en páginas estáticas sin drawer.
       if (!window.GarperLuxCart && !window.GarperLuxCartDrawer) toast('Añadido al carrito del prototipo.');
-    } else if (text.includes('favorito') || text.includes('guardar para luego') || text === 'guardar') {
-      toast('Guardado en tu área personal.');
     } else if (text.includes('pdf') || text.includes('descargar') || text.includes('exportar')) {
       toast('Descarga simulada para el prototipo.');
     } else if (text.includes('aplicar')) {

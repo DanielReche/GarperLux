@@ -2233,6 +2233,15 @@
           el.textContent = `Subtotal (${productCount} ref. · ${totalUnits} uds)`;
         }
       });
+      // Con la cesta vacía no se puede tramitar el pedido: desactivamos el botón.
+      document.querySelectorAll('[data-cart-checkout]').forEach((el) => {
+        const empty = productCount === 0;
+        el.classList.toggle('opacity-40', empty);
+        el.classList.toggle('pointer-events-none', empty);
+        el.classList.toggle('cursor-not-allowed', empty);
+        el.setAttribute('aria-disabled', empty ? 'true' : 'false');
+        if (empty) el.setAttribute('tabindex', '-1'); else el.removeAttribute('tabindex');
+      });
       updateCartTotals(rich.map((it) => ({ price: it.price, quantity: it.quantity })));
     }
 
@@ -2822,7 +2831,7 @@
         try {
           if (window.GarperLuxApi) await window.GarperLuxApi.addFavorite(product.sku);
           if (typeof window.glxRefreshSidebarCounts === 'function') window.glxRefreshSidebarCounts();
-          toast('Se ha añadido a Mis favoritos con éxito. <br/><a href="/pages/cuenta/mis-favoritos.html" class="underline font-medium hover:text-white mt-1 inline-block">Ver mis favoritos</a>');
+          toast('Se ha añadido a Mis favoritos. Lo tienes en tu área personal.');
         } catch (err) {
           toast(err.status === 401 ? 'Debes iniciar sesión para añadir a favoritos.' : 'Añadido a Mis favoritos (modo prototipo).');
         }
