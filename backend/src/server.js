@@ -54,7 +54,19 @@ function serveStatic(req, res) {
     }
     return fail(res, 404, 'NOT_FOUND', 'Página no encontrada.');
   }
-  res.writeHead(200, { 'Content-Type': mimeTypes[path.extname(filePath)] || 'application/octet-stream' });
+  const ext = path.extname(filePath);
+  const headers = { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' };
+  // El HTML, JS y CSS deben revalidarse siempre: así, tras un deploy, el
+  // navegador no se queda con versiones viejas mezcladas (causa típica de
+  // "a mí me funciona y a ti no"). Los assets versionados con ?v= ya fuerzan
+  // recarga; esta cabecera es la red de seguridad si se olvida subir la versión.
+  if (ext === '.html' || ext === '.js' || ext === '.css') {
+    headers['Cache-Control'] = 'no-cache, must-revalidate';
+  } else if (mimeTypes[ext]) {
+    // Imágenes/fuentes: cacheables un día (cambian poco).
+    headers['Cache-Control'] = 'public, max-age=86400';
+  }
+  res.writeHead(200, headers);
   fs.createReadStream(filePath).pipe(res);
 }
 

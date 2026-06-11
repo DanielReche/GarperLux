@@ -4420,7 +4420,7 @@
     if (window.GarperLuxCartDrawer) return;
     if (document.querySelector('script[data-glx-cart-drawer]')) return;
     const s = document.createElement('script');
-    s.src = '/assets/js/cart-drawer.js';
+    s.src = '/assets/js/cart-drawer.js?v=20260611';
     s.dataset.glxCartDrawer = '1';
     s.async = true;
     document.head.appendChild(s);
@@ -4429,7 +4429,7 @@
     if (window.GarperLuxCart) return;
     if (document.querySelector('script[data-glx-cart]')) return;
     const s = document.createElement('script');
-    s.src = '/assets/js/cart.js';
+    s.src = '/assets/js/cart.js?v=20260611';
     s.dataset.glxCart = '1';
     // No-async: necesitamos que esté listo antes de procesar clicks.
     document.head.appendChild(s);
@@ -4440,7 +4440,7 @@
     // Solo en la página del carrito tiene sentido cargarlo.
     if (page !== '/pages/tienda/carrito.html') return;
     const s = document.createElement('script');
-    s.src = '/assets/js/cart-recos.js';
+    s.src = '/assets/js/cart-recos.js?v=20260611';
     // OJO: usamos un atributo DIFERENTE al data-glx-cart-recos del marcado
     // (el contenedor en carrito.html lleva ese mismo dataset). Si fueran
     // iguales, querySelector('[data-glx-cart-recos]') matchearía el script
